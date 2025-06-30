@@ -110,6 +110,12 @@ export default function DashboardPage() {
                 <span className="text-sm text-gray-600">{user.email}</span>
               </div>
               <div className="flex items-center space-x-4">
+                <Link
+                  href="/blog"
+                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                >
+                  Blog
+                </Link>
                 {user.email === 'samcarr1232@gmail.com' && (
                   <Link
                     href="/admin"
@@ -247,8 +253,8 @@ export default function DashboardPage() {
             <div className="space-y-3 mb-6">
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                 <div className="flex items-center space-x-3">
-                  <span className="text-lg">💡</span>
-                  <span className="font-medium text-gray-900">Content Strategy GPT</span>
+                  <span className="text-lg">💼</span>
+                  <span className="font-medium text-gray-900">Business Planning</span>
                 </div>
                 {user.is_pro ? (
                   <span className="text-green-600 text-sm">✅ Access</span>
@@ -259,8 +265,8 @@ export default function DashboardPage() {
               
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                 <div className="flex items-center space-x-3">
-                  <span className="text-lg">🎯</span>
-                  <span className="font-medium text-gray-900">Marketing Automation</span>
+                  <span className="text-lg">⚡</span>
+                  <span className="font-medium text-gray-900">Productivity</span>
                 </div>
                 {user.is_pro ? (
                   <span className="text-green-600 text-sm">✅ Access</span>
@@ -271,8 +277,20 @@ export default function DashboardPage() {
               
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                 <div className="flex items-center space-x-3">
-                  <span className="text-lg">📊</span>
-                  <span className="font-medium text-gray-900">Data Analysis Pro</span>
+                  <span className="text-lg">🗣️</span>
+                  <span className="font-medium text-gray-900">Communication</span>
+                </div>
+                {user.is_pro ? (
+                  <span className="text-green-600 text-sm">✅ Access</span>
+                ) : (
+                  <span className="text-purple-600 text-sm">👀 Preview</span>
+                )}
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center space-x-3">
+                  <span className="text-lg">🤖</span>
+                  <span className="font-medium text-gray-900">Automation</span>
                 </div>
                 {user.is_pro ? (
                   <span className="text-green-600 text-sm">✅ Access</span>
@@ -309,8 +327,20 @@ export default function DashboardPage() {
             <div className="space-y-3 mb-6">
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                 <div className="flex items-center space-x-3">
+                  <span className="text-lg">💼</span>
+                  <span className="font-medium text-gray-900">Business Strategy</span>
+                </div>
+                {user.is_pro ? (
+                  <span className="text-green-600 text-sm">📥 Download</span>
+                ) : (
+                  <span className="text-purple-600 text-sm">👀 Preview</span>
+                )}
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                <div className="flex items-center space-x-3">
                   <span className="text-lg">⚡</span>
-                  <span className="font-medium text-gray-900">AI Workflow Mastery</span>
+                  <span className="font-medium text-gray-900">Productivity Systems</span>
                 </div>
                 {user.is_pro ? (
                   <span className="text-green-600 text-sm">📥 Download</span>
@@ -321,8 +351,8 @@ export default function DashboardPage() {
               
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                 <div className="flex items-center space-x-3">
-                  <span className="text-lg">🎨</span>
-                  <span className="font-medium text-gray-900">Design with AI</span>
+                  <span className="text-lg">🎯</span>
+                  <span className="font-medium text-gray-900">Marketing & Content</span>
                 </div>
                 {user.is_pro ? (
                   <span className="text-green-600 text-sm">📥 Download</span>
@@ -333,8 +363,8 @@ export default function DashboardPage() {
               
               <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                 <div className="flex items-center space-x-3">
-                  <span className="text-lg">🚀</span>
-                  <span className="font-medium text-gray-900">Productivity Hacks</span>
+                  <span className="text-lg">🤖</span>
+                  <span className="font-medium text-gray-900">AI Workflows</span>
                 </div>
                 {user.is_pro ? (
                   <span className="text-green-600 text-sm">📥 Download</span>
