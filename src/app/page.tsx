@@ -89,7 +89,7 @@ export default function HomePage() {
           
           <p className="text-xl sm:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
             Skip months of trial and error. Access my personal collection 
-            of proven GPTs and PDF playbooks you can upload directly to ChatGPT or any LLM as knowledge for 
+            of proven GPTs and PDF playbooks you can upload directly to ChatGPT, Claude, or any LLM as knowledge for 
             <span className="text-purple-600 font-medium">£15/month</span> — with free preview access.
           </p>
           
