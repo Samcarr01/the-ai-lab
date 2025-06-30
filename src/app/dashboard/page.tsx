@@ -353,44 +353,51 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Blog Section */}
+        {/* How to Use Section */}
         <div className="mt-8 bg-white rounded-2xl p-8 shadow-lg border border-green-100">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">📝</span>
+                <span className="text-2xl">💡</span>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">Latest Blog Posts</h3>
-                <p className="text-sm text-green-600">Free for everyone! 🎉</p>
+                <h3 className="text-xl font-semibold text-gray-900">How to Use Your Playbooks</h3>
+                <p className="text-sm text-green-600">Step-by-step instructions 📚</p>
               </div>
             </div>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
             <div className="p-4 bg-green-50 rounded-xl">
-              <h4 className="font-semibold text-gray-900 mb-2">The Future of AI Workflows</h4>
+              <h4 className="font-semibold text-gray-900 mb-2 flex items-center space-x-2">
+                <span>🤖</span>
+                <span>For ChatGPT</span>
+              </h4>
               <p className="text-sm text-gray-600 mb-3">
-                Discover how AI is revolutionizing productivity and what's coming next...
+                Download PDFs → Upload to ChatGPT → Select "Create GPT" → Upload as knowledge files → Start chatting with enhanced AI
               </p>
-              <span className="text-xs text-green-600 font-medium">2 days ago</span>
             </div>
             
             <div className="p-4 bg-green-50 rounded-xl">
-              <h4 className="font-semibold text-gray-900 mb-2">Building Better Prompts</h4>
+              <h4 className="font-semibold text-gray-900 mb-2 flex items-center space-x-2">
+                <span>🧠</span>
+                <span>For Claude</span>
+              </h4>
               <p className="text-sm text-gray-600 mb-3">
-                Master the art of prompt engineering with these proven techniques...
+                Download PDFs → Start new conversation → Upload files → Claude will reference them in responses → Enhanced AI assistance
               </p>
-              <span className="text-xs text-green-600 font-medium">5 days ago</span>
             </div>
           </div>
 
-          <Link
-            href="/blog"
-            className="w-full block text-center bg-green-600 text-white py-3 px-4 rounded-xl font-semibold hover:bg-green-700 transition-colors"
-          >
-            Read All Blog Posts →
-          </Link>
+          <div className="p-4 bg-purple-50 rounded-xl">
+            <h4 className="font-semibold text-gray-900 mb-2 flex items-center space-x-2">
+              <span>⚡</span>
+              <span>Pro Tip</span>
+            </h4>
+            <p className="text-sm text-gray-600">
+              Upload multiple playbooks together for comprehensive AI knowledge. Each PDF contains battle-tested workflows and strategies that enhance your AI assistant's capabilities.
+            </p>
+          </div>
         </div>
       </div>
     </div>

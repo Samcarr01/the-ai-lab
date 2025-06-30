@@ -82,8 +82,6 @@ export default function HomePage() {
               ]}
               className="block"
             />
-            <br />
-            <span className="text-gradient">that actually work</span> 
             <span className="text-4xl ml-4">⚡</span>
           </h1>
           
