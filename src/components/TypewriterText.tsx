@@ -25,55 +25,54 @@ export default function TypewriterText({
   // Function to create highlighted text during typing
   const createHighlightedText = (text: string, fullText: string) => {
     const keyWords = ['AI', 'GPT', 'playbooks']
-    const parts: Array<{start: number, end: number, word: string, isHighlight: boolean}> = []
-    let lastIndex = 0
     
     // Find all keyword positions in the full text
+    const keywordPositions: Array<{start: number, end: number, word: string}> = []
+    
     keyWords.forEach(word => {
       const regex = new RegExp(`\\b${word}\\b`, 'gi')
       let match
       while ((match = regex.exec(fullText)) !== null) {
-        const startPos = match.index
-        const endPos = startPos + word.length
-        
-        // Only highlight if this word is fully typed
-        if (endPos <= text.length) {
-          parts.push({
-            start: startPos,
-            end: endPos,
-            word: word,
-            isHighlight: true
-          })
-        }
+        keywordPositions.push({
+          start: match.index,
+          end: match.index + word.length,
+          word: word
+        })
       }
     })
     
     // Sort by position
-    parts.sort((a, b) => a.start - b.start)
+    keywordPositions.sort((a, b) => a.start - b.start)
     
-    // Build the highlighted text
+    // Build the highlighted text character by character
     let result = ''
-    let currentPos = 0
     
-    parts.forEach(part => {
-      // Add text before highlight
-      if (part.start > currentPos) {
-        result += text.substring(currentPos, Math.min(part.start, text.length))
-      }
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i]
       
-      // Add highlighted word if fully typed
-      if (part.end <= text.length) {
-        result += `<span class="text-purple-600 font-semibold">${text.substring(part.start, part.end)}</span>`
-        currentPos = part.end
+      // Check if this character is part of a keyword
+      const isInKeyword = keywordPositions.some(kw => i >= kw.start && i < kw.end)
+      
+      if (isInKeyword) {
+        // Check if this is the start of a keyword
+        const keywordStart = keywordPositions.find(kw => i === kw.start)
+        if (keywordStart) {
+          result += `<span class="text-purple-600 font-semibold">${char}`
+        } else {
+          result += char
+        }
+        
+        // Check if this is the end of a keyword
+        const keywordEnd = keywordPositions.find(kw => i === kw.end - 1)
+        if (keywordEnd) {
+          result += '</span>'
+        }
+      } else {
+        result += char
       }
-    })
-    
-    // Add remaining text
-    if (currentPos < text.length) {
-      result += text.substring(currentPos)
     }
     
-    return result || text
+    return result
   }
 
   useEffect(() => {
