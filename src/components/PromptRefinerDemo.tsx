@@ -9,6 +9,7 @@ export default function PromptRefinerDemo() {
   const [showBot, setShowBot] = useState(false)
   const [isTypingBot, setIsTypingBot] = useState(false)
   const [hasStarted, setHasStarted] = useState(false)
+  const [isCompleted, setIsCompleted] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const typeTimerRef = useRef<NodeJS.Timeout | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -23,7 +24,7 @@ export default function PromptRefinerDemo() {
 Structure with clear headings and examples.`
 
   const startDemo = () => {
-    if (hasStarted) return // Only start once
+    if (hasStarted || isCompleted) return // Only start once and don't restart if completed
     
     // Clear any existing timers
     if (timerRef.current) clearTimeout(timerRef.current)
@@ -60,7 +61,7 @@ Structure with clear headings and examples.`
         typeTimerRef.current = setTimeout(typeChar, 50)
       } else {
         setIsTypingBot(false)
-        // Don't restart - leave the conversation displayed
+        setIsCompleted(true) // Mark as completed so it never restarts
       }
     }
     
@@ -100,32 +101,36 @@ Structure with clear headings and examples.`
         <h3 className="text-xl font-semibold text-gray-900">PromptRefiner</h3>
       </div>
       
-      <div className="bg-gray-50/80 rounded-xl p-4 space-y-4 min-h-[200px]">
+      <div className="bg-gray-50/50 rounded-xl p-4 space-y-3 min-h-[280px] max-h-[350px] overflow-y-auto">
         {/* User Message */}
         {showUser && (
-          <div className="flex space-x-3">
-            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-blue-600 text-sm font-medium">You</span>
-            </div>
-            <div className="bg-blue-50 rounded-lg px-4 py-2 max-w-sm">
-              <p className="text-sm text-gray-700">{userText}</p>
+          <div className="flex justify-end">
+            <div className="flex items-end space-x-2 max-w-[85%]">
+              <div className="bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-2 shadow-sm">
+                <p className="text-sm">{userText}</p>
+              </div>
+              <div className="w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-xs font-medium">You</span>
+              </div>
             </div>
           </div>
         )}
 
         {/* Bot Response */}
         {showBot && (
-          <div className="flex space-x-3">
-            <div className="w-8 h-8 gradient-purple rounded-full flex items-center justify-center flex-shrink-0">
-              <span className="text-white text-xs">🔧</span>
-            </div>
-            <div className="bg-purple-50 rounded-lg px-4 py-3 flex-1">
-              <p className="text-sm text-gray-700 whitespace-pre-line">
-                {botText}
-                {isTypingBot && (
-                  <span className="inline-block w-2 h-4 bg-purple-400 ml-1 animate-pulse"></span>
-                )}
-              </p>
+          <div className="flex justify-start">
+            <div className="flex items-end space-x-2 max-w-[85%]">
+              <div className="w-7 h-7 gradient-purple rounded-full flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-xs">🔧</span>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed">
+                  {botText}
+                  {isTypingBot && (
+                    <span className="inline-block w-1 h-4 bg-purple-500 ml-1 animate-pulse rounded-sm"></span>
+                  )}
+                </p>
+              </div>
             </div>
           </div>
         )}
