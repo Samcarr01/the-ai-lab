@@ -55,10 +55,16 @@ export default function TypewriterText({
     return () => clearTimeout(timer)
   }, [currentText, currentTextIndex, isDeleting, isPaused, texts, speed, deleteSpeed, pauseTime])
 
+  // Find the longest text to prevent layout shift
+  const longestText = texts.reduce((a, b) => a.length > b.length ? a : b, '')
+  
   return (
-    <span className={className}>
-      {currentText}
-      <span className="animate-pulse">|</span>
+    <span className={`${className} inline-block relative`} style={{ minWidth: `${longestText.length * 0.6}ch` }}>
+      <span className="invisible absolute">{longestText}</span>
+      <span className="relative">
+        {currentText}
+        <span className="animate-pulse">|</span>
+      </span>
     </span>
   )
 }
