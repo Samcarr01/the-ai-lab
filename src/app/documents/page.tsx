@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { documentsService, type Document } from '@/lib/documents'
+import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 
 
 export default function DocumentsPage() {
@@ -174,7 +175,8 @@ export default function DocumentsPage() {
               <span className="text-xl font-semibold text-gradient">The AI Lab</span>
             </Link>
             
-            <div className="flex items-center space-x-6">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-6">
               <Link href="/dashboard" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
                 Dashboard
               </Link>
@@ -200,6 +202,13 @@ export default function DocumentsPage() {
                 </Link>
               )}
             </div>
+
+            {/* Mobile Navigation */}
+            <InternalMobileNavigation 
+              userEmail={user.email}
+              isPro={user.is_pro}
+              showAdminLink={user.email === 'samcarr1232@gmail.com'}
+            />
           </div>
         </div>
       </header>

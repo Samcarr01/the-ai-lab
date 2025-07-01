@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
+import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import { gptsService } from '@/lib/gpts'
 import { documentsService } from '@/lib/documents'
 import { aiService } from '@/lib/ai'
@@ -227,7 +228,8 @@ export default function AdminPage() {
               <span className="text-xl font-semibold text-gradient">The AI Lab</span>
             </Link>
             
-            <div className="flex items-center space-x-6">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-6">
               <Link href="/dashboard" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
                 Dashboard
               </Link>
@@ -241,6 +243,13 @@ export default function AdminPage() {
                 🔧 Admin
               </div>
             </div>
+
+            {/* Mobile Navigation */}
+            <InternalMobileNavigation 
+              userEmail={user.email}
+              isPro={user.is_pro}
+              showAdminLink={true}
+            />
           </div>
         </div>
       </header>
@@ -266,10 +275,10 @@ export default function AdminPage() {
 
             {/* Upload Type Toggle */}
             <div className="mb-6">
-              <div className="flex bg-gray-100 rounded-xl p-1">
+              <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 gap-1 sm:gap-0">
                 <button
                   onClick={() => setUploadType('gpt')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
+                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     uploadType === 'gpt'
                       ? 'gradient-purple text-white shadow-lg'
                       : 'text-gray-600 hover:text-purple-600'
@@ -279,7 +288,7 @@ export default function AdminPage() {
                 </button>
                 <button
                   onClick={() => setUploadType('document')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 ${
+                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     uploadType === 'document'
                       ? 'gradient-purple text-white shadow-lg'
                       : 'text-gray-600 hover:text-purple-600'
@@ -415,47 +424,47 @@ export default function AdminPage() {
             {recentUploads.length > 0 ? (
               <div className="space-y-4">
                 {recentUploads.map((item, index) => (
-                  <div key={`${item.type}-${item.id}`} className="p-4 border border-gray-200 rounded-xl hover:border-purple-300 transition-colors">
+                  <div key={`${item.type}-${item.id}`} className="p-3 sm:p-4 border border-gray-200 rounded-xl hover:border-purple-300 transition-colors">
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-2 mb-2">
-                          <span className="text-lg">
+                          <span className="text-lg flex-shrink-0">
                             {item.type === 'gpt' ? '🤖' : '📄'}
                           </span>
-                          <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
+                          <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
                         </div>
-                        <p className="text-xs text-gray-600 mb-2">{item.description.slice(0, 100)}...</p>
-                        <div className="flex items-center space-x-3">
-                          <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+                        <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
                             {item.category}
                           </span>
                           {item.is_featured && (
-                            <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
+                            <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full whitespace-nowrap">
                               ⭐ Featured
                             </span>
                           )}
                         </div>
                       </div>
-                      <div className="ml-4 flex items-center space-x-2">
+                      <div className="ml-2 sm:ml-4 flex items-center space-x-1 sm:space-x-2">
                         <button
                           onClick={() => handleToggleFeature(item)}
-                          className={`p-2 rounded-lg transition-colors ${
+                          className={`p-2 sm:p-2 rounded-lg transition-colors touch-manipulation min-w-[40px] min-h-[40px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center ${
                             item.is_featured
                               ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
                               : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
                           }`}
                           title={item.is_featured ? 'Remove from featured' : 'Add to featured'}
                         >
-                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                           </svg>
                         </button>
                         <button
                           onClick={() => handleDelete(item)}
-                          className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors"
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 sm:p-2 rounded-lg transition-colors touch-manipulation min-w-[40px] min-h-[40px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center"
                           title="Delete this content"
                         >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                         </button>
