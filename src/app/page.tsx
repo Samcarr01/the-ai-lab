@@ -5,6 +5,8 @@ import GradientBackground from '@/components/NetworkBackground'
 import ScrollAnimation from '@/components/ScrollAnimation'
 import AnimatedCounter from '@/components/AnimatedCounter'
 import TypewriterText from '@/components/TypewriterText'
+import PromptRefinerDemo from '@/components/PromptRefinerDemo'
+import PlaybookFlipDemo from '@/components/PlaybookFlipDemo'
 
 export default function HomePage() {
   return (
@@ -208,6 +210,38 @@ export default function HomePage() {
                 <span className="text-xl">→</span>
               </div>
                 </div>
+              </div>
+            </ScrollAnimation>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Demo Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <ScrollAnimation animation="fade-up">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                See What You Get 🎯
+              </h2>
+              <p className="text-xl text-gray-600">
+                Experience the quality of our GPTs and playbooks
+              </p>
+            </div>
+          </ScrollAnimation>
+          
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Left Side - PromptRefiner Demo */}
+            <ScrollAnimation animation="slide-left" delay={100}>
+              <div className="h-[400px]">
+                <PromptRefinerDemo />
+              </div>
+            </ScrollAnimation>
+
+            {/* Right Side - Playbook Flip Demo */}
+            <ScrollAnimation animation="slide-right" delay={200}>
+              <div className="h-[400px]">
+                <PlaybookFlipDemo />
               </div>
             </ScrollAnimation>
           </div>
