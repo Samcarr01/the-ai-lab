@@ -58,6 +58,19 @@ export default function TypewriterText({
   // Find the longest text to prevent layout shift
   const longestText = texts.reduce((a, b) => a.length > b.length ? a : b, '')
   
+  // Function to highlight key words in purple
+  const highlightText = (text: string) => {
+    const keyWords = ['AI', 'GPT', 'playbooks']
+    let highlightedText = text
+    
+    keyWords.forEach(word => {
+      const regex = new RegExp(`\\b${word}\\b`, 'gi')
+      highlightedText = highlightedText.replace(regex, `<span class="text-purple-600 font-semibold">${word}</span>`)
+    })
+    
+    return highlightedText
+  }
+  
   return (
     <span className={`${className} inline-block relative overflow-hidden`}>
       {/* Invisible placeholder to reserve space */}
@@ -66,7 +79,7 @@ export default function TypewriterText({
       </span>
       {/* Actual content positioned absolutely */}
       <span className="absolute top-0 left-0 whitespace-nowrap">
-        {currentText}
+        <span dangerouslySetInnerHTML={{ __html: highlightText(currentText) }} />
         <span className="inline-block w-1 bg-gradient-to-b from-purple-500 to-purple-600 animate-pulse ml-1 rounded-sm shadow-lg" style={{ animation: 'cursor-blink 1s infinite, cursor-glow 2s ease-in-out infinite alternate' }}>
           &nbsp;
         </span>
