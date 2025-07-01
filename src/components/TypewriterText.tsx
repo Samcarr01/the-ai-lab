@@ -8,6 +8,7 @@ interface TypewriterTextProps {
   speed?: number
   deleteSpeed?: number
   pauseTime?: number
+  playOnce?: boolean
 }
 
 export default function TypewriterText({ 
@@ -15,12 +16,14 @@ export default function TypewriterText({
   className = '', 
   speed = 100, 
   deleteSpeed = 50, 
-  pauseTime = 2000 
+  pauseTime = 2000,
+  playOnce = false
 }: TypewriterTextProps) {
   const [currentTextIndex, setCurrentTextIndex] = useState(0)
   const [currentText, setCurrentText] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
+  const [hasCompleted, setHasCompleted] = useState(false)
 
   // Function to create highlighted text during typing
   const createHighlightedText = (text: string, fullText: string) => {
@@ -76,12 +79,20 @@ export default function TypewriterText({
   }
 
   useEffect(() => {
+    if (hasCompleted && playOnce) return // Stop if completed and playOnce is true
+    
     const targetText = texts[currentTextIndex]
     
     if (isPaused) {
       const pauseTimer = setTimeout(() => {
         setIsPaused(false)
-        setIsDeleting(true)
+        if (playOnce) {
+          // For play once mode, stop after first text
+          setHasCompleted(true)
+          return
+        } else {
+          setIsDeleting(true)
+        }
       }, pauseTime)
       return () => clearTimeout(pauseTimer)
     }
@@ -100,13 +111,21 @@ export default function TypewriterText({
           setCurrentText(currentText.substring(0, currentText.length - 1))
         } else {
           setIsDeleting(false)
-          setCurrentTextIndex((prevIndex) => (prevIndex + 1) % texts.length)
+          const nextIndex = (currentTextIndex + 1) % texts.length
+          setCurrentTextIndex(nextIndex)
+          
+          // If we've cycled through all texts once in playOnce mode, stop
+          if (playOnce && nextIndex === 0) {
+            setHasCompleted(true)
+            setCurrentTextIndex(0)
+            setCurrentText(texts[0]) // Show first text
+          }
         }
       }
     }, isDeleting ? deleteSpeed : speed)
 
     return () => clearTimeout(timer)
-  }, [currentText, currentTextIndex, isDeleting, isPaused, texts, speed, deleteSpeed, pauseTime])
+  }, [currentText, currentTextIndex, isDeleting, isPaused, texts, speed, deleteSpeed, pauseTime, playOnce, hasCompleted])
 
   // Find the longest text to prevent layout shift
   const longestText = texts.reduce((a, b) => a.length > b.length ? a : b, '')

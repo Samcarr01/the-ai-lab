@@ -8,8 +8,10 @@ export default function PromptRefinerDemo() {
   const [showUser, setShowUser] = useState(false)
   const [showBot, setShowBot] = useState(false)
   const [isTypingBot, setIsTypingBot] = useState(false)
+  const [hasStarted, setHasStarted] = useState(false)
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const typeTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   const userPrompt = 'Help me research b2b marketing'
   const botResponse = `Research B2B marketing methods focusing on:
@@ -21,6 +23,8 @@ export default function PromptRefinerDemo() {
 Structure with clear headings and examples.`
 
   const startDemo = () => {
+    if (hasStarted) return // Only start once
+    
     // Clear any existing timers
     if (timerRef.current) clearTimeout(timerRef.current)
     if (typeTimerRef.current) clearTimeout(typeTimerRef.current)
@@ -31,6 +35,7 @@ Structure with clear headings and examples.`
     setShowUser(false)
     setShowBot(false)
     setIsTypingBot(false)
+    setHasStarted(true)
 
     // Show user message first
     setShowUser(true)
@@ -63,17 +68,31 @@ Structure with clear headings and examples.`
   }
 
   useEffect(() => {
-    startDemo()
-    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasStarted) {
+            startDemo()
+          }
+        })
+      },
+      { threshold: 0.3 } // Start when 30% visible
+    )
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current)
+    }
+
     // Cleanup on unmount
     return () => {
+      observer.disconnect()
       if (timerRef.current) clearTimeout(timerRef.current)
       if (typeTimerRef.current) clearTimeout(typeTimerRef.current)
     }
-  }, [])
+  }, [hasStarted])
 
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50 h-full">
+    <div ref={containerRef} className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50 h-full">
       <div className="flex items-center space-x-3 mb-4">
         <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center">
           <span className="text-white text-lg">🔧</span>
