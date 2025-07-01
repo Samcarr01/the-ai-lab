@@ -13,6 +13,7 @@ export default function PromptRefinerDemo() {
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const typeTimerRef = useRef<NodeJS.Timeout | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+  const observerRef = useRef<IntersectionObserver | null>(null)
 
   const userPrompt = 'Help me research b2b marketing'
   const botResponse = `Research B2B marketing methods focusing on:
@@ -62,6 +63,12 @@ Structure with clear headings and examples.`
       } else {
         setIsTypingBot(false)
         setIsCompleted(true) // Mark as completed so it never restarts
+        
+        // Disconnect observer to prevent any future triggers
+        if (observerRef.current) {
+          observerRef.current.disconnect()
+          observerRef.current = null
+        }
       }
     }
     
@@ -69,10 +76,12 @@ Structure with clear headings and examples.`
   }
 
   useEffect(() => {
+    if (isCompleted) return // Don't create observer if already completed
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasStarted) {
+          if (entry.isIntersecting && !hasStarted && !isCompleted) {
             startDemo()
           }
         })
@@ -80,17 +89,22 @@ Structure with clear headings and examples.`
       { threshold: 0.3 } // Start when 30% visible
     )
 
+    observerRef.current = observer
+
     if (containerRef.current) {
       observer.observe(containerRef.current)
     }
 
     // Cleanup on unmount
     return () => {
-      observer.disconnect()
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+        observerRef.current = null
+      }
       if (timerRef.current) clearTimeout(timerRef.current)
       if (typeTimerRef.current) clearTimeout(typeTimerRef.current)
     }
-  }, [])
+  }, [hasStarted, isCompleted])
 
   return (
     <div ref={containerRef} className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50 h-full">
