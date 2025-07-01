@@ -12,7 +12,7 @@ export default function PlaybookFlipDemo() {
       ([entry]) => {
         if (entry.isIntersecting && !isVisible) {
           setIsVisible(true)
-          setTimeout(() => setIsFlipped(true), 200) // Small delay for smooth effect
+          setTimeout(() => setIsFlipped(true), 500) // Longer delay for cooler effect
         } else if (!entry.isIntersecting && isVisible) {
           setIsVisible(false)
           setIsFlipped(false)
@@ -31,22 +31,25 @@ export default function PlaybookFlipDemo() {
   return (
     <div ref={containerRef} className="h-full perspective-1000">
       <div 
-        className={`relative w-full h-full transition-transform duration-700 transform-style-preserve-3d ${
+        className={`relative w-full h-full transition-all duration-1000 ease-out transform-style-preserve-3d ${
           isFlipped ? 'rotate-y-180' : ''
         }`}
       >
         {/* Front Side - Blank/Loading */}
-        <div className="absolute inset-0 backface-hidden bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-lg border border-gray-300/50 flex items-center justify-center">
+        <div className="absolute inset-0 backface-hidden bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-xl border border-gray-300/50 flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
           <div className="text-center">
-            <div className="w-16 h-16 bg-gray-300 rounded-2xl flex items-center justify-center mb-4 mx-auto">
-              <span className="text-3xl text-gray-500">📚</span>
+            <div className="w-16 h-16 bg-gradient-to-br from-gray-300 to-gray-400 rounded-2xl flex items-center justify-center mb-4 mx-auto shadow-lg animate-pulse">
+              <span className="text-3xl text-gray-600">📚</span>
             </div>
-            <div className="text-gray-400 font-medium">Loading playbook...</div>
+            <div className="text-gray-500 font-medium">Scroll to reveal playbook...</div>
           </div>
         </div>
 
         {/* Back Side - Playbook Content */}
-        <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50">
+        <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-purple-200/50 transform hover:scale-105 transition-transform duration-300"
+             style={{
+               background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,248,255,0.95) 100%)'
+             }}>
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center">
               <span className="text-white text-lg">📚</span>
@@ -88,14 +91,6 @@ export default function PlaybookFlipDemo() {
               </div>
             </div>
 
-            {/* Page indicator */}
-            <div className="flex justify-center pt-4">
-              <div className="flex space-x-2">
-                <div className="w-2 h-2 rounded-full bg-purple-400"></div>
-                <div className="w-2 h-2 rounded-full bg-purple-200"></div>
-                <div className="w-2 h-2 rounded-full bg-purple-200"></div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

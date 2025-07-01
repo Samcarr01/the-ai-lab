@@ -55,8 +55,7 @@ Structure with clear headings and examples.`
         typeTimerRef.current = setTimeout(typeChar, 50)
       } else {
         setIsTypingBot(false)
-        // Pause before restarting
-        timerRef.current = setTimeout(startDemo, 8000)
+        // Don't restart - leave the conversation displayed
       }
     }
     
