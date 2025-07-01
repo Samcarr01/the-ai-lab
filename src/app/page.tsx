@@ -90,7 +90,7 @@ export default function HomePage() {
             <span className="text-purple-700 text-sm font-medium">🧪 Curated AI Tools & Playbooks</span>
           </div>
           
-          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight text-center min-h-[50px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] flex items-center justify-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight text-center min-h-[40px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] flex items-center justify-center px-2">
             <TypewriterText 
               texts={[
                 "Battle-tested AI workflows",
