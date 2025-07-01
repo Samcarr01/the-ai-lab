@@ -3,74 +3,64 @@
 import { useState, useEffect, useRef } from 'react'
 
 export default function PlaybookFlipDemo() {
-  const [scrollProgress, setScrollProgress] = useState(0)
+  const [isFlipped, setIsFlipped] = useState(false)
+  const [animationProgress, setAnimationProgress] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const updateScrollProgress = () => {
-      if (!containerRef.current) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          // Start flip animation when 50% visible
+          setTimeout(() => setIsFlipped(true), 300)
+        } else {
+          // Reset when out of view
+          setIsFlipped(false)
+          setAnimationProgress(0)
+        }
+      },
+      { threshold: 0.5 } // Trigger when 50% visible
+    )
 
-      const rect = containerRef.current.getBoundingClientRect()
-      const windowHeight = window.innerHeight
-      
-      // Calculate how much of the element is visible
-      const elementTop = rect.top
-      const elementHeight = rect.height
-      
-      // Start animation when element enters viewport, complete when centered
-      const startPoint = windowHeight - elementHeight * 0.2
-      const endPoint = windowHeight * 0.3
-      
-      if (elementTop <= startPoint && elementTop >= endPoint) {
-        // Element is in the animation zone
-        const progress = (startPoint - elementTop) / (startPoint - endPoint)
-        setScrollProgress(Math.min(Math.max(progress, 0), 1))
-      } else if (elementTop < endPoint) {
-        // Element is fully in view
-        setScrollProgress(1)
-      } else {
-        // Element is out of view
-        setScrollProgress(0)
-      }
+    if (containerRef.current) {
+      observer.observe(containerRef.current)
     }
 
-    // Initial check
-    updateScrollProgress()
-
-    // Throttled scroll listener for performance
-    let ticking = false
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateScrollProgress()
-          ticking = false
-        })
-        ticking = true
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    window.addEventListener('resize', updateScrollProgress)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      window.removeEventListener('resize', updateScrollProgress)
-    }
+    return () => observer.disconnect()
   }, [])
 
-  // Calculate transform values based on scroll progress
-  const rotateY = scrollProgress * 180
-  const scale = 0.8 + (scrollProgress * 0.2) // Scale from 0.8 to 1.0
-  const opacity = 0.7 + (scrollProgress * 0.3) // Opacity from 0.7 to 1.0
+  // Handle the animation progress for scale effect
+  useEffect(() => {
+    if (isFlipped) {
+      const timer = setInterval(() => {
+        setAnimationProgress(prev => {
+          if (prev >= 1) {
+            clearInterval(timer)
+            return 1
+          }
+          return prev + 0.05 // Smooth progress increase
+        })
+      }, 16) // ~60fps
+      
+      return () => clearInterval(timer)
+    } else {
+      setAnimationProgress(0)
+    }
+  }, [isFlipped])
+
+  // Calculate transform values 
+  const rotateY = isFlipped ? 180 : 0
+  const scale = 0.8 + (animationProgress * 0.2) // Scale from 0.8 to 1.0
+  const opacity = 0.7 + (animationProgress * 0.3) // Opacity from 0.7 to 1.0
 
   return (
     <div ref={containerRef} className="h-full perspective-1000">
       <div 
-        className="relative w-full h-full transform-style-preserve-3d transition-all duration-300 ease-out"
+        className="relative w-full h-full transform-style-preserve-3d transition-all duration-1000 ease-out"
         style={{
           transform: `rotateY(${rotateY}deg) scale(${scale})`,
           opacity: opacity,
-          filter: `drop-shadow(0 ${20 + scrollProgress * 20}px ${40 + scrollProgress * 20}px rgba(168, 85, 247, ${0.1 + scrollProgress * 0.2}))`
+          filter: `drop-shadow(0 ${20 + animationProgress * 20}px ${40 + animationProgress * 20}px rgba(168, 85, 247, ${0.1 + animationProgress * 0.2}))`
         }}
       >
         {/* Front Side - Blank/Loading */}
@@ -80,7 +70,7 @@ export default function PlaybookFlipDemo() {
               <span className="text-3xl text-gray-600">📚</span>
             </div>
             <div className="text-gray-500 font-medium">
-              {scrollProgress === 0 ? 'Scroll to reveal playbook...' : 'Loading chapters...'}
+              Scroll to reveal playbook...
             </div>
           </div>
         </div>
