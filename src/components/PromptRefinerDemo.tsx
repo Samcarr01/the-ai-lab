@@ -113,39 +113,66 @@ Structure with clear headings and examples.`
         <h3 className="text-xl font-semibold text-gray-900">PromptRefiner</h3>
       </div>
       
-      <div className="bg-gray-50/50 rounded-xl p-4 space-y-3 min-h-[280px] max-h-[350px] overflow-y-auto">
-        {/* User Message */}
-        {showUser && (
+      <div className="bg-gray-50/50 rounded-xl p-4 space-y-3 h-[320px] overflow-hidden relative">
+        {/* Hidden space reserving layout - always present but invisible */}
+        <div className="opacity-0 pointer-events-none absolute inset-4 space-y-3">
           <div className="flex justify-end">
             <div className="flex items-end space-x-2 max-w-[85%]">
               <div className="bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-2 shadow-sm">
-                <p className="text-sm">{userText}</p>
+                <p className="text-sm">{userPrompt}</p>
               </div>
               <div className="w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-white text-xs font-medium">You</span>
               </div>
             </div>
           </div>
-        )}
-
-        {/* Bot Response */}
-        {showBot && (
           <div className="flex justify-start">
             <div className="flex items-end space-x-2 max-w-[85%]">
               <div className="w-7 h-7 gradient-purple rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-white text-xs">🔧</span>
               </div>
               <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
-                <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed">
-                  {botText}
-                  {isTypingBot && (
-                    <span className="inline-block w-1 h-4 bg-purple-500 ml-1 animate-pulse rounded-sm"></span>
-                  )}
-                </p>
+                <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed">{botResponse}</p>
               </div>
             </div>
           </div>
-        )}
+        </div>
+
+        {/* Actual visible content */}
+        <div className="relative z-10 space-y-3">
+          {/* User Message */}
+          {showUser && (
+            <div className="flex justify-end">
+              <div className="flex items-end space-x-2 max-w-[85%]">
+                <div className="bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-2 shadow-sm">
+                  <p className="text-sm">{userText}</p>
+                </div>
+                <div className="w-7 h-7 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-xs font-medium">You</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Bot Response */}
+          {showBot && (
+            <div className="flex justify-start">
+              <div className="flex items-end space-x-2 max-w-[85%]">
+                <div className="w-7 h-7 gradient-purple rounded-full flex items-center justify-center flex-shrink-0">
+                  <span className="text-white text-xs">🔧</span>
+                </div>
+                <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
+                  <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed">
+                    {botText}
+                    {isTypingBot && (
+                      <span className="inline-block w-1 h-4 bg-purple-500 ml-1 animate-pulse rounded-sm"></span>
+                    )}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )
