@@ -90,14 +90,14 @@ export default function HomePage() {
             <span className="text-purple-700 text-sm font-medium">🧪 Curated AI Tools & Playbooks</span>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight text-center">
             <TypewriterText 
               texts={[
                 "Battle-tested AI workflows",
                 "Proven GPT collections", 
                 "Ready-to-use playbooks"
               ]}
-              className="bg-gradient-to-r from-gray-900 via-purple-800 to-gray-900 bg-clip-text text-transparent"
+              className="inline-block"
             />
           </h1>
           
