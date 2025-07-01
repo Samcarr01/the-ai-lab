@@ -4,22 +4,18 @@ import { useState, useEffect, useRef } from 'react'
 
 export default function PlaybookFlipDemo() {
   const [isFlipped, setIsFlipped] = useState(false)
-  const [animationProgress, setAnimationProgress] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Start flip animation immediately when visible
           setIsFlipped(true)
         } else {
-          // Reset when out of view
           setIsFlipped(false)
-          setAnimationProgress(0)
         }
       },
-      { threshold: 0.3 } // Trigger when 30% visible for more responsiveness
+      { threshold: 0.3 }
     )
 
     if (containerRef.current) {
@@ -29,38 +25,12 @@ export default function PlaybookFlipDemo() {
     return () => observer.disconnect()
   }, [])
 
-  // Handle the animation progress for scale effect
-  useEffect(() => {
-    if (isFlipped) {
-      const timer = setInterval(() => {
-        setAnimationProgress(prev => {
-          if (prev >= 1) {
-            clearInterval(timer)
-            return 1
-          }
-          return prev + 0.08 // Faster progress increase
-        })
-      }, 16) // ~60fps
-      
-      return () => clearInterval(timer)
-    } else {
-      setAnimationProgress(0)
-    }
-  }, [isFlipped])
-
-  // Calculate transform values 
-  const rotateY = isFlipped ? 180 : 0
-  const scale = 0.9 + (animationProgress * 0.1) // Scale from 0.9 to 1.0 (less dramatic)
-  const opacity = 0.9 + (animationProgress * 0.1) // Opacity from 0.9 to 1.0 (less dramatic)
-
   return (
     <div ref={containerRef} className="h-full perspective-1000">
       <div 
-        className="relative w-full h-full transform-style-preserve-3d transition-all duration-700 ease-out"
-        style={{
-          transform: `rotateY(${rotateY}deg) scale(${scale})`,
-          opacity: opacity
-        }}
+        className={`relative w-full h-full transform-style-preserve-3d transition-transform duration-700 ease-out ${
+          isFlipped ? 'rotate-y-180' : ''
+        }`}
       >
         {/* Front Side - Blank/Loading */}
         <div className="absolute inset-0 backface-hidden bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-xl border border-gray-300/50 flex items-center justify-center">
@@ -75,12 +45,10 @@ export default function PlaybookFlipDemo() {
         </div>
 
         {/* Back Side - Playbook Content */}
-        <div 
-          className="absolute inset-0 backface-hidden bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-purple-200/50"
-          style={{
-            transform: 'rotateY(180deg)',
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,248,255,0.95) 100%)'
-          }}>
+        <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white rounded-2xl p-6 shadow-xl border border-purple-200"
+             style={{
+               background: 'linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(248,246,255,1) 100%)'
+             }}>
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center">
               <span className="text-white text-lg">📚</span>
