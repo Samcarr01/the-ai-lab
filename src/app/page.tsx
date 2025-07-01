@@ -90,16 +90,18 @@ export default function HomePage() {
             <span className="text-purple-700 text-sm font-medium">🧪 Curated AI Tools & Playbooks</span>
           </div>
           
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-            <TypewriterText 
-              texts={[
-                "Battle-tested AI workflows",
-                "Proven GPT collections", 
-                "Ready-to-use playbooks"
-              ]}
-              className="block"
-            />
-            <span className="text-2xl sm:text-3xl lg:text-4xl ml-2 sm:ml-4">⚡</span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight text-center">
+            <div className="flex items-center justify-center gap-3 sm:gap-4">
+              <TypewriterText 
+                texts={[
+                  "Battle-tested AI workflows",
+                  "Proven GPT collections", 
+                  "Ready-to-use playbooks"
+                ]}
+                className="inline-block"
+              />
+              <span className="text-2xl sm:text-3xl lg:text-4xl flex-shrink-0">⚡</span>
+            </div>
           </h1>
           
           <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
