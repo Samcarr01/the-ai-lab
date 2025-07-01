@@ -50,8 +50,8 @@ export default function PlaybookFlipDemo() {
 
   // Calculate transform values 
   const rotateY = isFlipped ? 180 : 0
-  const scale = 0.8 + (animationProgress * 0.2) // Scale from 0.8 to 1.0
-  const opacity = 0.7 + (animationProgress * 0.3) // Opacity from 0.7 to 1.0
+  const scale = 0.9 + (animationProgress * 0.1) // Scale from 0.9 to 1.0 (less dramatic)
+  const opacity = 0.9 + (animationProgress * 0.1) // Opacity from 0.9 to 1.0 (less dramatic)
 
   return (
     <div ref={containerRef} className="h-full perspective-1000">
@@ -59,8 +59,7 @@ export default function PlaybookFlipDemo() {
         className="relative w-full h-full transform-style-preserve-3d transition-all duration-700 ease-out"
         style={{
           transform: `rotateY(${rotateY}deg) scale(${scale})`,
-          opacity: opacity,
-          filter: `drop-shadow(0 ${20 + animationProgress * 20}px ${40 + animationProgress * 20}px rgba(168, 85, 247, ${0.1 + animationProgress * 0.2}))`
+          opacity: opacity
         }}
       >
         {/* Front Side - Blank/Loading */}
@@ -76,10 +75,12 @@ export default function PlaybookFlipDemo() {
         </div>
 
         {/* Back Side - Playbook Content */}
-        <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-purple-200/50 transform hover:scale-105 transition-transform duration-300"
-             style={{
-               background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,248,255,0.95) 100%)'
-             }}>
+        <div 
+          className="absolute inset-0 backface-hidden bg-white/95 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-purple-200/50"
+          style={{
+            transform: 'rotateY(180deg)',
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,248,255,0.95) 100%)'
+          }}>
           <div className="flex items-center space-x-3 mb-6">
             <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center">
               <span className="text-white text-lg">📚</span>
