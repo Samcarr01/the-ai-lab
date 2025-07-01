@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
+import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
@@ -93,7 +94,8 @@ export default function DashboardPage() {
               <span className="text-xl font-semibold text-gradient">The AI Lab</span>
             </Link>
             
-            <div className="flex items-center space-x-4">
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-4">
               <div className="flex items-center space-x-3">
                 <div className={`px-3 py-1 rounded-full text-xs font-medium ${
                   user.is_pro 
@@ -132,6 +134,13 @@ export default function DashboardPage() {
                 </button>
               </div>
             </div>
+
+            {/* Mobile Navigation */}
+            <InternalMobileNavigation 
+              userEmail={user.email}
+              isPro={user.is_pro}
+              showAdminLink={user.email === 'samcarr1232@gmail.com'}
+            />
           </div>
         </div>
       </header>
@@ -176,8 +185,8 @@ export default function DashboardPage() {
         {/* Upgrade Banner for Free Users */}
         {!user.is_pro && (
           <div className="mb-8 gradient-purple rounded-2xl p-6 text-white">
-            <div className="flex items-center justify-between">
-              <div>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <div className="mb-4 sm:mb-0">
                 <h3 className="text-xl font-semibold mb-2">Unlock Everything with Pro! ⚡</h3>
                 <p className="text-purple-100">
                   Get direct access to all 7 GPTs and download PDF playbooks you can upload to ChatGPT, Claude, or any LLM as knowledge.
@@ -185,7 +194,7 @@ export default function DashboardPage() {
               </div>
               <Link
                 href="/upgrade"
-                className="bg-white text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap"
+                className="bg-white text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg sm:whitespace-nowrap w-full sm:w-auto text-center"
               >
                 Upgrade for £15/month 🚀
               </Link>

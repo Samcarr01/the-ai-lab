@@ -7,8 +7,17 @@ import AnimatedCounter from '@/components/AnimatedCounter'
 import TypewriterText from '@/components/TypewriterText'
 import PromptRefinerDemo from '@/components/PromptRefinerDemo'
 import PlaybookFlipDemo from '@/components/PlaybookFlipDemo'
+import MobileNavigation from '@/components/MobileNavigation'
 
 export default function HomePage() {
+  const handleFeatureClick = () => {
+    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handlePricingClick = () => {
+    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative">
       {/* Animated Background */}
@@ -32,7 +41,7 @@ export default function HomePage() {
                 className="text-gray-600 hover:text-purple-600 transition-colors cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault()
-                  document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+                  handleFeatureClick()
                 }}
               >
                 Features
@@ -42,7 +51,7 @@ export default function HomePage() {
                 className="text-gray-600 hover:text-purple-600 transition-colors cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault()
-                  document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+                  handlePricingClick()
                 }}
               >
                 Pricing
@@ -63,6 +72,12 @@ export default function HomePage() {
                 Get Started
               </Link>
             </nav>
+            
+            {/* Mobile Navigation */}
+            <MobileNavigation 
+              onFeatureClick={handleFeatureClick}
+              onPricingClick={handlePricingClick}
+            />
           </div>
         </div>
       </header>
@@ -75,7 +90,7 @@ export default function HomePage() {
             <span className="text-purple-700 text-sm font-medium">🧪 Curated AI Tools & Playbooks</span>
           </div>
           
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight">
             <TypewriterText 
               texts={[
                 "Battle-tested AI workflows",
@@ -84,10 +99,10 @@ export default function HomePage() {
               ]}
               className="block"
             />
-            <span className="text-4xl ml-4">⚡</span>
+            <span className="text-2xl sm:text-3xl lg:text-4xl ml-2 sm:ml-4">⚡</span>
           </h1>
           
-          <p className="text-xl sm:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
             Skip months of trial and error. Access my personal collection 
             of proven GPTs and PDF playbooks you can upload directly to ChatGPT, Claude, or any LLM as knowledge for 
             <span className="text-purple-600 font-medium">£15/month</span> — with free preview access.
@@ -114,7 +129,7 @@ export default function HomePage() {
             </a>
           </div>
           
-          <div className="mt-8 flex items-center justify-center space-x-6 text-sm text-gray-500">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-6 text-sm text-gray-500">
             <div className="flex items-center space-x-2">
               <span>🆓</span>
               <span>Free account required</span>
@@ -233,14 +248,14 @@ export default function HomePage() {
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Left Side - PromptRefiner Demo */}
             <ScrollAnimation animation="slide-left" delay={100}>
-              <div className="h-[400px]">
+              <div className="h-auto min-h-[300px] md:min-h-[350px] lg:h-[400px]">
                 <PromptRefinerDemo />
               </div>
             </ScrollAnimation>
 
             {/* Right Side - Playbook Flip Demo */}
             <ScrollAnimation animation="slide-right" delay={200}>
-              <div className="h-[400px]">
+              <div className="h-auto min-h-[300px] md:min-h-[350px] lg:h-[400px]">
                 <PlaybookFlipDemo />
               </div>
             </ScrollAnimation>

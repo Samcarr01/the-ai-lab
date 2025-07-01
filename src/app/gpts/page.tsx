@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { gptsService, type GPT } from '@/lib/gpts'
+import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 
 
 export default function GPTsPage() {
