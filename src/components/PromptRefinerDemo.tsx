@@ -1,63 +1,77 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export default function PromptRefinerDemo() {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [displayedText, setDisplayedText] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
+  const [userText, setUserText] = useState('')
+  const [botText, setBotText] = useState('')
+  const [showUser, setShowUser] = useState(false)
+  const [showBot, setShowBot] = useState(false)
+  const [isTypingBot, setIsTypingBot] = useState(false)
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const typeTimerRef = useRef<NodeJS.Timeout | null>(null)
 
-  const sequence = [
-    { type: 'user', text: 'Help me research b2b marketing' },
-    { 
-      type: 'bot', 
-      text: `Research B2B marketing methods focusing on:
+  const userPrompt = 'Help me research b2b marketing'
+  const botResponse = `Research B2B marketing methods focusing on:
 • Strategic approaches (ABM, demand gen)
-• Content types (whitepapers, case studies)
+• Content types (white papers, case studies)
 • Key platforms (LinkedIn, industry forums)
 • Success metrics
 
 Structure with clear headings and examples.`
-    }
-  ]
 
-  const typeText = (text: string, callback: () => void) => {
-    setIsTyping(true)
-    setDisplayedText('')
+  const startDemo = () => {
+    // Clear any existing timers
+    if (timerRef.current) clearTimeout(timerRef.current)
+    if (typeTimerRef.current) clearTimeout(typeTimerRef.current)
+    
+    // Reset state
+    setUserText('')
+    setBotText('')
+    setShowUser(false)
+    setShowBot(false)
+    setIsTypingBot(false)
+
+    // Show user message first
+    setShowUser(true)
+    setUserText(userPrompt)
+
+    // Start bot typing after pause
+    timerRef.current = setTimeout(() => {
+      setShowBot(true)
+      typeBot()
+    }, 1500)
+  }
+
+  const typeBot = () => {
+    setIsTypingBot(true)
+    setBotText('')
     let index = 0
     
-    const timer = setInterval(() => {
-      if (index < text.length) {
-        setDisplayedText(prev => prev + text[index])
+    const typeChar = () => {
+      if (index < botResponse.length) {
+        setBotText(botResponse.slice(0, index + 1))
         index++
+        typeTimerRef.current = setTimeout(typeChar, 50)
       } else {
-        clearInterval(timer)
-        setIsTyping(false)
-        setTimeout(callback, 2000) // Pause before next step
+        setIsTypingBot(false)
+        // Pause before restarting
+        timerRef.current = setTimeout(startDemo, 8000)
       }
-    }, 30) // Typing speed
+    }
+    
+    typeChar()
   }
 
   useEffect(() => {
-    const runSequence = () => {
-      if (currentStep < sequence.length) {
-        const currentItem = sequence[currentStep]
-        typeText(currentItem.text, () => {
-          setCurrentStep(prev => prev + 1)
-        })
-      } else {
-        // Reset and loop
-        setTimeout(() => {
-          setCurrentStep(0)
-          setDisplayedText('')
-        }, 3000)
-      }
+    startDemo()
+    
+    // Cleanup on unmount
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      if (typeTimerRef.current) clearTimeout(typeTimerRef.current)
     }
-
-    runSequence()
-  }, [currentStep])
-
-  const currentItem = sequence[currentStep] || sequence[0]
+  }, [])
 
   return (
     <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50 h-full">
@@ -70,40 +84,31 @@ Structure with clear headings and examples.`
       
       <div className="bg-gray-50/80 rounded-xl p-4 space-y-4 min-h-[200px]">
         {/* User Message */}
-        {currentStep >= 0 && (
+        {showUser && (
           <div className="flex space-x-3">
             <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-blue-600 text-sm font-medium">You</span>
             </div>
             <div className="bg-blue-50 rounded-lg px-4 py-2 max-w-sm">
-              <p className="text-sm text-gray-700">
-                {currentStep === 0 ? displayedText : sequence[0].text}
-              </p>
+              <p className="text-sm text-gray-700">{userText}</p>
             </div>
           </div>
         )}
 
         {/* Bot Response */}
-        {currentStep >= 1 && (
+        {showBot && (
           <div className="flex space-x-3">
             <div className="w-8 h-8 gradient-purple rounded-full flex items-center justify-center flex-shrink-0">
               <span className="text-white text-xs">🔧</span>
             </div>
             <div className="bg-purple-50 rounded-lg px-4 py-3 flex-1">
               <p className="text-sm text-gray-700 whitespace-pre-line">
-                {currentStep === 1 ? displayedText : sequence[1].text}
-                {currentStep === 1 && isTyping && (
+                {botText}
+                {isTypingBot && (
                   <span className="inline-block w-2 h-4 bg-purple-400 ml-1 animate-pulse"></span>
                 )}
               </p>
             </div>
-          </div>
-        )}
-
-        {/* Show placeholder when resetting */}
-        {currentStep >= sequence.length && (
-          <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-6 w-6 border-2 border-purple-300 border-t-purple-600"></div>
           </div>
         )}
       </div>
