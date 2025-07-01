@@ -59,9 +59,13 @@ export default function TypewriterText({
   const longestText = texts.reduce((a, b) => a.length > b.length ? a : b, '')
   
   return (
-    <span className={`${className} inline-block relative`} style={{ minWidth: `${longestText.length * 0.6}ch` }}>
-      <span className="invisible absolute">{longestText}</span>
-      <span className="relative">
+    <span className={`${className} inline-block relative overflow-hidden`}>
+      {/* Invisible placeholder to reserve space */}
+      <span className="invisible whitespace-nowrap" aria-hidden="true">
+        {longestText}
+      </span>
+      {/* Actual content positioned absolutely */}
+      <span className="absolute top-0 left-0 whitespace-nowrap">
         {currentText}
         <span className="animate-pulse">|</span>
       </span>
