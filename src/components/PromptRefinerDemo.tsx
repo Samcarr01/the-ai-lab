@@ -76,8 +76,6 @@ Structure with clear headings and examples.`
   }
 
   useEffect(() => {
-    if (isCompleted) return // Don't create observer if already completed
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -104,7 +102,7 @@ Structure with clear headings and examples.`
       if (timerRef.current) clearTimeout(timerRef.current)
       if (typeTimerRef.current) clearTimeout(typeTimerRef.current)
     }
-  }, [hasStarted, isCompleted])
+  }, []) // Remove dependencies to ensure observer is always created
 
   return (
     <div ref={containerRef} className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50 h-full">
