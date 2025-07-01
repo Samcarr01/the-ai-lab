@@ -11,15 +11,15 @@ export default function PlaybookFlipDemo() {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // Start flip animation when 50% visible
-          setTimeout(() => setIsFlipped(true), 300)
+          // Start flip animation immediately when visible
+          setIsFlipped(true)
         } else {
           // Reset when out of view
           setIsFlipped(false)
           setAnimationProgress(0)
         }
       },
-      { threshold: 0.5 } // Trigger when 50% visible
+      { threshold: 0.3 } // Trigger when 30% visible for more responsiveness
     )
 
     if (containerRef.current) {
@@ -38,7 +38,7 @@ export default function PlaybookFlipDemo() {
             clearInterval(timer)
             return 1
           }
-          return prev + 0.05 // Smooth progress increase
+          return prev + 0.08 // Faster progress increase
         })
       }, 16) // ~60fps
       
@@ -56,7 +56,7 @@ export default function PlaybookFlipDemo() {
   return (
     <div ref={containerRef} className="h-full perspective-1000">
       <div 
-        className="relative w-full h-full transform-style-preserve-3d transition-all duration-1000 ease-out"
+        className="relative w-full h-full transform-style-preserve-3d transition-all duration-700 ease-out"
         style={{
           transform: `rotateY(${rotateY}deg) scale(${scale})`,
           opacity: opacity,
