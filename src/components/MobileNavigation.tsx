@@ -30,18 +30,19 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMenu}
-        className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-purple-50 transition-colors"
+        className="md:hidden flex items-center justify-center w-12 h-12 rounded-lg hover:bg-purple-50 transition-colors z-50 relative"
         aria-label="Toggle navigation menu"
+        style={{ touchAction: 'manipulation' }}
       >
-        <div className="flex flex-col w-5 h-5 justify-center">
-          <span className={`block h-0.5 w-full bg-gray-600 transition-all duration-300 ease-out ${
-            isOpen ? 'rotate-45 translate-y-1' : ''
+        <div className="flex flex-col w-6 h-6 justify-center">
+          <span className={`block h-0.5 w-full bg-gray-700 transition-all duration-300 ease-out ${
+            isOpen ? 'rotate-45 translate-y-1.5' : ''
           }`} />
-          <span className={`block h-0.5 w-full bg-gray-600 transition-all duration-300 ease-out mt-1 ${
+          <span className={`block h-0.5 w-full bg-gray-700 transition-all duration-300 ease-out mt-1.5 ${
             isOpen ? 'opacity-0' : ''
           }`} />
-          <span className={`block h-0.5 w-full bg-gray-600 transition-all duration-300 ease-out mt-1 ${
-            isOpen ? '-rotate-45 -translate-y-1' : ''
+          <span className={`block h-0.5 w-full bg-gray-700 transition-all duration-300 ease-out mt-1.5 ${
+            isOpen ? '-rotate-45 -translate-y-1.5' : ''
           }`} />
         </div>
       </button>

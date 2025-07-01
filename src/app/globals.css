@@ -63,6 +63,24 @@
   ::selection {
     @apply bg-purple-200 text-purple-900;
   }
+  
+  /* Mobile-specific improvements */
+  @media (max-width: 768px) {
+    html {
+      font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    /* Improve touch targets */
+    button, a, input, select, textarea {
+      min-height: 44px;
+    }
+    
+    /* Better mobile text rendering */
+    body {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+  }
 }
 
 @layer components {
@@ -134,4 +152,15 @@
     transform: rotateY(180deg);
   }
   
+  /* Mobile optimization utilities */
+  .mobile-optimized {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  
+  .touch-action-manipulation {
+    touch-action: manipulation;
+  }
 }
