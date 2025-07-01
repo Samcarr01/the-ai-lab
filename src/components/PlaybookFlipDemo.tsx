@@ -4,16 +4,19 @@ import { useState, useEffect, useRef } from 'react'
 
 export default function PlaybookFlipDemo() {
   const [showContent, setShowContent] = useState(false)
+  const [hasTriggered, setHasTriggered] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => setShowContent(true), 200) // Shorter delay for more responsive feel
-        } else {
-          setShowContent(false)
+        if (entry.isIntersecting && !hasTriggered) {
+          setTimeout(() => {
+            setShowContent(true)
+            setHasTriggered(true)
+          }, 200) // Shorter delay for more responsive feel
         }
+        // Remove the reset logic - once triggered, stay triggered
       },
       { threshold: 0.2 } // Lower threshold for earlier trigger
     )

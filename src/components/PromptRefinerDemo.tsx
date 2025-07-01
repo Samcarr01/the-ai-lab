@@ -89,7 +89,7 @@ Structure with clear headings and examples.`
       if (timerRef.current) clearTimeout(timerRef.current)
       if (typeTimerRef.current) clearTimeout(typeTimerRef.current)
     }
-  }, [hasStarted])
+  }, [])
 
   return (
     <div ref={containerRef} className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50 h-full">

@@ -87,9 +87,8 @@ export default function TypewriterText({
       const pauseTimer = setTimeout(() => {
         setIsPaused(false)
         if (playOnce) {
-          // For play once mode, stop after first text
-          setHasCompleted(true)
-          return
+          // For play once mode, continue to next text but don't loop back
+          setIsDeleting(true)
         } else {
           setIsDeleting(true)
         }
