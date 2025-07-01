@@ -113,9 +113,9 @@ Structure with clear headings and examples.`
         <h3 className="text-xl font-semibold text-gray-900">PromptRefiner</h3>
       </div>
       
-      <div className="bg-gray-50/50 rounded-xl p-3 space-y-2 h-[300px] overflow-hidden relative">
+      <div className="bg-gray-50/50 rounded-xl p-3 sm:p-4 space-y-2 sm:space-y-3 h-[300px] sm:h-[320px] overflow-hidden relative">
         {/* Hidden space reserving layout - always present but invisible */}
-        <div className="opacity-0 pointer-events-none absolute inset-3 space-y-2">
+        <div className="opacity-0 pointer-events-none absolute inset-3 sm:inset-4 space-y-2 sm:space-y-3">
           <div className="flex justify-end">
             <div className="flex items-end space-x-2 max-w-[85%]">
               <div className="bg-blue-500 text-white rounded-2xl rounded-br-md px-4 py-2 shadow-sm">
@@ -131,15 +131,15 @@ Structure with clear headings and examples.`
               <div className="w-7 h-7 gradient-purple rounded-full flex items-center justify-center flex-shrink-0">
                 <span className="text-white text-xs">🔧</span>
               </div>
-              <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
-                <p className="text-xs text-gray-800 whitespace-pre-line leading-snug">{botResponse}</p>
+              <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-3 sm:px-4 py-2 sm:py-3 shadow-sm">
+                <p className="text-xs sm:text-sm text-gray-800 whitespace-pre-line leading-snug sm:leading-relaxed">{botResponse}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* Actual visible content */}
-        <div className="relative z-10 space-y-2">
+        <div className="relative z-10 space-y-2 sm:space-y-3">
           {/* User Message */}
           {showUser && (
             <div className="flex justify-end">
@@ -161,11 +161,11 @@ Structure with clear headings and examples.`
                 <div className="w-7 h-7 gradient-purple rounded-full flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-xs">🔧</span>
                 </div>
-                <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-3 py-2 shadow-sm">
-                  <p className="text-xs text-gray-800 whitespace-pre-line leading-snug">
+                <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-3 sm:px-4 py-2 sm:py-3 shadow-sm">
+                  <p className="text-xs sm:text-sm text-gray-800 whitespace-pre-line leading-snug sm:leading-relaxed">
                     {botText}
                     {isTypingBot && (
-                      <span className="inline-block w-1 h-3 bg-purple-500 ml-1 animate-pulse rounded-sm"></span>
+                      <span className="inline-block w-1 h-3 sm:h-4 bg-purple-500 ml-1 animate-pulse rounded-sm"></span>
                     )}
                   </p>
                 </div>
