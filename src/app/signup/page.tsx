@@ -76,7 +76,7 @@ export default function SignupPage() {
           Create your free account! 🚀
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Join 500+ AI enthusiasts • No credit card required
+          No credit card required • Free account required to explore
         </p>
       </div>
 
@@ -99,7 +99,7 @@ export default function SignupPage() {
           {success && (
             <div className="mb-4 p-4 rounded-xl bg-green-50 border border-green-200">
               <p className="text-sm text-green-600">
-                🎉 Account created! Check your email to confirm your account and start your free trial.
+                🎉 Account created! Check your email to confirm your account and access your free account.
               </p>
             </div>
           )}
@@ -111,7 +111,7 @@ export default function SignupPage() {
               <div className="space-y-2 text-sm text-green-700">
                 <div className="flex items-center space-x-2">
                   <span>👀</span>
-                  <span>Preview all GPTs & guides</span>
+                  <span>Preview all GPTs & playbooks</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>📝</span>
@@ -129,11 +129,11 @@ export default function SignupPage() {
               <div className="space-y-2 text-sm text-purple-700">
                 <div className="flex items-center space-x-2">
                   <span>🤖</span>
-                  <span>Direct links to 25+ GPTs</span>
+                  <span>Direct links to all GPTs</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>📚</span>
-                  <span>Download 30+ PDF guides</span>
+                  <span>Download all PDF playbooks</span>
                 </div>
                 <div className="flex items-center space-x-2">
                   <span>⚡</span>
