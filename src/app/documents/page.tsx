@@ -8,6 +8,7 @@ import { userService, type UserProfile } from '@/lib/user'
 import { documentsService, type Document } from '@/lib/documents'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import GradientBackground from '@/components/NetworkBackground'
+import DescriptionModal from '@/components/DescriptionModal'
 
 
 export default function DocumentsPage() {
@@ -16,7 +17,7 @@ export default function DocumentsPage() {
   const [categories, setCategories] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [loading, setLoading] = useState(true)
-  const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set())
+  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null)
   const router = useRouter()
 
   const loadData = async () => {
@@ -97,43 +98,25 @@ export default function DocumentsPage() {
     }
   }
 
-  const toggleDescription = (docId: string) => {
-    setExpandedDescriptions(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(docId)) {
-        newSet.delete(docId)
-      } else {
-        newSet.add(docId)
-      }
-      return newSet
-    })
-  }
-
   const renderDescription = (document: Document) => {
-    const isExpanded = expandedDescriptions.has(document.id)
-    const shouldTruncate = document.description.length > 150
-    
-    if (!shouldTruncate) {
-      return <p className="text-gray-600 mb-6 text-sm leading-relaxed">{document.description}</p>
-    }
-    
-    const truncatedText = document.description.slice(0, 150) + '...'
+    const shouldTruncate = document.description.length > 120
+    const truncatedText = shouldTruncate 
+      ? document.description.slice(0, 120) + '...'
+      : document.description
     
     return (
-      <div className="mb-6">
-        <div className={`overflow-hidden transition-all duration-300 ${
-          isExpanded ? 'max-h-32 overflow-y-auto' : 'max-h-none'
-        }`}>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            {isExpanded ? document.description : truncatedText}
-          </p>
-        </div>
-        <button
-          onClick={() => toggleDescription(document.id)}
-          className="text-purple-600 hover:text-purple-700 text-xs font-medium mt-2 transition-colors"
-        >
-          {isExpanded ? 'Show less' : 'Read more'}
-        </button>
+      <div className="mb-4">
+        <p className="text-gray-600 text-sm leading-relaxed mb-3">
+          {truncatedText}
+        </p>
+        {shouldTruncate && (
+          <button
+            onClick={() => setSelectedDocument(document)}
+            className="text-purple-600 hover:text-purple-700 text-xs font-medium transition-colors"
+          >
+            Read more
+          </button>
+        )}
       </div>
     )
   }
@@ -324,7 +307,7 @@ export default function DocumentsPage() {
               {featuredDocuments.map((document) => (
                 <div
                   key={document.id}
-                  className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 group flex flex-col h-[400px]"
+                  className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
@@ -386,7 +369,7 @@ export default function DocumentsPage() {
                     document.is_featured && selectedCategory !== 'All'
                       ? 'border-purple-100'
                       : 'border-gray-200 hover:border-purple-200'
-                  } hover:shadow-xl transition-all duration-300 group flex flex-col h-[400px]`}
+                  } hover:shadow-xl transition-all duration-300 group flex flex-col h-full`}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
@@ -472,6 +455,17 @@ export default function DocumentsPage() {
             </p>
           </div>
         )}
+
+        {/* Description Modal */}
+        <DescriptionModal
+          isOpen={selectedDocument !== null}
+          onClose={() => setSelectedDocument(null)}
+          title={selectedDocument?.title || ''}
+          description={selectedDocument?.description || ''}
+          category={selectedDocument?.category || ''}
+          categoryIcon={getCategoryIcon(selectedDocument?.category || '')}
+          type="playbook"
+        />
       </div>
     </div>
   )

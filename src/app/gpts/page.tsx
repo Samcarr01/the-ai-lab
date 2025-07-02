@@ -8,6 +8,7 @@ import { userService, type UserProfile } from '@/lib/user'
 import { gptsService, type GPT } from '@/lib/gpts'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import GradientBackground from '@/components/NetworkBackground'
+import DescriptionModal from '@/components/DescriptionModal'
 
 
 export default function GPTsPage() {
@@ -16,7 +17,7 @@ export default function GPTsPage() {
   const [categories, setCategories] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [loading, setLoading] = useState(true)
-  const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set())
+  const [selectedGpt, setSelectedGpt] = useState<GPT | null>(null)
   const router = useRouter()
 
   const loadData = async () => {
@@ -93,43 +94,25 @@ export default function GPTsPage() {
     }
   }
 
-  const toggleDescription = (gptId: string) => {
-    setExpandedDescriptions(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(gptId)) {
-        newSet.delete(gptId)
-      } else {
-        newSet.add(gptId)
-      }
-      return newSet
-    })
-  }
-
   const renderDescription = (gpt: GPT) => {
-    const isExpanded = expandedDescriptions.has(gpt.id)
-    const shouldTruncate = gpt.description.length > 150
-    
-    if (!shouldTruncate) {
-      return <p className="text-gray-600 mb-6 text-sm leading-relaxed">{gpt.description}</p>
-    }
-    
-    const truncatedText = gpt.description.slice(0, 150) + '...'
+    const shouldTruncate = gpt.description.length > 120
+    const truncatedText = shouldTruncate 
+      ? gpt.description.slice(0, 120) + '...'
+      : gpt.description
     
     return (
-      <div className="mb-6">
-        <div className={`overflow-hidden transition-all duration-300 ${
-          isExpanded ? 'max-h-32 overflow-y-auto' : 'max-h-none'
-        }`}>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            {isExpanded ? gpt.description : truncatedText}
-          </p>
-        </div>
-        <button
-          onClick={() => toggleDescription(gpt.id)}
-          className="text-purple-600 hover:text-purple-700 text-xs font-medium mt-2 transition-colors"
-        >
-          {isExpanded ? 'Show less' : 'Read more'}
-        </button>
+      <div className="mb-4">
+        <p className="text-gray-600 text-sm leading-relaxed mb-3">
+          {truncatedText}
+        </p>
+        {shouldTruncate && (
+          <button
+            onClick={() => setSelectedGpt(gpt)}
+            className="text-purple-600 hover:text-purple-700 text-xs font-medium transition-colors"
+          >
+            Read more
+          </button>
+        )}
       </div>
     )
   }
@@ -301,7 +284,7 @@ export default function GPTsPage() {
               {featuredGpts.map((gpt) => (
                 <div
                   key={gpt.id}
-                  className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 group flex flex-col h-[400px]"
+                  className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
@@ -365,7 +348,7 @@ export default function GPTsPage() {
                     gpt.is_featured && selectedCategory !== 'All'
                       ? 'border-purple-100'
                       : 'border-gray-200 hover:border-purple-200'
-                  } hover:shadow-xl transition-all duration-300 group flex flex-col h-[400px]`}
+                  } hover:shadow-xl transition-all duration-300 group flex flex-col h-full`}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
@@ -438,6 +421,17 @@ export default function GPTsPage() {
             </p>
           </div>
         )}
+
+        {/* Description Modal */}
+        <DescriptionModal
+          isOpen={selectedGpt !== null}
+          onClose={() => setSelectedGpt(null)}
+          title={selectedGpt?.title || ''}
+          description={selectedGpt?.description || ''}
+          category={selectedGpt?.category || ''}
+          categoryIcon={getCategoryIcon(selectedGpt?.category || '')}
+          type="gpt"
+        />
       </div>
     </div>
   )
