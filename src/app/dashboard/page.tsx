@@ -17,6 +17,53 @@ export default function DashboardPage() {
   const [stats, setStats] = useState({ gpts: 0, documents: 0, blogPosts: 0 })
   const router = useRouter()
 
+  // Helper function to extract a proper name from email
+  const extractNameFromEmail = (email: string): string => {
+    const username = email.split('@')[0]
+    
+    // Remove common number patterns from the end
+    const withoutNumbers = username.replace(/\d+$/, '')
+    
+    // Try to split on common patterns
+    let parts: string[] = []
+    
+    // Check for common separators first
+    if (withoutNumbers.includes('.')) {
+      parts = withoutNumbers.split('.')
+    } else if (withoutNumbers.includes('_')) {
+      parts = withoutNumbers.split('_')
+    } else if (withoutNumbers.includes('-')) {
+      parts = withoutNumbers.split('-')
+    } else {
+      // Try to intelligently split camelCase or common name patterns
+      // For "samcarr" -> try to detect "sam" + "carr"
+      const commonFirstNames = ['sam', 'john', 'jane', 'mike', 'chris', 'alex', 'david', 'sarah', 'emma', 'james']
+      
+      for (const firstName of commonFirstNames) {
+        if (withoutNumbers.toLowerCase().startsWith(firstName)) {
+          const remaining = withoutNumbers.slice(firstName.length)
+          if (remaining.length > 0) {
+            parts = [firstName, remaining]
+            break
+          }
+        }
+      }
+      
+      // If no pattern found, just use the whole username
+      if (parts.length === 0) {
+        parts = [withoutNumbers]
+      }
+    }
+    
+    // Capitalize each part
+    const capitalizedParts = parts.map(part => 
+      part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+    )
+    
+    // Return the formatted name or fall back to username
+    return capitalizedParts.length > 1 ? capitalizedParts.join(' ') : capitalizedParts[0] || username
+  }
+
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -215,7 +262,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <h1 className="text-4xl font-bold text-gray-900">
-                    Welcome back, {user.email.split('@')[0]}!
+                    Welcome back, {extractNameFromEmail(user.email)}!
                   </h1>
                   <div className="flex items-center space-x-2 mt-2">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
