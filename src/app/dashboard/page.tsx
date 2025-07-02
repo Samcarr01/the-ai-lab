@@ -55,8 +55,8 @@ export default function DashboardPage() {
     const loadStats = async () => {
       try {
         const [gptsData, documentsData] = await Promise.all([
-          gptsService.getAll(),
-          documentsService.getAll()
+          gptsService.getAllGPTs(),
+          documentsService.getAllDocuments()
         ])
         
         setStats({
