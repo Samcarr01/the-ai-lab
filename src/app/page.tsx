@@ -35,7 +35,7 @@ export default function HomePage() {
               </span>
             </Link>
             
-            <nav className="hidden md:flex items-center space-x-8">
+            <nav className="hidden md:flex items-center space-x-6">
               <a 
                 href="#features" 
                 className="relative text-gray-600 hover:text-purple-600 transition-all duration-300 cursor-pointer font-medium group"
