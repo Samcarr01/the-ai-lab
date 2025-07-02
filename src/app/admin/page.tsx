@@ -8,6 +8,7 @@ import { userService, type UserProfile } from '@/lib/user'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import { gptsService } from '@/lib/gpts'
 import { documentsService } from '@/lib/documents'
+import { blogService, type BlogPost } from '@/lib/blog'
 import { aiService } from '@/lib/ai'
 
 interface AnalyzedContent {
@@ -19,6 +20,7 @@ interface AnalyzedContent {
 export default function AdminPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<'content' | 'blog'>('content')
   const [uploadType, setUploadType] = useState<'gpt' | 'document'>('gpt')
   const [gptUrl, setGptUrl] = useState('')
   const [documentFile, setDocumentFile] = useState<File | null>(null)
@@ -26,6 +28,9 @@ export default function AdminPage() {
   const [analyzedContent, setAnalyzedContent] = useState<AnalyzedContent | null>(null)
   const [uploading, setUploading] = useState(false)
   const [recentUploads, setRecentUploads] = useState<any[]>([])
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
+  const [editingPost, setEditingPost] = useState<BlogPost | null>(null)
+  const [isCreatingPost, setIsCreatingPost] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -51,8 +56,8 @@ export default function AdminPage() {
           }
         }
 
-        // Load recent uploads
-        await loadRecentUploads()
+        // Load recent uploads and blog posts
+        await Promise.all([loadRecentUploads(), loadBlogPosts()])
       } catch (err) {
         console.error('Error loading data:', err)
         router.push('/login')
@@ -80,6 +85,92 @@ export default function AdminPage() {
       setRecentUploads(allUploads.slice(0, 10)) // Show last 10
     } catch (err) {
       console.error('Error loading recent uploads:', err)
+    }
+  }
+
+  const loadBlogPosts = async () => {
+    try {
+      const posts = await blogService.getAllPosts()
+      setBlogPosts(posts)
+    } catch (err) {
+      console.error('Error loading blog posts:', err)
+    }
+  }
+
+  const createSlug = (title: string): string => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9 -]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+  }
+
+  const calculateReadTime = (content: string): number => {
+    const wordsPerMinute = 200
+    const wordCount = content.split(/\s+/).length
+    return Math.ceil(wordCount / wordsPerMinute)
+  }
+
+  const handleCreateBlogPost = async (postData: {
+    title: string
+    content: string
+    meta_description: string
+    category: string
+  }) => {
+    try {
+      const slug = createSlug(postData.title)
+      const read_time = calculateReadTime(postData.content)
+      
+      const newPost = await blogService.createPost({
+        title: postData.title,
+        content: postData.content,
+        slug,
+        published_at: new Date().toISOString(),
+        meta_description: postData.meta_description,
+        category: postData.category,
+        read_time
+      })
+
+      if (newPost) {
+        setBlogPosts(prev => [newPost, ...prev])
+        setIsCreatingPost(false)
+        alert('Blog post created successfully!')
+      }
+    } catch (err) {
+      console.error('Error creating blog post:', err)
+      alert('Failed to create blog post. Please try again.')
+    }
+  }
+
+  const handleUpdateBlogPost = async (postId: string, updates: Partial<BlogPost>) => {
+    try {
+      const updatedPost = await blogService.updatePost(postId, updates)
+      if (updatedPost) {
+        setBlogPosts(prev => prev.map(post => post.id === postId ? updatedPost : post))
+        setEditingPost(null)
+        alert('Blog post updated successfully!')
+      }
+    } catch (err) {
+      console.error('Error updating blog post:', err)
+      alert('Failed to update blog post. Please try again.')
+    }
+  }
+
+  const handleDeleteBlogPost = async (postId: string, title: string) => {
+    if (!confirm(`Are you sure you want to delete "${title}"? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const success = await blogService.deletePost(postId)
+      if (success) {
+        setBlogPosts(prev => prev.filter(post => post.id !== postId))
+        alert('Blog post deleted successfully!')
+      }
+    } catch (err) {
+      console.error('Error deleting blog post:', err)
+      alert('Failed to delete blog post. Please try again.')
     }
   }
 
@@ -264,13 +355,43 @@ export default function AdminPage() {
             Content Management Studio
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Upload GPT links or PDF documents and let AI automatically analyze, categorize, and add them to your collection!
+            Manage your GPTs, playbooks, and blog posts all in one place with AI-powered analysis!
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Upload Section */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+        {/* Tab Navigation */}
+        <div className="mb-8">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-purple-100/50 max-w-md mx-auto">
+            <div className="flex gap-2">
+              <button
+                onClick={() => setActiveTab('content')}
+                className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
+                  activeTab === 'content'
+                    ? 'gradient-purple text-white shadow-lg'
+                    : 'text-gray-600 hover:text-purple-600'
+                }`}
+              >
+                📚 Content Manager
+              </button>
+              <button
+                onClick={() => setActiveTab('blog')}
+                className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
+                  activeTab === 'blog'
+                    ? 'gradient-purple text-white shadow-lg'
+                    : 'text-gray-600 hover:text-purple-600'
+                }`}
+              >
+                ✍️ Blog Manager
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Management Tab */}
+        {activeTab === 'content' && (
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Upload Section */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
               <span className="text-2xl mr-3">📤</span>
               Upload Content
@@ -549,7 +670,239 @@ export default function AdminPage() {
               )}
             </div>
           </div>
+        )}
+
+        {/* Blog Management Tab */}
+        {activeTab === 'blog' && (
+          <div className="space-y-6">
+            {/* Blog Actions Header */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-semibold text-gray-900 flex items-center">
+                  <span className="text-2xl mr-3">✍️</span>
+                  Blog Posts Management
+                </h2>
+                <button
+                  onClick={() => setIsCreatingPost(true)}
+                  className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
+                >
+                  ➕ Create New Post
+                </button>
+              </div>
+
+              {/* Blog Posts List */}
+              {blogPosts.length > 0 ? (
+                <div className="space-y-4">
+                  {blogPosts.map((post) => (
+                    <div key={post.id} className="p-6 border border-gray-200 rounded-xl hover:border-purple-300 transition-colors">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
+                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+                              {post.category}
+                            </span>
+                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                              {post.read_time} min read
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-3">{post.meta_description}</p>
+                          <div className="text-xs text-gray-500">
+                            Published: {new Date(post.published_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className="ml-4 flex items-center space-x-2">
+                          <button
+                            onClick={() => setEditingPost(post)}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors"
+                            title="Edit post"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteBlogPost(post.id, post.title)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors"
+                            title="Delete post"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">✍️</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    No blog posts yet
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Create your first blog post to start sharing AI insights and tutorials!
+                  </p>
+                  <button
+                    onClick={() => setIsCreatingPost(true)}
+                    className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
+                  >
+                    Create Your First Post ✨
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Blog Post Creation/Edit Modal */}
+        {(isCreatingPost || editingPost) && (
+          <BlogPostModal
+            isOpen={isCreatingPost || editingPost !== null}
+            onClose={() => {
+              setIsCreatingPost(false)
+              setEditingPost(null)
+            }}
+            onSave={editingPost ? 
+              (data) => handleUpdateBlogPost(editingPost.id, data) : 
+              handleCreateBlogPost
+            }
+            initialData={editingPost}
+            title={editingPost ? 'Edit Blog Post' : 'Create New Blog Post'}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Blog Post Modal Component
+interface BlogPostModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSave: (data: any) => void
+  initialData?: BlogPost | null
+  title: string
+}
+
+function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPostModalProps) {
+  const [formData, setFormData] = useState({
+    title: initialData?.title || '',
+    content: initialData?.content || '',
+    meta_description: initialData?.meta_description || '',
+    category: initialData?.category || 'AI Strategy'
+  })
+
+  const categories = [
+    'AI Strategy',
+    'Tutorials', 
+    'Productivity',
+    'Tools',
+    'Development',
+    'Business'
+  ]
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!formData.title.trim() || !formData.content.trim() || !formData.meta_description.trim()) {
+      alert('Please fill in all required fields')
+      return
+    }
+    onSave(formData)
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Title *
+            </label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Enter blog post title..."
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Meta Description *
+            </label>
+            <textarea
+              value={formData.meta_description}
+              onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+              rows={2}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Brief description for SEO and social sharing..."
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Category
+            </label>
+            <select
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Content * (Markdown supported)
+            </label>
+            <textarea
+              value={formData.content}
+              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              rows={20}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
+              placeholder="Write your blog post content here... You can use Markdown formatting."
+              required
+            />
+          </div>
+
+          <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-3 text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
+            >
+              {initialData ? 'Update Post' : 'Create Post'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   )
