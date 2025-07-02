@@ -109,7 +109,6 @@ export default function HomePage() {
                 "Ready-to-use playbooks"
               ]}
               className="inline-block"
-              playOnce={true}
             />
           </h1>
           
