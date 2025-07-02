@@ -23,14 +23,7 @@ export const auth = {
       password,
     })
     
-    // Store remember me preference in localStorage for UI state
-    if (typeof window !== 'undefined') {
-      if (rememberMe) {
-        localStorage.setItem('rememberMe', 'true')
-      } else {
-        localStorage.removeItem('rememberMe')
-      }
-    }
+    // rememberMe parameter is handled by the component for UI state persistence
     
     return { data, error }
   },

@@ -21,6 +21,18 @@ export default function LoginPage() {
     }
   }, [])
 
+  // Handle remember me checkbox change
+  const handleRememberMeChange = (checked: boolean) => {
+    setRememberMe(checked)
+    if (typeof window !== 'undefined') {
+      if (checked) {
+        localStorage.setItem('rememberMe', 'true')
+      } else {
+        localStorage.removeItem('rememberMe')
+      }
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -123,7 +135,7 @@ export default function LoginPage() {
                   name="remember-me"
                   type="checkbox"
                   checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
+                  onChange={(e) => handleRememberMeChange(e.target.checked)}
                   className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
