@@ -257,19 +257,22 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            AI-Powered Admin Panel 🤖
+          <div className="inline-flex items-center justify-center w-20 h-20 gradient-purple rounded-2xl mb-6 shadow-2xl animate-float">
+            <span className="text-3xl">🤖</span>
+          </div>
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+            Content Management Studio
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Upload GPT links or PDF documents and let AI automatically analyze, categorize, and add them to your collection!
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Upload Section */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <span className="text-3xl mr-3">📤</span>
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span className="text-2xl mr-3">📤</span>
               Upload Content
             </h2>
 
@@ -414,71 +417,137 @@ export default function AdminPage() {
             )}
           </div>
 
-          {/* Recent Uploads */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <span className="text-3xl mr-3">📊</span>
-              Recent Uploads
-            </h2>
+          {/* Content Management */}
+          <div className="space-y-6">
+            {/* GPTs Section */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+                <span className="text-2xl mr-3">🤖</span>
+                GPTs Collection
+              </h2>
 
-            {recentUploads.length > 0 ? (
-              <div className="space-y-4">
-                {recentUploads.map((item, index) => (
-                  <div key={`${item.type}-${item.id}`} className="p-3 sm:p-4 border border-gray-200 rounded-xl hover:border-purple-300 transition-colors">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <span className="text-lg flex-shrink-0">
-                            {item.type === 'gpt' ? '🤖' : '📄'}
-                          </span>
-                          <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
-                        </div>
-                        <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
-                            {item.category}
-                          </span>
-                          {item.is_featured && (
-                            <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full whitespace-nowrap">
-                              ⭐ Featured
+              {recentUploads.filter(item => item.type === 'gpt').length > 0 ? (
+                <div className="max-h-96 overflow-y-auto space-y-4 pr-2">
+                  {recentUploads.filter(item => item.type === 'gpt').map((item, index) => (
+                    <div key={`gpt-${item.id}`} className="p-4 border border-gray-200 rounded-xl hover:border-purple-300 transition-colors">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <span className="text-lg flex-shrink-0">🤖</span>
+                            <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
+                          </div>
+                          <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
+                              {item.category}
                             </span>
-                          )}
+                            {item.is_featured && (
+                              <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full whitespace-nowrap">
+                                ⭐ Featured
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                      <div className="ml-2 sm:ml-4 flex items-center space-x-1 sm:space-x-2">
-                        <button
-                          onClick={() => handleToggleFeature(item)}
-                          className={`p-2 sm:p-2 rounded-lg transition-colors touch-manipulation min-w-[40px] min-h-[40px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center ${
-                            item.is_featured
-                              ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
-                              : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
-                          }`}
-                          title={item.is_featured ? 'Remove from featured' : 'Add to featured'}
-                        >
-                          <svg className="w-4 h-4 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item)}
-                          className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 sm:p-2 rounded-lg transition-colors touch-manipulation min-w-[40px] min-h-[40px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center"
-                          title="Delete this content"
-                        >
-                          <svg className="w-4 h-4 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
+                        <div className="ml-4 flex items-center space-x-2">
+                          <button
+                            onClick={() => handleToggleFeature(item)}
+                            className={`p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
+                              item.is_featured
+                                ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
+                                : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
+                            }`}
+                            title={item.is_featured ? 'Remove from featured' : 'Add to featured'}
+                          >
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(item)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+                            title="Delete this GPT"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <div className="text-4xl mb-2">📈</div>
-                <p className="text-gray-600">No uploads yet. Start by analyzing your first piece of content!</p>
-              </div>
-            )}
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-4xl mb-2">🤖</div>
+                  <p className="text-gray-600">No GPTs uploaded yet. Start by analyzing your first GPT!</p>
+                </div>
+              )}
+            </div>
+
+            {/* Playbooks Section */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+                <span className="text-2xl mr-3">📚</span>
+                Playbooks Collection
+              </h2>
+
+              {recentUploads.filter(item => item.type === 'document').length > 0 ? (
+                <div className="max-h-96 overflow-y-auto space-y-4 pr-2">
+                  {recentUploads.filter(item => item.type === 'document').map((item, index) => (
+                    <div key={`doc-${item.id}`} className="p-4 border border-gray-200 rounded-xl hover:border-purple-300 transition-colors">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <span className="text-lg flex-shrink-0">📄</span>
+                            <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
+                          </div>
+                          <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
+                              {item.category}
+                            </span>
+                            {item.is_featured && (
+                              <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full whitespace-nowrap">
+                                ⭐ Featured
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="ml-4 flex items-center space-x-2">
+                          <button
+                            onClick={() => handleToggleFeature(item)}
+                            className={`p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
+                              item.is_featured
+                                ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
+                                : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
+                            }`}
+                            title={item.is_featured ? 'Remove from featured' : 'Add to featured'}
+                          >
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(item)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+                            title="Delete this playbook"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <div className="text-4xl mb-2">📚</div>
+                  <p className="text-gray-600">No playbooks uploaded yet. Start by analyzing your first PDF!</p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
