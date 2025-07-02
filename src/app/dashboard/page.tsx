@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
+import GradientBackground from '@/components/NetworkBackground'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
@@ -82,7 +83,10 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative">
+      {/* Animated Background */}
+      <GradientBackground />
+      
       {/* Header */}
       <header className="glass border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -178,16 +182,41 @@ export default function DashboardPage() {
         )}
 
         {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
-            Welcome back! 👋
-          </h1>
-          <p className="text-xl text-gray-600">
-            {user.is_pro 
-              ? "You have full access to my personal collection of GPTs and playbooks. Upload the PDFs directly to ChatGPT, Claude, or any LLM as knowledge."
-              : "Start exploring my AI collection. Upgrade anytime for full access!"
-            }
-          </p>
+        <div className="mb-12">
+          <div className="bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-3xl p-8 border border-purple-100/50 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-100/20 to-transparent opacity-50"></div>
+            <div className="relative z-10">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-16 h-16 gradient-purple rounded-2xl flex items-center justify-center shadow-lg animate-float">
+                  <span className="text-2xl">👋</span>
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold text-gray-900">
+                    Welcome back, {user.email.split('@')[0]}!
+                  </h1>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      user.email === 'samcarr1232@gmail.com'
+                        ? 'bg-red-100 text-red-700'
+                        : user.is_pro 
+                          ? 'bg-purple-100 text-purple-700' 
+                          : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      {user.email === 'samcarr1232@gmail.com' ? '🔧 Admin' : user.is_pro ? '✨ Pro Member' : '🆓 Free Member'}
+                    </span>
+                    <span className="text-sm text-gray-500">•</span>
+                    <span className="text-sm text-gray-500">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  </div>
+                </div>
+              </div>
+              <p className="text-xl text-gray-600 leading-relaxed">
+                {user.is_pro || user.email === 'samcarr1232@gmail.com'
+                  ? "You have full access to my personal collection of GPTs and playbooks. Upload the PDFs directly to ChatGPT, Claude, or any LLM as knowledge."
+                  : "Start exploring my AI collection. Upgrade anytime for full access to download PDFs and unlock all GPTs!"
+                }
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Upgrade Banner for Free Users */}
@@ -211,39 +240,51 @@ export default function DashboardPage() {
         )}
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">GPTs Available</p>
-                <p className="text-3xl font-bold text-purple-600">7</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">🤖</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Playbooks</p>
-                <p className="text-3xl font-bold text-purple-600">Growing</p>
-              </div>
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">📚</span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-1">GPTs Available</p>
+                  <p className="text-4xl font-bold text-purple-600">7</p>
+                  <p className="text-xs text-gray-500 mt-1">Ready to explore</p>
+                </div>
+                <div className="w-16 h-16 gradient-purple rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-3xl">🤖</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Blog Posts</p>
-                <p className="text-3xl font-bold text-purple-600">Soon</p>
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-1">Playbooks</p>
+                  <p className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Growing</p>
+                  <p className="text-xs text-gray-500 mt-1">Collection expanding</p>
+                </div>
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-3xl">📚</span>
+                </div>
               </div>
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">📝</span>
+            </div>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600 mb-1">Blog Posts</p>
+                  <p className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">Soon</p>
+                  <p className="text-xs text-gray-500 mt-1">Coming up next</p>
+                </div>
+                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-3xl">📝</span>
+                </div>
               </div>
             </div>
           </div>
@@ -252,7 +293,7 @@ export default function DashboardPage() {
         {/* Content Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* GPTs Section */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-purple-100">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden group">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center">
@@ -326,7 +367,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Playbooks Section */}
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-purple-100">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden group">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center">
