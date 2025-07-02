@@ -116,9 +116,13 @@ export default function GPTsPage() {
     
     return (
       <div className="mb-6">
-        <p className="text-gray-600 text-sm leading-relaxed">
-          {isExpanded ? gpt.description : truncatedText}
-        </p>
+        <div className={`overflow-hidden transition-all duration-300 ${
+          isExpanded ? 'max-h-32 overflow-y-auto' : 'max-h-none'
+        }`}>
+          <p className="text-gray-600 text-sm leading-relaxed">
+            {isExpanded ? gpt.description : truncatedText}
+          </p>
+        </div>
         <button
           onClick={() => toggleDescription(gpt.id)}
           className="text-purple-600 hover:text-purple-700 text-xs font-medium mt-2 transition-colors"
