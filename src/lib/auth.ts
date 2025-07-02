@@ -15,13 +15,22 @@ export const auth = {
     return { data, error }
   },
 
-  async signIn(email: string, password: string) {
+  async signIn(email: string, password: string, rememberMe: boolean = false) {
     const supabase = createClient()
     
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
+    
+    // Store remember me preference in localStorage for UI state
+    if (typeof window !== 'undefined') {
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', 'true')
+      } else {
+        localStorage.removeItem('rememberMe')
+      }
+    }
     
     return { data, error }
   },

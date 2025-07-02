@@ -1,16 +1,25 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const router = useRouter()
+
+  // Load remember me preference on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const remembered = localStorage.getItem('rememberMe') === 'true'
+      setRememberMe(remembered)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,7 +27,7 @@ export default function LoginPage() {
     setError('')
     
     try {
-      const { data, error } = await auth.signIn(email, password)
+      const { data, error } = await auth.signIn(email, password, rememberMe)
       
       if (error) {
         setError(error.message)
@@ -113,6 +122,8 @@ export default function LoginPage() {
                   id="remember-me"
                   name="remember-me"
                   type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
                   className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
