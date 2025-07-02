@@ -134,16 +134,25 @@ export default function DocumentsPage() {
     try {
       const downloadUrl = await documentsService.downloadDocument(doc.id)
       if (downloadUrl) {
-        // Create a temporary anchor element for smooth download
-        const link = document.createElement('a')
-        link.href = downloadUrl
-        link.download = `${doc.title}.pdf` // Suggest filename
-        link.target = '_blank' // Fallback for browsers that don't support download attribute
+        // Fetch the file as a blob and create download
+        const response = await fetch(downloadUrl)
+        const blob = await response.blob()
         
-        // Append to body, click, and remove
+        // Create object URL from blob
+        const objectUrl = URL.createObjectURL(blob)
+        
+        // Create download link
+        const link = document.createElement('a')
+        link.href = objectUrl
+        link.download = `${doc.title}.pdf`
+        
+        // Trigger download
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
+        
+        // Clean up object URL
+        URL.revokeObjectURL(objectUrl)
       }
     } catch (err) {
       console.error('Download failed:', err)
