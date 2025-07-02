@@ -1,4 +1,4 @@
-import { supabase } from './supabase/client'
+import { createClient } from './supabase/client'
 
 export interface BlogPost {
   id: string
@@ -15,6 +15,7 @@ export interface BlogPost {
 
 export const blogService = {
   async getAllPosts(): Promise<BlogPost[]> {
+    const supabase = createClient()
     const { data, error } = await supabase
       .from('blog_posts')
       .select('*')
@@ -29,6 +30,7 @@ export const blogService = {
   },
 
   async getPostBySlug(slug: string): Promise<BlogPost | null> {
+    const supabase = createClient()
     const { data, error } = await supabase
       .from('blog_posts')
       .select('*')
@@ -44,6 +46,7 @@ export const blogService = {
   },
 
   async getCategories(): Promise<string[]> {
+    const supabase = createClient()
     const { data, error } = await supabase
       .from('blog_posts')
       .select('category')
@@ -55,10 +58,11 @@ export const blogService = {
     }
 
     const categories = data?.map(item => item.category) || []
-    return [...new Set(categories)]
+    return Array.from(new Set(categories))
   },
 
   async createPost(post: Omit<BlogPost, 'id' | 'created_at' | 'updated_at'>): Promise<BlogPost | null> {
+    const supabase = createClient()
     const { data, error } = await supabase
       .from('blog_posts')
       .insert([post])
@@ -74,6 +78,7 @@ export const blogService = {
   },
 
   async updatePost(id: string, updates: Partial<BlogPost>): Promise<BlogPost | null> {
+    const supabase = createClient()
     const { data, error } = await supabase
       .from('blog_posts')
       .update(updates)
@@ -90,6 +95,7 @@ export const blogService = {
   },
 
   async deletePost(id: string): Promise<boolean> {
+    const supabase = createClient()
     const { error } = await supabase
       .from('blog_posts')
       .delete()
