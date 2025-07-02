@@ -116,16 +116,21 @@ export default function DashboardPage() {
               {/* User Profile Section */}
               <div className="flex items-center space-x-3 pl-6 border-l border-gray-200">
                 <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
-                  user.is_pro 
-                    ? 'bg-purple-100 text-purple-700' 
-                    : 'bg-gray-100 text-gray-600'
+                  user.email === 'samcarr1232@gmail.com'
+                    ? 'bg-red-100 text-red-700'
+                    : user.is_pro 
+                      ? 'bg-purple-100 text-purple-700' 
+                      : 'bg-gray-100 text-gray-600'
                 }`}>
-                  <span>{user.is_pro ? '✨' : '🆓'}</span>
-                  <span>{user.is_pro ? 'Pro' : 'Free'}</span>
-                  {user.email === 'samcarr1232@gmail.com' && (
+                  {user.email === 'samcarr1232@gmail.com' ? (
                     <>
-                      <span className="mx-1">•</span>
-                      <span className="text-red-600">Admin</span>
+                      <span>🔧</span>
+                      <span>Admin</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>{user.is_pro ? '✨' : '🆓'}</span>
+                      <span>{user.is_pro ? 'Pro' : 'Free'}</span>
                     </>
                   )}
                 </div>
