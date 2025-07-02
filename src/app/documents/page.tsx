@@ -18,6 +18,7 @@ export default function DocumentsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null)
+  const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set())
   const router = useRouter()
 
   const loadData = async () => {
@@ -121,20 +122,40 @@ export default function DocumentsPage() {
     )
   }
 
-  const handleDownload = async (document: Document) => {
+  const handleDownload = async (doc: Document) => {
     if (!user?.is_pro) {
       router.push('/upgrade')
       return
     }
 
+    // Add to downloading state
+    setDownloadingIds(prev => new Set(prev).add(doc.id))
+
     try {
-      const downloadUrl = await documentsService.downloadDocument(document.id)
+      const downloadUrl = await documentsService.downloadDocument(doc.id)
       if (downloadUrl) {
-        // Open in new tab for download
-        window.open(downloadUrl, '_blank')
+        // Create a temporary anchor element for smooth download
+        const link = document.createElement('a')
+        link.href = downloadUrl
+        link.download = `${doc.title}.pdf` // Suggest filename
+        link.target = '_blank' // Fallback for browsers that don't support download attribute
+        
+        // Append to body, click, and remove
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
       }
     } catch (err) {
       console.error('Download failed:', err)
+    } finally {
+      // Remove from downloading state after a short delay
+      setTimeout(() => {
+        setDownloadingIds(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(doc.id)
+          return newSet
+        })
+      }, 1000)
     }
   }
 
@@ -338,9 +359,21 @@ export default function DocumentsPage() {
                     {user.is_pro ? (
                       <button
                         onClick={() => handleDownload(document)}
-                        className="w-full gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
+                        disabled={downloadingIds.has(document.id)}
+                        className={`w-full py-3 px-4 rounded-xl font-semibold shadow-lg transition-all duration-200 ${
+                          downloadingIds.has(document.id)
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'gradient-purple text-white button-hover'
+                        }`}
                       >
-                        Download PDF 📥
+                        {downloadingIds.has(document.id) ? (
+                          <>
+                            <span className="inline-block animate-spin mr-2">⏳</span>
+                            Downloading...
+                          </>
+                        ) : (
+                          'Download PDF 📥'
+                        )}
                       </button>
                     ) : (
                       <div className="w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-300">
@@ -410,9 +443,21 @@ export default function DocumentsPage() {
                     {user.is_pro ? (
                       <button
                         onClick={() => handleDownload(document)}
-                        className="w-full gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
+                        disabled={downloadingIds.has(document.id)}
+                        className={`w-full py-3 px-4 rounded-xl font-semibold shadow-lg transition-all duration-200 ${
+                          downloadingIds.has(document.id)
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'gradient-purple text-white button-hover'
+                        }`}
                       >
-                        Download PDF 📥
+                        {downloadingIds.has(document.id) ? (
+                          <>
+                            <span className="inline-block animate-spin mr-2">⏳</span>
+                            Downloading...
+                          </>
+                        ) : (
+                          'Download PDF 📥'
+                        )}
                       </button>
                     ) : (
                       <div className="w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-300">
