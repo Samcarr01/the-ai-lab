@@ -303,7 +303,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
               <h3 className="text-2xl font-bold mb-2">Pro Access</h3>
-              <div className="text-4xl font-bold mb-4">£15<span className="text-xl">/month</span></div>
+              <div className="text-4xl font-bold mb-4">£<AnimatedCounter end={15} duration={2500} className="inline" /><span className="text-xl">/month</span></div>
               <ul className="text-left space-y-3 flex-grow">
                 <li className="flex items-center space-x-3">
                   <span className="text-purple-200">✓</span>
