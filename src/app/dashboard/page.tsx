@@ -95,23 +95,8 @@ export default function DashboardPage() {
             </Link>
             
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  user.is_pro 
-                    ? 'bg-purple-100 text-purple-700' 
-                    : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {user.is_pro ? '✨ Pro Member' : '🆓 Free Member'}
-                </div>
-                {user.email === 'samcarr1232@gmail.com' && (
-                  <div className="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
-                    🔧 Admin
-                  </div>
-                )}
-                <span className="text-sm text-gray-600">{user.email}</span>
-              </div>
-              <div className="flex items-center space-x-4">
+            <div className="hidden md:flex items-center space-x-6">
+              <nav className="flex items-center space-x-6">
                 <Link
                   href="/blog"
                   className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
@@ -126,6 +111,24 @@ export default function DashboardPage() {
                     Admin Panel
                   </Link>
                 )}
+              </nav>
+              
+              {/* User Profile Section */}
+              <div className="flex items-center space-x-3 pl-6 border-l border-gray-200">
+                <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
+                  user.is_pro 
+                    ? 'bg-purple-100 text-purple-700' 
+                    : 'bg-gray-100 text-gray-600'
+                }`}>
+                  <span>{user.is_pro ? '✨' : '🆓'}</span>
+                  <span>{user.is_pro ? 'Pro' : 'Free'}</span>
+                  {user.email === 'samcarr1232@gmail.com' && (
+                    <>
+                      <span className="mx-1">•</span>
+                      <span className="text-red-600">Admin</span>
+                    </>
+                  )}
+                </div>
                 <button
                   onClick={handleSignOut}
                   className="text-sm text-gray-500 hover:text-purple-600 transition-colors"
