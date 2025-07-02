@@ -260,7 +260,7 @@ export default function GPTsPage() {
               {featuredGpts.map((gpt) => (
                 <div
                   key={gpt.id}
-                  className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
+                  className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 group flex flex-col h-[400px]"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
@@ -324,7 +324,7 @@ export default function GPTsPage() {
                     gpt.is_featured && selectedCategory !== 'All'
                       ? 'border-purple-100'
                       : 'border-gray-200 hover:border-purple-200'
-                  } hover:shadow-xl transition-all duration-300 group flex flex-col h-full`}
+                  } hover:shadow-xl transition-all duration-300 group flex flex-col h-[400px]`}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
