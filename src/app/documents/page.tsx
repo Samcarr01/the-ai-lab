@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { documentsService, type Document } from '@/lib/documents'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
+import GradientBackground from '@/components/NetworkBackground'
 
 
 export default function DocumentsPage() {
@@ -167,7 +168,10 @@ export default function DocumentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative">
+      {/* Animated Background */}
+      <GradientBackground />
+      
       {/* Header */}
       <header className="glass border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -181,30 +185,65 @@ export default function DocumentsPage() {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
-              <Link href="/dashboard" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
-                Dashboard
-              </Link>
-              <Link href="/gpts" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
-                GPTs
-              </Link>
-              <Link href="/blog" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
-                Blog
-              </Link>
-              <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                user.is_pro 
-                  ? 'bg-purple-100 text-purple-700' 
-                  : 'bg-gray-100 text-gray-600'
-              }`}>
-                {user.is_pro ? '✨ Pro' : '🆓 Free'}
-              </div>
-              {!user.is_pro && (
-                <Link 
-                  href="/upgrade"
-                  className="text-sm gradient-purple text-white px-4 py-2 rounded-full font-medium button-hover"
+              <nav className="flex items-center space-x-6">
+                <Link
+                  href="/dashboard"
+                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
                 >
-                  Upgrade
+                  Dashboard
                 </Link>
-              )}
+                <Link
+                  href="/gpts"
+                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                >
+                  GPTs
+                </Link>
+                <Link
+                  href="/blog"
+                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                >
+                  Blog
+                </Link>
+                {user.email === 'samcarr1232@gmail.com' && (
+                  <Link
+                    href="/admin"
+                    className="text-sm text-purple-600 hover:text-purple-700 transition-colors font-medium"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+              </nav>
+              
+              {/* User Profile Section */}
+              <div className="flex items-center space-x-3 pl-6 border-l border-gray-200">
+                <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
+                  user.email === 'samcarr1232@gmail.com'
+                    ? 'bg-red-100 text-red-700'
+                    : user.is_pro 
+                      ? 'bg-purple-100 text-purple-700' 
+                      : 'bg-gray-100 text-gray-600'
+                }`}>
+                  {user.email === 'samcarr1232@gmail.com' ? (
+                    <>
+                      <span>🔧</span>
+                      <span>Admin</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>{user.is_pro ? '✨' : '🆓'}</span>
+                      <span>{user.is_pro ? 'Pro' : 'Free'}</span>
+                    </>
+                  )}
+                </div>
+                {!user.is_pro && user.email !== 'samcarr1232@gmail.com' && (
+                  <Link
+                    href="/upgrade"
+                    className="text-sm gradient-purple text-white px-4 py-2 rounded-full font-medium button-hover"
+                  >
+                    Upgrade
+                  </Link>
+                )}
+              </div>
             </div>
 
             {/* Mobile Navigation */}
@@ -223,23 +262,12 @@ export default function DocumentsPage() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             AI Playbooks Collection 📚
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             {user.is_pro 
               ? "Download any playbook below and start implementing proven AI workflows today!"
               : "Explore our playbook collection. Upgrade to Pro to download all PDF playbooks!"
             }
           </p>
-          {user.email === 'samcarr1232@gmail.com' && (
-            <button
-              onClick={() => {
-                setLoading(true)
-                loadData()
-              }}
-              className="text-sm text-purple-600 hover:text-purple-800 underline"
-            >
-              🔄 Refresh Content (Admin)
-            </button>
-          )}
         </div>
 
         {/* Upgrade Banner for Free Users */}
@@ -264,21 +292,23 @@ export default function DocumentsPage() {
 
         {/* Category Filter */}
         {categories.length > 1 && (
-          <div className="mb-8">
-            <div className="flex flex-wrap justify-center gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                    selectedCategory === category
-                      ? 'gradient-purple text-white shadow-lg'
-                      : 'bg-white text-gray-600 border border-gray-200 hover:border-purple-300 hover:text-purple-600'
-                  }`}
-                >
-                  {category === 'All' ? '📋' : getCategoryIcon(category)} {category}
-                </button>
-              ))}
+          <div className="mb-12">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50">
+              <div className="flex flex-wrap justify-center gap-3">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                      selectedCategory === category
+                        ? 'gradient-purple text-white shadow-lg transform scale-105'
+                        : 'bg-gray-50 text-gray-600 border border-gray-200 hover:border-purple-300 hover:text-purple-600 hover:scale-105'
+                    }`}
+                  >
+                    {category === 'All' ? '📋' : getCategoryIcon(category)} {category}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         )}
