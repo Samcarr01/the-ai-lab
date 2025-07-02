@@ -148,22 +148,29 @@ export default function ContactPage() {
                         <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
                           Subject *
                         </label>
-                        <select
-                          id="subject"
-                          name="subject"
-                          required
-                          value={formData.subject}
-                          onChange={handleChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors"
-                        >
-                          <option value="">Select a topic</option>
-                          <option value="subscription">Subscription & Billing</option>
-                          <option value="technical">Technical Support</option>
-                          <option value="content">Content Suggestions</option>
-                          <option value="partnership">Partnership Inquiry</option>
-                          <option value="feedback">Feedback & Reviews</option>
-                          <option value="other">Other</option>
-                        </select>
+                        <div className="relative">
+                          <select
+                            id="subject"
+                            name="subject"
+                            required
+                            value={formData.subject}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors appearance-none bg-white cursor-pointer"
+                          >
+                            <option value="">Select a topic</option>
+                            <option value="subscription">Subscription & Billing</option>
+                            <option value="technical">Technical Support</option>
+                            <option value="content">Content Suggestions</option>
+                            <option value="partnership">Partnership Inquiry</option>
+                            <option value="feedback">Feedback & Reviews</option>
+                            <option value="other">Other</option>
+                          </select>
+                          <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
+                            <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/>
+                            </svg>
+                          </div>
+                        </div>
                       </div>
                       
                       <div>
@@ -261,36 +268,6 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                {/* Quick Links */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="relative z-10">
-                    <div className="flex items-center space-x-4 mb-6">
-                      <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                        <span className="text-2xl">🔗</span>
-                      </div>
-                      <h3 className="text-xl font-semibold text-gray-900">Quick Links</h3>
-                    </div>
-                    <div className="space-y-3">
-                      <Link href="/gpts" className="flex items-center space-x-3 text-purple-600 hover:text-purple-700 transition-colors">
-                        <span>🤖</span>
-                        <span>Browse GPTs</span>
-                      </Link>
-                      <Link href="/documents" className="flex items-center space-x-3 text-purple-600 hover:text-purple-700 transition-colors">
-                        <span>📚</span>
-                        <span>View Playbooks</span>
-                      </Link>
-                      <Link href="/upgrade" className="flex items-center space-x-3 text-purple-600 hover:text-purple-700 transition-colors">
-                        <span>✨</span>
-                        <span>Upgrade to Pro</span>
-                      </Link>
-                      <Link href="/terms" className="flex items-center space-x-3 text-purple-600 hover:text-purple-700 transition-colors">
-                        <span>📄</span>
-                        <span>Terms & Privacy</span>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
 
               </div>
             </ScrollAnimation>
