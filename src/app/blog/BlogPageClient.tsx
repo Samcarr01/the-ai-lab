@@ -178,11 +178,11 @@ export default function BlogPageClient() {
         {/* Header Section */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            AI Insights & Tutorials 📝
+            AI Tools & Strategies 🧠
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Discover the latest AI strategies, tutorials, and insights to supercharge your productivity. 
-            Free access to all articles for everyone.
+            Discover powerful AI tools, proven strategies, and actionable insights to boost your productivity. 
+            Everything you need to leverage AI effectively in your work.
           </p>
         </div>
 
@@ -276,11 +276,11 @@ export default function BlogPageClient() {
               <span className="text-4xl">📚</span>
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Coming Soon!
+              Content Coming Soon!
             </h2>
             <p className="text-xl text-gray-600 mb-8 max-w-lg mx-auto">
-              I'm currently crafting valuable AI content and tutorials. 
-              The first articles will be published soon.
+              I'm preparing helpful articles about AI tools, productivity strategies, 
+              and actionable guides to help you work smarter with AI.
             </p>
             
             {/* Newsletter Signup */}
@@ -290,7 +290,7 @@ export default function BlogPageClient() {
                   Get Notified 🔔
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Be the first to read new AI insights and tutorials
+                  Be the first to read new articles about AI tools and strategies
                 </p>
                 <div className="flex gap-3">
                   <input
