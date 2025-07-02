@@ -7,11 +7,14 @@ import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import GradientBackground from '@/components/NetworkBackground'
+import { gptsService } from '@/lib/gpts'
+import { documentsService } from '@/lib/documents'
 
 export default function DashboardPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(false)
+  const [stats, setStats] = useState({ gpts: 0, documents: 0, blogPosts: 0 })
   const router = useRouter()
 
   useEffect(() => {
@@ -34,6 +37,9 @@ export default function DashboardPage() {
         
         if (userProfile) {
           setUser(userProfile)
+          
+          // Load live stats
+          await loadStats()
         } else {
           console.error('Failed to load or create user profile')
           router.push('/login')
@@ -43,6 +49,23 @@ export default function DashboardPage() {
         router.push('/login')
       } finally {
         setLoading(false)
+      }
+    }
+
+    const loadStats = async () => {
+      try {
+        const [gptsData, documentsData] = await Promise.all([
+          gptsService.getAll(),
+          documentsService.getAll()
+        ])
+        
+        setStats({
+          gpts: gptsData.length,
+          documents: documentsData.length,
+          blogPosts: 0 // Will be updated when blog is implemented
+        })
+      } catch (error) {
+        console.error('Error loading stats:', error)
       }
     }
 
@@ -241,50 +264,41 @@ export default function DashboardPage() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">GPTs Available</p>
-                  <p className="text-4xl font-bold text-purple-600">7</p>
-                  <p className="text-xs text-gray-500 mt-1">Ready to explore</p>
-                </div>
-                <div className="w-16 h-16 gradient-purple rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-3xl">🤖</span>
-                </div>
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">GPTs Available</p>
+                <p className="text-4xl font-bold text-purple-600">{stats.gpts}</p>
+                <p className="text-xs text-gray-500 mt-1">Ready to explore</p>
+              </div>
+              <div className="w-16 h-16 gradient-purple rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-3xl">🤖</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">Playbooks</p>
-                  <p className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Growing</p>
-                  <p className="text-xs text-gray-500 mt-1">Collection expanding</p>
-                </div>
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-3xl">📚</span>
-                </div>
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">Playbooks</p>
+                <p className="text-4xl font-bold text-purple-600">{stats.documents}</p>
+                <p className="text-xs text-gray-500 mt-1">PDF guides available</p>
+              </div>
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-3xl">📚</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600 mb-1">Blog Posts</p>
-                  <p className="text-4xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">Soon</p>
-                  <p className="text-xs text-gray-500 mt-1">Coming up next</p>
-                </div>
-                <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-3xl">📝</span>
-                </div>
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600 mb-1">Blog Posts</p>
+                <p className="text-4xl font-bold text-purple-600">{stats.blogPosts}</p>
+                <p className="text-xs text-gray-500 mt-1">Coming soon</p>
+              </div>
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-3xl">📝</span>
               </div>
             </div>
           </div>
@@ -293,7 +307,7 @@ export default function DashboardPage() {
         {/* Content Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* GPTs Section */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden group">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100/50">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center">
@@ -367,7 +381,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Playbooks Section */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden group">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100/50">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center">
