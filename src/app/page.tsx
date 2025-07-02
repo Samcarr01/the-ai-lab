@@ -26,50 +26,61 @@ export default function HomePage() {
       <header className="fixed top-0 w-full z-50 glass">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple">
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                 <span className="text-white text-xl">🧪</span>
               </div>
-              <span className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-purple-600 transition-all duration-300">
                 The AI Lab
               </span>
-            </div>
+            </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
               <a 
                 href="#features" 
-                className="text-gray-600 hover:text-purple-600 transition-colors cursor-pointer"
+                className="relative text-gray-600 hover:text-purple-600 transition-all duration-300 cursor-pointer font-medium group"
                 onClick={(e) => {
                   e.preventDefault()
                   handleFeatureClick()
                 }}
               >
                 Features
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-300 group-hover:w-full"></span>
               </a>
               <a 
                 href="#pricing" 
-                className="text-gray-600 hover:text-purple-600 transition-colors cursor-pointer"
+                className="relative text-gray-600 hover:text-purple-600 transition-all duration-300 cursor-pointer font-medium group"
                 onClick={(e) => {
                   e.preventDefault()
                   handlePricingClick()
                 }}
               >
                 Pricing
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-300 group-hover:w-full"></span>
               </a>
-              <Link href="/blog" className="text-gray-600 hover:text-purple-600 transition-colors">
+              <Link 
+                href="/blog" 
+                className="relative text-gray-600 hover:text-purple-600 transition-all duration-300 font-medium group"
+              >
                 Blog
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-300 group-hover:w-full"></span>
               </Link>
               <Link 
                 href="/login" 
-                className="text-purple-600 font-medium hover:text-purple-700 transition-colors"
+                className="relative text-purple-600 font-medium hover:text-purple-700 transition-all duration-300 px-4 py-2 rounded-lg hover:bg-purple-50 group"
               >
                 Sign In
+                <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-100 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
               </Link>
               <Link 
                 href="/signup" 
-                className="gradient-purple text-white px-5 py-2 rounded-full font-medium button-hover shadow-md"
+                className="gradient-purple text-white px-6 py-2.5 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1 relative overflow-hidden group"
               >
-                Get Started
+                <span className="relative z-10 flex items-center space-x-2">
+                  <span>Get Started</span>
+                  <span className="text-lg transform group-hover:translate-x-1 transition-transform duration-300">✨</span>
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
             </nav>
             
