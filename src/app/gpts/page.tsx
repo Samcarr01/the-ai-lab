@@ -301,9 +301,7 @@ export default function GPTsPage() {
                       </div>
                     </div>
                     <div className="flex flex-col items-end space-y-2">
-                      <span className="text-xs font-medium bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
-                        ⭐ Featured
-                      </span>
+                      <span className="text-xl">⭐</span>
                     </div>
                   </div>
                   
@@ -374,9 +372,7 @@ export default function GPTsPage() {
                     </div>
                     <div className="flex flex-col items-end space-y-2">
                       {gpt.is_featured && selectedCategory !== 'All' && (
-                        <span className="text-xs font-medium bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full">
-                          ⭐ Featured
-                        </span>
+                        <span className="text-xl">⭐</span>
                       )}
                     </div>
                   </div>
