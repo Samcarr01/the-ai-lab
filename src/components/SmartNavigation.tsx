@@ -2,8 +2,10 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { type UserProfile } from '@/lib/user'
 import { useAdmin } from '@/contexts/AdminContext'
+import { auth } from '@/lib/auth'
 import InternalMobileNavigation from './InternalMobileNavigation'
 
 interface SmartNavigationProps {
@@ -13,9 +15,15 @@ interface SmartNavigationProps {
 
 export default function SmartNavigation({ user, currentPage }: SmartNavigationProps) {
   const { adminViewMode, toggleAdminView, getEffectiveUser } = useAdmin()
+  const router = useRouter()
   
   // Get effective user for display (applies global admin toggle)
   const effectiveUser = getEffectiveUser(user)
+  
+  const handleSignOut = async () => {
+    await auth.signOut()
+    router.push('/')
+  }
 
   return (
     <header className="glass border-b">
@@ -129,6 +137,13 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                       Upgrade
                     </Link>
                   )}
+                  
+                  <button
+                    onClick={handleSignOut}
+                    className="text-sm text-gray-500 hover:text-purple-600 transition-colors"
+                  >
+                    Sign Out
+                  </button>
                 </div>
               </>
             ) : (

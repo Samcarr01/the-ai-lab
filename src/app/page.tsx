@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
+import { auth } from '@/lib/auth'
 import GradientBackground from '@/components/NetworkBackground'
 import ScrollAnimation from '@/components/ScrollAnimation'
 import AnimatedCounter from '@/components/AnimatedCounter'
@@ -10,6 +12,25 @@ import PlaybookFlipDemo from '@/components/PlaybookFlipDemo'
 import MobileNavigation from '@/components/MobileNavigation'
 
 export default function HomePage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [loading, setLoading] = useState(true)
+  
+  // Check authentication status
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { user } = await auth.getUser()
+        setIsLoggedIn(!!user)
+      } catch (error) {
+        setIsLoggedIn(false)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    checkAuth()
+  }, [])
+  
   const handleFeatureClick = () => {
     document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -65,23 +86,43 @@ export default function HomePage() {
                 Blog
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-300 group-hover:w-full"></span>
               </Link>
-              <Link 
-                href="/login" 
-                className="relative text-purple-600 font-medium hover:text-purple-700 transition-all duration-300 px-4 py-2 rounded-lg hover:bg-purple-50 group"
-              >
-                Sign In
-                <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-100 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
-              </Link>
-              <Link 
-                href="/signup" 
-                className="gradient-purple text-white px-6 py-2.5 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1 relative overflow-hidden group"
-              >
-                <span className="relative z-10 flex items-center space-x-2">
-                  <span>Get Started</span>
-                  <span className="text-lg transform group-hover:translate-x-1 transition-transform duration-300">✨</span>
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </Link>
+              {loading ? (
+                <div className="animate-pulse flex space-x-3">
+                  <div className="h-10 w-20 bg-gray-200 rounded-lg"></div>
+                  <div className="h-10 w-24 bg-gray-200 rounded-full"></div>
+                </div>
+              ) : isLoggedIn ? (
+                <Link 
+                  href="/dashboard" 
+                  className="gradient-purple text-white px-6 py-2.5 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1 relative overflow-hidden group"
+                >
+                  <span className="relative z-10 flex items-center space-x-2">
+                    <span>Dashboard</span>
+                    <span className="text-lg transform group-hover:translate-x-1 transition-transform duration-300">⚡</span>
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </Link>
+              ) : (
+                <>
+                  <Link 
+                    href="/login" 
+                    className="relative text-purple-600 font-medium hover:text-purple-700 transition-all duration-300 px-4 py-2 rounded-lg hover:bg-purple-50 group"
+                  >
+                    Sign In
+                    <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-100 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
+                  </Link>
+                  <Link 
+                    href="/signup" 
+                    className="gradient-purple text-white px-6 py-2.5 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1 relative overflow-hidden group"
+                  >
+                    <span className="relative z-10 flex items-center space-x-2">
+                      <span>Get Started</span>
+                      <span className="text-lg transform group-hover:translate-x-1 transition-transform duration-300">✨</span>
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  </Link>
+                </>
+              )}
             </nav>
             
             {/* Mobile Navigation */}

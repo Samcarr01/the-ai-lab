@@ -141,10 +141,6 @@ export default function DashboardPage() {
     }
   }, [])
 
-  const handleSignOut = async () => {
-    await auth.signOut()
-    router.push('/')
-  }
 
   if (loading) {
     return (
@@ -164,76 +160,7 @@ export default function DashboardPage() {
       <GradientBackground />
       
       {/* Header */}
-      <header className="glass border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white text-xl">🧪</span>
-              </div>
-              <span className="text-xl font-semibold text-gradient">The AI Lab</span>
-            </Link>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6">
-              <nav className="flex items-center space-x-6">
-                <Link
-                  href="/blog"
-                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
-                >
-                  Blog
-                </Link>
-                {user.email === 'samcarr1232@gmail.com' && (
-                  <Link
-                    href="/admin"
-                    className="text-sm text-purple-600 hover:text-purple-700 transition-colors font-medium"
-                  >
-                    Admin Panel
-                  </Link>
-                )}
-              </nav>
-              
-              {/* User Profile Section */}
-              <div className="flex items-center space-x-3 pl-6 border-l border-gray-200">
-                <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
-                  user.email === 'samcarr1232@gmail.com'
-                    ? 'bg-red-100 text-red-700'
-                    : user.is_pro 
-                      ? 'bg-purple-100 text-purple-700' 
-                      : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {user.email === 'samcarr1232@gmail.com' ? (
-                    <>
-                      <span>🔧</span>
-                      <span>Admin</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{user.is_pro ? '✨' : '🆓'}</span>
-                      <span>{user.is_pro ? 'Pro' : 'Free'}</span>
-                    </>
-                  )}
-                </div>
-                <button
-                  onClick={handleSignOut}
-                  className="text-sm text-gray-500 hover:text-purple-600 transition-colors"
-                >
-                  Sign Out
-                </button>
-              </div>
-            </div>
-
-            {/* Mobile Navigation */}
-            <div className="md:hidden">
-              <InternalMobileNavigation 
-                userEmail={user.email}
-                isPro={user.is_pro}
-                showAdminLink={user.email === 'samcarr1232@gmail.com'}
-              />
-            </div>
-          </div>
-        </div>
-      </header>
+      <SmartNavigation user={user} currentPage="dashboard" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Upgrade Success Message */}

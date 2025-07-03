@@ -13,13 +13,29 @@ export default function LoginPage() {
   const [error, setError] = useState('')
   const router = useRouter()
 
-  // Load remember me preference on component mount
+  // Check for existing session and load remember me preference
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const remembered = localStorage.getItem('rememberMe') === 'true'
-      setRememberMe(remembered)
+    const checkSession = async () => {
+      try {
+        const { user } = await auth.getUser()
+        if (user) {
+          // User is already logged in, redirect to dashboard
+          router.push('/dashboard')
+          return
+        }
+      } catch (error) {
+        // User is not logged in, continue to login page
+      }
+      
+      // Load remember me preference
+      if (typeof window !== 'undefined') {
+        const remembered = localStorage.getItem('rememberMe') === 'true'
+        setRememberMe(remembered)
+      }
     }
-  }, [])
+    
+    checkSession()
+  }, [router])
 
   // Handle remember me checkbox change
   const handleRememberMeChange = (checked: boolean) => {
