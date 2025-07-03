@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { documentsService, type Document } from '@/lib/documents'
-import InternalMobileNavigation from '@/components/InternalMobileNavigation'
+import SmartNavigation from '@/components/SmartNavigation'
 import GradientBackground from '@/components/NetworkBackground'
 import DescriptionModal from '@/components/DescriptionModal'
 
@@ -23,7 +23,7 @@ export default function DocumentsPage() {
 
   const loadData = async () => {
     try {
-      // Check authentication
+      // Check authentication first - Playbooks require account
       const { user: authUser, error } = await auth.getUser()
       
       if (error || !authUser) {
@@ -32,12 +32,21 @@ export default function DocumentsPage() {
       }
 
       // Get user profile
-      const userProfile = await userService.getProfile(authUser.id)
+      let userProfile = await userService.getProfile(authUser.id)
+      
+      // If no profile exists, create one (for existing auth users)
+      if (!userProfile) {
+        userProfile = await userService.createProfile(authUser.id, authUser.email || '')
+      }
+      
       if (userProfile) {
         setUser(userProfile)
+      } else {
+        router.push('/login')
+        return
       }
 
-      // Load documents and categories (always fresh data with cache busting)
+      // Load documents and categories
       console.log('🔄 Fetching fresh documents data...')
       const [allDocuments, allCategories] = await Promise.all([
         documentsService.getAllDocuments(),
@@ -185,89 +194,8 @@ export default function DocumentsPage() {
       {/* Animated Background */}
       <GradientBackground />
       
-      {/* Header */}
-      <header className="glass border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/dashboard" className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white text-xl">🧪</span>
-              </div>
-              <span className="text-xl font-semibold text-gradient">The AI Lab</span>
-            </Link>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6">
-              <nav className="flex items-center space-x-6">
-                <Link
-                  href="/dashboard"
-                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/gpts"
-                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
-                >
-                  GPTs
-                </Link>
-                <Link
-                  href="/blog"
-                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
-                >
-                  Blog
-                </Link>
-                {user.email === 'samcarr1232@gmail.com' && (
-                  <Link
-                    href="/admin"
-                    className="text-sm text-purple-600 hover:text-purple-700 transition-colors font-medium"
-                  >
-                    Admin Panel
-                  </Link>
-                )}
-              </nav>
-              
-              {/* User Profile Section */}
-              <div className="flex items-center space-x-3 pl-6 border-l border-gray-200">
-                <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
-                  user.email === 'samcarr1232@gmail.com'
-                    ? 'bg-red-100 text-red-700'
-                    : user.is_pro 
-                      ? 'bg-purple-100 text-purple-700' 
-                      : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {user.email === 'samcarr1232@gmail.com' ? (
-                    <>
-                      <span>🔧</span>
-                      <span>Admin</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{user.is_pro ? '✨' : '🆓'}</span>
-                      <span>{user.is_pro ? 'Pro' : 'Free'}</span>
-                    </>
-                  )}
-                </div>
-                {!user.is_pro && user.email !== 'samcarr1232@gmail.com' && (
-                  <Link
-                    href="/upgrade"
-                    className="text-sm gradient-purple text-white px-4 py-2 rounded-full font-medium button-hover"
-                  >
-                    Upgrade
-                  </Link>
-                )}
-              </div>
-            </div>
-
-            {/* Mobile Navigation */}
-            <InternalMobileNavigation 
-              userEmail={user.email}
-              isPro={user.is_pro}
-              showAdminLink={user.email === 'samcarr1232@gmail.com'}
-            />
-          </div>
-        </div>
-      </header>
+      {/* Smart Navigation */}
+      <SmartNavigation user={user} currentPage="documents" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}

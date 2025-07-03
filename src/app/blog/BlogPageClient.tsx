@@ -16,6 +16,7 @@ export default function BlogPageClient() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [categories, setCategories] = useState<string[]>([])
+  const [adminViewMode, setAdminViewMode] = useState<'admin' | 'free'>('admin') // Admin testing toggle
   const router = useRouter()
 
   useEffect(() => {
@@ -45,6 +46,13 @@ export default function BlogPageClient() {
             
             if (userProfile) {
               setUser(userProfile)
+              // Load admin view mode preference
+              if (userProfile.email === 'samcarr1232@gmail.com') {
+                const savedMode = localStorage.getItem('adminViewMode') as 'admin' | 'free'
+                if (savedMode) {
+                  setAdminViewMode(savedMode)
+                }
+              }
             }
           }
           // If not logged in, that's fine - blog is public
@@ -62,6 +70,18 @@ export default function BlogPageClient() {
 
     loadData()
   }, [router])
+
+  // Admin toggle function
+  const toggleAdminView = () => {
+    const newMode = adminViewMode === 'admin' ? 'free' : 'admin'
+    setAdminViewMode(newMode)
+    localStorage.setItem('adminViewMode', newMode)
+  }
+
+  // Get effective user for display (simulate free user when in free mode)
+  const effectiveUser = user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'free' 
+    ? { ...user, is_pro: false, email: 'test@user.com' } // Simulate free user
+    : user
 
   // Filter blog posts based on search and category
   const filteredPosts = blogPosts.filter(post => {
@@ -104,7 +124,7 @@ export default function BlogPageClient() {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
-              {user ? (
+              {effectiveUser ? (
                 // Logged in navigation
                 <>
                   <nav className="flex items-center space-x-6">
@@ -132,7 +152,7 @@ export default function BlogPageClient() {
                     >
                       Blog
                     </Link>
-                    {user.email === 'samcarr1232@gmail.com' && (
+                    {user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin' && (
                       <Link
                         href="/admin"
                         className="text-sm text-purple-600 hover:text-purple-700 transition-colors font-medium"
@@ -145,25 +165,40 @@ export default function BlogPageClient() {
                   {/* User Profile Section */}
                   <div className="flex items-center space-x-3 pl-6 border-l border-gray-200">
                     <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
-                      user.email === 'samcarr1232@gmail.com'
+                      user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin'
                         ? 'bg-red-100 text-red-700'
-                        : user.is_pro 
+                        : effectiveUser && effectiveUser.is_pro 
                           ? 'bg-purple-100 text-purple-700' 
                           : 'bg-gray-100 text-gray-600'
                     }`}>
-                      {user.email === 'samcarr1232@gmail.com' ? (
+                      {user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin' ? (
                         <>
                           <span>🔧</span>
                           <span>Admin</span>
                         </>
                       ) : (
                         <>
-                          <span>{user.is_pro ? '✨' : '🆓'}</span>
-                          <span>{user.is_pro ? 'Pro' : 'Free'}</span>
+                          <span>{effectiveUser && effectiveUser.is_pro ? '✨' : '🆓'}</span>
+                          <span>{effectiveUser && effectiveUser.is_pro ? 'Pro' : 'Free'}</span>
                         </>
                       )}
                     </div>
-                    {!user.is_pro && user.email !== 'samcarr1232@gmail.com' && (
+                    {/* Admin Toggle Button (only for admin) */}
+                    {user && user.email === 'samcarr1232@gmail.com' && (
+                      <button
+                        onClick={toggleAdminView}
+                        className={`text-xs px-3 py-1.5 rounded-full font-medium transition-all ${
+                          adminViewMode === 'admin' 
+                            ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
+                            : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                        }`}
+                        title={`Currently viewing as: ${adminViewMode === 'admin' ? 'Admin' : 'Free User'}`}
+                      >
+                        {adminViewMode === 'admin' ? '👤 View as Free' : '🔧 View as Admin'}
+                      </button>
+                    )}
+                    
+                    {effectiveUser && !effectiveUser.is_pro && effectiveUser.email !== 'samcarr1232@gmail.com' && (
                       <Link
                         href="/upgrade"
                         className="text-sm gradient-purple text-white px-4 py-2 rounded-full font-medium button-hover"
@@ -211,11 +246,11 @@ export default function BlogPageClient() {
             </div>
 
             {/* Mobile Navigation */}
-            {user ? (
+            {effectiveUser ? (
               <InternalMobileNavigation 
-                userEmail={user.email}
-                isPro={user.is_pro}
-                showAdminLink={user.email === 'samcarr1232@gmail.com'}
+                userEmail={effectiveUser.email}
+                isPro={effectiveUser.is_pro}
+                showAdminLink={user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin'}
               />
             ) : (
               // Public mobile navigation
@@ -247,7 +282,7 @@ export default function BlogPageClient() {
             AI Tools & Strategies 🧠
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            {user ? (
+            {effectiveUser ? (
               "Discover powerful AI tools, proven strategies, and actionable insights to boost your productivity. Explore our latest findings and tutorials."
             ) : (
               "Free insights into AI tools, proven strategies, and actionable tutorials. Learn how to leverage AI effectively in your work. Sign up to access our full collection of GPTs and Playbooks."
