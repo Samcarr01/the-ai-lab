@@ -17,7 +17,7 @@ export default function BlogPageClient() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [categories, setCategories] = useState<string[]>([])
-  const { adminViewMode, getEffectiveUser } = useAdmin()
+  const { adminViewMode, toggleAdminView, getEffectiveUser } = useAdmin()
   const router = useRouter()
 
   useEffect(() => {
