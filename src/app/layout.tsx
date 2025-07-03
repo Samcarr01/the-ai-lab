@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { AdminProvider } from '@/contexts/AdminContext'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -25,7 +26,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className={`${inter.className} font-sans`}>{children}</body>
+      <body className={`${inter.className} font-sans`}>
+        <AdminProvider>
+          {children}
+        </AdminProvider>
+      </body>
     </html>
   )
 }

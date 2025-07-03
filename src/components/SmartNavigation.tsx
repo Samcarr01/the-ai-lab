@@ -11,29 +11,10 @@ interface SmartNavigationProps {
 }
 
 export default function SmartNavigation({ user, currentPage }: SmartNavigationProps) {
-  const [adminViewMode, setAdminViewMode] = useState<'admin' | 'free'>('admin')
-
-  useEffect(() => {
-    // Load admin view mode preference
-    if (user && user.email === 'samcarr1232@gmail.com') {
-      const savedMode = localStorage.getItem('adminViewMode') as 'admin' | 'free'
-      if (savedMode) {
-        setAdminViewMode(savedMode)
-      }
-    }
-  }, [user])
-
-  // Admin toggle function
-  const toggleAdminView = () => {
-    const newMode = adminViewMode === 'admin' ? 'free' : 'admin'
-    setAdminViewMode(newMode)
-    localStorage.setItem('adminViewMode', newMode)
-  }
-
-  // Get effective user for display (simulate free user when in free mode)
-  const effectiveUser = user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'free' 
-    ? { ...user, is_pro: false, email: 'test@user.com' } // Simulate free user
-    : user
+  const { adminViewMode, toggleAdminView, getEffectiveUser } = useAdmin()
+  
+  // Get effective user for display (applies global admin toggle)
+  const effectiveUser = getEffectiveUser(user)
 
   return (
     <header className="glass border-b">

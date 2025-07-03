@@ -5,7 +5,8 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
-import InternalMobileNavigation from '@/components/InternalMobileNavigation'
+import { useAdmin } from '@/contexts/AdminContext'
+import SmartNavigation from '@/components/SmartNavigation'
 import GradientBackground from '@/components/NetworkBackground'
 import { gptsService } from '@/lib/gpts'
 import { documentsService } from '@/lib/documents'
@@ -15,7 +16,11 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(false)
   const [stats, setStats] = useState({ gpts: 0, documents: 0, blogPosts: 0 })
+  const { getEffectiveUser } = useAdmin()
   const router = useRouter()
+  
+  // Get effective user for display (applies global admin toggle)
+  const effectiveUser = getEffectiveUser(user)
 
   // Helper function to extract a proper name from email
   const extractNameFromEmail = (email: string): string => {

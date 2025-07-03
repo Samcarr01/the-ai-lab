@@ -6,7 +6,8 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { blogService, type BlogPost } from '@/lib/blog'
-import InternalMobileNavigation from '@/components/InternalMobileNavigation'
+import { useAdmin } from '@/contexts/AdminContext'
+import SmartNavigation from '@/components/SmartNavigation'
 import GradientBackground from '@/components/NetworkBackground'
 
 export default function BlogPageClient() {
@@ -16,7 +17,7 @@ export default function BlogPageClient() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [categories, setCategories] = useState<string[]>([])
-  const [adminViewMode, setAdminViewMode] = useState<'admin' | 'free'>('admin') // Admin testing toggle
+  const { getEffectiveUser } = useAdmin()
   const router = useRouter()
 
   useEffect(() => {
@@ -46,13 +47,6 @@ export default function BlogPageClient() {
             
             if (userProfile) {
               setUser(userProfile)
-              // Load admin view mode preference
-              if (userProfile.email === 'samcarr1232@gmail.com') {
-                const savedMode = localStorage.getItem('adminViewMode') as 'admin' | 'free'
-                if (savedMode) {
-                  setAdminViewMode(savedMode)
-                }
-              }
             }
           }
           // If not logged in, that's fine - blog is public
@@ -71,17 +65,8 @@ export default function BlogPageClient() {
     loadData()
   }, [router])
 
-  // Admin toggle function
-  const toggleAdminView = () => {
-    const newMode = adminViewMode === 'admin' ? 'free' : 'admin'
-    setAdminViewMode(newMode)
-    localStorage.setItem('adminViewMode', newMode)
-  }
-
-  // Get effective user for display (simulate free user when in free mode)
-  const effectiveUser = user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'free' 
-    ? { ...user, is_pro: false, email: 'test@user.com' } // Simulate free user
-    : user
+  // Get effective user for display (applies global admin toggle)
+  const effectiveUser = getEffectiveUser(user)
 
   // Filter blog posts based on search and category
   const filteredPosts = blogPosts.filter(post => {
