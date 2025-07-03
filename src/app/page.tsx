@@ -44,7 +44,7 @@ export default function HomePage() {
       {/* Animated Background */}
       <GradientBackground />
       {/* Navigation Header with Glassmorphism */}
-      <header className="fixed top-0 w-full z-50 glass md:backdrop-blur-xl bg-white md:bg-white/70 border-b border-gray-100 md:border-white/20">
+      <header className="fixed top-0 w-full z-50 glass">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">

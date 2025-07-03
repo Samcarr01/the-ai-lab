@@ -84,11 +84,17 @@
 }
 
 @layer components {
-  /* Glass morphism effect */
+  /* Glass morphism effect - desktop only */
   .glass {
-    @apply backdrop-blur-xl bg-white/70 border border-white/20;
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    @apply bg-white border-b border-gray-100;
+  }
+  
+  @media (min-width: 768px) {
+    .glass {
+      @apply backdrop-blur-xl bg-white/70 border-white/20;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+    }
   }
   
   /* Purple gradient backgrounds */

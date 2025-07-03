@@ -406,10 +406,10 @@ export default function AdminPage() {
           <div className="inline-flex items-center justify-center w-20 h-20 gradient-purple rounded-2xl mb-6 shadow-2xl animate-float">
             <span className="text-3xl">🤖</span>
           </div>
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
             Content Management Studio
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
             Upload GPT links, PDF documents, and manage blog content with AI assistance!
           </p>
         </div>
@@ -417,10 +417,10 @@ export default function AdminPage() {
         {/* Tab Navigation */}
         <div className="mb-8">
           <div className="flex justify-center">
-            <div className="flex bg-gray-100 rounded-xl p-1">
+            <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 w-full sm:w-auto max-w-md mx-auto">
               <button
                 onClick={() => setActiveTab('content')}
-                className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                className={`px-4 sm:px-6 py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   activeTab === 'content'
                     ? 'gradient-purple text-white shadow-lg'
                     : 'text-gray-600 hover:text-purple-600'
@@ -430,7 +430,7 @@ export default function AdminPage() {
               </button>
               <button
                 onClick={() => setActiveTab('blog')}
-                className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                className={`px-4 sm:px-6 py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                   activeTab === 'blog'
                     ? 'gradient-purple text-white shadow-lg'
                     : 'text-gray-600 hover:text-purple-600'
@@ -444,12 +444,12 @@ export default function AdminPage() {
 
         {/* Content Upload Tab */}
         {activeTab === 'content' && (
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Upload Section */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
-              <span className="text-2xl mr-3">📤</span>
-              Upload Content
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-purple-100/50">
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
+              <span className="text-xl sm:text-2xl mr-2 sm:mr-3">📤</span>
+              <span>Upload Content</span>
             </h2>
 
             {/* Upload Type Toggle */}
@@ -596,10 +596,10 @@ export default function AdminPage() {
           {/* Content Management */}
           <div className="space-y-6">
             {/* GPTs Section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
-                <span className="text-2xl mr-3">🤖</span>
-                GPTs Collection
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
+                <span className="text-xl sm:text-2xl mr-2 sm:mr-3">🤖</span>
+                <span>GPTs Collection</span>
               </h2>
 
               {recentUploads.filter(item => item.type === 'gpt').length > 0 ? (
@@ -612,7 +612,7 @@ export default function AdminPage() {
                             <span className="text-lg flex-shrink-0">🤖</span>
                             <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
                           </div>
-                          <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
+                          <p className="text-xs text-gray-600 mb-2 leading-relaxed line-clamp-2">{item.description}</p>
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
                               {item.category}
@@ -624,10 +624,10 @@ export default function AdminPage() {
                             )}
                           </div>
                         </div>
-                        <div className="ml-4 flex items-center space-x-2">
+                        <div className="ml-2 sm:ml-4 flex items-center space-x-1 sm:space-x-2">
                           <button
                             onClick={() => handleToggleFeature(item)}
-                            className={`p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
+                            className={`p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback ${
                               item.is_featured
                                 ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
                                 : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
@@ -640,7 +640,7 @@ export default function AdminPage() {
                           </button>
                           <button
                             onClick={() => handleDelete(item)}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback"
                             title="Delete this GPT"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -661,10 +661,10 @@ export default function AdminPage() {
             </div>
 
             {/* Playbooks Section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
-                <span className="text-2xl mr-3">📚</span>
-                Playbooks Collection
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
+                <span className="text-xl sm:text-2xl mr-2 sm:mr-3">📚</span>
+                <span>Playbooks Collection</span>
               </h2>
 
               {recentUploads.filter(item => item.type === 'document').length > 0 ? (
@@ -677,7 +677,7 @@ export default function AdminPage() {
                             <span className="text-lg flex-shrink-0">📄</span>
                             <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
                           </div>
-                          <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
+                          <p className="text-xs text-gray-600 mb-2 leading-relaxed line-clamp-2">{item.description}</p>
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
                               {item.category}
@@ -689,10 +689,10 @@ export default function AdminPage() {
                             )}
                           </div>
                         </div>
-                        <div className="ml-4 flex items-center space-x-2">
+                        <div className="ml-2 sm:ml-4 flex items-center space-x-1 sm:space-x-2">
                           <button
                             onClick={() => handleToggleFeature(item)}
-                            className={`p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
+                            className={`p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback ${
                               item.is_featured
                                 ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
                                 : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
@@ -705,7 +705,7 @@ export default function AdminPage() {
                           </button>
                           <button
                             onClick={() => handleDelete(item)}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback"
                             title="Delete this playbook"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -731,15 +731,15 @@ export default function AdminPage() {
         {/* Blog Management Tab */}
         {activeTab === 'blog' && (
           <div className="max-w-6xl mx-auto">
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
-                <span className="text-2xl mr-3">✍️</span>
-                AI Blog Writing Assistant
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
+                <span className="text-xl sm:text-2xl mr-2 sm:mr-3">✍️</span>
+                <span>AI Blog Writing Assistant</span>
               </h2>
               
               <div className="space-y-6">
                 {/* AI Blog Writing Section */}
-                <div className="p-6 bg-purple-50 rounded-xl border border-purple-200">
+                <div className="p-4 sm:p-6 bg-purple-50 rounded-xl border border-purple-200">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Write New Blog Post with AI</h3>
                   
                   <div className="space-y-4">
@@ -772,7 +772,7 @@ export default function AdminPage() {
                       </p>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -800,7 +800,7 @@ export default function AdminPage() {
                       </div>
                     </div>
                     
-                    <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
+                    <div className="text-xs sm:text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
                       <span className="font-medium">💡 AI Workflow:</span> The AI will research the web for latest information, analyze your knowledge base, write the blog post, and generate relevant images.
                       <div className="mt-2 text-xs">
                         <strong>Process:</strong>
@@ -833,7 +833,7 @@ export default function AdminPage() {
 
                 {/* Generated Blog Preview */}
                 {generatedBlog && (
-                  <div className="p-6 bg-green-50 rounded-xl border border-green-200">
+                  <div className="p-4 sm:p-6 bg-green-50 rounded-xl border border-green-200">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Generated Blog Post</h3>
                     
                     <div className="space-y-4">
@@ -952,7 +952,7 @@ export default function AdminPage() {
 
                 {/* Blog Post Editor */}
                 {editingPost && (
-                  <div className="p-6 bg-yellow-50 rounded-xl border border-yellow-200 mb-6">
+                  <div className="p-4 sm:p-6 bg-yellow-50 rounded-xl border border-yellow-200 mb-6">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4">Edit Blog Post</h3>
                     
                     <div className="space-y-4">
@@ -1068,10 +1068,10 @@ export default function AdminPage() {
                                 </span>
                               </div>
                             </div>
-                            <div className="ml-4 flex items-center space-x-2">
+                            <div className="ml-2 sm:ml-4 flex items-center space-x-1 sm:space-x-2">
                               <button
                                 onClick={() => setEditingPost(post)}
-                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback"
                                 title="Edit this post"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1080,7 +1080,7 @@ export default function AdminPage() {
                               </button>
                               <button
                                 onClick={() => handleDeleteBlogPost(post.id)}
-                                className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+                                className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback"
                                 title="Delete this post"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

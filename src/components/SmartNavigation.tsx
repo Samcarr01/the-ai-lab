@@ -26,7 +26,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
   }
 
   return (
-    <header className="glass md:backdrop-blur-xl bg-white md:bg-white/70 border-b border-gray-100 md:border-white/20">
+    <header className="glass">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href={effectiveUser ? "/dashboard" : "/"} className="flex items-center space-x-2 sm:space-x-3">
