@@ -104,73 +104,138 @@ export default function BlogPageClient() {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
-              <nav className="flex items-center space-x-6">
-                <Link
-                  href="/dashboard"
-                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/gpts"
-                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
-                >
-                  GPTs
-                </Link>
-                <Link
-                  href="/documents"
-                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
-                >
-                  Playbooks
-                </Link>
-                {user.email === 'samcarr1232@gmail.com' && (
-                  <Link
-                    href="/admin"
-                    className="text-sm text-purple-600 hover:text-purple-700 transition-colors font-medium"
-                  >
-                    Admin Panel
-                  </Link>
-                )}
-              </nav>
-              
-              {/* User Profile Section */}
-              <div className="flex items-center space-x-3 pl-6 border-l border-gray-200">
-                <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
-                  user.email === 'samcarr1232@gmail.com'
-                    ? 'bg-red-100 text-red-700'
-                    : user.is_pro 
-                      ? 'bg-purple-100 text-purple-700' 
-                      : 'bg-gray-100 text-gray-600'
-                }`}>
-                  {user.email === 'samcarr1232@gmail.com' ? (
-                    <>
-                      <span>🔧</span>
-                      <span>Admin</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>{user.is_pro ? '✨' : '🆓'}</span>
-                      <span>{user.is_pro ? 'Pro' : 'Free'}</span>
-                    </>
-                  )}
-                </div>
-                {!user.is_pro && user.email !== 'samcarr1232@gmail.com' && (
-                  <Link
-                    href="/upgrade"
-                    className="text-sm gradient-purple text-white px-4 py-2 rounded-full font-medium button-hover"
-                  >
-                    Upgrade
-                  </Link>
-                )}
-              </div>
+              {user ? (
+                // Logged in navigation
+                <>
+                  <nav className="flex items-center space-x-6">
+                    <Link
+                      href="/dashboard"
+                      className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      href="/gpts"
+                      className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                    >
+                      GPTs
+                    </Link>
+                    <Link
+                      href="/documents"
+                      className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                    >
+                      Playbooks
+                    </Link>
+                    <Link
+                      href="/blog"
+                      className="text-sm text-purple-600 hover:text-purple-700 transition-colors font-medium"
+                    >
+                      Blog
+                    </Link>
+                    {user.email === 'samcarr1232@gmail.com' && (
+                      <Link
+                        href="/admin"
+                        className="text-sm text-purple-600 hover:text-purple-700 transition-colors font-medium"
+                      >
+                        Admin
+                      </Link>
+                    )}
+                  </nav>
+                  
+                  {/* User Profile Section */}
+                  <div className="flex items-center space-x-3 pl-6 border-l border-gray-200">
+                    <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
+                      user.email === 'samcarr1232@gmail.com'
+                        ? 'bg-red-100 text-red-700'
+                        : user.is_pro 
+                          ? 'bg-purple-100 text-purple-700' 
+                          : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      {user.email === 'samcarr1232@gmail.com' ? (
+                        <>
+                          <span>🔧</span>
+                          <span>Admin</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>{user.is_pro ? '✨' : '🆓'}</span>
+                          <span>{user.is_pro ? 'Pro' : 'Free'}</span>
+                        </>
+                      )}
+                    </div>
+                    {!user.is_pro && user.email !== 'samcarr1232@gmail.com' && (
+                      <Link
+                        href="/upgrade"
+                        className="text-sm gradient-purple text-white px-4 py-2 rounded-full font-medium button-hover"
+                      >
+                        Upgrade
+                      </Link>
+                    )}
+                  </div>
+                </>
+              ) : (
+                // Public navigation
+                <>
+                  <nav className="flex items-center space-x-6">
+                    <Link
+                      href="/"
+                      className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                    >
+                      Home
+                    </Link>
+                    <Link
+                      href="/blog"
+                      className="text-sm text-purple-600 hover:text-purple-700 transition-colors font-medium"
+                    >
+                      Blog
+                    </Link>
+                  </nav>
+                  
+                  {/* Auth Actions */}
+                  <div className="flex items-center space-x-3">
+                    <Link
+                      href="/login"
+                      className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      href="/signup"
+                      className="text-sm gradient-purple text-white px-4 py-2 rounded-full font-medium button-hover"
+                    >
+                      Get Started
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Mobile Navigation */}
-            <InternalMobileNavigation 
-              userEmail={user.email}
-              isPro={user.is_pro}
-              showAdminLink={user.email === 'samcarr1232@gmail.com'}
-            />
+            {user ? (
+              <InternalMobileNavigation 
+                userEmail={user.email}
+                isPro={user.is_pro}
+                showAdminLink={user.email === 'samcarr1232@gmail.com'}
+              />
+            ) : (
+              // Public mobile navigation
+              <div className="md:hidden">
+                <div className="flex items-center space-x-3">
+                  <Link
+                    href="/login"
+                    className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="text-sm gradient-purple text-white px-3 py-2 rounded-full font-medium button-hover"
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -182,8 +247,11 @@ export default function BlogPageClient() {
             AI Tools & Strategies 🧠
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Discover powerful AI tools, proven strategies, and actionable insights to boost your productivity. 
-            Everything you need to leverage AI effectively in your work.
+            {user ? (
+              "Discover powerful AI tools, proven strategies, and actionable insights to boost your productivity. Explore our latest findings and tutorials."
+            ) : (
+              "Free insights into AI tools, proven strategies, and actionable tutorials. Learn how to leverage AI effectively in your work. Sign up to access our full collection of GPTs and Playbooks."
+            )}
           </p>
         </div>
 
