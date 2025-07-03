@@ -52,27 +52,34 @@ export async function POST(request: NextRequest) {
     // Perform web search if requested
     let webSearchResults = ''
     if (includeWebSearch) {
-      try {
-        const searchResponse = await fetch(`https://api.tavily.com/search`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.TAVILY_API_KEY}`
-          },
-          body: JSON.stringify({
-            query: prompt,
-            search_depth: 'advanced',
-            max_results: 5,
-            include_answer: true
+      if (!process.env.TAVILY_API_KEY) {
+        webSearchResults = 'Web search disabled: TAVILY_API_KEY not configured'
+      } else {
+        try {
+          const searchResponse = await fetch(`https://api.tavily.com/search`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${process.env.TAVILY_API_KEY}`
+            },
+            body: JSON.stringify({
+              query: prompt,
+              search_depth: 'advanced',
+              max_results: 5,
+              include_answer: true
+            })
           })
-        })
-        
-        if (searchResponse.ok) {
-          const searchData = await searchResponse.json()
-          webSearchResults = JSON.stringify(searchData.results || [])
+          
+          if (searchResponse.ok) {
+            const searchData = await searchResponse.json()
+            webSearchResults = JSON.stringify(searchData.results || [])
+          } else {
+            webSearchResults = 'Web search failed: API error'
+          }
+        } catch (err) {
+          console.log('Web search failed, proceeding without it:', err)
+          webSearchResults = 'Web search failed: Network error'
         }
-      } catch (err) {
-        console.log('Web search failed, proceeding without it:', err)
       }
     }
 

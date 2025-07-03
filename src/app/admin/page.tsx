@@ -247,11 +247,17 @@ export default function AdminPage() {
       }
 
       const blogPost = await response.json()
+      
+      if (blogPost.error) {
+        throw new Error(blogPost.error)
+      }
+      
       setGeneratedBlog(blogPost)
       
     } catch (err) {
       console.error('Blog generation failed:', err)
-      alert('Failed to generate blog post. Please try again.')
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+      alert(`Failed to generate blog post: ${errorMessage}\n\nPossible issues:\n- OpenAI API key not configured\n- TAVILY_API_KEY missing (for web search)\n- Network connectivity\n\nPlease check your environment variables.`)
     } finally {
       setGeneratingBlog(false)
     }
@@ -304,6 +310,41 @@ export default function AdminPage() {
     } catch (err) {
       console.error('Blog deletion failed:', err)
       alert('Failed to delete blog post. Please try again.')
+    }
+  }
+
+  const handleUpdateBlogPost = async () => {
+    if (!editingPost) return
+
+    setPublishingBlog(true)
+    try {
+      // Generate new slug if title changed
+      const slug = editingPost.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+      
+      const updatedPost = await blogService.updatePost(editingPost.id, {
+        title: editingPost.title,
+        content: editingPost.content,
+        slug: slug,
+        meta_description: editingPost.meta_description,
+        category: editingPost.category,
+        read_time: Math.ceil(editingPost.content.split(' ').length / 200)
+      })
+
+      if (updatedPost) {
+        alert('Blog post updated successfully!')
+        setEditingPost(null)
+        await loadBlogPosts() // Refresh blog posts list
+      } else {
+        throw new Error('Failed to update blog post')
+      }
+    } catch (err) {
+      console.error('Blog update failed:', err)
+      alert('Failed to update blog post. Please try again.')
+    } finally {
+      setPublishingBlog(false)
     }
   }
 
@@ -901,6 +942,95 @@ export default function AdminPage() {
                               </span>
                             ) : (
                               '🚀 Publish Blog Post'
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Blog Post Editor */}
+                {editingPost && (
+                  <div className="p-6 bg-yellow-50 rounded-xl border border-yellow-200 mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Edit Blog Post</h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                        <input
+                          type="text"
+                          value={editingPost.title}
+                          onChange={(e) => setEditingPost({ ...editingPost, title: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
+                        <input
+                          type="text"
+                          value={editingPost.meta_description}
+                          onChange={(e) => setEditingPost({ ...editingPost, meta_description: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                          maxLength={160}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">{editingPost.meta_description.length}/160 characters</p>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select
+                          value={editingPost.category}
+                          onChange={(e) => setEditingPost({ ...editingPost, category: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                        >
+                          <option value="AI Tools">AI Tools</option>
+                          <option value="Strategy">Strategy</option>
+                          <option value="Business Planning">Business Planning</option>
+                          <option value="Productivity">Productivity</option>
+                          <option value="Communication">Communication</option>
+                          <option value="Automation">Automation</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Design">Design</option>
+                          <option value="Development">Development</option>
+                        </select>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                        <textarea
+                          value={editingPost.content}
+                          onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })}
+                          rows={15}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 font-mono text-sm"
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between pt-4">
+                        <span className="text-sm text-gray-600">
+                          📖 Estimated read time: {Math.ceil(editingPost.content.split(' ').length / 200)} minutes
+                        </span>
+                        
+                        <div className="space-x-3">
+                          <button
+                            onClick={() => setEditingPost(null)}
+                            className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handleUpdateBlogPost}
+                            disabled={publishingBlog}
+                            className="px-4 py-2 gradient-purple text-white rounded-lg font-semibold button-hover shadow-lg disabled:opacity-50"
+                          >
+                            {publishingBlog ? (
+                              <span className="flex items-center">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                Updating...
+                              </span>
+                            ) : (
+                              '💾 Update Blog Post'
                             )}
                           </button>
                         </div>
