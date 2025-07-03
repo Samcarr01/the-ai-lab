@@ -144,20 +144,20 @@ export default function GPTsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative">
+    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative mobile-no-overflow">
       {/* Animated Background */}
       <GradientBackground />
       
       {/* Smart Navigation */}
       <SmartNavigation user={user} currentPage="gpts" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
             AI GPTs Collection 🤖
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-2 sm:px-0 mobile-readable">
             {effectiveUser && effectiveUser.is_pro 
               ? "Click any GPT below to open it directly in ChatGPT and start using it!"
               : "Explore my personal GPT collection. Upgrade to Pro for direct access to all GPTs!"
@@ -167,17 +167,17 @@ export default function GPTsPage() {
 
         {/* Upgrade Banner for Free Users */}
         {!(effectiveUser && effectiveUser.is_pro) && (
-          <div className="mb-8 gradient-purple rounded-2xl p-6 text-white">
-            <div className="flex items-center justify-between">
+          <div className="mb-6 sm:mb-8 gradient-purple rounded-2xl p-4 sm:p-6 text-white">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-xl font-semibold mb-2">Unlock All GPTs! ⚡</h3>
-                <p className="text-purple-100">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">Unlock All GPTs! ⚡</h3>
+                <p className="text-sm sm:text-base text-purple-100">
                   Currently viewing previews only. Upgrade to Pro for direct access to all {gpts.length} GPTs.
                 </p>
               </div>
               <Link
                 href="/upgrade"
-                className="bg-white text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap"
+                className="bg-white text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
               >
                 Upgrade Now 🚀
               </Link>
@@ -186,14 +186,14 @@ export default function GPTsPage() {
         )}
 
         {/* Category Filter */}
-        <div className="mb-12">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50">
-            <div className="flex flex-wrap justify-center gap-3">
+        <div className="mb-8 sm:mb-12">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-purple-100/50">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 mobile-touch-target touch-feedback ${
                     selectedCategory === category
                       ? 'gradient-purple text-white shadow-lg transform scale-105'
                       : 'bg-gray-50 text-gray-600 border border-gray-200 hover:border-purple-300 hover:text-purple-600 hover:scale-105'
@@ -213,7 +213,7 @@ export default function GPTsPage() {
               <span className="text-3xl mr-3">⭐</span>
               Featured GPTs
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {featuredGpts.map((gpt) => (
                 <div
                   key={gpt.id}
@@ -271,7 +271,7 @@ export default function GPTsPage() {
               <span className="text-3xl mr-3">{selectedCategory === 'All' ? '🤖' : getCategoryIcon(selectedCategory)}</span>
               {selectedCategory === 'All' ? 'All GPTs' : `${selectedCategory} GPTs`}
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {(selectedCategory === 'All' ? regularGpts : filteredGpts).map((gpt) => (
                 <div
                   key={gpt.id}

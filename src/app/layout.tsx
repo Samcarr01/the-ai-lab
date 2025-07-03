@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import '../styles/mobile-optimizations.css'
 import { AdminProvider } from '@/contexts/AdminContext'
 
 const inter = Inter({ 

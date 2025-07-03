@@ -1,0 +1,163 @@
+/* Mobile-Specific Optimizations */
+
+/* Ensure proper viewport on all mobile devices */
+@media (max-width: 640px) {
+  /* Prevent horizontal scroll */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+  
+  /* Improve tap targets for all interactive elements */
+  button, a, input, select, textarea, [role="button"] {
+    min-height: 44px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  /* Better spacing for mobile cards */
+  .mobile-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Optimize text readability */
+  p, li {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  /* Ensure emojis display properly */
+  .emoji {
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  }
+  
+  /* Fix gradient performance on mobile */
+  .gradient-purple {
+    background-attachment: scroll !important;
+  }
+  
+  /* Optimize shadow performance */
+  .shadow-lg {
+    box-shadow: 0 4px 6px -1px rgba(139, 92, 246, 0.1);
+  }
+  
+  /* Ensure modals are mobile-friendly */
+  .modal {
+    max-height: 90vh;
+    margin: 1rem;
+  }
+  
+  /* Better form inputs on mobile */
+  input, textarea, select {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  /* Optimize hover states for touch */
+  @media (hover: none) {
+    .hover\:scale-105:hover {
+      transform: none;
+    }
+    
+    .hover\:shadow-xl:hover {
+      box-shadow: none;
+    }
+  }
+  
+  /* Better button states for touch */
+  button:active, a:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  /* Ensure purple gradients work on all devices */
+  .bg-gradient-to-r,
+  .bg-gradient-to-br,
+  .bg-gradient-to-b {
+    background-size: 200% 200%;
+  }
+  
+  /* Fix backdrop blur on older devices */
+  @supports not (backdrop-filter: blur(20px)) {
+    .glass {
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-width: 768px) and (orientation: landscape) {
+  /* Reduce vertical padding in landscape */
+  section {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  /* Smaller headers in landscape */
+  h1 {
+    font-size: 1.5rem;
+  }
+  
+  h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Small device optimizations (older phones) */
+@media (max-width: 320px) {
+  /* Even smaller text for very small screens */
+  .text-base {
+    font-size: 14px;
+  }
+  
+  /* Reduce padding on tiny screens */
+  .px-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+/* Touch device optimizations */
+@media (pointer: coarse) {
+  /* Larger click areas for touch */
+  .touch-target::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    bottom: -8px;
+    left: -8px;
+  }
+  
+  /* Disable hover effects on touch devices */
+  .no-touch-hover:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+  /* Fix iOS button styling */
+  button, input[type="button"], input[type="submit"] {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  /* Fix iOS safe areas */
+  .safe-area-inset {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Android-specific fixes */
+@media (hover: none) and (pointer: coarse) and (min-width: 0) {
+  /* Better touch feedback on Android */
+  button, a {
+    -webkit-tap-highlight-color: rgba(139, 92, 246, 0.2);
+  }
+}

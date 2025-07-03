@@ -179,4 +179,60 @@
   .touch-action-manipulation {
     touch-action: manipulation;
   }
+  
+  /* Mobile-specific responsive helpers */
+  @media (max-width: 640px) {
+    /* Ensure proper mobile font sizes */
+    .mobile-text-base {
+      font-size: 16px !important;
+    }
+    
+    /* Enhanced touch targets */
+    .mobile-touch-target {
+      min-height: 48px !important;
+      min-width: 48px !important;
+    }
+    
+    /* Better mobile spacing */
+    .mobile-padding {
+      padding: 1rem !important;
+    }
+    
+    /* Prevent horizontal overflow */
+    .mobile-no-overflow {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+    }
+    
+    /* Card stack on mobile */
+    .mobile-stack {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 1rem !important;
+    }
+    
+    /* Improve readability */
+    .mobile-readable {
+      line-height: 1.6 !important;
+      letter-spacing: 0.01em !important;
+    }
+    
+    /* Mobile-friendly gradients */
+    .mobile-gradient-fix {
+      background-attachment: scroll !important;
+    }
+  }
+  
+  /* Touch feedback for interactive elements */
+  @media (hover: none) and (pointer: coarse) {
+    .touch-feedback:active {
+      transform: scale(0.95);
+      opacity: 0.9;
+    }
+    
+    /* Remove hover effects on touch devices */
+    .touch-no-hover:hover {
+      transform: none !important;
+    }
+  }
 }

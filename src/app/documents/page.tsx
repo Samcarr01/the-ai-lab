@@ -195,20 +195,20 @@ export default function DocumentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative">
+    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative mobile-no-overflow">
       {/* Animated Background */}
       <GradientBackground />
       
       {/* Smart Navigation */}
       <SmartNavigation user={user} currentPage="documents" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
             AI Playbooks Collection 📚
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-2 sm:px-0 mobile-readable">
             {effectiveUser && effectiveUser.is_pro 
               ? "Download any playbook below and start implementing proven AI workflows today!"
               : "Explore our playbook collection. Upgrade to Pro to download all PDF playbooks!"
@@ -266,11 +266,11 @@ export default function DocumentsPage() {
               <span className="text-3xl mr-3">⭐</span>
               Featured Playbooks
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {featuredDocuments.map((document) => (
                 <div
                   key={document.id}
-                  className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 group flex flex-col h-full"
+                  className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300 group flex flex-col h-full touch-feedback"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
@@ -336,7 +336,7 @@ export default function DocumentsPage() {
               <span className="text-3xl mr-3">{selectedCategory === 'All' ? '📚' : getCategoryIcon(selectedCategory)}</span>
               {selectedCategory === 'All' ? 'All Playbooks' : `${selectedCategory} Playbooks`}
             </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {(selectedCategory === 'All' ? regularDocuments : filteredDocuments).map((document) => (
                 <div
                   key={document.id}
