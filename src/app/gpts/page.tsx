@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { gptsService, type GPT } from '@/lib/gpts'
+import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
 import GradientBackground from '@/components/NetworkBackground'
 import DescriptionModal from '@/components/DescriptionModal'
@@ -18,7 +19,11 @@ export default function GPTsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [loading, setLoading] = useState(true)
   const [selectedGpt, setSelectedGpt] = useState<GPT | null>(null)
+  const { getEffectiveUser } = useAdmin()
   const router = useRouter()
+  
+  // Get effective user for display (applies global admin toggle)
+  const effectiveUser = getEffectiveUser(user)
 
   const loadData = async () => {
     try {
@@ -153,7 +158,7 @@ export default function GPTsPage() {
             AI GPTs Collection 🤖
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {user.is_pro 
+            {effectiveUser && effectiveUser.is_pro 
               ? "Click any GPT below to open it directly in ChatGPT and start using it!"
               : "Explore my personal GPT collection. Upgrade to Pro for direct access to all GPTs!"
             }
@@ -161,7 +166,7 @@ export default function GPTsPage() {
         </div>
 
         {/* Upgrade Banner for Free Users */}
-        {!user.is_pro && (
+        {!(effectiveUser && effectiveUser.is_pro) && (
           <div className="mb-8 gradient-purple rounded-2xl p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
@@ -238,7 +243,7 @@ export default function GPTsPage() {
                   </div>
                   
                   <div className="mt-auto">
-                    {user.is_pro ? (
+                    {effectiveUser && effectiveUser.is_pro ? (
                       <a
                         href={gpt.chatgpt_url}
                         target="_blank"
@@ -310,7 +315,7 @@ export default function GPTsPage() {
                   </div>
                   
                   <div className="mt-auto">
-                    {user.is_pro ? (
+                    {effectiveUser && effectiveUser.is_pro ? (
                       <a
                         href={gpt.chatgpt_url}
                         target="_blank"

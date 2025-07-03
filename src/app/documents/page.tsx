@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { documentsService, type Document } from '@/lib/documents'
+import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
 import GradientBackground from '@/components/NetworkBackground'
 import DescriptionModal from '@/components/DescriptionModal'
@@ -19,7 +20,11 @@ export default function DocumentsPage() {
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null)
   const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set())
+  const { getEffectiveUser } = useAdmin()
   const router = useRouter()
+  
+  // Get effective user for display (applies global admin toggle)
+  const effectiveUser = getEffectiveUser(user)
 
   const loadData = async () => {
     try {
@@ -204,7 +209,7 @@ export default function DocumentsPage() {
             AI Playbooks Collection 📚
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {user.is_pro 
+            {effectiveUser && effectiveUser.is_pro 
               ? "Download any playbook below and start implementing proven AI workflows today!"
               : "Explore our playbook collection. Upgrade to Pro to download all PDF playbooks!"
             }
@@ -212,7 +217,7 @@ export default function DocumentsPage() {
         </div>
 
         {/* Upgrade Banner for Free Users */}
-        {!user.is_pro && (
+        {!effectiveUser && effectiveUser.is_pro && (
           <div className="mb-8 gradient-purple rounded-2xl p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
@@ -293,7 +298,7 @@ export default function DocumentsPage() {
                   </div>
                   
                   <div className="mt-auto">
-                    {user.is_pro ? (
+                    {effectiveUser && effectiveUser.is_pro ? (
                       <button
                         onClick={() => handleDownload(document)}
                         disabled={downloadingIds.has(document.id)}
@@ -377,7 +382,7 @@ export default function DocumentsPage() {
                   </div>
                   
                   <div className="mt-auto">
-                    {user.is_pro ? (
+                    {effectiveUser && effectiveUser.is_pro ? (
                       <button
                         onClick={() => handleDownload(document)}
                         disabled={downloadingIds.has(document.id)}
