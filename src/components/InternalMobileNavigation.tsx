@@ -90,6 +90,15 @@ export default function InternalMobileNavigation({
           <nav className="flex-1 px-6 py-6">
             <div className="space-y-4">
               <Link
+                href="/"
+                onClick={handleLinkClick}
+                className="flex items-center text-lg text-gray-700 hover:text-purple-600 transition-colors py-3 border-b border-gray-100"
+              >
+                <span className="mr-3 text-xl">🏠</span>
+                Home
+              </Link>
+              
+              <Link
                 href="/dashboard"
                 onClick={handleLinkClick}
                 className="flex items-center text-lg text-gray-700 hover:text-purple-600 transition-colors py-3 border-b border-gray-100"

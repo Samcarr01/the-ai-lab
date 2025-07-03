@@ -43,6 +43,12 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
               <>
                 <nav className="flex items-center space-x-6">
                   <Link
+                    href="/"
+                    className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                  >
+                    Home
+                  </Link>
+                  <Link
                     href="/dashboard"
                     className={`text-sm transition-colors font-medium ${
                       currentPage === 'dashboard' 
