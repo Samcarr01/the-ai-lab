@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { type UserProfile } from '@/lib/user'
+import { useAdmin } from '@/contexts/AdminContext'
 import InternalMobileNavigation from './InternalMobileNavigation'
 
 interface SmartNavigationProps {

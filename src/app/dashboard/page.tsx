@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
+import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import GradientBackground from '@/components/NetworkBackground'
 import { gptsService } from '@/lib/gpts'
 import { documentsService } from '@/lib/documents'
@@ -223,11 +224,13 @@ export default function DashboardPage() {
             </div>
 
             {/* Mobile Navigation */}
-            <InternalMobileNavigation 
-              userEmail={user.email}
-              isPro={user.is_pro}
-              showAdminLink={user.email === 'samcarr1232@gmail.com'}
-            />
+            <div className="md:hidden">
+              <InternalMobileNavigation 
+                userEmail={user.email}
+                isPro={user.is_pro}
+                showAdminLink={user.email === 'samcarr1232@gmail.com'}
+              />
+            </div>
           </div>
         </div>
       </header>
