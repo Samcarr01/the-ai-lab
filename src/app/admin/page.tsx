@@ -8,6 +8,7 @@ import { userService, type UserProfile } from '@/lib/user'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import { gptsService } from '@/lib/gpts'
 import { documentsService } from '@/lib/documents'
+import { blogService, type BlogPost } from '@/lib/blog'
 import { aiService } from '@/lib/ai'
 
 interface AnalyzedContent {
@@ -19,6 +20,7 @@ interface AnalyzedContent {
 export default function AdminPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState<'content' | 'blog'>('content')
   const [uploadType, setUploadType] = useState<'gpt' | 'document'>('gpt')
   const [gptUrl, setGptUrl] = useState('')
   const [documentFile, setDocumentFile] = useState<File | null>(null)
@@ -26,6 +28,16 @@ export default function AdminPage() {
   const [analyzedContent, setAnalyzedContent] = useState<AnalyzedContent | null>(null)
   const [uploading, setUploading] = useState(false)
   const [recentUploads, setRecentUploads] = useState<any[]>([])
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
+  const [editingPost, setEditingPost] = useState<BlogPost | null>(null)
+  const [isCreatingPost, setIsCreatingPost] = useState(false)
+  const [blogPrompt, setBlogPrompt] = useState('')
+  const [generatingBlog, setGeneratingBlog] = useState(false)
+  const [knowledgeBase, setKnowledgeBase] = useState('')
+  const [generatedBlog, setGeneratedBlog] = useState<any>(null)
+  const [publishingBlog, setPublishingBlog] = useState(false)
+  const [includeWebSearch, setIncludeWebSearch] = useState(true)
+  const [includeImages, setIncludeImages] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
@@ -51,8 +63,9 @@ export default function AdminPage() {
           }
         }
 
-        // Load recent uploads
+        // Load recent uploads and blog posts
         await loadRecentUploads()
+        await loadBlogPosts()
       } catch (err) {
         console.error('Error loading data:', err)
         router.push('/login')
@@ -80,6 +93,15 @@ export default function AdminPage() {
       setRecentUploads(allUploads.slice(0, 10)) // Show last 10
     } catch (err) {
       console.error('Error loading recent uploads:', err)
+    }
+  }
+
+  const loadBlogPosts = async () => {
+    try {
+      const posts = await blogService.getAllPosts()
+      setBlogPosts(posts)
+    } catch (err) {
+      console.error('Error loading blog posts:', err)
     }
   }
 
@@ -202,6 +224,89 @@ export default function AdminPage() {
     }
   }
 
+  const handleGenerateBlog = async () => {
+    if (!blogPrompt.trim()) return
+
+    setGeneratingBlog(true)
+    try {
+      const response = await fetch('/api/ai/generate-blog', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: blogPrompt,
+          knowledgeBase: knowledgeBase,
+          includeWebSearch: includeWebSearch,
+          includeImages: includeImages
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to generate blog post')
+      }
+
+      const blogPost = await response.json()
+      setGeneratedBlog(blogPost)
+      
+    } catch (err) {
+      console.error('Blog generation failed:', err)
+      alert('Failed to generate blog post. Please try again.')
+    } finally {
+      setGeneratingBlog(false)
+    }
+  }
+
+  const handlePublishBlog = async () => {
+    if (!generatedBlog) return
+
+    setPublishingBlog(true)
+    try {
+      // Generate slug from title
+      const slug = generatedBlog.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '')
+      
+      const response = await blogService.createPost({
+        title: generatedBlog.title,
+        content: generatedBlog.content,
+        slug: slug,
+        published_at: new Date().toISOString(),
+        meta_description: generatedBlog.meta_description,
+        category: generatedBlog.category,
+        read_time: generatedBlog.read_time
+      })
+
+      alert('Blog post published successfully!')
+      setGeneratedBlog(null)
+      setBlogPrompt('')
+      setKnowledgeBase('')
+      await loadBlogPosts() // Refresh blog posts list
+      
+    } catch (err) {
+      console.error('Blog publishing failed:', err)
+      alert('Failed to publish blog post. Please try again.')
+    } finally {
+      setPublishingBlog(false)
+    }
+  }
+
+  const handleDeleteBlogPost = async (postId: string) => {
+    if (!confirm('Are you sure you want to delete this blog post? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      await blogService.deletePost(postId)
+      alert('Blog post deleted successfully!')
+      await loadBlogPosts() // Refresh blog posts list
+    } catch (err) {
+      console.error('Blog deletion failed:', err)
+      alert('Failed to delete blog post. Please try again.')
+    }
+  }
+
 
   if (loading) {
     return (
@@ -264,10 +369,40 @@ export default function AdminPage() {
             Content Management Studio
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Upload GPT links or PDF documents and let AI automatically analyze, categorize, and add them to your collection!
+            Upload GPT links, PDF documents, and manage blog content with AI assistance!
           </p>
         </div>
 
+        {/* Tab Navigation */}
+        <div className="mb-8">
+          <div className="flex justify-center">
+            <div className="flex bg-gray-100 rounded-xl p-1">
+              <button
+                onClick={() => setActiveTab('content')}
+                className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                  activeTab === 'content'
+                    ? 'gradient-purple text-white shadow-lg'
+                    : 'text-gray-600 hover:text-purple-600'
+                }`}
+              >
+                📤 Content Upload
+              </button>
+              <button
+                onClick={() => setActiveTab('blog')}
+                className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                  activeTab === 'blog'
+                    ? 'gradient-purple text-white shadow-lg'
+                    : 'text-gray-600 hover:text-purple-600'
+                }`}
+              >
+                ✍️ Blog Management
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Upload Tab */}
+        {activeTab === 'content' && (
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Upload Section */}
           <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
@@ -550,6 +685,294 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
+        )}
+
+        {/* Blog Management Tab */}
+        {activeTab === 'blog' && (
+          <div className="max-w-6xl mx-auto">
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+                <span className="text-2xl mr-3">✍️</span>
+                AI Blog Writing Assistant
+              </h2>
+              
+              <div className="space-y-6">
+                {/* AI Blog Writing Section */}
+                <div className="p-6 bg-purple-50 rounded-xl border border-purple-200">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Write New Blog Post with AI</h3>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Blog Topic or Prompt
+                      </label>
+                      <textarea
+                        value={blogPrompt}
+                        onChange={(e) => setBlogPrompt(e.target.value)}
+                        placeholder="e.g., 'Write a blog post about the best AI tools for content creators in 2025'"
+                        rows={3}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Additional Knowledge Base (Optional)
+                      </label>
+                      <textarea
+                        value={knowledgeBase}
+                        onChange={(e) => setKnowledgeBase(e.target.value)}
+                        placeholder="Paste any additional context, research, or specific information you want the AI to use when writing the blog post..."
+                        rows={4}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        💡 Add SEO best practices, research data, or specific points you want covered
+                      </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="webSearch"
+                          checked={includeWebSearch}
+                          onChange={(e) => setIncludeWebSearch(e.target.checked)}
+                          className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                        />
+                        <label htmlFor="webSearch" className="text-sm text-gray-700">
+                          🌍 Include web search for latest info
+                        </label>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          id="includeImages"
+                          checked={includeImages}
+                          onChange={(e) => setIncludeImages(e.target.checked)}
+                          className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                        />
+                        <label htmlFor="includeImages" className="text-sm text-gray-700">
+                          🎨 Generate AI images (GPT-4o)
+                        </label>
+                      </div>
+                    </div>
+                    
+                    <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
+                      <span className="font-medium">💡 AI Workflow:</span> The AI will research the web for latest information, analyze your knowledge base, write the blog post, and generate relevant images.
+                      <div className="mt-2 text-xs">
+                        <strong>Process:</strong>
+                        <ol className="list-decimal list-inside mt-1 space-y-1">
+                          <li>Search web for latest information (if enabled)</li>
+                          <li>Analyze platform docs + writing instructions + SEO guide</li>
+                          <li>Write comprehensive blog post with GPT-4o</li>
+                          <li>Generate 2-3 relevant images with GPT-4o (if enabled)</li>
+                          <li>Present for your review and editing</li>
+                        </ol>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={handleGenerateBlog}
+                      disabled={generatingBlog || !blogPrompt.trim()}
+                      className="w-full gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {generatingBlog ? (
+                        <span className="flex items-center justify-center">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                          AI is writing your blog post...
+                        </span>
+                      ) : (
+                        '🤖 Generate Blog Post with AI'
+                      )}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Generated Blog Preview */}
+                {generatedBlog && (
+                  <div className="p-6 bg-green-50 rounded-xl border border-green-200">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Generated Blog Post</h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                        <input
+                          type="text"
+                          value={generatedBlog.title}
+                          onChange={(e) => setGeneratedBlog({ ...generatedBlog, title: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
+                        <input
+                          type="text"
+                          value={generatedBlog.meta_description}
+                          onChange={(e) => setGeneratedBlog({ ...generatedBlog, meta_description: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                          maxLength={160}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">{generatedBlog.meta_description.length}/160 characters</p>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select
+                          value={generatedBlog.category}
+                          onChange={(e) => setGeneratedBlog({ ...generatedBlog, category: e.target.value })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                        >
+                          <option value="AI Tools">AI Tools</option>
+                          <option value="Strategy">Strategy</option>
+                          <option value="Business Planning">Business Planning</option>
+                          <option value="Productivity">Productivity</option>
+                          <option value="Communication">Communication</option>
+                          <option value="Automation">Automation</option>
+                          <option value="Marketing">Marketing</option>
+                          <option value="Design">Design</option>
+                          <option value="Development">Development</option>
+                        </select>
+                      </div>
+                      
+                      {/* Generated Images */}
+                      {generatedBlog.generated_images && generatedBlog.generated_images.length > 0 && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Generated Images</label>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                            {generatedBlog.generated_images.map((image: any, index: number) => (
+                              <div key={index} className="border border-gray-200 rounded-lg p-3">
+                                <img 
+                                  src={image.url} 
+                                  alt={image.prompt} 
+                                  className="w-full h-32 object-cover rounded-lg mb-2"
+                                />
+                                <p className="text-xs text-gray-600 mb-2">{image.prompt}</p>
+                                <div className="flex items-center space-x-2">
+                                  <input
+                                    type="checkbox"
+                                    id={`image-${index}`}
+                                    defaultChecked={true}
+                                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                  />
+                                  <label htmlFor={`image-${index}`} className="text-xs text-gray-700">
+                                    Include in blog
+                                  </label>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                        <textarea
+                          value={generatedBlog.content}
+                          onChange={(e) => setGeneratedBlog({ ...generatedBlog, content: e.target.value })}
+                          rows={15}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-sm"
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between pt-4">
+                        <span className="text-sm text-gray-600">
+                          📖 Estimated read time: {generatedBlog.read_time} minutes
+                        </span>
+                        
+                        <div className="space-x-3">
+                          <button
+                            onClick={() => setGeneratedBlog(null)}
+                            className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            onClick={handlePublishBlog}
+                            disabled={publishingBlog}
+                            className="px-4 py-2 gradient-purple text-white rounded-lg font-semibold button-hover shadow-lg disabled:opacity-50"
+                          >
+                            {publishingBlog ? (
+                              <span className="flex items-center">
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                Publishing...
+                              </span>
+                            ) : (
+                              '🚀 Publish Blog Post'
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Existing Blog Posts Management */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Manage Existing Posts</h3>
+                  
+                  {blogPosts.length > 0 ? (
+                    <div className="space-y-4">
+                      {blogPosts.map((post) => (
+                        <div key={post.id} className="p-4 border border-gray-200 rounded-xl hover:border-purple-300 transition-colors">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <span className="text-lg flex-shrink-0">📝</span>
+                                <h4 className="font-semibold text-gray-900 text-sm leading-tight truncate">{post.title}</h4>
+                              </div>
+                              <p className="text-xs text-gray-600 mb-2 leading-relaxed">
+                                {post.meta_description || post.content.slice(0, 100) + '...'}
+                              </p>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
+                                  {post.category}
+                                </span>
+                                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full whitespace-nowrap">
+                                  {post.read_time} min read
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {new Date(post.published_at).toLocaleDateString()}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="ml-4 flex items-center space-x-2">
+                              <button
+                                onClick={() => setEditingPost(post)}
+                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+                                title="Edit this post"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteBlogPost(post.id)}
+                                className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
+                                title="Delete this post"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-600">
+                      <div className="text-4xl mb-2">📝</div>
+                      <p>No blog posts yet. Create your first one using the AI assistant above!</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
