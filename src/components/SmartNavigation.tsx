@@ -195,7 +195,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
             <InternalMobileNavigation 
               userEmail={effectiveUser.email}
               isPro={effectiveUser.is_pro}
-              showAdminLink={user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin'}
+              showAdminLink={!!(user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin')}
             />
           ) : (
             // Public mobile navigation
