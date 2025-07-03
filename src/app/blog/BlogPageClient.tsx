@@ -19,47 +19,48 @@ export default function BlogPageClient() {
   const router = useRouter()
 
   useEffect(() => {
-    const getUser = async () => {
+    const loadData = async () => {
       try {
-        const { user: authUser, error } = await auth.getUser()
+        // Load blog posts and categories first (always accessible - public content)
+        const [posts, blogCategories] = await Promise.all([
+          blogService.getAllPosts(),
+          blogService.getCategories()
+        ])
         
-        if (error || !authUser) {
-          router.push('/login')
-          return
-        }
-
-        // Fetch user profile from our database
-        let userProfile = await userService.getProfile(authUser.id)
+        setBlogPosts(posts)
+        setCategories(['All', ...blogCategories])
         
-        // If no profile exists, create one (for existing auth users)
-        if (!userProfile) {
-          userProfile = await userService.createProfile(authUser.id, authUser.email || '')
-        }
-        
-        if (userProfile) {
-          setUser(userProfile)
+        // Try to get user info (optional - for better UX if logged in)
+        try {
+          const { user: authUser, error } = await auth.getUser()
           
-          // Load blog posts and categories
-          const [posts, blogCategories] = await Promise.all([
-            blogService.getAllPosts(),
-            blogService.getCategories()
-          ])
-          
-          setBlogPosts(posts)
-          setCategories(['All', ...blogCategories])
-        } else {
-          console.error('Failed to load or create user profile')
-          router.push('/login')
+          if (!error && authUser) {
+            // Fetch user profile from our database
+            let userProfile = await userService.getProfile(authUser.id)
+            
+            // If no profile exists, create one (for existing auth users)
+            if (!userProfile) {
+              userProfile = await userService.createProfile(authUser.id, authUser.email || '')
+            }
+            
+            if (userProfile) {
+              setUser(userProfile)
+            }
+          }
+          // If not logged in, that's fine - blog is public
+        } catch (authErr) {
+          console.log('User not authenticated, showing public blog content')
+          // Not an error - blog is public
         }
       } catch (err) {
-        console.error('Error fetching user:', err)
-        router.push('/login')
+        console.error('Error loading blog data:', err)
+        // Still don't redirect - show what we can
       } finally {
         setLoading(false)
       }
     }
 
-    getUser()
+    loadData()
   }, [router])
 
   // Filter blog posts based on search and category

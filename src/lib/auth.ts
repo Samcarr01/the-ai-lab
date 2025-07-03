@@ -23,7 +23,14 @@ export const auth = {
       password,
     })
     
-    // rememberMe parameter is handled by the component for UI state persistence
+    // Handle session persistence based on rememberMe
+    if (data.session && rememberMe) {
+      // Store user preference for longer session
+      localStorage.setItem('supabase-auth-persist', 'true')
+    } else {
+      // Clear persistence preference for session-only auth
+      localStorage.removeItem('supabase-auth-persist')
+    }
     
     return { data, error }
   },
