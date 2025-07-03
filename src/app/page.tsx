@@ -44,14 +44,14 @@ export default function HomePage() {
       {/* Animated Background */}
       <GradientBackground />
       {/* Navigation Header with Glassmorphism */}
-      <header className="fixed top-0 w-full z-50 glass">
+      <header className="fixed top-0 w-full z-50 glass md:backdrop-blur-xl bg-white md:bg-white/70 border-b border-gray-100 md:border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <span className="text-white text-xl">🧪</span>
+            <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">
+              <div className="w-9 sm:w-10 h-9 sm:h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                <span className="text-white text-lg sm:text-xl">🧪</span>
               </div>
-              <span className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-purple-600 transition-all duration-300">
+              <span className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-purple-600 transition-all duration-300">
                 The AI Lab
               </span>
             </Link>

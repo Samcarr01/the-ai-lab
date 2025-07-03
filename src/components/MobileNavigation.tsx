@@ -30,23 +30,23 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMenu}
-        className="md:hidden flex items-center justify-center w-12 h-12 rounded-lg bg-white/50 hover:bg-purple-50 border border-gray-200 transition-all duration-200 z-[80] relative shadow-sm"
+        className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg hover:bg-purple-50 transition-all duration-200 z-[80] relative"
         aria-label="Toggle navigation menu"
         style={{ touchAction: 'manipulation' }}
       >
         <div className="relative w-6 h-5 flex flex-col justify-between">
           <span 
-            className={`block h-[2px] w-full bg-gray-800 rounded-full transition-all duration-300 ease-out transform origin-center ${
+            className={`block h-[2px] w-full bg-gray-700 rounded-full transition-all duration-300 ease-out transform origin-center ${
               isOpen ? 'rotate-45 translate-y-[9px] bg-purple-600' : ''
             }`} 
           />
           <span 
-            className={`block h-[2px] w-full bg-gray-800 rounded-full transition-all duration-300 ease-out ${
+            className={`block h-[2px] w-full bg-gray-700 rounded-full transition-all duration-300 ease-out ${
               isOpen ? 'opacity-0 scale-0' : ''
             }`} 
           />
           <span 
-            className={`block h-[2px] w-full bg-gray-800 rounded-full transition-all duration-300 ease-out transform origin-center ${
+            className={`block h-[2px] w-full bg-gray-700 rounded-full transition-all duration-300 ease-out transform origin-center ${
               isOpen ? '-rotate-45 -translate-y-[9px] bg-purple-600' : ''
             }`} 
           />
@@ -68,27 +68,24 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
             <div className="flex flex-col h-full">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 gradient-purple rounded-xl flex items-center justify-center">
-                    <span className="text-white text-lg">🧪</span>
-                  </div>
-                  <span className="text-xl font-bold text-gradient">The AI Lab</span>
-                </div>
+                <h2 className="text-lg font-semibold text-gray-900">Menu</h2>
                 <button
                   onClick={toggleMenu}
-                  className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors"
                   aria-label="Close menu"
                 >
-                  <span className="text-2xl text-gray-600">×</span>
+                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </div>
 
               {/* Navigation Links */}
-              <nav className="flex-1 px-6 py-6">
-                <div className="space-y-2">
+              <nav className="flex-1 px-4 py-4">
+                <div className="space-y-1">
                   <button
                     onClick={handleFeatureClick}
-                    className="flex items-center w-full text-left text-lg text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all py-4 px-4 rounded-lg"
+                    className="flex items-center w-full text-left text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 active:bg-purple-100 transition-all py-3 px-3 rounded-lg"
                   >
                     <span className="mr-3 text-xl">✨</span>
                     Features
@@ -96,7 +93,7 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
                   
                   <button
                     onClick={handlePricingClick}
-                    className="flex items-center w-full text-left text-lg text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all py-4 px-4 rounded-lg"
+                    className="flex items-center w-full text-left text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 active:bg-purple-100 transition-all py-3 px-3 rounded-lg"
                   >
                     <span className="mr-3 text-xl">💜</span>
                     Pricing
@@ -105,7 +102,7 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
                   <Link
                     href="/blog"
                     onClick={handleLinkClick}
-                    className="flex items-center text-lg text-gray-700 hover:text-purple-600 hover:bg-purple-50 transition-all py-4 px-4 rounded-lg"
+                    className="flex items-center text-base font-medium text-gray-700 hover:text-purple-600 hover:bg-purple-50 active:bg-purple-100 transition-all py-3 px-3 rounded-lg"
                   >
                     <span className="mr-3 text-xl">📝</span>
                     Blog
@@ -114,7 +111,7 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
                   <Link
                     href="/login"
                     onClick={handleLinkClick}
-                    className="flex items-center text-lg text-purple-600 font-medium hover:text-purple-700 hover:bg-purple-50 transition-all py-4 px-4 rounded-lg"
+                    className="flex items-center text-base text-purple-600 font-semibold hover:text-purple-700 hover:bg-purple-50 active:bg-purple-100 transition-all py-3 px-3 rounded-lg"
                   >
                     <span className="mr-3 text-xl">👋</span>
                     Sign In
