@@ -30,33 +30,41 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMenu}
-        className="md:hidden flex items-center justify-center w-12 h-12 rounded-lg hover:bg-purple-50 transition-colors z-[80] relative"
+        className="md:hidden flex items-center justify-center w-12 h-12 rounded-lg bg-white/50 hover:bg-purple-50 border border-gray-200 transition-all duration-200 z-[80] relative shadow-sm"
         aria-label="Toggle navigation menu"
         style={{ touchAction: 'manipulation' }}
       >
-        <div className="flex flex-col w-6 h-6 justify-center">
-          <span className={`block h-0.5 w-full bg-gray-700 transition-all duration-300 ease-out ${
-            isOpen ? 'rotate-45 translate-y-1.5' : ''
-          }`} />
-          <span className={`block h-0.5 w-full bg-gray-700 transition-all duration-300 ease-out mt-1.5 ${
-            isOpen ? 'opacity-0' : ''
-          }`} />
-          <span className={`block h-0.5 w-full bg-gray-700 transition-all duration-300 ease-out mt-1.5 ${
-            isOpen ? '-rotate-45 -translate-y-1.5' : ''
-          }`} />
+        <div className="relative w-6 h-5 flex flex-col justify-between">
+          <span 
+            className={`block h-[2px] w-full bg-gray-800 rounded-full transition-all duration-300 ease-out transform origin-center ${
+              isOpen ? 'rotate-45 translate-y-[9px] bg-purple-600' : ''
+            }`} 
+          />
+          <span 
+            className={`block h-[2px] w-full bg-gray-800 rounded-full transition-all duration-300 ease-out ${
+              isOpen ? 'opacity-0 scale-0' : ''
+            }`} 
+          />
+          <span 
+            className={`block h-[2px] w-full bg-gray-800 rounded-full transition-all duration-300 ease-out transform origin-center ${
+              isOpen ? '-rotate-45 -translate-y-[9px] bg-purple-600' : ''
+            }`} 
+          />
         </div>
       </button>
 
-      {/* Mobile Menu Overlay - only render when open */}
-      {isOpen && (
-        <>
-          <div 
-            className="fixed inset-0 bg-black bg-opacity-50 z-[998] md:hidden"
-            onClick={handleLinkClick}
-          />
-          
-          {/* Mobile Menu Panel */}
-          <div className="fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-[999] md:hidden">
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={`fixed inset-0 bg-black bg-opacity-50 z-[998] md:hidden transition-opacity duration-300 ${
+          isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={handleLinkClick}
+      />
+      
+      {/* Mobile Menu Panel */}
+      <div className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-[999] md:hidden transform transition-transform duration-300 ease-out ${
+        isOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}>
             <div className="flex flex-col h-full">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -127,8 +135,6 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
               </div>
             </div>
           </div>
-        </>
-      )}
     </>
   )
 }
