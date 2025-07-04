@@ -236,20 +236,17 @@ export default function AdminPage() {
         await documentsService.deleteDocument(item.id)
       }
 
-      // Remove from local state immediately for instant feedback
-      setRecentUploads(prev => prev.filter(upload => upload.id !== item.id))
-      
       // Show success message
       showNotification(
         'Content Deleted',
-        `"${item.title}" deleted successfully! The content has been removed from all pages.`,
+        `"${item.title}" deleted successfully!`,
         'success'
       )
       
-      // Small delay then reload the page to ensure all content lists are updated
-      setTimeout(() => {
-        window.location.reload()
-      }, 1000)
+      // Small delay to ensure database delete completes, then reload content
+      setTimeout(async () => {
+        await loadRecentUploads()
+      }, 500)
       
     } catch (err) {
       console.error('Delete failed:', err)
@@ -325,7 +322,11 @@ export default function AdminPage() {
       setGeneratedBlog(null)
       setBlogPrompt('')
       setKnowledgeBase('')
-      await loadBlogPosts() // Refresh blog posts list
+      
+      // Small delay to ensure database insert completes, then reload blog posts
+      setTimeout(async () => {
+        await loadBlogPosts()
+      }, 500)
       
     } catch (err) {
       console.error('Blog publishing failed:', err)
@@ -343,7 +344,11 @@ export default function AdminPage() {
     try {
       await blogService.deletePost(postId)
       showNotification('Blog Deleted', 'Blog post deleted successfully!', 'success')
-      await loadBlogPosts() // Refresh blog posts list
+      
+      // Small delay to ensure database delete completes, then reload blog posts
+      setTimeout(async () => {
+        await loadBlogPosts()
+      }, 500)
     } catch (err) {
       console.error('Blog deletion failed:', err)
       showNotification('Delete Failed', 'Failed to delete blog post. Please try again.', 'error')
@@ -373,7 +378,11 @@ export default function AdminPage() {
       if (updatedPost) {
         showNotification('Blog Updated', 'Blog post updated successfully!', 'success')
         setEditingPost(null)
-        await loadBlogPosts() // Refresh blog posts list
+        
+        // Small delay to ensure database update completes, then reload blog posts
+        setTimeout(async () => {
+          await loadBlogPosts()
+        }, 500)
       } else {
         throw new Error('Failed to update blog post')
       }
