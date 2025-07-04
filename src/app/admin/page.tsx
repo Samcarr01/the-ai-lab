@@ -106,8 +106,15 @@ export default function AdminPage() {
 
   const loadRecentUploads = async () => {
     try {
+      console.log('📡 Fetching content from admin API...')
       // Use admin API endpoint that bypasses RLS to ensure all content is visible
-      const response = await fetch('/api/admin/content')
+      const response = await fetch('/api/admin/content', {
+        // Add cache busting to prevent stale data
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      })
       if (!response.ok) {
         throw new Error('Failed to fetch content')
       }
@@ -117,6 +124,7 @@ export default function AdminPage() {
         // Show ALL content in admin panel, not just last 10
         setRecentUploads(result.content)
         console.log(`✅ Loaded ${result.content.length} items for admin panel`)
+        console.log('📋 Content featured status:', result.content.map((item: any) => `${item.title}: ${item.is_featured}`))
       } else {
         throw new Error(result.error || 'Failed to load content')
       }
@@ -198,12 +206,16 @@ export default function AdminPage() {
   const handleToggleFeature = async (item: any) => {
     try {
       const newFeaturedStatus = !item.is_featured
+      console.log(`🔄 Toggling ${item.type} "${item.title}" from ${item.is_featured} to ${newFeaturedStatus}`)
       
+      let toggleResult
       if (item.type === 'gpt') {
-        await gptsService.toggleFeature(item.id, newFeaturedStatus)
+        toggleResult = await gptsService.toggleFeature(item.id, newFeaturedStatus)
       } else if (item.type === 'document') {
-        await documentsService.toggleFeature(item.id, newFeaturedStatus)
+        toggleResult = await documentsService.toggleFeature(item.id, newFeaturedStatus)
       }
+      
+      console.log('🔄 Toggle API result:', toggleResult)
 
       // Show success message
       const action = newFeaturedStatus ? 'featured' : 'unfeatured'
@@ -213,10 +225,12 @@ export default function AdminPage() {
         'success'
       )
       
-      // Small delay to ensure database update is complete, then reload
+      // Longer delay to ensure database update is complete, then reload
       setTimeout(async () => {
+        console.log('🔄 Reloading content after toggle...')
         await loadRecentUploads()
-      }, 500)
+        console.log('✅ Content reload complete')
+      }, 1000)
       
     } catch (err) {
       console.error('Toggle feature failed:', err)
