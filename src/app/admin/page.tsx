@@ -218,8 +218,8 @@ export default function AdminPage() {
       console.log('🔄 Toggle API result:', toggleResult)
 
       // If the API call was successful, immediately update local state with the confirmed result
-      if (toggleResult && (toggleResult as any).success && (toggleResult as any).updated) {
-        const updated = (toggleResult as any).updated
+      if (toggleResult && toggleResult.success && toggleResult.updated) {
+        const updated = toggleResult.updated
         console.log(`✅ Confirmed toggle: ${updated.title} is_featured = ${updated.is_featured}`)
         
         // Update local state with the confirmed database value
@@ -237,25 +237,7 @@ export default function AdminPage() {
           'success'
         )
       } else {
-        // If no success confirmation, just update with our expected value and reload to verify
-        console.log('⚠️ No success confirmation, updating optimistically and reloading...')
-        setRecentUploads(prev => prev.map(upload => 
-          upload.id === item.id 
-            ? { ...upload, is_featured: newFeaturedStatus }
-            : upload
-        ))
-
-        const action = newFeaturedStatus ? 'featured' : 'unfeatured'
-        showNotification(
-          `${action.charAt(0).toUpperCase() + action.slice(1)} Successfully`,
-          `"${item.title}" has been ${action} successfully!`,
-          'success'
-        )
-        
-        // Verify the change after a short delay
-        setTimeout(async () => {
-          await loadRecentUploads()
-        }, 1000)
+        throw new Error('Toggle API did not return success confirmation')
       }
       
     } catch (err) {

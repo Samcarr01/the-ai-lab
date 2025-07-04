@@ -133,7 +133,7 @@ export const gptsService = {
     return true
   },
 
-  async toggleFeature(gptId: string, isFeatured: boolean): Promise<boolean> {
+  async toggleFeature(gptId: string, isFeatured: boolean): Promise<any> {
     try {
       const response = await fetch('/api/admin/toggle-feature', {
         method: 'POST',
@@ -155,7 +155,7 @@ export const gptsService = {
       const result = await response.json()
       console.log('GPT feature toggle result:', result)
       
-      return true
+      return result
     } catch (error) {
       console.error('Error toggling GPT feature status:', error)
       throw error

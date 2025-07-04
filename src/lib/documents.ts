@@ -220,7 +220,7 @@ export const documentsService = {
     return true
   },
 
-  async toggleFeature(documentId: string, isFeatured: boolean): Promise<boolean> {
+  async toggleFeature(documentId: string, isFeatured: boolean): Promise<any> {
     try {
       const response = await fetch('/api/admin/toggle-feature', {
         method: 'POST',
@@ -242,7 +242,7 @@ export const documentsService = {
       const result = await response.json()
       console.log('Document feature toggle result:', result)
       
-      return true
+      return result
     } catch (error) {
       console.error('Error toggling document feature status:', error)
       throw error
