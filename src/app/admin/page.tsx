@@ -205,23 +205,18 @@ export default function AdminPage() {
         await documentsService.toggleFeature(item.id, newFeaturedStatus)
       }
 
-      // Update local state immediately
-      setRecentUploads(prev => prev.map(upload => 
-        upload.id === item.id 
-          ? { ...upload, is_featured: newFeaturedStatus }
-          : upload
-      ))
-      
-      // Show success message and reload data to reflect changes
+      // Show success message
       const action = newFeaturedStatus ? 'featured' : 'unfeatured'
       showNotification(
         `${action.charAt(0).toUpperCase() + action.slice(1)} Successfully`,
-        `"${item.title}" has been ${action} successfully! Refreshing content to show changes.`,
+        `"${item.title}" has been ${action} successfully!`,
         'success'
       )
       
-      // Reload recent uploads to show updated status
-      await loadRecentUploads()
+      // Small delay to ensure database update is complete, then reload
+      setTimeout(async () => {
+        await loadRecentUploads()
+      }, 500)
       
     } catch (err) {
       console.error('Toggle feature failed:', err)
