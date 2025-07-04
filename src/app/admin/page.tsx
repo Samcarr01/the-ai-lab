@@ -675,10 +675,7 @@ export default function AdminPage() {
             <div className="mb-6">
               <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 gap-1 sm:gap-0">
                 <button
-                  onClick={() => {
-                    setContentFilter('gpt')
-                    setUploadType('gpt')
-                  }}
+                  onClick={() => setContentFilter('gpt')}
                   className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     contentFilter === 'gpt'
                       ? 'gradient-purple text-white shadow-lg'
@@ -688,10 +685,7 @@ export default function AdminPage() {
                   🤖 GPTs
                 </button>
                 <button
-                  onClick={() => {
-                    setContentFilter('document')
-                    setUploadType('document')
-                  }}
+                  onClick={() => setContentFilter('document')}
                   className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     contentFilter === 'document'
                       ? 'gradient-purple text-white shadow-lg'
