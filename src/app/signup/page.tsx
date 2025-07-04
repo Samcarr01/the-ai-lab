@@ -36,13 +36,22 @@ export default function SignupPage() {
       const { data, error } = await auth.signUp(email, password)
       
       if (error) {
-        setError(error.message)
+        // Provide more user-friendly error messages
+        let friendlyError = error.message
+        if (error.message.includes('already registered')) {
+          friendlyError = 'This email is already registered. Try signing in instead!'
+        } else if (error.message.includes('invalid email')) {
+          friendlyError = 'Please enter a valid email address.'
+        } else if (error.message.includes('weak password')) {
+          friendlyError = 'Password is too weak. Please use at least 8 characters with a mix of letters and numbers.'
+        }
+        setError(friendlyError)
       } else if (data.user) {
         setSuccess(true)
         // Don't redirect immediately - user needs to confirm email
       }
     } catch (err) {
-      setError('An unexpected error occurred')
+      setError('Something went wrong. Please check your internet connection and try again.')
     } finally {
       setLoading(false)
     }
@@ -97,10 +106,40 @@ export default function SignupPage() {
           )}
 
           {success && (
-            <div className="mb-4 p-4 rounded-xl bg-green-50 border border-green-200">
-              <p className="text-sm text-green-600">
-                🎉 Account created! Check your email to confirm your account and access your free account.
-              </p>
+            <div className="mb-6 p-6 rounded-xl bg-green-50 border border-green-200 shadow-sm">
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                  <span className="text-3xl">✅</span>
+                </div>
+                <h3 className="text-lg font-semibold text-green-900 mb-2">
+                  Account Created Successfully!
+                </h3>
+                <p className="text-sm text-green-700 mb-4">
+                  We've sent a confirmation link to <strong>{email}</strong>
+                </p>
+                <div className="bg-green-100 rounded-lg p-4 mb-4">
+                  <h4 className="font-semibold text-green-900 mb-2 text-sm">📧 Next Steps:</h4>
+                  <ol className="text-xs text-green-800 space-y-1 text-left">
+                    <li><strong>1.</strong> Check your email inbox (and spam folder)</li>
+                    <li><strong>2.</strong> Click the confirmation link in the email</li>
+                    <li><strong>3.</strong> You'll be automatically signed in and ready to explore!</li>
+                  </ol>
+                </div>
+                <p className="text-xs text-green-600">
+                  💡 Didn't receive the email? Check your spam folder or{' '}
+                  <button 
+                    onClick={() => {
+                      setSuccess(false)
+                      setEmail('')
+                      setPassword('')
+                      setConfirmPassword('')
+                    }}
+                    className="underline hover:no-underline"
+                  >
+                    try again
+                  </button>
+                </p>
+              </div>
             </div>
           )}
 
@@ -231,7 +270,7 @@ export default function SignupPage() {
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>Creating account...</span>
+                    <span>Creating account & sending confirmation...</span>
                   </>
                 ) : (
                   <>
