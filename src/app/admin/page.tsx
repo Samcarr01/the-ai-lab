@@ -22,7 +22,7 @@ export default function AdminPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'content' | 'blog'>('content')
-  const [contentFilter, setContentFilter] = useState<'all' | 'gpt' | 'document'>('all')
+  const [contentFilter, setContentFilter] = useState<'gpt' | 'document'>('gpt')
   const [uploadType, setUploadType] = useState<'gpt' | 'document'>('gpt')
   const [gptUrl, setGptUrl] = useState('')
   const [documentFile, setDocumentFile] = useState<File | null>(null)
@@ -675,16 +675,6 @@ export default function AdminPage() {
             <div className="mb-6">
               <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 gap-1 sm:gap-0">
                 <button
-                  onClick={() => setContentFilter('all')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
-                    contentFilter === 'all'
-                      ? 'gradient-purple text-white shadow-lg'
-                      : 'text-gray-600 hover:text-purple-600'
-                  }`}
-                >
-                  📊 All Content
-                </button>
-                <button
                   onClick={() => {
                     setContentFilter('gpt')
                     setUploadType('gpt')
@@ -695,7 +685,7 @@ export default function AdminPage() {
                       : 'text-gray-600 hover:text-purple-600'
                   }`}
                 >
-                  🤖 GPTs Only
+                  🤖 GPTs
                 </button>
                 <button
                   onClick={() => {
@@ -708,14 +698,14 @@ export default function AdminPage() {
                       : 'text-gray-600 hover:text-purple-600'
                   }`}
                 >
-                  📚 Playbooks Only
+                  📚 Playbooks
                 </button>
               </div>
             </div>
             
             <div className="space-y-6">
             {/* GPTs Section */}
-            {(contentFilter === 'all' || contentFilter === 'gpt') && (
+            {contentFilter === 'gpt' && (
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="text-lg mr-2">🤖</span>
@@ -782,7 +772,7 @@ export default function AdminPage() {
             )}
 
             {/* Playbooks Section */}
-            {(contentFilter === 'all' || contentFilter === 'document') && (
+            {contentFilter === 'document' && (
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="text-lg mr-2">📚</span>
