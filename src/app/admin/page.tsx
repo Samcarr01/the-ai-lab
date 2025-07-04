@@ -362,7 +362,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white overflow-x-hidden">
       {/* Header */}
       <header className="glass border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -400,7 +400,7 @@ export default function AdminPage() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6 sm:py-8 overflow-hidden">
         {/* Header Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 gradient-purple rounded-2xl mb-6 shadow-2xl animate-float">
@@ -417,7 +417,7 @@ export default function AdminPage() {
         {/* Tab Navigation */}
         <div className="mb-8">
           <div className="flex justify-center">
-            <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 w-full sm:w-auto max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 w-full sm:w-auto max-w-sm mx-auto">
               <button
                 onClick={() => setActiveTab('content')}
                 className={`px-4 sm:px-6 py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
@@ -444,9 +444,9 @@ export default function AdminPage() {
 
         {/* Content Upload Tab */}
         {activeTab === 'content' && (
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
           {/* Upload Section */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-purple-100/50">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
               <span className="text-xl sm:text-2xl mr-2 sm:mr-3">📤</span>
               <span>Upload Content</span>
@@ -594,9 +594,9 @@ export default function AdminPage() {
           </div>
 
           {/* Content Management */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* GPTs Section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-purple-100/50">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
               <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
                 <span className="text-xl sm:text-2xl mr-2 sm:mr-3">🤖</span>
                 <span>GPTs Collection</span>
@@ -661,7 +661,7 @@ export default function AdminPage() {
             </div>
 
             {/* Playbooks Section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-purple-100/50">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
               <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
                 <span className="text-xl sm:text-2xl mr-2 sm:mr-3">📚</span>
                 <span>Playbooks Collection</span>
@@ -730,8 +730,8 @@ export default function AdminPage() {
 
         {/* Blog Management Tab */}
         {activeTab === 'blog' && (
-          <div className="max-w-6xl mx-auto">
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-purple-100/50">
+          <div className="max-w-6xl mx-auto px-2 sm:px-0">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
               <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
                 <span className="text-xl sm:text-2xl mr-2 sm:mr-3">✍️</span>
                 <span>AI Blog Writing Assistant</span>
