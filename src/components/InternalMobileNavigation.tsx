@@ -98,18 +98,31 @@ export default function InternalMobileNavigation({
 
           {/* User Info */}
           {userEmail && (
-            <div className={`px-6 py-5 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50 transition-all duration-500 delay-100 ${
+            <div className={`px-6 py-6 border-b border-gray-200 bg-gradient-to-br from-purple-50 via-blue-50 to-purple-50 transition-all duration-500 delay-100 ${
               animateItems ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
             }`}>
-              <div className="flex items-center space-x-3">
-                <div className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm transition-all duration-200 hover:scale-105 ${
+              <div className="flex flex-col space-y-3">
+                {/* Premium Badge */}
+                <div className={`self-start px-5 py-3 rounded-2xl text-base font-bold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl ${
                   isPro 
-                    ? 'bg-purple-100 text-purple-800 border border-purple-200' 
-                    : 'bg-blue-100 text-blue-800 border border-blue-200'
+                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-2 border-purple-300 shadow-purple-200' 
+                    : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white border-2 border-blue-300 shadow-blue-200'
                 }`}>
-                  {isPro ? '✨ Pro' : '🆓 Free'}
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xl">{isPro ? '✨' : '🆓'}</span>
+                    <span className="tracking-wide">{isPro ? 'PRO MEMBER' : 'FREE ACCOUNT'}</span>
+                  </div>
                 </div>
-                <span className="text-sm text-gray-700 truncate font-medium">{userEmail}</span>
+                
+                {/* Email Display */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-gray-200 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-gray-600 font-medium truncate max-w-[200px]" title={userEmail}>
+                      {userEmail}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           )}

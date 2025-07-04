@@ -3,26 +3,37 @@
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { auth } from '@/lib/auth'
+import { userService, type UserProfile } from '@/lib/user'
 import GradientBackground from '@/components/NetworkBackground'
 import ScrollAnimation from '@/components/ScrollAnimation'
 import AnimatedCounter from '@/components/AnimatedCounter'
 import TypewriterText from '@/components/TypewriterText'
 import PromptRefinerDemo from '@/components/PromptRefinerDemo'
 import PlaybookFlipDemo from '@/components/PlaybookFlipDemo'
+import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import MobileNavigation from '@/components/MobileNavigation'
 
 export default function HomePage() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   
-  // Check authentication status
+  // Check authentication status and get user profile
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const { user } = await auth.getUser()
-        setIsLoggedIn(!!user)
+        const { user: authUser } = await auth.getUser()
+        if (authUser) {
+          // Get user profile for Pro status
+          let userProfile = await userService.getProfile(authUser.id)
+          if (!userProfile) {
+            userProfile = await userService.createProfile(authUser.id, authUser.email || '')
+          }
+          setUser(userProfile)
+        } else {
+          setUser(null)
+        }
       } catch (error) {
-        setIsLoggedIn(false)
+        setUser(null)
       } finally {
         setLoading(false)
       }
@@ -91,7 +102,7 @@ export default function HomePage() {
                   <div className="h-10 w-20 bg-gray-200 rounded-lg"></div>
                   <div className="h-10 w-24 bg-gray-200 rounded-full"></div>
                 </div>
-              ) : isLoggedIn ? (
+              ) : user ? (
                 <Link 
                   href="/dashboard" 
                   className="gradient-purple text-white px-6 py-2.5 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1 relative overflow-hidden group"
@@ -126,10 +137,18 @@ export default function HomePage() {
             </nav>
             
             {/* Mobile Navigation */}
-            <MobileNavigation 
-              onFeatureClick={handleFeatureClick}
-              onPricingClick={handlePricingClick}
-            />
+            {user ? (
+              <InternalMobileNavigation 
+                userEmail={user.email}
+                isPro={user.is_pro}
+                showAdminLink={user.email === 'samcarr1232@gmail.com'}
+              />
+            ) : (
+              <MobileNavigation 
+                onFeatureClick={handleFeatureClick}
+                onPricingClick={handlePricingClick}
+              />
+            )}
           </div>
         </div>
       </header>
