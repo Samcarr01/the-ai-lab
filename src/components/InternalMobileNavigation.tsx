@@ -8,12 +8,14 @@ interface InternalMobileNavigationProps {
   userEmail?: string
   isPro?: boolean
   showAdminLink?: boolean
+  showSignOut?: boolean
 }
 
 export default function InternalMobileNavigation({ 
   userEmail, 
   isPro = false, 
-  showAdminLink = false 
+  showAdminLink = false,
+  showSignOut = true
 }: InternalMobileNavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [animateItems, setAnimateItems] = useState(false)
@@ -206,20 +208,30 @@ export default function InternalMobileNavigation({
           </nav>
 
           {/* Sign Out Button */}
-          <div className={`p-6 border-t border-gray-200 bg-gray-50 transition-all duration-500 delay-900 ${
-            animateItems ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-          }`}>
-            <form action="/auth/sign-out" method="post" className="w-full">
+          {showSignOut && (
+            <div className={`p-6 border-t border-gray-200 bg-gray-50 transition-all duration-500 delay-900 ${
+              animateItems ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+            }`}>
               <button
-                type="submit"
-                onClick={handleLinkClick}
+                onClick={async () => {
+                  try {
+                    handleLinkClick()
+                    // Use proper auth signOut method
+                    const { auth } = await import('@/lib/auth')
+                    await auth.signOut()
+                    window.location.href = '/'
+                  } catch (error) {
+                    console.error('Sign out error:', error)
+                    window.location.href = '/'
+                  }
+                }}
                 className="group flex items-center justify-center w-full text-gray-600 hover:text-red-600 py-4 px-4 rounded-xl hover:bg-red-50 border border-gray-200 hover:border-red-200 transition-all duration-200 hover:scale-105 active:scale-95 font-medium"
               >
                 <span className="mr-3 text-xl transition-transform duration-200 group-hover:scale-110">👋</span>
                 Sign Out
               </button>
-            </form>
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </>

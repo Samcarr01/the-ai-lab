@@ -142,6 +142,7 @@ export default function HomePage() {
                 userEmail={user.email}
                 isPro={user.is_pro}
                 showAdminLink={user.email === 'samcarr1232@gmail.com'}
+                showSignOut={false}
               />
             ) : (
               <MobileNavigation 
