@@ -98,37 +98,6 @@ export default function InternalMobileNavigation({
             </button>
           </div>
 
-          {/* User Info */}
-          {userEmail && (
-            <div className={`px-6 py-6 border-b border-gray-200 bg-gradient-to-br from-purple-50 via-blue-50 to-purple-50 transition-all duration-500 delay-100 ${
-              animateItems ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
-            }`}>
-              <div className="flex flex-col space-y-3">
-                {/* Premium Badge */}
-                <div className={`self-start px-5 py-3 rounded-2xl text-base font-bold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl ${
-                  isPro 
-                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-2 border-purple-300 shadow-purple-200' 
-                    : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white border-2 border-blue-300 shadow-blue-200'
-                }`}>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xl">{isPro ? '✨' : '🆓'}</span>
-                    <span className="tracking-wide">{isPro ? 'PRO MEMBER' : 'FREE ACCOUNT'}</span>
-                  </div>
-                </div>
-                
-                {/* Email Display */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-gray-200 shadow-sm">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-gray-600 font-medium truncate max-w-[200px]" title={userEmail}>
-                      {userEmail}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Navigation Links */}
           <nav className="flex-1 px-6 py-6">
             <div className="space-y-2">
@@ -206,6 +175,37 @@ export default function InternalMobileNavigation({
               )}
             </div>
           </nav>
+
+          {/* User Info Section - Moved to Bottom */}
+          {userEmail && (
+            <div className={`px-6 py-6 border-t border-gray-200 bg-gradient-to-br from-purple-50 via-blue-50 to-purple-50 transition-all duration-500 delay-800 ${
+              animateItems ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+            }`}>
+              <div className="flex flex-col space-y-3">
+                {/* Premium Badge */}
+                <div className={`self-start px-5 py-3 rounded-2xl text-base font-bold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl ${
+                  isPro 
+                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-2 border-purple-300 shadow-purple-200' 
+                    : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white border-2 border-blue-300 shadow-blue-200'
+                }`}>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xl">{isPro ? '✨' : '🆓'}</span>
+                    <span className="tracking-wide">{isPro ? 'PRO MEMBER' : 'FREE ACCOUNT'}</span>
+                  </div>
+                </div>
+                
+                {/* Email Display */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-gray-200 shadow-sm">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-gray-600 font-medium truncate max-w-[200px]" title={userEmail}>
+                      {userEmail}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Sign Out Button */}
           {showSignOut && (
