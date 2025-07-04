@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
+import NotificationModal from '@/components/NotificationModal'
 import { gptsService } from '@/lib/gpts'
 import { documentsService } from '@/lib/documents'
 import { blogService, type BlogPost } from '@/lib/blog'
@@ -21,6 +22,7 @@ export default function AdminPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<'content' | 'blog'>('content')
+  const [contentFilter, setContentFilter] = useState<'all' | 'gpt' | 'document'>('all')
   const [uploadType, setUploadType] = useState<'gpt' | 'document'>('gpt')
   const [gptUrl, setGptUrl] = useState('')
   const [documentFile, setDocumentFile] = useState<File | null>(null)
@@ -38,7 +40,32 @@ export default function AdminPage() {
   const [publishingBlog, setPublishingBlog] = useState(false)
   const [includeWebSearch, setIncludeWebSearch] = useState(true)
   const [includeImages, setIncludeImages] = useState(true)
+  const [notification, setNotification] = useState<{
+    isOpen: boolean
+    title: string
+    message: string
+    type: 'success' | 'error' | 'info'
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'success'
+  })
   const router = useRouter()
+
+  // Helper function to show notifications
+  const showNotification = (title: string, message: string, type: 'success' | 'error' | 'info' = 'success') => {
+    setNotification({
+      isOpen: true,
+      title,
+      message,
+      type
+    })
+  }
+
+  const closeNotification = () => {
+    setNotification(prev => ({ ...prev, isOpen: false }))
+  }
 
   useEffect(() => {
     const loadData = async () => {
@@ -121,7 +148,7 @@ export default function AdminPage() {
       setAnalyzedContent(analyzed)
     } catch (err) {
       console.error('Analysis failed:', err)
-      alert('Analysis failed. Please try again.')
+      showNotification('Analysis Failed', 'Unable to analyze the content. Please check the URL or file and try again.', 'error')
     } finally {
       setAnalyzing(false)
     }
@@ -156,10 +183,10 @@ export default function AdminPage() {
       // Reload recent uploads
       await loadRecentUploads()
       
-      alert('Content uploaded successfully!')
+      showNotification('Upload Successful', 'Content has been uploaded and analyzed successfully!', 'success')
     } catch (err) {
       console.error('Upload failed:', err)
-      alert('Upload failed. Please try again.')
+      showNotification('Upload Failed', 'Unable to upload the content. Please try again.', 'error')
     } finally {
       setUploading(false)
     }
@@ -184,14 +211,18 @@ export default function AdminPage() {
       
       // Show success message and reload data to reflect changes
       const action = newFeaturedStatus ? 'featured' : 'unfeatured'
-      alert(`"${item.title}" has been ${action} successfully! Refreshing content to show changes.`)
+      showNotification(
+        `${action.charAt(0).toUpperCase() + action.slice(1)} Successfully`,
+        `"${item.title}" has been ${action} successfully! Refreshing content to show changes.`,
+        'success'
+      )
       
       // Reload recent uploads to show updated status
       await loadRecentUploads()
       
     } catch (err) {
       console.error('Toggle feature failed:', err)
-      alert('Failed to update feature status. Please try again.')
+      showNotification('Update Failed', 'Failed to update feature status. Please try again.', 'error')
     }
   }
 
@@ -211,7 +242,11 @@ export default function AdminPage() {
       setRecentUploads(prev => prev.filter(upload => upload.id !== item.id))
       
       // Show success message
-      alert(`"${item.title}" deleted successfully! The content has been removed from all pages.`)
+      showNotification(
+        'Content Deleted',
+        `"${item.title}" deleted successfully! The content has been removed from all pages.`,
+        'success'
+      )
       
       // Small delay then reload the page to ensure all content lists are updated
       setTimeout(() => {
@@ -220,7 +255,7 @@ export default function AdminPage() {
       
     } catch (err) {
       console.error('Delete failed:', err)
-      alert('Delete failed. Please try again.')
+      showNotification('Delete Failed', 'Unable to delete the content. Please try again.', 'error')
     }
   }
 
@@ -257,7 +292,11 @@ export default function AdminPage() {
     } catch (err) {
       console.error('Blog generation failed:', err)
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
-      alert(`Failed to generate blog post: ${errorMessage}\n\nPossible issues:\n- OpenAI API key not configured\n- TAVILY_API_KEY missing (for web search)\n- Network connectivity\n\nPlease check your environment variables.`)
+      showNotification(
+        'Blog Generation Failed',
+        `${errorMessage}. Please check your API configuration and try again.`,
+        'error'
+      )
     } finally {
       setGeneratingBlog(false)
     }
@@ -284,7 +323,7 @@ export default function AdminPage() {
         read_time: generatedBlog.read_time
       })
 
-      alert('Blog post published successfully!')
+      showNotification('Blog Published', 'Blog post published successfully!', 'success')
       setGeneratedBlog(null)
       setBlogPrompt('')
       setKnowledgeBase('')
@@ -292,7 +331,7 @@ export default function AdminPage() {
       
     } catch (err) {
       console.error('Blog publishing failed:', err)
-      alert('Failed to publish blog post. Please try again.')
+      showNotification('Publish Failed', 'Failed to publish blog post. Please try again.', 'error')
     } finally {
       setPublishingBlog(false)
     }
@@ -305,11 +344,11 @@ export default function AdminPage() {
 
     try {
       await blogService.deletePost(postId)
-      alert('Blog post deleted successfully!')
+      showNotification('Blog Deleted', 'Blog post deleted successfully!', 'success')
       await loadBlogPosts() // Refresh blog posts list
     } catch (err) {
       console.error('Blog deletion failed:', err)
-      alert('Failed to delete blog post. Please try again.')
+      showNotification('Delete Failed', 'Failed to delete blog post. Please try again.', 'error')
     }
   }
 
@@ -334,7 +373,7 @@ export default function AdminPage() {
       })
 
       if (updatedPost) {
-        alert('Blog post updated successfully!')
+        showNotification('Blog Updated', 'Blog post updated successfully!', 'success')
         setEditingPost(null)
         await loadBlogPosts() // Refresh blog posts list
       } else {
@@ -342,7 +381,7 @@ export default function AdminPage() {
       }
     } catch (err) {
       console.error('Blog update failed:', err)
-      alert('Failed to update blog post. Please try again.')
+      showNotification('Update Failed', 'Failed to update blog post. Please try again.', 'error')
     } finally {
       setPublishingBlog(false)
     }
@@ -599,9 +638,52 @@ export default function AdminPage() {
               <span className="text-lg sm:text-xl lg:text-2xl mr-2 sm:mr-3">📊</span>
               <span>Content Management</span>
             </h2>
+
+            {/* Filter Buttons */}
+            <div className="mb-6">
+              <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 gap-1 sm:gap-0">
+                <button
+                  onClick={() => setContentFilter('all')}
+                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
+                    contentFilter === 'all'
+                      ? 'gradient-purple text-white shadow-lg'
+                      : 'text-gray-600 hover:text-purple-600'
+                  }`}
+                >
+                  📊 All Content
+                </button>
+                <button
+                  onClick={() => {
+                    setContentFilter('gpt')
+                    setUploadType('gpt')
+                  }}
+                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
+                    contentFilter === 'gpt'
+                      ? 'gradient-purple text-white shadow-lg'
+                      : 'text-gray-600 hover:text-purple-600'
+                  }`}
+                >
+                  🤖 GPTs Only
+                </button>
+                <button
+                  onClick={() => {
+                    setContentFilter('document')
+                    setUploadType('document')
+                  }}
+                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
+                    contentFilter === 'document'
+                      ? 'gradient-purple text-white shadow-lg'
+                      : 'text-gray-600 hover:text-purple-600'
+                  }`}
+                >
+                  📚 Playbooks Only
+                </button>
+              </div>
+            </div>
             
             <div className="space-y-6">
             {/* GPTs Section */}
+            {(contentFilter === 'all' || contentFilter === 'gpt') && (
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="text-lg mr-2">🤖</span>
@@ -665,8 +747,10 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
+            )}
 
             {/* Playbooks Section */}
+            {(contentFilter === 'all' || contentFilter === 'document') && (
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <span className="text-lg mr-2">📚</span>
@@ -730,6 +814,7 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
+            )}
             </div>
           </div>
         </div>
@@ -1111,6 +1196,15 @@ export default function AdminPage() {
           </div>
         )}
       </div>
+
+      {/* Notification Modal */}
+      <NotificationModal
+        isOpen={notification.isOpen}
+        onClose={closeNotification}
+        title={notification.title}
+        message={notification.message}
+        type={notification.type}
+      />
     </div>
   )
 }
