@@ -106,20 +106,23 @@ export default function AdminPage() {
 
   const loadRecentUploads = async () => {
     try {
-      const [gpts, documents] = await Promise.all([
-        gptsService.getAllGPTs(),
-        documentsService.getAllDocuments()
-      ])
+      // Use admin API endpoint that bypasses RLS to ensure all content is visible
+      const response = await fetch('/api/admin/content')
+      if (!response.ok) {
+        throw new Error('Failed to fetch content')
+      }
       
-      // Combine and sort by date
-      const allUploads = [
-        ...gpts.map(gpt => ({ ...gpt, type: 'gpt' })),
-        ...documents.map(doc => ({ ...doc, type: 'document' }))
-      ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      
-      setRecentUploads(allUploads.slice(0, 10)) // Show last 10
+      const result = await response.json()
+      if (result.success) {
+        // Show ALL content in admin panel, not just last 10
+        setRecentUploads(result.content)
+        console.log(`✅ Loaded ${result.content.length} items for admin panel`)
+      } else {
+        throw new Error(result.error || 'Failed to load content')
+      }
     } catch (err) {
       console.error('Error loading recent uploads:', err)
+      showNotification('Load Failed', 'Unable to load content. Please refresh the page.', 'error')
     }
   }
 
