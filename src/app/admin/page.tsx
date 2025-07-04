@@ -444,7 +444,7 @@ export default function AdminPage() {
 
         {/* Content Upload Tab */}
         {activeTab === 'content' && (
-        <div className="grid lg:grid-cols-2 gap-4 lg:gap-8 px-2 sm:px-0">
+        <div className="space-y-6">
           {/* Upload Section */}
           <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
@@ -594,13 +594,19 @@ export default function AdminPage() {
           </div>
 
           {/* Content Management */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
+              <span className="text-lg sm:text-xl lg:text-2xl mr-2 sm:mr-3">📊</span>
+              <span>Content Management</span>
+            </h2>
+            
+            <div className="space-y-6">
             {/* GPTs Section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
-                <span className="text-xl sm:text-2xl mr-2 sm:mr-3">🤖</span>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <span className="text-lg mr-2">🤖</span>
                 <span>GPTs Collection</span>
-              </h2>
+              </h3>
 
               {recentUploads.filter(item => item.type === 'gpt').length > 0 ? (
                 <div className="max-h-96 overflow-y-auto space-y-4 pr-2">
@@ -661,11 +667,11 @@ export default function AdminPage() {
             </div>
 
             {/* Playbooks Section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
-                <span className="text-xl sm:text-2xl mr-2 sm:mr-3">📚</span>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <span className="text-lg mr-2">📚</span>
                 <span>Playbooks Collection</span>
-              </h2>
+              </h3>
 
               {recentUploads.filter(item => item.type === 'document').length > 0 ? (
                 <div className="max-h-96 overflow-y-auto space-y-4 pr-2">
@@ -723,6 +729,7 @@ export default function AdminPage() {
                   <p className="text-gray-600">No playbooks uploaded yet. Start by analyzing your first PDF!</p>
                 </div>
               )}
+            </div>
             </div>
           </div>
         </div>
