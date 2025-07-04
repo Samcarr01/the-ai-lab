@@ -217,24 +217,53 @@ export default function AdminPage() {
       
       console.log('🔄 Toggle API result:', toggleResult)
 
-      // Show success message
-      const action = newFeaturedStatus ? 'featured' : 'unfeatured'
-      showNotification(
-        `${action.charAt(0).toUpperCase() + action.slice(1)} Successfully`,
-        `"${item.title}" has been ${action} successfully!`,
-        'success'
-      )
-      
-      // Longer delay to ensure database update is complete, then reload
-      setTimeout(async () => {
-        console.log('🔄 Reloading content after toggle...')
-        await loadRecentUploads()
-        console.log('✅ Content reload complete')
-      }, 1000)
+      // If the API call was successful, immediately update local state with the confirmed result
+      if (toggleResult && (toggleResult as any).success && (toggleResult as any).updated) {
+        const updated = (toggleResult as any).updated
+        console.log(`✅ Confirmed toggle: ${updated.title} is_featured = ${updated.is_featured}`)
+        
+        // Update local state with the confirmed database value
+        setRecentUploads(prev => prev.map(upload => 
+          upload.id === item.id 
+            ? { ...upload, is_featured: updated.is_featured }
+            : upload
+        ))
+
+        // Show success message
+        const action = updated.is_featured ? 'featured' : 'unfeatured'
+        showNotification(
+          `${action.charAt(0).toUpperCase() + action.slice(1)} Successfully`,
+          `"${item.title}" has been ${action} successfully!`,
+          'success'
+        )
+      } else {
+        // If no success confirmation, just update with our expected value and reload to verify
+        console.log('⚠️ No success confirmation, updating optimistically and reloading...')
+        setRecentUploads(prev => prev.map(upload => 
+          upload.id === item.id 
+            ? { ...upload, is_featured: newFeaturedStatus }
+            : upload
+        ))
+
+        const action = newFeaturedStatus ? 'featured' : 'unfeatured'
+        showNotification(
+          `${action.charAt(0).toUpperCase() + action.slice(1)} Successfully`,
+          `"${item.title}" has been ${action} successfully!`,
+          'success'
+        )
+        
+        // Verify the change after a short delay
+        setTimeout(async () => {
+          await loadRecentUploads()
+        }, 1000)
+      }
       
     } catch (err) {
       console.error('Toggle feature failed:', err)
       showNotification('Update Failed', 'Failed to update feature status. Please try again.', 'error')
+      
+      // On error, reload data to ensure we show the correct state
+      await loadRecentUploads()
     }
   }
 
