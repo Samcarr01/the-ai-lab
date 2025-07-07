@@ -116,6 +116,12 @@ export default function BlogGenerationProgress({
                   return
                 }
 
+                if (data.type === 'content_chunk') {
+                  setStreamingContent(prev => prev + data.content)
+                  setAccumulatedLength(data.accumulated_length)
+                  return
+                }
+
                 // Handle progress updates
                 setSteps(prev => ({
                   ...prev,

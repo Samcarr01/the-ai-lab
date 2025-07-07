@@ -8,7 +8,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 // Security and cost limits
 const MAX_PROMPT_LENGTH = 1000
 const MAX_KNOWLEDGE_BASE_LENGTH = 5000
-const MAX_TOKENS = 3000 // Reduced from 4000 for cost savings
+const MAX_TOKENS = 4500 // Increased to support 1,500-2,500 word blogs (SEO requirement)
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 3
 
@@ -346,7 +346,7 @@ ${includeWebSearch ? 'Use web search to find the latest information and ensure a
             step: 'content_generation',
             status: 'completed',
             duration: Date.now() - contentStart,
-            message: `Generated ${aiContent.split(' ').length} words`
+            message: `Generated ${accumulatedContent.split(' ').length} words`
           })
 
           // Step 4: Image Generation (if enabled)
@@ -404,7 +404,7 @@ ${includeWebSearch ? 'Use web search to find the latest information and ensure a
                         'Content-Type': 'application/json',
                       },
                       body: JSON.stringify({
-                        model: 'gpt-4o-mini', // Use cheaper model for image generation
+                        model: 'gpt-image-1', // Use correct model for image generation
                         input: `Generate a professional image: ${prompt}. Style: Clean, business-appropriate, tech blog suitable.`,
                         tools: [{
                           type: "image_generation",
