@@ -267,7 +267,7 @@ Return a JSON array of image prompt strings: ["prompt1", "prompt2", "prompt3"]`
                   ]
                 }
 
-                // Generate images using gpt-image-1 (GPT-4o analyzes content, gpt-image-1 creates images)
+                // Generate images using gpt-image-1 (no fallback - fail if not available)
                 const imagePromises = imagePrompts.slice(0, 3).map(async (prompt: string, index: number) => {
                   try {
                     const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
@@ -293,13 +293,13 @@ Return a JSON array of image prompt strings: ["prompt1", "prompt2", "prompt3"]`
                         return {
                           url: imageUrl,
                           prompt: prompt,
-                          description: `Image ${index + 1} for blog post (GPT-4o analyzed, gpt-image-1 generated)`
+                          description: `Image ${index + 1} for blog post (gpt-image-1 generated)`
                         }
                       }
                     }
                     return null
                   } catch (err) {
-                    console.log(`Image ${index + 1} generation failed:`, err)
+                    console.log(`gpt-image-1 generation failed for image ${index + 1}:`, err)
                     return null
                   }
                 })
