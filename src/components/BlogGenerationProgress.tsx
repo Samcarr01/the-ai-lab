@@ -15,6 +15,7 @@ interface BlogGenerationProgressProps {
   includeWebSearch: boolean
   includeImages: boolean
   searchProvider?: 'perplexity' | 'openai'
+  searchContextSize?: 'low' | 'medium' | 'high'
   onComplete: (blogPost: any) => void
   onError: (error: string) => void
   onCancel: () => void
@@ -54,6 +55,7 @@ export default function BlogGenerationProgress({
   includeWebSearch,
   includeImages,
   searchProvider = 'perplexity',
+  searchContextSize = 'medium',
   onComplete,
   onError,
   onCancel
@@ -88,7 +90,8 @@ export default function BlogGenerationProgress({
             knowledgeBase,
             includeWebSearch,
             includeImages,
-            searchProvider
+            searchProvider,
+            searchContextSize
           })
         })
 

@@ -42,6 +42,7 @@ export default function AdminPage() {
   const [includeWebSearch, setIncludeWebSearch] = useState(true)
   const [includeImages, setIncludeImages] = useState(true)
   const [searchProvider, setSearchProvider] = useState<'perplexity' | 'openai'>('perplexity')
+  const [searchContextSize, setSearchContextSize] = useState<'low' | 'medium' | 'high'>('medium')
   const [showProgress, setShowProgress] = useState(false)
   const [notification, setNotification] = useState<{
     isOpen: boolean
@@ -872,6 +873,7 @@ export default function AdminPage() {
                     includeWebSearch={includeWebSearch}
                     includeImages={includeImages}
                     searchProvider={searchProvider}
+                    searchContextSize={searchContextSize}
                     onComplete={handleBlogGenerationComplete}
                     onError={handleBlogGenerationError}
                     onCancel={handleBlogGenerationCancel}
@@ -928,31 +930,72 @@ export default function AdminPage() {
                       </div>
                       
                       {includeWebSearch && (
-                        <div className="ml-6 space-y-2">
-                          <p className="text-xs text-gray-600">Search Provider:</p>
-                          <div className="flex space-x-4">
-                            <label className="flex items-center space-x-2">
-                              <input
-                                type="radio"
-                                name="searchProvider"
-                                value="perplexity"
-                                checked={searchProvider === 'perplexity'}
-                                onChange={(e) => setSearchProvider(e.target.value as 'perplexity' | 'openai')}
-                                className="text-purple-600 focus:ring-purple-500"
-                              />
-                              <span className="text-sm text-gray-700">⚡ Perplexity (Fast & Cheap)</span>
-                            </label>
-                            <label className="flex items-center space-x-2">
-                              <input
-                                type="radio"
-                                name="searchProvider"
-                                value="openai"
-                                checked={searchProvider === 'openai'}
-                                onChange={(e) => setSearchProvider(e.target.value as 'perplexity' | 'openai')}
-                                className="text-purple-600 focus:ring-purple-500"
-                              />
-                              <span className="text-sm text-gray-700">🐌 OpenAI (Slow & Expensive)</span>
-                            </label>
+                        <div className="ml-6 space-y-3">
+                          <div>
+                            <p className="text-xs text-gray-600 mb-2">Search Provider:</p>
+                            <div className="flex space-x-4">
+                              <label className="flex items-center space-x-2">
+                                <input
+                                  type="radio"
+                                  name="searchProvider"
+                                  value="perplexity"
+                                  checked={searchProvider === 'perplexity'}
+                                  onChange={(e) => setSearchProvider(e.target.value as 'perplexity' | 'openai')}
+                                  className="text-purple-600 focus:ring-purple-500"
+                                />
+                                <span className="text-sm text-gray-700">⚡ Perplexity (Fast & Cheap)</span>
+                              </label>
+                              <label className="flex items-center space-x-2">
+                                <input
+                                  type="radio"
+                                  name="searchProvider"
+                                  value="openai"
+                                  checked={searchProvider === 'openai'}
+                                  onChange={(e) => setSearchProvider(e.target.value as 'perplexity' | 'openai')}
+                                  className="text-purple-600 focus:ring-purple-500"
+                                />
+                                <span className="text-sm text-gray-700">🐌 OpenAI (Slow & Expensive)</span>
+                              </label>
+                            </div>
+                          </div>
+                          
+                          <div>
+                            <p className="text-xs text-gray-600 mb-2">Search Context Size:</p>
+                            <div className="flex space-x-3">
+                              <label className="flex items-center space-x-1">
+                                <input
+                                  type="radio"
+                                  name="searchContextSize"
+                                  value="low"
+                                  checked={searchContextSize === 'low'}
+                                  onChange={(e) => setSearchContextSize(e.target.value as 'low' | 'medium' | 'high')}
+                                  className="text-purple-600 focus:ring-purple-500"
+                                />
+                                <span className="text-xs text-gray-700">💰 Low (Cheapest)</span>
+                              </label>
+                              <label className="flex items-center space-x-1">
+                                <input
+                                  type="radio"
+                                  name="searchContextSize"
+                                  value="medium"
+                                  checked={searchContextSize === 'medium'}
+                                  onChange={(e) => setSearchContextSize(e.target.value as 'low' | 'medium' | 'high')}
+                                  className="text-purple-600 focus:ring-purple-500"
+                                />
+                                <span className="text-xs text-gray-700">⚖️ Medium (Balanced)</span>
+                              </label>
+                              <label className="flex items-center space-x-1">
+                                <input
+                                  type="radio"
+                                  name="searchContextSize"
+                                  value="high"
+                                  checked={searchContextSize === 'high'}
+                                  onChange={(e) => setSearchContextSize(e.target.value as 'low' | 'medium' | 'high')}
+                                  className="text-purple-600 focus:ring-purple-500"
+                                />
+                                <span className="text-xs text-gray-700">🔍 High (Most Comprehensive)</span>
+                              </label>
+                            </div>
                           </div>
                         </div>
                       )}

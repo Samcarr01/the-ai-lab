@@ -64,7 +64,7 @@ function estimateTokenCount(text: string): number {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true, searchProvider = 'perplexity' } = body
+    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true, searchProvider = 'perplexity', searchContextSize = 'medium' } = body
     
     // Validate and sanitize inputs
     prompt = validateAndSanitizeInput(prompt, MAX_PROMPT_LENGTH)
@@ -276,11 +276,14 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
           // Add provider-specific parameters
           if (searchProvider === 'perplexity') {
             requestBody.temperature = 0.7
-            // Perplexity handles web search automatically for online models
+            // Add web search options for Perplexity with user-selected context size
+            requestBody.web_search_options = {
+              search_context_size: searchContextSize
+            }
           } else if (modelToUse === 'gpt-4o-search-preview') {
             // OpenAI search model - no temperature, add search options
             requestBody.web_search_options = {
-              search_context_size: "low"
+              search_context_size: searchContextSize === 'high' ? 'medium' : 'low' // OpenAI has different limits
             }
           } else {
             // Regular OpenAI model
