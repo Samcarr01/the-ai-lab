@@ -149,8 +149,14 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'setup', status: 'starting' })
           const setupStart = Date.now()
 
-          // Skip large knowledge base files to reduce token usage
-          console.log('Skipping knowledge base files to fit within rate limits')
+          // Load condensed SEO knowledge for better guidance
+          let seoKnowledge = ''
+          try {
+            const seoPath = join(process.cwd(), 'src/lib/knowledge/seo-condensed.md')
+            seoKnowledge = await readFile(seoPath, 'utf-8')
+          } catch (err) {
+            console.log('Condensed SEO knowledge file not found')
+          }
 
           sendProgress({
             step: 'setup',
@@ -185,38 +191,30 @@ export async function POST(request: NextRequest) {
           const systemMessage = `You are an expert SEO blog writer for "The AI Lab" - a subscription platform for AI tools and guides.
 
 TARGET: Professionals interested in AI productivity tools
-TONE: Professional but approachable
-LENGTH: 1,500-2,500 words (SEO optimal)
-FORMAT: Markdown with clear headings
+CATEGORIES: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy
 
-SEO REQUIREMENTS:
-- Use H2/H3 headings with keywords naturally included
-- Write 2-4 sentence paragraphs for readability
-- Include bullet points and numbered lists
-- Add actionable insights and practical examples
-- Use keywords naturally throughout (no stuffing)
-- Create compelling meta description (150-160 characters)
-- Structure: Introduction → Main sections → Conclusion with CTA
+SEO BEST PRACTICES:
+${seoKnowledge}
 
-CONTENT QUALITY:
-- Start with hook (statistic, question, or bold statement)
-- Provide real value and actionable takeaways  
-- Include specific examples and case studies when possible
-- End with clear next steps for readers
-- Categories: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy
+${knowledgeBase ? `ADDITIONAL CONTEXT: ${knowledgeBase.slice(0, 600)}` : ''}
 
-${knowledgeBase ? `ADDITIONAL CONTEXT: ${knowledgeBase.slice(0, 800)}` : ''}
+REQUIREMENTS:
+- Follow ALL SEO best practices above exactly
+- Write 1,500-2,500 words for optimal SEO performance
+- Use conversational, actionable tone
+- Include specific examples and data when possible
+- Structure with proper headings (H2/H3) and scannable format
 
 Return JSON:
 {
-  "title": "SEO-optimized title (60-70 characters)",
-  "content": "Full markdown blog post",
+  "title": "SEO title (60-70 chars, keyword near start)",
+  "content": "Full markdown blog post following SEO practices",
   "meta_description": "Compelling description (150-160 chars)",
-  "category": "Most relevant category",
-  "read_time": "Estimated minutes based on word count"
+  "category": "Most relevant category from list above",
+  "read_time": "Estimated read time in minutes"
 }
 
-${includeWebSearch ? 'Use web search for latest data and trends.' : 'Focus on proven strategies and actionable advice.'}`
+${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focus on proven strategies and practical advice.'}`
 
           // Hybrid approach: Use full gpt-4o for content quality, mini for other tasks
           const modelToUse = includeWebSearch ? 'gpt-4o-search-preview' : 'gpt-4o'
