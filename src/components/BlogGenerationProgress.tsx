@@ -14,6 +14,7 @@ interface BlogGenerationProgressProps {
   knowledgeBase: string
   includeWebSearch: boolean
   includeImages: boolean
+  searchProvider?: 'perplexity' | 'openai'
   onComplete: (blogPost: any) => void
   onError: (error: string) => void
   onCancel: () => void
@@ -52,6 +53,7 @@ export default function BlogGenerationProgress({
   knowledgeBase,
   includeWebSearch,
   includeImages,
+  searchProvider = 'perplexity',
   onComplete,
   onError,
   onCancel
@@ -85,7 +87,8 @@ export default function BlogGenerationProgress({
             prompt,
             knowledgeBase,
             includeWebSearch,
-            includeImages
+            includeImages,
+            searchProvider
           })
         })
 

@@ -4,6 +4,7 @@ import { join } from 'path'
 import { createClient } from '@/lib/supabase/server'
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY
 
 // Security and cost limits
 const MAX_PROMPT_LENGTH = 500
@@ -63,7 +64,7 @@ function estimateTokenCount(text: string): number {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true } = body
+    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true, searchProvider = 'perplexity' } = body
     
     // Validate and sanitize inputs
     prompt = validateAndSanitizeInput(prompt, MAX_PROMPT_LENGTH)
@@ -135,6 +136,16 @@ export async function POST(request: NextRequest) {
             return
           }
 
+          if (searchProvider === 'perplexity' && includeWebSearch && !PERPLEXITY_API_KEY) {
+            sendProgress({
+              step: 'setup',
+              status: 'error',
+              message: 'Perplexity API key not configured'
+            })
+            controller.close()
+            return
+          }
+
           if (!prompt) {
             sendProgress({
               step: 'setup',
@@ -169,11 +180,15 @@ export async function POST(request: NextRequest) {
           const searchStart = Date.now()
           
           if (includeWebSearch) {
+            const searchMessage = searchProvider === 'perplexity' 
+              ? 'Will use Perplexity for fast web search'
+              : 'Will use gpt-4o-search-preview for web search'
+            
             sendProgress({
               step: 'web_search',
               status: 'completed',
               duration: Date.now() - searchStart,
-              message: 'Will use gpt-4o-search-preview for web search'
+              message: searchMessage
             })
           } else {
             sendProgress({
@@ -216,19 +231,33 @@ Return JSON:
 
 ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focus on proven strategies and practical advice.'}`
 
-          // Hybrid approach: Use full gpt-4o for content quality, mini for other tasks
-          const modelToUse = includeWebSearch ? 'gpt-4o-search-preview' : 'gpt-4o'
+          // Choose model and API endpoint based on search provider
+          let modelToUse, apiEndpoint, apiKey
           
-          // Estimate token usage for cost monitoring and rate limit checking
+          if (includeWebSearch && searchProvider === 'perplexity') {
+            modelToUse = 'llama-3.1-sonar-large-128k-online'
+            apiEndpoint = 'https://api.perplexity.ai/chat/completions'
+            apiKey = PERPLEXITY_API_KEY
+          } else if (includeWebSearch && searchProvider === 'openai') {
+            modelToUse = 'gpt-4o-search-preview'
+            apiEndpoint = 'https://api.openai.com/v1/chat/completions'
+            apiKey = OPENAI_API_KEY
+          } else {
+            modelToUse = 'gpt-4o'
+            apiEndpoint = 'https://api.openai.com/v1/chat/completions'
+            apiKey = OPENAI_API_KEY
+          }
+          
+          // Estimate token usage for cost monitoring
           const estimatedPromptTokens = estimateTokenCount(systemMessage + prompt)
-          console.log(`📊 Estimated tokens: ${estimatedPromptTokens} (model: ${modelToUse})`)
+          console.log(`📊 Estimated tokens: ${estimatedPromptTokens} (model: ${modelToUse}, provider: ${searchProvider})`)
           
-          // Check if we're within rate limits (gpt-4o-search-preview has 6K TPM limit)
+          // Check rate limits for OpenAI models only
           if (modelToUse === 'gpt-4o-search-preview' && estimatedPromptTokens > 4000) {
             sendProgress({
               step: 'content_generation',
               status: 'error',
-              message: 'Request too large for search model. Try a shorter prompt or disable web search.'
+              message: 'Request too large for OpenAI search model. Try Perplexity or shorter prompt.'
             })
             controller.close()
             return
@@ -240,29 +269,31 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
               { role: 'system', content: systemMessage },
               { role: 'user', content: prompt }
             ],
-            max_tokens: MAX_TOKENS, // Use our cost-optimized limit
-            stream: true // Enable streaming for better UX
+            max_tokens: MAX_TOKENS,
+            stream: true
           }
 
-          // Only add temperature for non-search models
-          if (modelToUse !== 'gpt-4o-search-preview') {
+          // Add provider-specific parameters
+          if (searchProvider === 'perplexity') {
+            requestBody.temperature = 0.7
+            // Perplexity handles web search automatically for online models
+          } else if (modelToUse === 'gpt-4o-search-preview') {
+            // OpenAI search model - no temperature, add search options
+            requestBody.web_search_options = {
+              search_context_size: "low"
+            }
+          } else {
+            // Regular OpenAI model
             requestBody.temperature = 0.7
           }
 
-          // Add web search options if using search model (minimal context to avoid rate limits)
-          if (modelToUse === 'gpt-4o-search-preview') {
-            requestBody.web_search_options = {
-              search_context_size: "low" // Minimal context to stay within rate limits
-            }
-          }
-
-          console.log('📤 Sending request to OpenAI API...')
+          console.log(`📤 Sending request to ${searchProvider} API...`)
           const apiRequestStart = Date.now()
           
-          const response = await fetch('https://api.openai.com/v1/chat/completions', {
+          const response = await fetch(apiEndpoint, {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${OPENAI_API_KEY}`,
+              'Authorization': `Bearer ${apiKey}`,
               'Content-Type': 'application/json',
             },
             body: JSON.stringify(requestBody)

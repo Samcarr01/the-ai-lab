@@ -41,6 +41,7 @@ export default function AdminPage() {
   const [publishingBlog, setPublishingBlog] = useState(false)
   const [includeWebSearch, setIncludeWebSearch] = useState(true)
   const [includeImages, setIncludeImages] = useState(true)
+  const [searchProvider, setSearchProvider] = useState<'perplexity' | 'openai'>('perplexity')
   const [showProgress, setShowProgress] = useState(false)
   const [notification, setNotification] = useState<{
     isOpen: boolean
@@ -870,6 +871,7 @@ export default function AdminPage() {
                     knowledgeBase={knowledgeBase}
                     includeWebSearch={includeWebSearch}
                     includeImages={includeImages}
+                    searchProvider={searchProvider}
                     onComplete={handleBlogGenerationComplete}
                     onError={handleBlogGenerationError}
                     onCancel={handleBlogGenerationCancel}
@@ -911,7 +913,7 @@ export default function AdminPage() {
                       </p>
                     </div>
                     
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="space-y-4">
                       <div className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -921,9 +923,41 @@ export default function AdminPage() {
                           className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                         />
                         <label htmlFor="webSearch" className="text-sm text-gray-700">
-                          🌍 Web search + premium gpt-4o quality
+                          🌍 Enable web search for latest information
                         </label>
                       </div>
+                      
+                      {includeWebSearch && (
+                        <div className="ml-6 space-y-2">
+                          <p className="text-xs text-gray-600">Search Provider:</p>
+                          <div className="flex space-x-4">
+                            <label className="flex items-center space-x-2">
+                              <input
+                                type="radio"
+                                name="searchProvider"
+                                value="perplexity"
+                                checked={searchProvider === 'perplexity'}
+                                onChange={(e) => setSearchProvider(e.target.value as 'perplexity' | 'openai')}
+                                className="text-purple-600 focus:ring-purple-500"
+                              />
+                              <span className="text-sm text-gray-700">⚡ Perplexity (Fast & Cheap)</span>
+                            </label>
+                            <label className="flex items-center space-x-2">
+                              <input
+                                type="radio"
+                                name="searchProvider"
+                                value="openai"
+                                checked={searchProvider === 'openai'}
+                                onChange={(e) => setSearchProvider(e.target.value as 'perplexity' | 'openai')}
+                                className="text-purple-600 focus:ring-purple-500"
+                              />
+                              <span className="text-sm text-gray-700">🐌 OpenAI (Slow & Expensive)</span>
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       
                       <div className="flex items-center space-x-2">
                         <input
