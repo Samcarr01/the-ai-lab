@@ -41,7 +41,7 @@ export default function AdminPage() {
   const [publishingBlog, setPublishingBlog] = useState(false)
   const [includeWebSearch, setIncludeWebSearch] = useState(true)
   const [includeImages, setIncludeImages] = useState(true)
-  const [searchProvider, setSearchProvider] = useState<'perplexity' | 'openai'>('perplexity')
+  const [searchProvider] = useState<'perplexity'>('perplexity')
   const [searchContextSize, setSearchContextSize] = useState<'low' | 'medium' | 'high'>('medium')
   const [showProgress, setShowProgress] = useState(false)
   const [notification, setNotification] = useState<{
@@ -930,33 +930,10 @@ export default function AdminPage() {
                       </div>
                       
                       {includeWebSearch && (
-                        <div className="ml-6 space-y-3">
-                          <div>
-                            <p className="text-xs text-gray-600 mb-2">Search Provider:</p>
-                            <div className="flex space-x-4">
-                              <label className="flex items-center space-x-2">
-                                <input
-                                  type="radio"
-                                  name="searchProvider"
-                                  value="perplexity"
-                                  checked={searchProvider === 'perplexity'}
-                                  onChange={(e) => setSearchProvider(e.target.value as 'perplexity' | 'openai')}
-                                  className="text-purple-600 focus:ring-purple-500"
-                                />
-                                <span className="text-sm text-gray-700">⚡ Perplexity (Fast & Cheap)</span>
-                              </label>
-                              <label className="flex items-center space-x-2">
-                                <input
-                                  type="radio"
-                                  name="searchProvider"
-                                  value="openai"
-                                  checked={searchProvider === 'openai'}
-                                  onChange={(e) => setSearchProvider(e.target.value as 'perplexity' | 'openai')}
-                                  className="text-purple-600 focus:ring-purple-500"
-                                />
-                                <span className="text-sm text-gray-700">🐌 OpenAI (Slow & Expensive)</span>
-                              </label>
-                            </div>
+                        <div className="ml-6 space-y-2">
+                          <div className="flex items-center space-x-2 text-sm text-gray-700">
+                            <span>⚡</span>
+                            <span>Using Perplexity Sonar for fast, high-quality web search</span>
                           </div>
                           
                           <div>

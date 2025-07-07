@@ -64,7 +64,8 @@ function estimateTokenCount(text: string): number {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true, searchProvider = 'perplexity', searchContextSize = 'medium' } = body
+    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true, searchContextSize = 'medium' } = body
+    const searchProvider = 'perplexity' // Only Perplexity supported now
     
     // Validate and sanitize inputs
     prompt = validateAndSanitizeInput(prompt, MAX_PROMPT_LENGTH)
@@ -180,15 +181,11 @@ export async function POST(request: NextRequest) {
           const searchStart = Date.now()
           
           if (includeWebSearch) {
-            const searchMessage = searchProvider === 'perplexity' 
-              ? 'Will use Perplexity for fast web search'
-              : 'Will use gpt-4o-search-preview for web search'
-            
             sendProgress({
               step: 'web_search',
               status: 'completed',
               duration: Date.now() - searchStart,
-              message: searchMessage
+              message: 'Will use Perplexity Sonar for fast web search'
             })
           } else {
             sendProgress({
@@ -231,18 +228,16 @@ Return JSON:
 
 ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focus on proven strategies and practical advice.'}`
 
-          // Choose model and API endpoint based on search provider
+          // Choose model and API endpoint
           let modelToUse, apiEndpoint, apiKey
           
-          if (includeWebSearch && searchProvider === 'perplexity') {
+          if (includeWebSearch) {
+            // Use Perplexity for web search
             modelToUse = 'sonar'
             apiEndpoint = 'https://api.perplexity.ai/chat/completions'
             apiKey = PERPLEXITY_API_KEY
-          } else if (includeWebSearch && searchProvider === 'openai') {
-            modelToUse = 'gpt-4o-search-preview'
-            apiEndpoint = 'https://api.openai.com/v1/chat/completions'
-            apiKey = OPENAI_API_KEY
           } else {
+            // Use OpenAI for regular generation (no search)
             modelToUse = 'gpt-4o'
             apiEndpoint = 'https://api.openai.com/v1/chat/completions'
             apiKey = OPENAI_API_KEY
@@ -252,16 +247,7 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
           const estimatedPromptTokens = estimateTokenCount(systemMessage + prompt)
           console.log(`📊 Estimated tokens: ${estimatedPromptTokens} (model: ${modelToUse}, provider: ${searchProvider})`)
           
-          // Check rate limits for OpenAI models only
-          if (modelToUse === 'gpt-4o-search-preview' && estimatedPromptTokens > 4000) {
-            sendProgress({
-              step: 'content_generation',
-              status: 'error',
-              message: 'Request too large for OpenAI search model. Try Perplexity or shorter prompt.'
-            })
-            controller.close()
-            return
-          }
+          // No rate limit checks needed for Perplexity or regular GPT-4o
 
           const requestBody: any = {
             model: modelToUse,
@@ -273,24 +259,19 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
             stream: true
           }
 
-          // Add provider-specific parameters
-          if (searchProvider === 'perplexity') {
+          // Add model-specific parameters
+          if (includeWebSearch) {
+            // Perplexity Sonar model
             requestBody.temperature = 0.7
-            // Add web search options for Perplexity with user-selected context size
             requestBody.web_search_options = {
               search_context_size: searchContextSize
-            }
-          } else if (modelToUse === 'gpt-4o-search-preview') {
-            // OpenAI search model - no temperature, add search options
-            requestBody.web_search_options = {
-              search_context_size: searchContextSize === 'high' ? 'medium' : 'low' // OpenAI has different limits
             }
           } else {
             // Regular OpenAI model
             requestBody.temperature = 0.7
           }
 
-          console.log(`📤 Sending request to ${searchProvider} API...`)
+          console.log(`📤 Sending request to ${includeWebSearch ? 'Perplexity' : 'OpenAI'} API...`)
           const apiRequestStart = Date.now()
           
           const response = await fetch(apiEndpoint, {
