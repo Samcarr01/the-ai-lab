@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import NotificationModal from '@/components/NotificationModal'
+import BlogGenerationProgress from '@/components/BlogGenerationProgress'
 import { gptsService } from '@/lib/gpts'
 import { documentsService } from '@/lib/documents'
 import { blogService, type BlogPost } from '@/lib/blog'
@@ -40,6 +41,7 @@ export default function AdminPage() {
   const [publishingBlog, setPublishingBlog] = useState(false)
   const [includeWebSearch, setIncludeWebSearch] = useState(true)
   const [includeImages, setIncludeImages] = useState(true)
+  const [showProgress, setShowProgress] = useState(false)
   const [notification, setNotification] = useState<{
     isOpen: boolean
     title: string
@@ -281,45 +283,39 @@ export default function AdminPage() {
 
   const handleGenerateBlog = async () => {
     if (!blogPrompt.trim()) return
-
+    setShowProgress(true)
     setGeneratingBlog(true)
-    try {
-      const response = await fetch('/api/ai/generate-blog', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: blogPrompt,
-          knowledgeBase: knowledgeBase,
-          includeWebSearch: includeWebSearch,
-          includeImages: includeImages
-        })
-      })
+  }
 
-      if (!response.ok) {
-        throw new Error('Failed to generate blog post')
-      }
+  const handleBlogGenerationComplete = (blogPost: any) => {
+    setGeneratedBlog(blogPost)
+    setShowProgress(false)
+    setGeneratingBlog(false)
+    showNotification(
+      'Blog Generated Successfully',
+      `"${blogPost.title}" has been generated and is ready for review!`,
+      'success'
+    )
+  }
 
-      const blogPost = await response.json()
-      
-      if (blogPost.error) {
-        throw new Error(blogPost.error)
-      }
-      
-      setGeneratedBlog(blogPost)
-      
-    } catch (err) {
-      console.error('Blog generation failed:', err)
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
-      showNotification(
-        'Blog Generation Failed',
-        `${errorMessage}. Please check your API configuration and try again.`,
-        'error'
-      )
-    } finally {
-      setGeneratingBlog(false)
-    }
+  const handleBlogGenerationError = (error: string) => {
+    setShowProgress(false)
+    setGeneratingBlog(false)
+    showNotification(
+      'Blog Generation Failed',
+      `${error}. Please check your API configuration and try again.`,
+      'error'
+    )
+  }
+
+  const handleBlogGenerationCancel = () => {
+    setShowProgress(false)
+    setGeneratingBlog(false)
+    showNotification(
+      'Generation Cancelled',
+      'Blog generation has been cancelled.',
+      'info'
+    )
   }
 
   const handlePublishBlog = async () => {
@@ -846,7 +842,21 @@ export default function AdminPage() {
               </h2>
               
               <div className="space-y-6">
+                {/* Real-time Progress Section */}
+                {showProgress && (
+                  <BlogGenerationProgress
+                    prompt={blogPrompt}
+                    knowledgeBase={knowledgeBase}
+                    includeWebSearch={includeWebSearch}
+                    includeImages={includeImages}
+                    onComplete={handleBlogGenerationComplete}
+                    onError={handleBlogGenerationError}
+                    onCancel={handleBlogGenerationCancel}
+                  />
+                )}
+
                 {/* AI Blog Writing Section */}
+                {!showProgress && (
                 <div className="p-4 sm:p-6 bg-purple-50 rounded-xl border border-purple-200">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">Write New Blog Post with AI</h3>
                   
@@ -938,6 +948,7 @@ export default function AdminPage() {
                     </button>
                   </div>
                 </div>
+                )}
 
                 {/* Generated Blog Preview */}
                 {generatedBlog && (
