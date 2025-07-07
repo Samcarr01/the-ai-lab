@@ -248,7 +248,7 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
           // Add web search options if using search model (minimal context to avoid rate limits)
           if (modelToUse === 'gpt-4o-search-preview') {
             requestBody.web_search_options = {
-              search_context_size: "small" // Minimal context to stay within rate limits
+              search_context_size: "low" // Minimal context to stay within rate limits
             }
           }
 
