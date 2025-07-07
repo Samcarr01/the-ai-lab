@@ -276,39 +276,49 @@ Return a JSON array of image prompt strings: ["prompt1", "prompt2", "prompt3"]`
                   ]
                 }
 
-                // Generate images using gpt-image-1 (no fallback - fail if not available)
+                // Generate images using Responses API with image_generation tool
                 const imagePromises = imagePrompts.slice(0, 3).map(async (prompt: string, index: number) => {
                   try {
-                    const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
+                    const imageResponse = await fetch('https://api.openai.com/v1/responses', {
                       method: 'POST',
                       headers: {
                         'Authorization': `Bearer ${OPENAI_API_KEY}`,
                         'Content-Type': 'application/json',
                       },
                       body: JSON.stringify({
-                        model: 'gpt-image-1',
-                        prompt: `${prompt}. Style: Professional, clean, business-appropriate, suitable for a tech blog. High quality, modern design with a professional color scheme. Clear text rendering if any text is included.`,
-                        n: 1,
-                        size: '1024x1024',
-                        quality: 'hd'
+                        model: 'gpt-4o',
+                        input: `Generate a professional, high-quality image: ${prompt}. Style: Professional, clean, business-appropriate, suitable for a tech blog. High quality, modern design with a professional color scheme. Clear text rendering if any text is included.`,
+                        tools: [{
+                          type: "image_generation",
+                          size: "1024x1024",
+                          quality: "high"
+                        }]
                       })
                     })
 
                     if (imageResponse.ok) {
-                      const imageData = await imageResponse.json()
-                      const imageUrl = imageData.data?.[0]?.url
+                      const responseData = await imageResponse.json()
                       
-                      if (imageUrl) {
+                      // Find image generation results in the output
+                      const imageGenerationCalls = responseData.output?.filter(
+                        (output: any) => output.type === "image_generation_call"
+                      )
+                      
+                      if (imageGenerationCalls?.length > 0 && imageGenerationCalls[0].result) {
+                        // Convert base64 to data URL for display
+                        const base64Image = imageGenerationCalls[0].result
+                        const imageUrl = `data:image/png;base64,${base64Image}`
+                        
                         return {
                           url: imageUrl,
                           prompt: prompt,
-                          description: `Image ${index + 1} for blog post (gpt-image-1 generated)`
+                          description: `Image ${index + 1} for blog post (gpt-image-1 generated via Responses API)`
                         }
                       }
                     }
                     return null
                   } catch (err) {
-                    console.log(`gpt-image-1 generation failed for image ${index + 1}:`, err)
+                    console.log(`Image generation failed for image ${index + 1}:`, err)
                     return null
                   }
                 })
