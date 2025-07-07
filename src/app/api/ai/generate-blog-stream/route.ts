@@ -8,7 +8,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 // Security and cost limits
 const MAX_PROMPT_LENGTH = 500
 const MAX_KNOWLEDGE_BASE_LENGTH = 2000
-const MAX_TOKENS = 4000 // Supports 2,500-word blogs while staying within limits
+const MAX_TOKENS = 2000 // Faster streaming generation
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 3
 
@@ -199,8 +199,8 @@ ${seoKnowledge}
 ${knowledgeBase ? `ADDITIONAL CONTEXT: ${knowledgeBase.slice(0, 600)}` : ''}
 
 REQUIREMENTS:
-- Follow ALL SEO best practices above exactly
-- Write 1,500-2,500 words for optimal SEO performance
+- Follow SEO best practices above
+- Write 1,000-1,500 words (quality over length)
 - Use conversational, actionable tone
 - Include specific examples and data when possible
 - Structure with proper headings (H2/H3) and scannable format
