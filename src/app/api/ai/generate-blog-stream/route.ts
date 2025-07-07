@@ -240,9 +240,13 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
               { role: 'system', content: systemMessage },
               { role: 'user', content: prompt }
             ],
-            temperature: 0.7,
             max_tokens: MAX_TOKENS, // Use our cost-optimized limit
             stream: true // Enable streaming for better UX
+          }
+
+          // Only add temperature for non-search models
+          if (modelToUse !== 'gpt-4o-search-preview') {
+            requestBody.temperature = 0.7
           }
 
           // Add web search options if using search model (minimal context to avoid rate limits)
