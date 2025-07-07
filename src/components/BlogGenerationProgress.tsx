@@ -128,8 +128,11 @@ export default function BlogGenerationProgress({
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
+              const dataStr = line.slice(6).trim()
+              if (!dataStr) continue
+              
               try {
-                const data = JSON.parse(line.slice(6))
+                const data = JSON.parse(dataStr)
                 
                 if (data.type === 'final_result') {
                   setIsComplete(true)
@@ -138,7 +141,10 @@ export default function BlogGenerationProgress({
                 }
 
                 if (data.type === 'content_chunk') {
-                  console.log(`📝 Content chunk received: ${data.content.length} chars, total: ${data.accumulated_length}`)
+                  // Only log every 10th chunk to reduce console spam
+                  if (chunkCount % 10 === 0) {
+                    console.log(`📝 Content chunk batch: ${data.content.length} chars, total: ${data.accumulated_length}`)
+                  }
                   setStreamingContent(prev => prev + data.content)
                   setAccumulatedLength(data.accumulated_length)
                   return

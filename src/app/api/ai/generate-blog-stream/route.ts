@@ -344,8 +344,8 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
                   if (content) {
                     accumulatedContent += content
                     
-                    // Send progress update every 100 characters
-                    if (accumulatedContent.length % 100 === 0) {
+                    // Send progress update every 500 characters (reduced frequency)
+                    if (accumulatedContent.length % 500 === 0) {
                       sendProgress({
                         step: 'content_generation',
                         status: 'running',
@@ -353,13 +353,15 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
                       })
                     }
                     
-                    // Send live content updates (mobile-optimized chunks)
-                    const contentUpdate = `data: ${JSON.stringify({
-                      type: 'content_chunk',
-                      content: content,
-                      accumulated_length: accumulatedContent.length
-                    })}\n\n`
-                    controller.enqueue(encoder.encode(contentUpdate))
+                    // Only send content chunks every 50 characters to reduce stream overhead
+                    if (content.length > 5 && accumulatedContent.length % 50 === 0) {
+                      const contentUpdate = `data: ${JSON.stringify({
+                        type: 'content_chunk',
+                        content: content,
+                        accumulated_length: accumulatedContent.length
+                      })}\n\n`
+                      controller.enqueue(encoder.encode(contentUpdate))
+                    }
                   }
                 } catch (parseError) {
                   console.log('Failed to parse SSE data:', data.slice(0, 100))
