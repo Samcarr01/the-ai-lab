@@ -84,69 +84,22 @@ export async function POST(request: NextRequest) {
             duration: Date.now() - setupStart
           })
 
-          // Step 2: Web Search (if enabled)
-          let webSearchResults = ''
+          // Step 2: Content Generation with Web Search (if enabled)
+          sendProgress({ step: 'web_search', status: 'starting' })
+          const searchStart = Date.now()
+          
           if (includeWebSearch) {
-            sendProgress({ step: 'web_search', status: 'starting' })
-            const searchStart = Date.now()
-
-            if (!process.env.TAVILY_API_KEY) {
-              webSearchResults = 'Web search disabled: TAVILY_API_KEY not configured'
-              sendProgress({
-                step: 'web_search',
-                status: 'completed',
-                duration: Date.now() - searchStart,
-                message: 'Skipped - API key not configured'
-              })
-            } else {
-              try {
-                const searchResponse = await fetch(`https://api.tavily.com/search`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.TAVILY_API_KEY}`
-                  },
-                  body: JSON.stringify({
-                    query: prompt,
-                    search_depth: 'advanced',
-                    max_results: 5,
-                    include_answer: true
-                  })
-                })
-                
-                if (searchResponse.ok) {
-                  const searchData = await searchResponse.json()
-                  webSearchResults = JSON.stringify(searchData.results || [])
-                  sendProgress({
-                    step: 'web_search',
-                    status: 'completed',
-                    duration: Date.now() - searchStart,
-                    message: `Found ${searchData.results?.length || 0} results`
-                  })
-                } else {
-                  webSearchResults = 'Web search failed: API error'
-                  sendProgress({
-                    step: 'web_search',
-                    status: 'error',
-                    duration: Date.now() - searchStart,
-                    message: 'API error'
-                  })
-                }
-              } catch (err) {
-                webSearchResults = 'Web search failed: Network error'
-                sendProgress({
-                  step: 'web_search',
-                  status: 'error',
-                  duration: Date.now() - searchStart,
-                  message: 'Network error'
-                })
-              }
-            }
+            sendProgress({
+              step: 'web_search',
+              status: 'completed',
+              duration: Date.now() - searchStart,
+              message: 'Will use gpt-4o-search-preview for web search'
+            })
           } else {
             sendProgress({
               step: 'web_search',
               status: 'completed',
-              duration: 0,
+              duration: Date.now() - searchStart,
               message: 'Skipped - disabled'
             })
           }
@@ -169,9 +122,6 @@ ${seoKnowledge}
 ADDITIONAL KNOWLEDGE BASE:
 ${knowledgeBase || 'No additional knowledge base provided.'}
 
-WEB SEARCH RESULTS (LATEST INFORMATION):
-${webSearchResults}
-
 Write a high-quality blog post that:
 1. Is engaging and informative
 2. Targets professionals interested in AI tools and productivity
@@ -188,7 +138,10 @@ Return a JSON object with:
 - category: Appropriate category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy
 - read_time: Estimated read time in minutes
 
-Focus on providing real value and actionable insights to readers. Use the latest web search information to ensure accuracy and relevance.`
+${includeWebSearch ? 'Use web search to find the latest information and ensure accuracy and relevance.' : 'Focus on providing real value and actionable insights to readers.'}`
+
+          // Use web search model if enabled, otherwise use regular gpt-4o
+          const modelToUse = includeWebSearch ? 'gpt-4o-search-preview' : 'gpt-4o'
 
           const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
@@ -197,7 +150,7 @@ Focus on providing real value and actionable insights to readers. Use the latest
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              model: 'gpt-4o',
+              model: modelToUse,
               messages: [
                 { role: 'system', content: systemMessage },
                 { role: 'user', content: prompt }
@@ -288,7 +241,7 @@ Return a JSON array of image prompt strings: ["prompt1", "prompt2", "prompt3"]`
                   ]
                 }
 
-                // Generate images using DALL-E 3
+                // Generate images using gpt-image-1 (GPT-4o analyzes content, gpt-image-1 creates images)
                 const imagePromises = imagePrompts.slice(0, 3).map(async (prompt: string, index: number) => {
                   try {
                     const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
@@ -298,11 +251,11 @@ Return a JSON array of image prompt strings: ["prompt1", "prompt2", "prompt3"]`
                         'Content-Type': 'application/json',
                       },
                       body: JSON.stringify({
-                        model: 'dall-e-3',
-                        prompt: `${prompt}. Style: Professional, clean, business-appropriate, suitable for a tech blog. High quality, modern design.`,
+                        model: 'gpt-image-1',
+                        prompt: `${prompt}. Style: Professional, clean, business-appropriate, suitable for a tech blog. High quality, modern design with a professional color scheme. Clear text rendering if any text is included.`,
                         n: 1,
                         size: '1024x1024',
-                        quality: 'standard'
+                        quality: 'hd'
                       })
                     })
 
@@ -314,7 +267,7 @@ Return a JSON array of image prompt strings: ["prompt1", "prompt2", "prompt3"]`
                         return {
                           url: imageUrl,
                           prompt: prompt,
-                          description: `Image ${index + 1} for blog post`
+                          description: `Image ${index + 1} for blog post (GPT-4o analyzed, gpt-image-1 generated)`
                         }
                       }
                     }

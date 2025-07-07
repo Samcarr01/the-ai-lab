@@ -900,7 +900,7 @@ export default function AdminPage() {
                           className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                         />
                         <label htmlFor="webSearch" className="text-sm text-gray-700">
-                          🌍 Include web search for latest info
+                          🌍 Use gpt-4o-search-preview for latest info
                         </label>
                       </div>
                       
@@ -913,20 +913,19 @@ export default function AdminPage() {
                           className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                         />
                         <label htmlFor="includeImages" className="text-sm text-gray-700">
-                          🎨 Generate AI images (GPT-4o)
+                          🎨 Generate AI images (gpt-image-1)
                         </label>
                       </div>
                     </div>
                     
                     <div className="text-xs sm:text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
-                      <span className="font-medium">💡 AI Workflow:</span> The AI will research the web for latest information, analyze your knowledge base, write the blog post, and generate relevant images.
+                      <span className="font-medium">💡 AI Workflow:</span> The AI will use latest OpenAI models to research, write, and create visuals for your blog post.
                       <div className="mt-2 text-xs">
                         <strong>Process:</strong>
                         <ol className="list-decimal list-inside mt-1 space-y-1">
-                          <li>Search web for latest information (if enabled)</li>
-                          <li>Analyze platform docs + writing instructions + SEO guide</li>
-                          <li>Write comprehensive blog post with GPT-4o</li>
-                          <li>Generate 2-3 relevant images with GPT-4o (if enabled)</li>
+                          <li>Load knowledge base (SEO guide + writing instructions)</li>
+                          <li>Write comprehensive blog post with gpt-4o-search-preview (includes web search) or gpt-4o</li>
+                          <li>Generate 2-3 relevant images with gpt-image-1 (if enabled)</li>
                           <li>Present for your review and editing</li>
                         </ol>
                       </div>
