@@ -73,6 +73,9 @@ export default function BlogGenerationProgress({
     // Since EventSource doesn't support POST with body, we'll use fetch with ReadableStream
     const generateBlog = async () => {
       try {
+        console.log('🚀 Starting blog generation request...')
+        const requestStart = Date.now()
+        
         const response = await fetch('/api/ai/generate-blog-stream', {
           method: 'POST',
           headers: {
@@ -86,6 +89,9 @@ export default function BlogGenerationProgress({
           })
         })
 
+        const responseTime = Date.now() - requestStart
+        console.log(`📡 Initial response received in ${responseTime}ms`)
+
         if (!response.ok) {
           throw new Error('Failed to start blog generation')
         }
@@ -97,10 +103,25 @@ export default function BlogGenerationProgress({
           throw new Error('No response body reader available')
         }
 
+        console.log('📖 Starting to read streaming response...')
+        let chunkCount = 0
+        let lastChunkTime = Date.now()
+
         while (true) {
+          const chunkStart = Date.now()
           const { done, value } = await reader.read()
           
-          if (done) break
+          if (done) {
+            console.log(`✅ Streaming completed. Total chunks: ${chunkCount}`)
+            break
+          }
+
+          chunkCount++
+          const timeSinceLastChunk = Date.now() - lastChunkTime
+          
+          if (timeSinceLastChunk > 5000) {
+            console.log(`⚠️ SLOW CHUNK: ${timeSinceLastChunk}ms gap before chunk ${chunkCount}`)
+          }
 
           const chunk = decoder.decode(value)
           const lines = chunk.split('\n')
@@ -117,22 +138,26 @@ export default function BlogGenerationProgress({
                 }
 
                 if (data.type === 'content_chunk') {
+                  console.log(`📝 Content chunk received: ${data.content.length} chars, total: ${data.accumulated_length}`)
                   setStreamingContent(prev => prev + data.content)
                   setAccumulatedLength(data.accumulated_length)
                   return
                 }
 
                 // Handle progress updates
+                console.log(`🔄 Progress update:`, data)
                 setSteps(prev => ({
                   ...prev,
                   [data.step]: data
                 }))
                 
                 if (data.status === 'starting' || data.status === 'running') {
+                  console.log(`▶️ Starting step: ${data.step}`)
                   setCurrentStep(data.step)
                 }
 
                 if (data.status === 'error') {
+                  console.error(`❌ Error in ${data.step}:`, data.message)
                   onError(data.message || `Error in ${data.step}`)
                   return
                 }
@@ -140,6 +165,13 @@ export default function BlogGenerationProgress({
                 console.log('Failed to parse SSE data:', line)
               }
             }
+          }
+          
+          lastChunkTime = Date.now()
+          const chunkProcessTime = lastChunkTime - chunkStart
+          
+          if (chunkProcessTime > 1000) {
+            console.log(`⚠️ SLOW PROCESSING: ${chunkProcessTime}ms to process chunk ${chunkCount}`)
           }
         }
       } catch (error) {
