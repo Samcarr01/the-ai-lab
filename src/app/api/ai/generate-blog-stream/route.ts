@@ -5,6 +5,16 @@ import { createClient } from '@/lib/supabase/server'
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 
+// Security and cost limits
+const MAX_PROMPT_LENGTH = 1000
+const MAX_KNOWLEDGE_BASE_LENGTH = 5000
+const MAX_TOKENS = 3000 // Reduced from 4000 for cost savings
+const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 3
+
+// Simple in-memory rate limiting (in production, use Redis)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
+
 interface ProgressStep {
   step: string
   status: 'starting' | 'running' | 'completed' | 'error'
@@ -12,10 +22,59 @@ interface ProgressStep {
   message?: string
 }
 
+// Input validation and sanitization
+function validateAndSanitizeInput(input: string, maxLength: number): string {
+  if (!input || typeof input !== 'string') return ''
+  
+  // Remove potentially dangerous characters and limit length
+  const sanitized = input
+    .trim()
+    .slice(0, maxLength)
+    .replace(/[<>]/g, '') // Remove HTML-like characters
+    .replace(/javascript:/gi, '') // Remove javascript: protocols
+    
+  return sanitized
+}
+
+// Rate limiting check
+function checkRateLimit(userEmail: string): boolean {
+  const now = Date.now()
+  const userLimit = rateLimitMap.get(userEmail)
+  
+  if (!userLimit || now > userLimit.resetTime) {
+    // Reset or initialize
+    rateLimitMap.set(userEmail, { count: 1, resetTime: now + RATE_LIMIT_WINDOW })
+    return true
+  }
+  
+  if (userLimit.count >= MAX_REQUESTS_PER_WINDOW) {
+    return false
+  }
+  
+  userLimit.count++
+  return true
+}
+
+// Estimate token count (rough approximation)
+function estimateTokenCount(text: string): number {
+  return Math.ceil(text.length / 4) // Rough estimate: 1 token ≈ 4 characters
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { prompt, knowledgeBase, includeWebSearch = true, includeImages = true } = body
+    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true } = body
+    
+    // Validate and sanitize inputs
+    prompt = validateAndSanitizeInput(prompt, MAX_PROMPT_LENGTH)
+    knowledgeBase = validateAndSanitizeInput(knowledgeBase, MAX_KNOWLEDGE_BASE_LENGTH)
+    
+    if (!prompt || prompt.length < 10) {
+      return new Response(
+        JSON.stringify({ error: 'Prompt must be at least 10 characters long' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
 
     // Set up Server-Sent Events
     const encoder = new TextEncoder()
@@ -50,6 +109,17 @@ export async function POST(request: NextRequest) {
               step: 'setup',
               status: 'error',
               message: 'Admin access required for blog generation.'
+            })
+            controller.close()
+            return
+          }
+
+          // Rate limiting check
+          if (!checkRateLimit(user.email)) {
+            sendProgress({
+              step: 'setup',
+              status: 'error',
+              message: `Rate limit exceeded. Maximum ${MAX_REQUESTS_PER_WINDOW} requests per minute.`
             })
             controller.close()
             return
@@ -166,8 +236,12 @@ Return a JSON object with:
 
 ${includeWebSearch ? 'Use web search to find the latest information and ensure accuracy and relevance.' : 'Focus on providing real value and actionable insights to readers.'}`
 
-          // Use web search model if enabled, otherwise use regular gpt-4o
+          // Hybrid approach: Use full gpt-4o for content quality, mini for other tasks
           const modelToUse = includeWebSearch ? 'gpt-4o-search-preview' : 'gpt-4o'
+          
+          // Estimate token usage for cost monitoring
+          const estimatedPromptTokens = estimateTokenCount(systemMessage + prompt)
+          console.log(`📊 Estimated tokens: ${estimatedPromptTokens} (model: ${modelToUse}) - PREMIUM QUALITY`)
 
           const requestBody: any = {
             model: modelToUse,
@@ -176,13 +250,14 @@ ${includeWebSearch ? 'Use web search to find the latest information and ensure a
               { role: 'user', content: prompt }
             ],
             temperature: 0.7,
-            max_tokens: 4000
+            max_tokens: MAX_TOKENS, // Use our cost-optimized limit
+            stream: true // Enable streaming for better UX
           }
 
-          // Add web search options if using search model
+          // Add web search options if using search model (balanced context for quality)
           if (modelToUse === 'gpt-4o-search-preview') {
             requestBody.web_search_options = {
-              search_context_size: "medium"
+              search_context_size: "medium" // Balanced quality/cost for main content
             }
           }
 
@@ -196,26 +271,74 @@ ${includeWebSearch ? 'Use web search to find the latest information and ensure a
           })
 
           if (!response.ok) {
-            throw new Error(`OpenAI API error: ${response.status}`)
+            const errorData = await response.text()
+            throw new Error(`OpenAI API error: ${response.status} - ${errorData}`)
           }
 
-          const data = await response.json()
-          const aiContent = data.choices[0]?.message?.content
+          // Handle streaming response
+          const reader = response.body?.getReader()
+          const decoder = new TextDecoder()
+          let accumulatedContent = ''
+          let blogPost: any = {}
 
-          if (!aiContent) {
-            throw new Error('No content generated by AI')
+          if (!reader) {
+            throw new Error('No response body reader available')
           }
 
-          let blogPost
+          // Send real-time content updates
+          sendProgress({
+            step: 'content_generation',
+            status: 'running',
+            message: 'Streaming content...'
+          })
+
+          while (true) {
+            const { done, value } = await reader.read()
+            
+            if (done) break
+
+            const chunk = decoder.decode(value)
+            const lines = chunk.split('\n')
+
+            for (const line of lines) {
+              if (line.startsWith('data: ')) {
+                const data = line.slice(6)
+                
+                if (data === '[DONE]') continue
+                
+                try {
+                  const parsed = JSON.parse(data)
+                  const content = parsed.choices?.[0]?.delta?.content || ''
+                  
+                  if (content) {
+                    accumulatedContent += content
+                    
+                    // Send live content updates (mobile-optimized chunks)
+                    const contentUpdate = `data: ${JSON.stringify({
+                      type: 'content_chunk',
+                      content: content,
+                      accumulated_length: accumulatedContent.length
+                    })}\n\n`
+                    controller.enqueue(encoder.encode(contentUpdate))
+                  }
+                } catch (parseError) {
+                  console.log('Failed to parse SSE data:', data)
+                }
+              }
+            }
+          }
+
+          // Try to parse the final content as JSON blog post
           try {
-            blogPost = JSON.parse(aiContent)
+            blogPost = JSON.parse(accumulatedContent)
           } catch (parseError) {
+            // If not JSON, create structured blog post
             blogPost = {
               title: 'AI-Generated Blog Post',
-              content: aiContent,
+              content: accumulatedContent,
               meta_description: 'An AI-generated blog post about AI tools and strategies.',
               category: 'AI Tools',
-              read_time: Math.ceil(aiContent.split(' ').length / 200)
+              read_time: Math.ceil(accumulatedContent.split(' ').length / 200)
             }
           }
 
@@ -240,24 +363,19 @@ ${includeWebSearch ? 'Use web search to find the latest information and ensure a
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                  model: 'gpt-4o',
+                  model: 'gpt-4o-mini', // Use cheaper model for image analysis
                   messages: [
                     {
                       role: 'system',
-                      content: 'You are an expert at analyzing blog content and suggesting relevant, professional images that would enhance the article. Create detailed, specific image prompts that would be perfect for the blog content.'
+                      content: 'Analyze blog content and suggest 2-3 professional image prompts for a tech blog.'
                     },
                     {
                       role: 'user',
-                      content: `Analyze this blog post and suggest 2-3 specific image prompts that would perfectly complement the content. Make the prompts detailed and professional, suitable for a business/tech blog.
-
-Blog Title: ${blogPost.title}
-Blog Content: ${blogPost.content}
-
-Return a JSON array of image prompt strings: ["prompt1", "prompt2", "prompt3"]`
+                      content: `Create image prompts for: "${blogPost.title}". Return JSON array: ["prompt1", "prompt2", "prompt3"]`
                     }
                   ],
-                  temperature: 0.7,
-                  max_tokens: 500
+                  temperature: 0.5,
+                  max_tokens: 300 // Reduced for cost savings
                 })
               })
 
@@ -286,12 +404,12 @@ Return a JSON array of image prompt strings: ["prompt1", "prompt2", "prompt3"]`
                         'Content-Type': 'application/json',
                       },
                       body: JSON.stringify({
-                        model: 'gpt-4o',
-                        input: `Generate a professional, high-quality image: ${prompt}. Style: Professional, clean, business-appropriate, suitable for a tech blog. High quality, modern design with a professional color scheme. Clear text rendering if any text is included.`,
+                        model: 'gpt-4o-mini', // Use cheaper model for image generation
+                        input: `Generate a professional image: ${prompt}. Style: Clean, business-appropriate, tech blog suitable.`,
                         tools: [{
                           type: "image_generation",
                           size: "1024x1024",
-                          quality: "high"
+                          quality: "medium" // Reduced from high for cost savings
                         }]
                       })
                     })

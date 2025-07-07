@@ -921,7 +921,7 @@ export default function AdminPage() {
                           className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
                         />
                         <label htmlFor="webSearch" className="text-sm text-gray-700">
-                          🌍 Use gpt-4o-search-preview for latest info
+                          🌍 Web search + premium gpt-4o quality
                         </label>
                       </div>
                       
@@ -940,15 +940,19 @@ export default function AdminPage() {
                     </div>
                     
                     <div className="text-xs sm:text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
-                      <span className="font-medium">💡 AI Workflow:</span> The AI will use latest OpenAI models to research, write, and create visuals for your blog post.
+                      <span className="font-medium">💡 Hybrid AI Workflow:</span> Premium quality content with smart cost optimization and real-time streaming.
                       <div className="mt-2 text-xs">
-                        <strong>Process:</strong>
+                        <strong>Premium Process:</strong>
                         <ol className="list-decimal list-inside mt-1 space-y-1">
-                          <li>Load knowledge base (SEO guide + writing instructions)</li>
-                          <li>Write comprehensive blog post with gpt-4o-search-preview (includes web search) or gpt-4o</li>
-                          <li>Generate 2-3 relevant images with gpt-image-1 (if enabled)</li>
-                          <li>Present for your review and editing</li>
+                          <li>🔒 Security validation + rate limiting</li>
+                          <li>📚 Load knowledge base (SEO + writing instructions)</li>
+                          <li>✍️ Stream premium blog content with gpt-4o (+ web search if enabled)</li>
+                          <li>🎨 Generate images with gpt-4o-mini + gpt-image-1 (cost optimized)</li>
+                          <li>📱 Mobile-optimized real-time progress tracking</li>
                         </ol>
+                        <div className="mt-2 text-xs text-purple-600 font-medium">
+                          💰 Smart pricing: Premium quality writing + cost-optimized images
+                        </div>
                       </div>
                     </div>
                     

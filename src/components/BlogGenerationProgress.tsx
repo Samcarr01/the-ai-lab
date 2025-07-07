@@ -61,6 +61,8 @@ export default function BlogGenerationProgress({
   const [startTime] = useState(Date.now())
   const [totalElapsed, setTotalElapsed] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  const [streamingContent, setStreamingContent] = useState<string>('')
+  const [accumulatedLength, setAccumulatedLength] = useState(0)
 
   useEffect(() => {
     const eventSource = new EventSource('/api/ai/generate-blog-stream', {
