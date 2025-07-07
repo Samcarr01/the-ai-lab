@@ -6,9 +6,9 @@ import { createClient } from '@/lib/supabase/server'
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 
 // Security and cost limits
-const MAX_PROMPT_LENGTH = 1000
-const MAX_KNOWLEDGE_BASE_LENGTH = 5000
-const MAX_TOKENS = 4500 // Increased to support 1,500-2,500 word blogs (SEO requirement)
+const MAX_PROMPT_LENGTH = 500
+const MAX_KNOWLEDGE_BASE_LENGTH = 2000
+const MAX_TOKENS = 4000 // Supports 2,500-word blogs while staying within limits
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 3
 
@@ -149,30 +149,8 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'setup', status: 'starting' })
           const setupStart = Date.now()
 
-          let claudeContext = ''
-          let seoKnowledge = ''
-          let writingInstructions = ''
-
-          try {
-            const claudePath = join(process.cwd(), 'CLAUDE.md')
-            claudeContext = await readFile(claudePath, 'utf-8')
-          } catch (err) {
-            console.log('CLAUDE.md not found')
-          }
-
-          try {
-            const seoPath = join(process.cwd(), 'src/lib/knowledge/seo-best-practices.md')
-            seoKnowledge = await readFile(seoPath, 'utf-8')
-          } catch (err) {
-            console.log('SEO knowledge file not found')
-          }
-
-          try {
-            const instructionsPath = join(process.cwd(), 'src/lib/knowledge/ai-writing-instructions.md')
-            writingInstructions = await readFile(instructionsPath, 'utf-8')
-          } catch (err) {
-            console.log('AI writing instructions file not found')
-          }
+          // Skip large knowledge base files to reduce token usage
+          console.log('Skipping knowledge base files to fit within rate limits')
 
           sendProgress({
             step: 'setup',
@@ -204,44 +182,59 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'content_generation', status: 'starting' })
           const contentStart = Date.now()
 
-          const systemMessage = `You are an expert blog writer for "The AI Lab", a subscription platform for curated AI documents and GPTs. 
+          const systemMessage = `You are an expert SEO blog writer for "The AI Lab" - a subscription platform for AI tools and guides.
 
-PLATFORM CONTEXT:
-${claudeContext}
+TARGET: Professionals interested in AI productivity tools
+TONE: Professional but approachable
+LENGTH: 1,500-2,500 words (SEO optimal)
+FORMAT: Markdown with clear headings
 
-AI WRITING INSTRUCTIONS (FOLLOW THESE EXACTLY):
-${writingInstructions}
+SEO REQUIREMENTS:
+- Use H2/H3 headings with keywords naturally included
+- Write 2-4 sentence paragraphs for readability
+- Include bullet points and numbered lists
+- Add actionable insights and practical examples
+- Use keywords naturally throughout (no stuffing)
+- Create compelling meta description (150-160 characters)
+- Structure: Introduction → Main sections → Conclusion with CTA
 
-SEO BEST PRACTICES KNOWLEDGE:
-${seoKnowledge}
+CONTENT QUALITY:
+- Start with hook (statistic, question, or bold statement)
+- Provide real value and actionable takeaways  
+- Include specific examples and case studies when possible
+- End with clear next steps for readers
+- Categories: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy
 
-ADDITIONAL KNOWLEDGE BASE:
-${knowledgeBase || 'No additional knowledge base provided.'}
+${knowledgeBase ? `ADDITIONAL CONTEXT: ${knowledgeBase.slice(0, 800)}` : ''}
 
-Write a high-quality blog post that:
-1. Is engaging and informative
-2. Targets professionals interested in AI tools and productivity
-3. Is SEO-optimized with clear headings
-4. Includes actionable insights
-5. Maintains a professional but approachable tone
-6. Is between 800-1500 words
-7. Uses markdown formatting
-8. Includes a compelling meta description (under 160 characters)
-Return a JSON object with:
-- title: Blog post title
-- content: Full blog post content in markdown
-- meta_description: SEO meta description
-- category: Appropriate category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy
-- read_time: Estimated read time in minutes
+Return JSON:
+{
+  "title": "SEO-optimized title (60-70 characters)",
+  "content": "Full markdown blog post",
+  "meta_description": "Compelling description (150-160 chars)",
+  "category": "Most relevant category",
+  "read_time": "Estimated minutes based on word count"
+}
 
-${includeWebSearch ? 'Use web search to find the latest information and ensure accuracy and relevance.' : 'Focus on providing real value and actionable insights to readers.'}`
+${includeWebSearch ? 'Use web search for latest data and trends.' : 'Focus on proven strategies and actionable advice.'}`
 
           // Hybrid approach: Use full gpt-4o for content quality, mini for other tasks
           const modelToUse = includeWebSearch ? 'gpt-4o-search-preview' : 'gpt-4o'
           
-          // Estimate token usage for cost monitoring
+          // Estimate token usage for cost monitoring and rate limit checking
           const estimatedPromptTokens = estimateTokenCount(systemMessage + prompt)
-          console.log(`📊 Estimated tokens: ${estimatedPromptTokens} (model: ${modelToUse}) - PREMIUM QUALITY`)
+          console.log(`📊 Estimated tokens: ${estimatedPromptTokens} (model: ${modelToUse})`)
+          
+          // Check if we're within rate limits (gpt-4o-search-preview has 6K TPM limit)
+          if (modelToUse === 'gpt-4o-search-preview' && estimatedPromptTokens > 4000) {
+            sendProgress({
+              step: 'content_generation',
+              status: 'error',
+              message: 'Request too large for search model. Try a shorter prompt or disable web search.'
+            })
+            controller.close()
+            return
+          }
 
           const requestBody: any = {
             model: modelToUse,
@@ -254,10 +247,10 @@ ${includeWebSearch ? 'Use web search to find the latest information and ensure a
             stream: true // Enable streaming for better UX
           }
 
-          // Add web search options if using search model (balanced context for quality)
+          // Add web search options if using search model (minimal context to avoid rate limits)
           if (modelToUse === 'gpt-4o-search-preview') {
             requestBody.web_search_options = {
-              search_context_size: "medium" // Balanced quality/cost for main content
+              search_context_size: "small" // Minimal context to stay within rate limits
             }
           }
 
