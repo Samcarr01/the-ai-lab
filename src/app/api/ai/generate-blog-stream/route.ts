@@ -169,21 +169,30 @@ ${includeWebSearch ? 'Use web search to find the latest information and ensure a
           // Use web search model if enabled, otherwise use regular gpt-4o
           const modelToUse = includeWebSearch ? 'gpt-4o-search-preview' : 'gpt-4o'
 
+          const requestBody: any = {
+            model: modelToUse,
+            messages: [
+              { role: 'system', content: systemMessage },
+              { role: 'user', content: prompt }
+            ],
+            temperature: 0.7,
+            max_tokens: 4000
+          }
+
+          // Add web search options if using search model
+          if (modelToUse === 'gpt-4o-search-preview') {
+            requestBody.web_search_options = {
+              search_context_size: "medium"
+            }
+          }
+
           const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${OPENAI_API_KEY}`,
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-              model: modelToUse,
-              messages: [
-                { role: 'system', content: systemMessage },
-                { role: 'user', content: prompt }
-              ],
-              temperature: 0.7,
-              max_tokens: 4000
-            })
+            body: JSON.stringify(requestBody)
           })
 
           if (!response.ok) {
