@@ -109,7 +109,11 @@ export default function BlogGenerationProgress({
 
         while (true) {
           const chunkStart = Date.now()
+          console.log(`🔍 About to read chunk ${chunkCount + 1}...`)
+          
           const { done, value } = await reader.read()
+          const readTime = Date.now() - chunkStart
+          console.log(`📥 Chunk read in ${readTime}ms`)
           
           if (done) {
             console.log(`✅ Streaming completed. Total chunks: ${chunkCount}`)
@@ -123,16 +127,26 @@ export default function BlogGenerationProgress({
             console.log(`⚠️ SLOW CHUNK: ${timeSinceLastChunk}ms gap before chunk ${chunkCount}`)
           }
 
+          const decodeStart = Date.now()
           const chunk = decoder.decode(value)
+          const decodeTime = Date.now() - decodeStart
+          console.log(`🔤 Decode took ${decodeTime}ms, chunk size: ${chunk.length}`)
+          
           const lines = chunk.split('\n')
+          console.log(`📄 Processing ${lines.length} lines`)
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
               const dataStr = line.slice(6).trim()
               if (!dataStr) continue
               
+              const parseStart = Date.now()
               try {
                 const data = JSON.parse(dataStr)
+                const parseTime = Date.now() - parseStart
+                if (parseTime > 100) {
+                  console.log(`⚠️ SLOW JSON PARSE: ${parseTime}ms for line: ${dataStr.slice(0, 50)}...`)
+                }
                 
                 if (data.type === 'final_result') {
                   setIsComplete(true)
