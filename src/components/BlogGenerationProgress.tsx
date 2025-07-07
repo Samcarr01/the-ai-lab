@@ -141,12 +141,8 @@ export default function BlogGenerationProgress({
                 }
 
                 if (data.type === 'content_chunk') {
-                  // Only log every 10th chunk to reduce console spam
-                  if (chunkCount % 10 === 0) {
-                    console.log(`📝 Content chunk batch: ${data.content.length} chars, total: ${data.accumulated_length}`)
-                  }
-                  setStreamingContent(prev => prev + data.content)
-                  setAccumulatedLength(data.accumulated_length)
+                  // Skip streaming content updates to test performance
+                  console.log(`📝 Content chunk skipped: ${data.content.length} chars, total: ${data.accumulated_length}`)
                   return
                 }
 
