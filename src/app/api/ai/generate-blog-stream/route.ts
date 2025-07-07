@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
+import { createClient } from '@/lib/supabase/server'
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 
@@ -29,6 +30,31 @@ export async function POST(request: NextRequest) {
         const startTime = Date.now()
         
         try {
+          // Check authentication first
+          const supabase = createClient()
+          const { data: { user }, error: authError } = await supabase.auth.getUser()
+          
+          if (authError || !user) {
+            sendProgress({
+              step: 'setup',
+              status: 'error',
+              message: 'Authentication required. Please sign in again.'
+            })
+            controller.close()
+            return
+          }
+
+          // Check if user is admin
+          if (user.email !== 'samcarr1232@gmail.com') {
+            sendProgress({
+              step: 'setup',
+              status: 'error',
+              message: 'Admin access required for blog generation.'
+            })
+            controller.close()
+            return
+          }
+
           if (!OPENAI_API_KEY) {
             sendProgress({
               step: 'setup',

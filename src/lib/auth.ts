@@ -91,4 +91,12 @@ export const auth = {
     
     return { session, error }
   },
+
+  async refreshSession() {
+    const supabase = createClient()
+    
+    const { data, error } = await supabase.auth.refreshSession()
+    
+    return { data, error }
+  },
 }

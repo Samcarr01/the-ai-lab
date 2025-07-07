@@ -72,10 +72,19 @@ export default function AdminPage() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Check authentication
+        // Check authentication with session refresh
+        const { session, error: sessionError } = await auth.getSession()
+        
+        if (sessionError || !session) {
+          console.log('No valid session, redirecting to login')
+          router.push('/login')
+          return
+        }
+
         const { user: authUser, error } = await auth.getUser()
         
         if (error || !authUser) {
+          console.log('Auth error:', error)
           router.push('/login')
           return
         }
@@ -97,6 +106,7 @@ export default function AdminPage() {
         await loadBlogPosts()
       } catch (err) {
         console.error('Error loading data:', err)
+        showNotification('Session Error', 'Your session has expired. Please sign in again.', 'error')
         router.push('/login')
       } finally {
         setLoading(false)
@@ -301,11 +311,22 @@ export default function AdminPage() {
   const handleBlogGenerationError = (error: string) => {
     setShowProgress(false)
     setGeneratingBlog(false)
-    showNotification(
-      'Blog Generation Failed',
-      `${error}. Please check your API configuration and try again.`,
-      'error'
-    )
+    
+    // Handle auth errors specifically
+    if (error.includes('Authentication required') || error.includes('session')) {
+      showNotification(
+        'Session Expired',
+        'Your session has expired. Please sign in again.',
+        'error'
+      )
+      router.push('/login')
+    } else {
+      showNotification(
+        'Blog Generation Failed',
+        `${error}. Please check your API configuration and try again.`,
+        'error'
+      )
+    }
   }
 
   const handleBlogGenerationCancel = () => {
