@@ -256,6 +256,9 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
             }
           }
 
+          console.log('📤 Sending request to OpenAI API...')
+          const apiRequestStart = Date.now()
+          
           const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -265,16 +268,27 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
             body: JSON.stringify(requestBody)
           })
 
+          const apiResponseTime = Date.now() - apiRequestStart
+          console.log(`📥 API response received in ${apiResponseTime}ms`)
+
           if (!response.ok) {
             const errorData = await response.text()
             throw new Error(`OpenAI API error: ${response.status} - ${errorData}`)
           }
 
-          // Handle streaming response
+          sendProgress({
+            step: 'content_generation',
+            status: 'running',
+            message: `API connected (${apiResponseTime}ms), starting stream...`
+          })
+
+          // Handle streaming response with debugging
           const reader = response.body?.getReader()
           const decoder = new TextDecoder()
           let accumulatedContent = ''
           let blogPost: any = {}
+          let chunkCount = 0
+          let lastChunkTime = Date.now()
 
           if (!reader) {
             throw new Error('No response body reader available')
@@ -284,13 +298,32 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
           sendProgress({
             step: 'content_generation',
             status: 'running',
-            message: 'Streaming content...'
+            message: 'Starting content stream...'
           })
 
+          console.log('🚀 Starting streaming response processing...')
+
           while (true) {
+            const chunkStartTime = Date.now()
             const { done, value } = await reader.read()
             
-            if (done) break
+            if (done) {
+              console.log(`✅ Streaming complete. Total chunks: ${chunkCount}, Final content length: ${accumulatedContent.length}`)
+              break
+            }
+
+            chunkCount++
+            const timeSinceLastChunk = Date.now() - lastChunkTime
+            
+            // Log if there are long delays between chunks
+            if (timeSinceLastChunk > 5000) {
+              console.log(`⚠️ Long delay detected: ${timeSinceLastChunk}ms between chunks`)
+              sendProgress({
+                step: 'content_generation',
+                status: 'running',
+                message: `Slow response detected... (${Math.round(timeSinceLastChunk/1000)}s delay)`
+              })
+            }
 
             const chunk = decoder.decode(value)
             const lines = chunk.split('\n')
@@ -299,7 +332,10 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
               if (line.startsWith('data: ')) {
                 const data = line.slice(6)
                 
-                if (data === '[DONE]') continue
+                if (data === '[DONE]') {
+                  console.log('📝 Received [DONE] signal from OpenAI')
+                  continue
+                }
                 
                 try {
                   const parsed = JSON.parse(data)
@@ -307,6 +343,15 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
                   
                   if (content) {
                     accumulatedContent += content
+                    
+                    // Send progress update every 100 characters
+                    if (accumulatedContent.length % 100 === 0) {
+                      sendProgress({
+                        step: 'content_generation',
+                        status: 'running',
+                        message: `Generated ${accumulatedContent.length} characters...`
+                      })
+                    }
                     
                     // Send live content updates (mobile-optimized chunks)
                     const contentUpdate = `data: ${JSON.stringify({
@@ -317,9 +362,17 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
                     controller.enqueue(encoder.encode(contentUpdate))
                   }
                 } catch (parseError) {
-                  console.log('Failed to parse SSE data:', data)
+                  console.log('Failed to parse SSE data:', data.slice(0, 100))
                 }
               }
+            }
+
+            lastChunkTime = Date.now()
+            const chunkProcessTime = lastChunkTime - chunkStartTime
+            
+            // Log slow chunk processing
+            if (chunkProcessTime > 1000) {
+              console.log(`⚠️ Slow chunk processing: ${chunkProcessTime}ms for chunk ${chunkCount}`)
             }
           }
 
