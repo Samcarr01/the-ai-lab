@@ -235,7 +235,7 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
           let modelToUse, apiEndpoint, apiKey
           
           if (includeWebSearch && searchProvider === 'perplexity') {
-            modelToUse = 'llama-3.1-sonar-large-128k-online'
+            modelToUse = 'sonar'
             apiEndpoint = 'https://api.perplexity.ai/chat/completions'
             apiKey = PERPLEXITY_API_KEY
           } else if (includeWebSearch && searchProvider === 'openai') {
