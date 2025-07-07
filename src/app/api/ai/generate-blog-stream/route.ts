@@ -64,7 +64,7 @@ function estimateTokenCount(text: string): number {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true, searchContextSize = 'medium' } = body
+    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true } = body
     const searchProvider = 'perplexity' // Only Perplexity supported now
     
     // Validate and sanitize inputs
@@ -261,11 +261,8 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
 
           // Add model-specific parameters
           if (includeWebSearch) {
-            // Perplexity Sonar model
+            // Perplexity Sonar model - simplified structure
             requestBody.temperature = 0.7
-            requestBody.web_search_options = {
-              search_context_size: searchContextSize
-            }
           } else {
             // Regular OpenAI model
             requestBody.temperature = 0.7

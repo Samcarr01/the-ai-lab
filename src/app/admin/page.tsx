@@ -42,7 +42,7 @@ export default function AdminPage() {
   const [includeWebSearch, setIncludeWebSearch] = useState(true)
   const [includeImages, setIncludeImages] = useState(true)
   const [searchProvider] = useState<'perplexity'>('perplexity')
-  const [searchContextSize, setSearchContextSize] = useState<'low' | 'medium' | 'high'>('medium')
+  const [searchContextSize] = useState<'medium'>('medium')
   const [showProgress, setShowProgress] = useState(false)
   const [notification, setNotification] = useState<{
     isOpen: boolean
@@ -437,7 +437,6 @@ export default function AdminPage() {
       setPublishingBlog(false)
     }
   }
-
 
   if (loading) {
     return (
@@ -850,8 +849,8 @@ export default function AdminPage() {
               )}
             </div>
             )}
-            </div>
           </div>
+        </div>
         </div>
         )}
 
@@ -930,49 +929,10 @@ export default function AdminPage() {
                       </div>
                       
                       {includeWebSearch && (
-                        <div className="ml-6 space-y-2">
+                        <div className="ml-6">
                           <div className="flex items-center space-x-2 text-sm text-gray-700">
                             <span>⚡</span>
-                            <span>Using Perplexity Sonar for fast, high-quality web search</span>
-                          </div>
-                          
-                          <div>
-                            <p className="text-xs text-gray-600 mb-2">Search Context Size:</p>
-                            <div className="flex space-x-3">
-                              <label className="flex items-center space-x-1">
-                                <input
-                                  type="radio"
-                                  name="searchContextSize"
-                                  value="low"
-                                  checked={searchContextSize === 'low'}
-                                  onChange={(e) => setSearchContextSize(e.target.value as 'low' | 'medium' | 'high')}
-                                  className="text-purple-600 focus:ring-purple-500"
-                                />
-                                <span className="text-xs text-gray-700">💰 Low (Cheapest)</span>
-                              </label>
-                              <label className="flex items-center space-x-1">
-                                <input
-                                  type="radio"
-                                  name="searchContextSize"
-                                  value="medium"
-                                  checked={searchContextSize === 'medium'}
-                                  onChange={(e) => setSearchContextSize(e.target.value as 'low' | 'medium' | 'high')}
-                                  className="text-purple-600 focus:ring-purple-500"
-                                />
-                                <span className="text-xs text-gray-700">⚖️ Medium (Balanced)</span>
-                              </label>
-                              <label className="flex items-center space-x-1">
-                                <input
-                                  type="radio"
-                                  name="searchContextSize"
-                                  value="high"
-                                  checked={searchContextSize === 'high'}
-                                  onChange={(e) => setSearchContextSize(e.target.value as 'low' | 'medium' | 'high')}
-                                  className="text-purple-600 focus:ring-purple-500"
-                                />
-                                <span className="text-xs text-gray-700">🔍 High (Most Comprehensive)</span>
-                              </label>
-                            </div>
+                            <span>Using Perplexity Sonar with balanced search context</span>
                           </div>
                         </div>
                       )}
