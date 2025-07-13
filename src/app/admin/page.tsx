@@ -986,8 +986,6 @@ export default function AdminPage() {
                     </button>
                   </div>
                 </div>
-                )}
-
                 {/* Generated Blog Preview */}
                 {generatedBlog && (
                   <div className="p-4 sm:p-6 bg-green-50 rounded-xl border border-green-200">
@@ -1256,6 +1254,8 @@ export default function AdminPage() {
                     </div>
                   )}
                 </div>
+                </div>
+                )}
               </div>
             </div>
           </div>
