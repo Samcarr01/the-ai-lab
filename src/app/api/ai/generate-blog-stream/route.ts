@@ -234,22 +234,29 @@ ${seoKnowledge}
 ${knowledgeBase ? `ADDITIONAL CONTEXT: ${knowledgeBase.slice(0, 600)}` : ''}
 
 REQUIREMENTS:
-- Follow SEO best practices above
-- Write 1,000-1,500 words (quality over length)
-- Use conversational, actionable tone
-- Include specific examples and data when possible
-- Structure with proper headings (H2/H3) and scannable format
+- Follow ALL SEO best practices listed above
+- Write 1,000-1,500 words with proper markdown formatting
+- Use ## for H2 headings, ### for H3 headings
+- Include 2-3 internal links to related pages: [link text](/gpts), [link text](/documents), [link text](/blog)
+- Include 2-3 external links to authoritative sources
+- Use **bold** for emphasis and *italics* for key terms
+- Create bullet points and numbered lists for scannable content
+- Write short paragraphs (2-4 sentences max)
+- Include a compelling introduction with a hook
+- End with a clear call-to-action
 
-Return JSON:
+You MUST return ONLY valid JSON with this exact structure:
 {
-  "title": "SEO title (60-70 chars, keyword near start)",
-  "content": "Full markdown blog post following SEO practices",
-  "meta_description": "Compelling description (150-160 chars)",
-  "category": "Most relevant category from list above",
-  "read_time": "Estimated read time in minutes"
+  "title": "SEO-optimized title (60-70 chars, keyword near start)",
+  "content": "# Title Here\\n\\n## Introduction\\n\\nYour intro paragraph here...\\n\\n## Main Heading\\n\\nContent with **bold** and *italics*...\\n\\n### Subheading\\n\\n- Bullet point 1\\n- Bullet point 2\\n\\n[Internal link to GPTs](/gpts)...\\n\\n## Conclusion\\n\\nYour conclusion with CTA...",
+  "meta_description": "Compelling meta description (150-160 chars) with main keyword",
+  "category": "One category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy",
+  "read_time": 5
 }
 
-${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focus on proven strategies and practical advice.'}`
+${includeWebSearch ? 'Use web search for latest information, statistics, and trends.' : 'Focus on proven strategies and practical advice.'}
+
+CRITICAL: Return ONLY the JSON object, no other text or markdown.`
 
           // Choose model and API endpoint
           let modelToUse, apiEndpoint, apiKey
@@ -279,16 +286,13 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
               { role: 'user', content: prompt }
             ],
             max_tokens: MAX_TOKENS,
-            stream: true
+            stream: true,
+            temperature: 0.7
           }
 
-          // Add model-specific parameters
-          if (includeWebSearch) {
-            // Perplexity Sonar model - simplified structure
-            requestBody.temperature = 0.7
-          } else {
-            // Regular OpenAI model
-            requestBody.temperature = 0.7
+          // Add response format for OpenAI to ensure JSON
+          if (!includeWebSearch) {
+            requestBody.response_format = { type: "json_object" }
           }
 
           console.log(`📤 Sending request to ${includeWebSearch ? 'Perplexity' : 'OpenAI'} API...`)
@@ -430,16 +434,26 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
 
           // Try to parse the final content as JSON blog post
           try {
-            blogPost = JSON.parse(accumulatedContent)
+            // First try to extract JSON from the response
+            const jsonMatch = accumulatedContent.match(/\{[\s\S]*\}/);
+            if (jsonMatch) {
+              blogPost = JSON.parse(jsonMatch[0]);
+            } else {
+              throw new Error('No JSON found in response');
+            }
           } catch (parseError) {
-            // If not JSON, create structured blog post
+            console.error('Failed to parse blog JSON:', parseError);
+            // If not JSON, try to extract content and create structured blog post
+            const lines = accumulatedContent.split('\n');
+            const title = lines[0]?.replace(/^#\s*/, '') || `AI Tools Guide: ${prompt.slice(0, 50)}...`;
+            
             blogPost = {
-              title: 'AI-Generated Blog Post',
-              content: accumulatedContent,
-              meta_description: 'An AI-generated blog post about AI tools and strategies.',
+              title: title.slice(0, 70),
+              content: `# ${title}\n\n## Introduction\n\n${accumulatedContent}\n\n## Learn More\n\nExplore our [AI GPTs collection](/gpts) and [downloadable playbooks](/documents) to enhance your AI workflow.\n\n---\n\n*Ready to unlock the full power of AI tools? [Upgrade to Pro](/upgrade) for unlimited access to all GPTs and playbooks.*`,
+              meta_description: `Learn about ${prompt}. Expert insights on AI tools, strategies, and best practices for professionals.`.slice(0, 160),
               category: 'AI Tools',
               read_time: Math.ceil(accumulatedContent.split(' ').length / 200)
-            }
+            };
           }
 
           sendProgress({
@@ -494,45 +508,37 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
                   ]
                 }
 
-                // Generate images using Responses API with image_generation tool
-                const imagePromises = imagePrompts.slice(0, 3).map(async (prompt: string, index: number) => {
+                // Generate images using DALL-E 3
+                const imagePromises = imagePrompts.slice(0, 2).map(async (prompt: string, index: number) => {
                   try {
-                    const imageResponse = await fetch('https://api.openai.com/v1/responses', {
+                    const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
                       method: 'POST',
                       headers: {
                         'Authorization': `Bearer ${OPENAI_API_KEY}`,
                         'Content-Type': 'application/json',
                       },
                       body: JSON.stringify({
-                        model: 'gpt-image-1', // Use correct model for image generation
-                        input: `Generate a professional image: ${prompt}. Style: Clean, business-appropriate, tech blog suitable.`,
-                        tools: [{
-                          type: "image_generation",
-                          size: "1024x1024",
-                          quality: "medium" // Reduced from high for cost savings
-                        }]
+                        model: 'dall-e-3',
+                        prompt: `Professional, modern tech blog illustration: ${prompt}. Style: Clean, minimalist, business-appropriate, purple/blue gradient accents, no text in image.`,
+                        size: '1024x1024',
+                        quality: 'standard', // standard is cheaper than hd
+                        n: 1
                       })
                     })
 
                     if (imageResponse.ok) {
                       const responseData = await imageResponse.json()
                       
-                      // Find image generation results in the output
-                      const imageGenerationCalls = responseData.output?.filter(
-                        (output: any) => output.type === "image_generation_call"
-                      )
-                      
-                      if (imageGenerationCalls?.length > 0 && imageGenerationCalls[0].result) {
-                        // Convert base64 to data URL for display
-                        const base64Image = imageGenerationCalls[0].result
-                        const imageUrl = `data:image/png;base64,${base64Image}`
-                        
+                      // DALL-E returns images in data array
+                      if (responseData.data && responseData.data[0]?.url) {
                         return {
-                          url: imageUrl,
+                          url: responseData.data[0].url,
                           prompt: prompt,
-                          description: `Image ${index + 1} for blog post (gpt-image-1 generated via Responses API)`
+                          description: `Image ${index + 1} for blog post`
                         }
                       }
+                    } else {
+                      console.error(`Image generation failed: ${imageResponse.status}`, await imageResponse.text())
                     }
                     return null
                   } catch (err) {
