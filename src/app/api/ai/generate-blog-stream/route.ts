@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server'
-import { readFile } from 'fs/promises'
-import { join } from 'path'
 import { createClient } from '@/lib/supabase/server'
+
+// Configure for Node.js runtime with extended timeout
+export const maxDuration = 300 // 5 minutes max for blog generation
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY
@@ -161,14 +162,36 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'setup', status: 'starting' })
           const setupStart = Date.now()
 
-          // Load condensed SEO knowledge for better guidance
-          let seoKnowledge = ''
-          try {
-            const seoPath = join(process.cwd(), 'src/lib/knowledge/seo-condensed.md')
-            seoKnowledge = await readFile(seoPath, 'utf-8')
-          } catch (err) {
-            console.log('Condensed SEO knowledge file not found')
-          }
+          // Embedded SEO knowledge to avoid file system issues in production
+          const seoKnowledge = `
+# SEO Blog Writing Essentials
+
+## Blog Structure & Length
+- Optimal length: 1,500-2,500 words for best SEO performance
+- Headline: 60-70 characters, include primary keyword near beginning
+- Introduction: Hook reader in first 10-15 seconds, clear value proposition
+- Body: Use H2/H3 headings hierarchically, 2-4 sentence paragraphs
+- Conclusion: Summarize key takeaways, include clear call-to-action
+
+## Content Quality Requirements
+- Scannable format: 79% of users scan content, not read word-for-word
+- Short paragraphs: 1-3 sentences max for mobile readability
+- Bullet points/lists: Break up text, highlight key information
+- Bold/italic: Emphasize important concepts (don't overuse)
+
+## SEO Optimization
+- Primary keyword: Include naturally in headline, intro, headings
+- Heading structure: H2/H3 tags that tell complete story when scanned
+- Meta description: 150-160 characters, compelling and keyword-rich
+- Internal links: Link to related content for better site structure
+
+## Writing Approach
+- Conversational tone: Use "you", contractions, rhetorical questions
+- Active voice: More engaging than passive voice
+- Concrete language: Specific words over vague generalities
+- Evidence-based: Support claims with data, research, examples
+- Actionable insights: Provide practical takeaways readers can implement
+`
 
           sendProgress({
             step: 'setup',
@@ -316,13 +339,14 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
           console.log('🚀 Starting streaming response processing...')
 
           while (true) {
-            const chunkStartTime = Date.now()
-            const { done, value } = await reader.read()
-            
-            if (done) {
-              console.log(`✅ Streaming complete. Total chunks: ${chunkCount}, Final content length: ${accumulatedContent.length}`)
-              break
-            }
+            try {
+              const chunkStartTime = Date.now()
+              const { done, value } = await reader.read()
+              
+              if (done) {
+                console.log(`✅ Streaming complete. Total chunks: ${chunkCount}, Final content length: ${accumulatedContent.length}`)
+                break
+              }
 
             chunkCount++
             const timeSinceLastChunk = Date.now() - lastChunkTime
@@ -365,7 +389,9 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
                       })
                     }
                     
-                    // Only send content chunks every 50 characters to reduce stream overhead
+                    // Disable content chunk streaming to avoid permission errors
+                    // Only send progress updates, not content chunks
+                    /*
                     if (content.length > 5 && accumulatedContent.length % 50 === 0) {
                       const contentUpdate = `data: ${JSON.stringify({
                         type: 'content_chunk',
@@ -374,6 +400,7 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
                       })}\n\n`
                       controller.enqueue(encoder.encode(contentUpdate))
                     }
+                    */
                   }
                 } catch (parseError) {
                   console.log('Failed to parse SSE data:', data.slice(0, 100))
@@ -387,6 +414,17 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
             // Log slow chunk processing
             if (chunkProcessTime > 1000) {
               console.log(`⚠️ Slow chunk processing: ${chunkProcessTime}ms for chunk ${chunkCount}`)
+            }
+            } catch (chunkError) {
+              console.error('Error processing chunk:', chunkError)
+              // Continue processing other chunks
+              if (chunkCount > 5) {
+                // If we've processed some chunks, try to continue
+                break
+              } else {
+                // If early error, throw it
+                throw chunkError
+              }
             }
           }
 
@@ -576,9 +614,7 @@ ${includeWebSearch ? 'Use web search for latest information and trends.' : 'Focu
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST',
-        'Access-Control-Allow-Headers': 'Content-Type',
+        'X-Content-Type-Options': 'nosniff',
       },
     })
   } catch (error) {
