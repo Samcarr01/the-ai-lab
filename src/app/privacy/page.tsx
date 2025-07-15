@@ -9,10 +9,10 @@ export default function PrivacyPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-3">
               <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple">
-                <span className="text-white text-xl">🧪</span>
+                <span className="text-white text-xl">🤖</span>
               </div>
               <span className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-                The AI Lab
+                thehackai
               </span>
             </Link>
             

@@ -11,7 +11,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'The AI Lab - Battle-tested AI workflows that actually work',
+  title: 'thehackai - Battle-tested AI workflows that actually work',
   description: 'Access curated AI tools and guides for £15/month. Proven GPTs, PDF guides, and monthly additions.',
 }
 

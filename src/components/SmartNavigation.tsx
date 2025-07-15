@@ -31,9 +31,9 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
         <div className="flex justify-between items-center h-16">
           <Link href={effectiveUser ? "/dashboard" : "/"} className="flex items-center space-x-2 sm:space-x-3">
             <div className="w-9 sm:w-10 h-9 sm:h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white text-lg sm:text-xl">🧪</span>
+              <span className="text-white text-lg sm:text-xl">🤖</span>
             </div>
-            <span className="text-lg sm:text-xl font-semibold text-gradient">The AI Lab</span>
+            <span className="text-lg sm:text-xl font-semibold text-gradient">thehackai</span>
           </Link>
           
           {/* Desktop Navigation */}

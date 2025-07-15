@@ -88,9 +88,9 @@ export default function UpgradePage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/dashboard" className="flex items-center space-x-3">
               <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white text-xl">🧪</span>
+                <span className="text-white text-xl">🤖</span>
               </div>
-              <span className="text-xl font-semibold text-gradient">The AI Lab</span>
+              <span className="text-xl font-semibold text-gradient">thehackai</span>
             </Link>
             
             <Link href="/dashboard" className="text-sm text-gray-500 hover:text-purple-600 transition-colors">

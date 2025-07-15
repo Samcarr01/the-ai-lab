@@ -8,9 +8,9 @@ export default function AuthCodeErrorPage() {
         <div className="flex justify-center">
           <Link href="/" className="flex items-center space-x-3">
             <div className="w-12 h-12 gradient-purple rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white text-2xl">🧪</span>
+              <span className="text-white text-2xl">🤖</span>
             </div>
-            <span className="text-2xl font-bold text-gradient">The AI Lab</span>
+            <span className="text-2xl font-bold text-gradient">thehackai</span>
           </Link>
         </div>
         
@@ -64,7 +64,7 @@ export default function AuthCodeErrorPage() {
       <div className="mt-8 text-center">
         <Link href="/" className="text-sm text-gray-500 hover:text-purple-600 transition-colors flex items-center justify-center space-x-1">
           <span>←</span>
-          <span>Back to The AI Lab</span>
+          <span>Back to thehackai</span>
         </Link>
       </div>
     </div>

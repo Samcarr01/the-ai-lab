@@ -3,7 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
-- **Name:** The AI Lab  
+- **Name:** thehackai  
 - **Purpose:** Subscription platform for curated AI documents and GPTs
 - **Target:** £15/month for access to tested AI tools and guides
 - **Value Prop:** "Battle-tested AI workflows that actually work"

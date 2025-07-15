@@ -9,10 +9,10 @@ export default function TermsPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-3">
               <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple">
-                <span className="text-white text-xl">🧪</span>
+                <span className="text-white text-xl">🤖</span>
               </div>
               <span className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
-                The AI Lab
+                thehackai
               </span>
             </Link>
             
@@ -58,7 +58,7 @@ export default function TermsPage() {
 
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Service Description</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
-                The AI Lab provides access to curated AI tools, GPTs, and PDF playbooks for a monthly subscription fee of £15. 
+                thehackai provides access to curated AI tools, GPTs, and PDF playbooks for a monthly subscription fee of £15. 
                 Free accounts have preview access to browse content titles and descriptions.
               </p>
 
@@ -100,7 +100,7 @@ export default function TermsPage() {
 
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Limitation of Liability</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
-                The AI Lab shall not be liable for any indirect, incidental, special, consequential, or punitive damages 
+                thehackai shall not be liable for any indirect, incidental, special, consequential, or punitive damages 
                 resulting from your use of the service. Our liability is limited to the amount you paid for the service.
               </p>
 

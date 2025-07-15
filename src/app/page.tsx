@@ -60,10 +60,10 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">
               <div className="w-9 sm:w-10 h-9 sm:h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <span className="text-white text-lg sm:text-xl">🧪</span>
+                <span className="text-white text-lg sm:text-xl">🤖</span>
               </div>
               <span className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-purple-600 transition-all duration-300">
-                The AI Lab
+                thehackai
               </span>
             </Link>
             
@@ -159,7 +159,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto text-center">
           <ScrollAnimation animation="fade-up">
           <div className="inline-flex items-center justify-center px-4 py-2 mb-8 rounded-full bg-purple-100/50 border border-purple-200/50">
-            <span className="text-purple-700 text-sm font-medium">🧪 Curated AI Tools & Playbooks</span>
+            <span className="text-purple-700 text-sm font-medium">🤖 Curated AI Tools & Playbooks</span>
           </div>
           
           <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight text-center min-h-[36px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] flex items-center justify-center px-1">
@@ -224,7 +224,7 @@ export default function HomePage() {
           <ScrollAnimation animation="fade-up">
             <div className="text-center mb-8 sm:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
-                What&apos;s Inside The Lab 🧬
+                What&apos;s Inside thehackai 🚀
               </h2>
               <p className="text-xl text-gray-600">
                 Create your free account to explore and upgrade anytime for full access
