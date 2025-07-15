@@ -119,6 +119,28 @@
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400;
   }
+  
+  /* Dark purple logo with blue glow */
+  .logo-dark-purple-blue-glow {
+    filter: 
+      brightness(0.3) /* Make it much darker */
+      saturate(1.5) /* Increase color saturation */
+      hue-rotate(10deg) /* Slight hue shift toward purple */
+      drop-shadow(0 0 8px rgba(59, 130, 246, 0.6)) /* Blue glow */
+      drop-shadow(0 0 16px rgba(59, 130, 246, 0.3)) /* Outer blue glow */
+      drop-shadow(0 0 3px rgba(126, 34, 206, 0.8)); /* Inner purple shadow */
+    transition: filter 0.3s ease;
+  }
+  
+  .logo-dark-purple-blue-glow:hover {
+    filter: 
+      brightness(0.2) /* Even darker on hover */
+      saturate(2) /* More saturated on hover */
+      hue-rotate(10deg)
+      drop-shadow(0 0 12px rgba(59, 130, 246, 0.8)) /* Stronger blue glow */
+      drop-shadow(0 0 24px rgba(59, 130, 246, 0.4)) /* Larger outer glow */
+      drop-shadow(0 0 6px rgba(126, 34, 206, 1)); /* Stronger purple shadow */
+  }
 }
 
 @layer utilities {

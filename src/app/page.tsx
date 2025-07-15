@@ -60,13 +60,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">
-              <div className="w-10 sm:w-12 h-10 sm:h-12 bg-white rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 p-1 border border-purple-200">
+              <div className="w-12 sm:w-14 h-12 sm:h-14 bg-white rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 p-1 border border-purple-200">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
-                  width={48}
-                  height={48}
-                  className="w-full h-full object-contain"
+                  width={56}
+                  height={56}
+                  className="w-full h-full object-contain logo-dark-purple-blue-glow"
                 />
               </div>
               <span className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-purple-600 transition-all duration-300">
@@ -166,13 +166,13 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto text-center">
           <ScrollAnimation animation="fade-up">
           <div className="inline-flex items-center justify-center px-4 py-2 mb-8 rounded-full bg-purple-100/50 border border-purple-200/50">
-            <div className="w-5 h-5 mr-2 flex items-center justify-center">
+            <div className="w-6 h-6 mr-2 flex items-center justify-center">
               <Image
                 src="/logo.png"
                 alt="thehackai logo"
-                width={20}
-                height={20}
-                className="w-full h-full object-contain"
+                width={24}
+                height={24}
+                className="w-full h-full object-contain logo-dark-purple-blue-glow"
               />
             </div>
             <span className="text-purple-700 text-sm font-medium">Curated AI Tools & Playbooks</span>
@@ -254,13 +254,13 @@ export default function HomePage() {
               <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-100/50 hover:border-purple-300/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-              <div className="w-16 sm:w-20 h-16 sm:h-20 bg-white rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 p-2 border border-purple-200 shadow-lg">
+              <div className="w-20 sm:w-24 h-20 sm:h-24 bg-white rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 p-2 border border-purple-200 shadow-lg">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
-                  width={80}
-                  height={80}
-                  className="w-full h-full object-contain"
+                  width={96}
+                  height={96}
+                  className="w-full h-full object-contain logo-dark-purple-blue-glow"
                 />
               </div>
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
@@ -447,13 +447,13 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 sm:space-x-3 mb-4 md:mb-0">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
-                  width={32}
-                  height={32}
-                  className="w-full h-full object-contain"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-contain logo-dark-purple-blue-glow"
                 />
               </div>
               <span className="text-base sm:text-lg font-semibold text-gray-900">thehackai</span>

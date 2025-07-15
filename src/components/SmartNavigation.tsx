@@ -31,13 +31,13 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href={effectiveUser ? "/dashboard" : "/"} className="flex items-center space-x-2 sm:space-x-3">
-            <div className="w-10 sm:w-12 h-10 sm:h-12 bg-white rounded-xl flex items-center justify-center shadow-lg p-1 border border-purple-200">
+            <div className="w-12 sm:w-14 h-12 sm:h-14 bg-white rounded-xl flex items-center justify-center shadow-lg p-1 border border-purple-200">
               <Image
                 src="/logo.png"
                 alt="thehackai logo"
-                width={48}
-                height={48}
-                className="w-full h-full object-contain"
+                width={56}
+                height={56}
+                className="w-full h-full object-contain logo-dark-purple-blue-glow"
               />
             </div>
             <span className="text-lg sm:text-xl font-semibold text-gradient">thehackai</span>

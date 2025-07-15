@@ -87,13 +87,13 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="flex justify-center">
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-12 h-12 gradient-purple rounded-xl flex items-center justify-center shadow-lg p-3">
+            <div className="w-14 h-14 gradient-purple rounded-xl flex items-center justify-center shadow-lg p-3">
               <Image
                 src="/logo.png"
                 alt="thehackai logo"
-                width={48}
-                height={48}
-                className="w-full h-full object-contain"
+                width={56}
+                height={56}
+                className="w-full h-full object-contain logo-dark-purple-blue-glow"
               />
             </div>
             <span className="text-2xl font-bold text-gradient">thehackai</span>
