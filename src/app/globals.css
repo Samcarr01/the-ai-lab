@@ -120,22 +120,13 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400;
   }
   
-  /* Clean dark logo with subtle enhancement */
+  /* Clean logo styling */
   .logo-dark-purple-blue-glow {
-    filter: 
-      brightness(0.4) /* Darker but still recognizable */
-      saturate(1.2) /* Slight color enhancement */
-      contrast(1.1) /* Subtle contrast boost */
-      drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1)); /* Clean subtle shadow */
-    transition: filter 0.3s ease;
+    transition: transform 0.3s ease;
   }
   
   .logo-dark-purple-blue-glow:hover {
-    filter: 
-      brightness(0.3) /* Slightly darker on hover */
-      saturate(1.4) /* More saturated on hover */
-      contrast(1.2) /* Enhanced contrast on hover */
-      drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2)); /* Stronger clean shadow */
+    transform: scale(1.05);
   }
 }
 
