@@ -403,7 +403,7 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative z-10">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-            Ready to Join The Lab? 🚀
+            Ready to Join thehackai? 🚀
           </h2>
           <p className="text-base sm:text-lg lg:text-xl text-purple-100 mb-6 sm:mb-8 px-2 sm:px-0">
             Create your free account now and start exploring. Upgrade to Pro for full access to everything.
@@ -425,7 +425,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 sm:space-x-3 mb-4 md:mb-0">
-              <span className="text-xl sm:text-2xl">🧪</span>
+              <span className="text-xl sm:text-2xl">🤖</span>
               <span className="text-base sm:text-lg font-semibold text-gray-900">thehackai</span>
             </div>
             <div className="flex space-x-4 sm:space-x-6 text-xs sm:text-sm text-gray-600">

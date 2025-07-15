@@ -304,7 +304,7 @@ export default function ContactPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <span className="text-2xl">🧪</span>
+              <span className="text-2xl">🤖</span>
               <span className="text-lg font-semibold text-gray-900">thehackai</span>
             </div>
             <div className="flex space-x-6 text-sm text-gray-600">
