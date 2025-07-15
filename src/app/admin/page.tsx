@@ -74,19 +74,10 @@ export default function AdminPage() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Check authentication with session refresh
-        const { session, error: sessionError } = await auth.getSession()
-        
-        if (sessionError || !session) {
-          console.log('No valid session, redirecting to login')
-          router.push('/login')
-          return
-        }
-
+        // Check authentication
         const { user: authUser, error } = await auth.getUser()
         
         if (error || !authUser) {
-          console.log('Auth error:', error)
           router.push('/login')
           return
         }
@@ -104,11 +95,9 @@ export default function AdminPage() {
         }
 
         // Load recent uploads and blog posts
-        await loadRecentUploads()
-        await loadBlogPosts()
+        await Promise.all([loadRecentUploads(), loadBlogPosts()])
       } catch (err) {
         console.error('Error loading data:', err)
-        showNotification('Session Error', 'Your session has expired. Please sign in again.', 'error')
         router.push('/login')
       } finally {
         setLoading(false)
@@ -120,31 +109,20 @@ export default function AdminPage() {
 
   const loadRecentUploads = async () => {
     try {
-      console.log('📡 Fetching content from admin API...')
-      // Use admin API endpoint that bypasses RLS to ensure all content is visible
-      const response = await fetch('/api/admin/content', {
-        // Add cache busting to prevent stale data
-        cache: 'no-store',
-        headers: {
-          'Cache-Control': 'no-cache'
-        }
-      })
-      if (!response.ok) {
-        throw new Error('Failed to fetch content')
-      }
+      const [gpts, documents] = await Promise.all([
+        gptsService.getAllGPTs(),
+        documentsService.getAllDocuments()
+      ])
       
-      const result = await response.json()
-      if (result.success) {
-        // Show ALL content in admin panel, not just last 10
-        setRecentUploads(result.content)
-        console.log(`✅ Loaded ${result.content.length} items for admin panel`)
-        console.log('📋 Content featured status:', result.content.map((item: any) => `${item.title}: ${item.is_featured}`))
-      } else {
-        throw new Error(result.error || 'Failed to load content')
-      }
+      // Combine and sort by date
+      const allUploads = [
+        ...gpts.map(gpt => ({ ...gpt, type: 'gpt' })),
+        ...documents.map(doc => ({ ...doc, type: 'document' }))
+      ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      
+      setRecentUploads(allUploads.slice(0, 10)) // Show last 10
     } catch (err) {
       console.error('Error loading recent uploads:', err)
-      showNotification('Load Failed', 'Unable to load content. Please refresh the page.', 'error')
     }
   }
 
@@ -154,6 +132,83 @@ export default function AdminPage() {
       setBlogPosts(posts)
     } catch (err) {
       console.error('Error loading blog posts:', err)
+    }
+  }
+
+  const createSlug = (title: string): string => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9 -]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+  }
+
+  const calculateReadTime = (content: string): number => {
+    const wordsPerMinute = 200
+    const wordCount = content.split(/\s+/).length
+    return Math.ceil(wordCount / wordsPerMinute)
+  }
+
+  const handleCreateBlogPost = async (postData: {
+    title: string
+    content: string
+    meta_description: string
+    category: string
+  }) => {
+    try {
+      const slug = createSlug(postData.title)
+      const read_time = calculateReadTime(postData.content)
+      
+      const newPost = await blogService.createPost({
+        title: postData.title,
+        content: postData.content,
+        slug,
+        published_at: new Date().toISOString(),
+        meta_description: postData.meta_description,
+        category: postData.category,
+        read_time
+      })
+
+      if (newPost) {
+        setBlogPosts(prev => [newPost, ...prev])
+        setIsCreatingPost(false)
+        showNotification('Success', 'Blog post created successfully!', 'success')
+      }
+    } catch (err) {
+      console.error('Error creating blog post:', err)
+      showNotification('Error', 'Failed to create blog post. Please try again.', 'error')
+    }
+  }
+
+  const handleUpdateBlogPost = async (postId: string, updates: Partial<BlogPost>) => {
+    try {
+      const updatedPost = await blogService.updatePost(postId, updates)
+      if (updatedPost) {
+        setBlogPosts(prev => prev.map(post => post.id === postId ? updatedPost : post))
+        setEditingPost(null)
+        alert('Blog post updated successfully!')
+      }
+    } catch (err) {
+      console.error('Error updating blog post:', err)
+      alert('Failed to update blog post. Please try again.')
+    }
+  }
+
+  const handleDeleteBlogPost = async (postId: string, title: string) => {
+    if (!confirm(`Are you sure you want to delete "${title}"? This action cannot be undone.`)) {
+      return
+    }
+
+    try {
+      const success = await blogService.deletePost(postId)
+      if (success) {
+        setBlogPosts(prev => prev.filter(post => post.id !== postId))
+        alert('Blog post deleted successfully!')
+      }
+    } catch (err) {
+      console.error('Error deleting blog post:', err)
+      alert('Failed to delete blog post. Please try again.')
     }
   }
 
@@ -173,7 +228,7 @@ export default function AdminPage() {
       setAnalyzedContent(analyzed)
     } catch (err) {
       console.error('Analysis failed:', err)
-      showNotification('Analysis Failed', 'Unable to analyze the content. Please check the URL or file and try again.', 'error')
+      alert('Analysis failed. Please try again.')
     } finally {
       setAnalyzing(false)
     }
@@ -208,10 +263,10 @@ export default function AdminPage() {
       // Reload recent uploads
       await loadRecentUploads()
       
-      showNotification('Upload Successful', 'Content has been uploaded and analyzed successfully!', 'success')
+      alert('Content uploaded successfully!')
     } catch (err) {
       console.error('Upload failed:', err)
-      showNotification('Upload Failed', 'Unable to upload the content. Please try again.', 'error')
+      alert('Upload failed. Please try again.')
     } finally {
       setUploading(false)
     }
@@ -220,46 +275,30 @@ export default function AdminPage() {
   const handleToggleFeature = async (item: any) => {
     try {
       const newFeaturedStatus = !item.is_featured
-      console.log(`🔄 Toggling ${item.type} "${item.title}" from ${item.is_featured} to ${newFeaturedStatus}`)
       
-      let toggleResult
       if (item.type === 'gpt') {
-        toggleResult = await gptsService.toggleFeature(item.id, newFeaturedStatus)
+        await gptsService.toggleFeature(item.id, newFeaturedStatus)
       } else if (item.type === 'document') {
-        toggleResult = await documentsService.toggleFeature(item.id, newFeaturedStatus)
+        await documentsService.toggleFeature(item.id, newFeaturedStatus)
       }
+
+      // Update local state immediately
+      setRecentUploads(prev => prev.map(upload => 
+        upload.id === item.id 
+          ? { ...upload, is_featured: newFeaturedStatus }
+          : upload
+      ))
       
-      console.log('🔄 Toggle API result:', toggleResult)
-
-      // If the API call was successful, immediately update local state with the confirmed result
-      if (toggleResult && toggleResult.success && toggleResult.updated) {
-        const updated = toggleResult.updated
-        console.log(`✅ Confirmed toggle: ${updated.title} is_featured = ${updated.is_featured}`)
-        
-        // Update local state with the confirmed database value
-        setRecentUploads(prev => prev.map(upload => 
-          upload.id === item.id 
-            ? { ...upload, is_featured: updated.is_featured }
-            : upload
-        ))
-
-        // Show success message
-        const action = updated.is_featured ? 'featured' : 'unfeatured'
-        showNotification(
-          `${action.charAt(0).toUpperCase() + action.slice(1)} Successfully`,
-          `"${item.title}" has been ${action} successfully!`,
-          'success'
-        )
-      } else {
-        throw new Error('Toggle API did not return success confirmation')
-      }
+      // Show success message and reload data to reflect changes
+      const action = newFeaturedStatus ? 'featured' : 'unfeatured'
+      alert(`"${item.title}" has been ${action} successfully! Refreshing content to show changes.`)
+      
+      // Reload recent uploads to show updated status
+      await loadRecentUploads()
       
     } catch (err) {
       console.error('Toggle feature failed:', err)
-      showNotification('Update Failed', 'Failed to update feature status. Please try again.', 'error')
-      
-      // On error, reload data to ensure we show the correct state
-      await loadRecentUploads()
+      alert('Failed to update feature status. Please try again.')
     }
   }
 
@@ -275,166 +314,20 @@ export default function AdminPage() {
         await documentsService.deleteDocument(item.id)
       }
 
-      // Show success message
-      showNotification(
-        'Content Deleted',
-        `"${item.title}" deleted successfully!`,
-        'success'
-      )
+      // Remove from local state immediately for instant feedback
+      setRecentUploads(prev => prev.filter(upload => upload.id !== item.id))
       
-      // Small delay to ensure database delete completes, then reload content
-      setTimeout(async () => {
-        await loadRecentUploads()
-      }, 500)
+      // Show success message
+      alert(`"${item.title}" deleted successfully! The content has been removed from all pages.`)
+      
+      // Small delay then reload the page to ensure all content lists are updated
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
       
     } catch (err) {
       console.error('Delete failed:', err)
-      showNotification('Delete Failed', 'Unable to delete the content. Please try again.', 'error')
-    }
-  }
-
-  const handleGenerateBlog = async () => {
-    if (!blogPrompt.trim()) return
-    setShowProgress(true)
-    setGeneratingBlog(true)
-  }
-
-  const handleBlogGenerationComplete = (blogPost: any) => {
-    setGeneratedBlog(blogPost)
-    setShowProgress(false)
-    setGeneratingBlog(false)
-    showNotification(
-      'Blog Generated Successfully',
-      `"${blogPost.title}" has been generated and is ready for review!`,
-      'success'
-    )
-  }
-
-  const handleBlogGenerationError = (error: string) => {
-    setShowProgress(false)
-    setGeneratingBlog(false)
-    
-    // Handle auth errors specifically
-    if (error.includes('Authentication required') || error.includes('session')) {
-      showNotification(
-        'Session Expired',
-        'Your session has expired. Please sign in again.',
-        'error'
-      )
-      router.push('/login')
-    } else {
-      showNotification(
-        'Blog Generation Failed',
-        `${error}. Please check your API configuration and try again.`,
-        'error'
-      )
-    }
-  }
-
-  const handleBlogGenerationCancel = () => {
-    setShowProgress(false)
-    setGeneratingBlog(false)
-    showNotification(
-      'Generation Cancelled',
-      'Blog generation has been cancelled.',
-      'info'
-    )
-  }
-
-  const handlePublishBlog = async () => {
-    if (!generatedBlog) return
-
-    setPublishingBlog(true)
-    try {
-      // Generate slug from title
-      const slug = generatedBlog.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-      
-      const response = await blogService.createPost({
-        title: generatedBlog.title,
-        content: generatedBlog.content,
-        slug: slug,
-        published_at: new Date().toISOString(),
-        meta_description: generatedBlog.meta_description,
-        category: generatedBlog.category,
-        read_time: generatedBlog.read_time
-      })
-
-      showNotification('Blog Published', 'Blog post published successfully!', 'success')
-      setGeneratedBlog(null)
-      setBlogPrompt('')
-      setKnowledgeBase('')
-      
-      // Small delay to ensure database insert completes, then reload blog posts
-      setTimeout(async () => {
-        await loadBlogPosts()
-      }, 500)
-      
-    } catch (err) {
-      console.error('Blog publishing failed:', err)
-      showNotification('Publish Failed', 'Failed to publish blog post. Please try again.', 'error')
-    } finally {
-      setPublishingBlog(false)
-    }
-  }
-
-  const handleDeleteBlogPost = async (postId: string) => {
-    if (!confirm('Are you sure you want to delete this blog post? This action cannot be undone.')) {
-      return
-    }
-
-    try {
-      await blogService.deletePost(postId)
-      showNotification('Blog Deleted', 'Blog post deleted successfully!', 'success')
-      
-      // Small delay to ensure database delete completes, then reload blog posts
-      setTimeout(async () => {
-        await loadBlogPosts()
-      }, 500)
-    } catch (err) {
-      console.error('Blog deletion failed:', err)
-      showNotification('Delete Failed', 'Failed to delete blog post. Please try again.', 'error')
-    }
-  }
-
-  const handleUpdateBlogPost = async () => {
-    if (!editingPost) return
-
-    setPublishingBlog(true)
-    try {
-      // Generate new slug if title changed
-      const slug = editingPost.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')
-      
-      const updatedPost = await blogService.updatePost(editingPost.id, {
-        title: editingPost.title,
-        content: editingPost.content,
-        slug: slug,
-        meta_description: editingPost.meta_description,
-        category: editingPost.category,
-        read_time: Math.ceil(editingPost.content.split(' ').length / 200)
-      })
-
-      if (updatedPost) {
-        showNotification('Blog Updated', 'Blog post updated successfully!', 'success')
-        setEditingPost(null)
-        
-        // Small delay to ensure database update completes, then reload blog posts
-        setTimeout(async () => {
-          await loadBlogPosts()
-        }, 500)
-      } else {
-        throw new Error('Failed to update blog post')
-      }
-    } catch (err) {
-      console.error('Blog update failed:', err)
-      showNotification('Update Failed', 'Failed to update blog post. Please try again.', 'error')
-    } finally {
-      setPublishingBlog(false)
+      alert('Delete failed. Please try again.')
     }
   }
 
@@ -451,7 +344,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
       {/* Header */}
       <header className="glass border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -489,56 +382,56 @@ export default function AdminPage() {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 py-6 sm:py-8 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-20 h-20 gradient-purple rounded-2xl mb-6 shadow-2xl animate-float">
             <span className="text-3xl">🤖</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
             Content Management Studio
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
-            Upload GPT links, PDF documents, and manage blog content with AI assistance!
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Manage your GPTs, playbooks, and blog posts all in one place with AI-powered analysis!
           </p>
         </div>
 
         {/* Tab Navigation */}
         <div className="mb-8">
-          <div className="flex justify-center">
-            <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 w-full sm:w-auto max-w-sm mx-auto">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-purple-100/50 max-w-md mx-auto">
+            <div className="flex gap-2">
               <button
                 onClick={() => setActiveTab('content')}
-                className={`px-4 sm:px-6 py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
+                className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'content'
                     ? 'gradient-purple text-white shadow-lg'
                     : 'text-gray-600 hover:text-purple-600'
                 }`}
               >
-                📤 Content Upload
+                📚 Content Manager
               </button>
               <button
                 onClick={() => setActiveTab('blog')}
-                className={`px-4 sm:px-6 py-3 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
+                className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'blog'
                     ? 'gradient-purple text-white shadow-lg'
                     : 'text-gray-600 hover:text-purple-600'
                 }`}
               >
-                ✍️ Blog Management
+                ✍️ Blog Manager
               </button>
             </div>
           </div>
         </div>
 
-        {/* Content Upload Tab */}
+        {/* Content Management Tab */}
         {activeTab === 'content' && (
-        <div className="space-y-6">
-          {/* Upload Section */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
-            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
-              <span className="text-xl sm:text-2xl mr-2 sm:mr-3">📤</span>
-              <span>Upload Content</span>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Upload Section */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+              <span className="text-2xl mr-3">📤</span>
+              Upload Content
             </h2>
 
             {/* Upload Type Toggle */}
@@ -683,46 +576,13 @@ export default function AdminPage() {
           </div>
 
           {/* Content Management */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
-              <span className="text-lg sm:text-xl lg:text-2xl mr-2 sm:mr-3">📊</span>
-              <span>Content Management</span>
-            </h2>
-
-            {/* Filter Buttons */}
-            <div className="mb-6">
-              <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 gap-1 sm:gap-0">
-                <button
-                  onClick={() => setContentFilter('gpt')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
-                    contentFilter === 'gpt'
-                      ? 'gradient-purple text-white shadow-lg'
-                      : 'text-gray-600 hover:text-purple-600'
-                  }`}
-                >
-                  🤖 GPTs
-                </button>
-                <button
-                  onClick={() => setContentFilter('document')}
-                  className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
-                    contentFilter === 'document'
-                      ? 'gradient-purple text-white shadow-lg'
-                      : 'text-gray-600 hover:text-purple-600'
-                  }`}
-                >
-                  📚 Playbooks
-                </button>
-              </div>
-            </div>
-            
-            <div className="space-y-6">
+          <div className="space-y-6">
             {/* GPTs Section */}
-            {contentFilter === 'gpt' && (
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="text-lg mr-2">🤖</span>
-                <span>GPTs Collection</span>
-              </h3>
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+                <span className="text-2xl mr-3">🤖</span>
+                GPTs Collection
+              </h2>
 
               {recentUploads.filter(item => item.type === 'gpt').length > 0 ? (
                 <div className="max-h-96 overflow-y-auto space-y-4 pr-2">
@@ -734,7 +594,7 @@ export default function AdminPage() {
                             <span className="text-lg flex-shrink-0">🤖</span>
                             <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
                           </div>
-                          <p className="text-xs text-gray-600 mb-2 leading-relaxed line-clamp-2">{item.description}</p>
+                          <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
                               {item.category}
@@ -746,10 +606,10 @@ export default function AdminPage() {
                             )}
                           </div>
                         </div>
-                        <div className="ml-2 sm:ml-4 flex items-center space-x-1 sm:space-x-2">
+                        <div className="ml-4 flex items-center space-x-2">
                           <button
                             onClick={() => handleToggleFeature(item)}
-                            className={`p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback ${
+                            className={`p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
                               item.is_featured
                                 ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
                                 : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
@@ -762,7 +622,7 @@ export default function AdminPage() {
                           </button>
                           <button
                             onClick={() => handleDelete(item)}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback"
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
                             title="Delete this GPT"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -781,15 +641,13 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
-            )}
 
             {/* Playbooks Section */}
-            {contentFilter === 'document' && (
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <span className="text-lg mr-2">📚</span>
-                <span>Playbooks Collection</span>
-              </h3>
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+                <span className="text-2xl mr-3">📚</span>
+                Playbooks Collection
+              </h2>
 
               {recentUploads.filter(item => item.type === 'document').length > 0 ? (
                 <div className="max-h-96 overflow-y-auto space-y-4 pr-2">
@@ -801,7 +659,7 @@ export default function AdminPage() {
                             <span className="text-lg flex-shrink-0">📄</span>
                             <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
                           </div>
-                          <p className="text-xs text-gray-600 mb-2 leading-relaxed line-clamp-2">{item.description}</p>
+                          <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
                               {item.category}
@@ -813,10 +671,10 @@ export default function AdminPage() {
                             )}
                           </div>
                         </div>
-                        <div className="ml-2 sm:ml-4 flex items-center space-x-1 sm:space-x-2">
+                        <div className="ml-4 flex items-center space-x-2">
                           <button
                             onClick={() => handleToggleFeature(item)}
-                            className={`p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback ${
+                            className={`p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
                               item.is_featured
                                 ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
                                 : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
@@ -829,7 +687,7 @@ export default function AdminPage() {
                           </button>
                           <button
                             onClick={() => handleDelete(item)}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback"
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center"
                             title="Delete this playbook"
                           >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -848,420 +706,111 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
-            )}
           </div>
-        </div>
-        </div>
+          </div>
         )}
 
         {/* Blog Management Tab */}
         {activeTab === 'blog' && (
-          <div className="max-w-6xl mx-auto px-2 sm:px-0">
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl border border-purple-100/50">
-              <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4 sm:mb-6 flex items-center flex-wrap">
-                <span className="text-xl sm:text-2xl mr-2 sm:mr-3">✍️</span>
-                <span>AI Blog Writing Assistant</span>
-              </h2>
-              
-              <div className="space-y-6">
-                {/* Real-time Progress Section */}
-                {showProgress && (
-                  <BlogGenerationProgress
-                    prompt={blogPrompt}
-                    knowledgeBase={knowledgeBase}
-                    includeWebSearch={includeWebSearch}
-                    includeImages={includeImages}
-                    searchProvider={searchProvider}
-                    searchContextSize={searchContextSize}
-                    onComplete={handleBlogGenerationComplete}
-                    onError={handleBlogGenerationError}
-                    onCancel={handleBlogGenerationCancel}
-                  />
-                )}
-
-                {/* AI Blog Writing Section */}
-                {!showProgress && (
-                <div className="p-4 sm:p-6 bg-purple-50 rounded-xl border border-purple-200">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Write New Blog Post with AI</h3>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Blog Topic or Prompt
-                      </label>
-                      <textarea
-                        value={blogPrompt}
-                        onChange={(e) => setBlogPrompt(e.target.value)}
-                        placeholder="e.g., 'Write a blog post about the best AI tools for content creators in 2025'"
-                        rows={3}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Additional Knowledge Base (Optional)
-                      </label>
-                      <textarea
-                        value={knowledgeBase}
-                        onChange={(e) => setKnowledgeBase(e.target.value)}
-                        placeholder="Paste any additional context, research, or specific information you want the AI to use when writing the blog post..."
-                        rows={4}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        💡 Add SEO best practices, research data, or specific points you want covered
-                      </p>
-                    </div>
-                    
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id="webSearch"
-                          checked={includeWebSearch}
-                          onChange={(e) => setIncludeWebSearch(e.target.checked)}
-                          className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-                        />
-                        <label htmlFor="webSearch" className="text-sm text-gray-700">
-                          🌍 Enable web search for latest information
-                        </label>
-                      </div>
-                      
-                      {includeWebSearch && (
-                        <div className="ml-6">
-                          <div className="flex items-center space-x-2 text-sm text-gray-700">
-                            <span>⚡</span>
-                            <span>Using Perplexity Sonar with balanced search context</span>
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          id="includeImages"
-                          checked={includeImages}
-                          onChange={(e) => setIncludeImages(e.target.checked)}
-                          className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-                        />
-                        <label htmlFor="includeImages" className="text-sm text-gray-700">
-                          🎨 Generate AI images (gpt-image-1)
-                        </label>
-                      </div>
-                    </div>
-                    
-                    <div className="text-xs sm:text-sm text-gray-600 bg-blue-50 p-3 rounded-lg border border-blue-200">
-                      <span className="font-medium">💡 Hybrid AI Workflow:</span> Premium quality content with smart cost optimization and real-time streaming.
-                      <div className="mt-2 text-xs">
-                        <strong>Premium Process:</strong>
-                        <ol className="list-decimal list-inside mt-1 space-y-1">
-                          <li>🔒 Security validation + rate limiting</li>
-                          <li>📚 Load knowledge base (SEO + writing instructions)</li>
-                          <li>✍️ Stream premium blog content with gpt-4o (+ web search if enabled)</li>
-                          <li>🎨 Generate images with gpt-4o-mini + gpt-image-1 (cost optimized)</li>
-                          <li>📱 Mobile-optimized real-time progress tracking</li>
-                        </ol>
-                        <div className="mt-2 text-xs text-purple-600 font-medium">
-                          💰 Smart pricing: Premium quality writing + cost-optimized images
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <button
-                      onClick={handleGenerateBlog}
-                      disabled={generatingBlog || !blogPrompt.trim()}
-                      className="w-full gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {generatingBlog ? (
-                        <span className="flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                          AI is writing your blog post...
-                        </span>
-                      ) : (
-                        '🤖 Generate Blog Post with AI'
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Generated Blog Preview */}
-                {generatedBlog && (
-                  <div className="p-4 sm:p-6 bg-green-50 rounded-xl border border-green-200">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Generated Blog Post</h3>
-                    
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                        <input
-                          type="text"
-                          value={generatedBlog.title}
-                          onChange={(e) => setGeneratedBlog({ ...generatedBlog, title: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                        <input
-                          type="text"
-                          value={generatedBlog.meta_description}
-                          onChange={(e) => setGeneratedBlog({ ...generatedBlog, meta_description: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                          maxLength={160}
-                        />
-                        <p className="text-xs text-gray-500 mt-1">{generatedBlog.meta_description.length}/160 characters</p>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                        <select
-                          value={generatedBlog.category}
-                          onChange={(e) => setGeneratedBlog({ ...generatedBlog, category: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                        >
-                          <option value="AI Tools">AI Tools</option>
-                          <option value="Strategy">Strategy</option>
-                          <option value="Business Planning">Business Planning</option>
-                          <option value="Productivity">Productivity</option>
-                          <option value="Communication">Communication</option>
-                          <option value="Automation">Automation</option>
-                          <option value="Marketing">Marketing</option>
-                          <option value="Design">Design</option>
-                          <option value="Development">Development</option>
-                        </select>
-                      </div>
-                      
-                      {/* Generated Images */}
-                      {generatedBlog.generated_images && generatedBlog.generated_images.length > 0 && (
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Generated Images</label>
-                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                            {generatedBlog.generated_images.map((image: any, index: number) => (
-                              <div key={index} className="border border-gray-200 rounded-lg p-3">
-                                <img 
-                                  src={image.url} 
-                                  alt={image.prompt} 
-                                  className="w-full h-32 object-cover rounded-lg mb-2"
-                                />
-                                <p className="text-xs text-gray-600 mb-2">{image.prompt}</p>
-                                <div className="flex items-center space-x-2">
-                                  <input
-                                    type="checkbox"
-                                    id={`image-${index}`}
-                                    defaultChecked={true}
-                                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
-                                  />
-                                  <label htmlFor={`image-${index}`} className="text-xs text-gray-700">
-                                    Include in blog
-                                  </label>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
-                        <textarea
-                          value={generatedBlog.content}
-                          onChange={(e) => setGeneratedBlog({ ...generatedBlog, content: e.target.value })}
-                          rows={15}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 font-mono text-sm"
-                        />
-                      </div>
-                      
-                      <div className="flex items-center justify-between pt-4">
-                        <span className="text-sm text-gray-600">
-                          📖 Estimated read time: {generatedBlog.read_time} minutes
-                        </span>
-                        
-                        <div className="space-x-3">
-                          <button
-                            onClick={() => setGeneratedBlog(null)}
-                            className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            onClick={handlePublishBlog}
-                            disabled={publishingBlog}
-                            className="px-4 py-2 gradient-purple text-white rounded-lg font-semibold button-hover shadow-lg disabled:opacity-50"
-                          >
-                            {publishingBlog ? (
-                              <span className="flex items-center">
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                Publishing...
-                              </span>
-                            ) : (
-                              '🚀 Publish Blog Post'
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Blog Post Editor */}
-                {editingPost && (
-                  <div className="p-4 sm:p-6 bg-yellow-50 rounded-xl border border-yellow-200 mb-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Edit Blog Post</h3>
-                    
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                        <input
-                          type="text"
-                          value={editingPost.title}
-                          onChange={(e) => setEditingPost({ ...editingPost, title: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                        <input
-                          type="text"
-                          value={editingPost.meta_description}
-                          onChange={(e) => setEditingPost({ ...editingPost, meta_description: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                          maxLength={160}
-                        />
-                        <p className="text-xs text-gray-500 mt-1">{editingPost.meta_description.length}/160 characters</p>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                        <select
-                          value={editingPost.category}
-                          onChange={(e) => setEditingPost({ ...editingPost, category: e.target.value })}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                        >
-                          <option value="AI Tools">AI Tools</option>
-                          <option value="Strategy">Strategy</option>
-                          <option value="Business Planning">Business Planning</option>
-                          <option value="Productivity">Productivity</option>
-                          <option value="Communication">Communication</option>
-                          <option value="Automation">Automation</option>
-                          <option value="Marketing">Marketing</option>
-                          <option value="Design">Design</option>
-                          <option value="Development">Development</option>
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
-                        <textarea
-                          value={editingPost.content}
-                          onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })}
-                          rows={15}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 font-mono text-sm"
-                        />
-                      </div>
-                      
-                      <div className="flex items-center justify-between pt-4">
-                        <span className="text-sm text-gray-600">
-                          📖 Estimated read time: {Math.ceil(editingPost.content.split(' ').length / 200)} minutes
-                        </span>
-                        
-                        <div className="space-x-3">
-                          <button
-                            onClick={() => setEditingPost(null)}
-                            className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            onClick={handleUpdateBlogPost}
-                            disabled={publishingBlog}
-                            className="px-4 py-2 gradient-purple text-white rounded-lg font-semibold button-hover shadow-lg disabled:opacity-50"
-                          >
-                            {publishingBlog ? (
-                              <span className="flex items-center">
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                Updating...
-                              </span>
-                            ) : (
-                              '💾 Update Blog Post'
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Existing Blog Posts Management */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Manage Existing Posts</h3>
-                  
-                  {blogPosts.length > 0 ? (
-                    <div className="space-y-4">
-                      {blogPosts.map((post) => (
-                        <div key={post.id} className="p-4 border border-gray-200 rounded-xl hover:border-purple-300 transition-colors">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center space-x-2 mb-2">
-                                <span className="text-lg flex-shrink-0">📝</span>
-                                <h4 className="font-semibold text-gray-900 text-sm leading-tight truncate">{post.title}</h4>
-                              </div>
-                              <p className="text-xs text-gray-600 mb-2 leading-relaxed">
-                                {post.meta_description || post.content.slice(0, 100) + '...'}
-                              </p>
-                              <div className="flex flex-wrap items-center gap-2">
-                                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
-                                  {post.category}
-                                </span>
-                                <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full whitespace-nowrap">
-                                  {post.read_time} min read
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                  {new Date(post.published_at).toLocaleDateString()}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="ml-2 sm:ml-4 flex items-center space-x-1 sm:space-x-2">
-                              <button
-                                onClick={() => setEditingPost(post)}
-                                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback"
-                                title="Edit this post"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={() => handleDeleteBlogPost(post.id)}
-                                className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors min-w-[44px] min-h-[44px] sm:min-w-[36px] sm:min-h-[36px] flex items-center justify-center touch-feedback"
-                                title="Delete this post"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8 text-gray-600">
-                      <div className="text-4xl mb-2">📝</div>
-                      <p>No blog posts yet. Create your first one using the AI assistant above!</p>
-                    </div>
-                  )}
-                </div>
-                )}
+          <div className="space-y-6">
+            {/* Blog Actions Header */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-semibold text-gray-900 flex items-center">
+                  <span className="text-2xl mr-3">✍️</span>
+                  Blog Posts Management
+                </h2>
+                <button
+                  onClick={() => setIsCreatingPost(true)}
+                  className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
+                >
+                  ➕ Create New Post
+                </button>
               </div>
+
+              {/* Blog Posts List */}
+              {blogPosts.length > 0 ? (
+                <div className="space-y-4">
+                  {blogPosts.map((post) => (
+                    <div key={post.id} className="p-6 border border-gray-200 rounded-xl hover:border-purple-300 transition-colors">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
+                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+                              {post.category}
+                            </span>
+                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                              {post.read_time} min read
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-3">{post.meta_description}</p>
+                          <div className="text-xs text-gray-500">
+                            Published: {new Date(post.published_at).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className="ml-4 flex items-center space-x-2">
+                          <button
+                            onClick={() => setEditingPost(post)}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-2 rounded-lg transition-colors"
+                            title="Edit post"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDeleteBlogPost(post.id, post.title)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded-lg transition-colors"
+                            title="Delete post"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">✍️</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    No blog posts yet
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Create your first blog post to start sharing AI insights and tutorials!
+                  </p>
+                  <button
+                    onClick={() => setIsCreatingPost(true)}
+                    className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
+                  >
+                    Create Your First Post ✨
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
+
+        {/* Blog Post Creation/Edit Modal */}
+        {(isCreatingPost || editingPost) && (
+          <BlogPostModal
+            isOpen={isCreatingPost || editingPost !== null}
+            onClose={() => {
+              setIsCreatingPost(false)
+              setEditingPost(null)
+            }}
+            onSave={editingPost ? 
+              (data) => handleUpdateBlogPost(editingPost.id, data) : 
+              handleCreateBlogPost
+            }
+            initialData={editingPost}
+            title={editingPost ? 'Edit Blog Post' : 'Create New Blog Post'}
+          />
+        )}
       </div>
-    </div>
 
       {/* Notification Modal */}
       <NotificationModal
@@ -1271,6 +820,137 @@ export default function AdminPage() {
         message={notification.message}
         type={notification.type}
       />
+    </div>
+  )
+}
+
+// Blog Post Modal Component
+interface BlogPostModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSave: (data: any) => void
+  initialData?: BlogPost | null
+  title: string
+}
+
+function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPostModalProps) {
+  const [formData, setFormData] = useState({
+    title: initialData?.title || '',
+    content: initialData?.content || '',
+    meta_description: initialData?.meta_description || '',
+    category: initialData?.category || 'AI Strategy'
+  })
+
+  const categories = [
+    'AI Strategy',
+    'Tutorials', 
+    'Productivity',
+    'Tools',
+    'Development',
+    'Business'
+  ]
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!formData.title.trim() || !formData.content.trim() || !formData.meta_description.trim()) {
+      alert('Please fill in all required fields')
+      return
+    }
+    onSave(formData)
+  }
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Title *
+            </label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Enter blog post title..."
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Meta Description *
+            </label>
+            <textarea
+              value={formData.meta_description}
+              onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+              rows={2}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder="Brief description for SEO and social sharing..."
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Category
+            </label>
+            <select
+              value={formData.category}
+              onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+              {categories.map(category => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Content * (Markdown supported)
+            </label>
+            <textarea
+              value={formData.content}
+              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+              rows={20}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm"
+              placeholder="Write your blog post content here... You can use Markdown formatting."
+              required
+            />
+          </div>
+
+          <div className="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-6 py-3 text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
+            >
+              {initialData ? 'Update Post' : 'Create Post'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
