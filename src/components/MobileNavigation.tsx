@@ -88,12 +88,12 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
             animateItems ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
           }`}>
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse p-2">
+              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg animate-pulse p-1 border border-purple-200">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
-                  width={40}
-                  height={40}
+                  width={48}
+                  height={48}
                   className="w-full h-full object-contain"
                 />
               </div>

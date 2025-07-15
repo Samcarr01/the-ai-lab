@@ -60,12 +60,12 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">
-              <div className="w-9 sm:w-10 h-9 sm:h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 p-2">
+              <div className="w-10 sm:w-12 h-10 sm:h-12 bg-white rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 p-1 border border-purple-200">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
-                  width={40}
-                  height={40}
+                  width={48}
+                  height={48}
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -254,13 +254,13 @@ export default function HomePage() {
               <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-100/50 hover:border-purple-300/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-              <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 p-3">
+              <div className="w-16 sm:w-20 h-16 sm:h-20 bg-white rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 p-2 border border-purple-200 shadow-lg">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
-                  width={64}
-                  height={64}
-                  className="w-full h-full object-contain animate-pulse transition-all duration-300"
+                  width={80}
+                  height={80}
+                  className="w-full h-full object-contain"
                 />
               </div>
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
