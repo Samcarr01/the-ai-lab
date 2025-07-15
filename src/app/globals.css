@@ -120,13 +120,18 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400;
   }
   
-  /* Clean logo styling */
+  /* High contrast logo with white background */
   .logo-dark-purple-blue-glow {
-    transition: transform 0.3s ease;
+    background-color: white;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
   }
   
   .logo-dark-purple-blue-glow:hover {
     transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
 }
 
