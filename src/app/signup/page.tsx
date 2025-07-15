@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
@@ -74,8 +75,14 @@ export default function SignupPage() {
         {/* Logo */}
         <div className="flex justify-center">
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-12 h-12 gradient-purple rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white text-2xl">🤖</span>
+            <div className="w-12 h-12 gradient-purple rounded-xl flex items-center justify-center shadow-lg p-3">
+              <Image
+                src="/logo.png"
+                alt="thehackai logo"
+                width={48}
+                height={48}
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="text-2xl font-bold text-gradient">thehackai</span>
           </Link>
@@ -167,7 +174,15 @@ export default function SignupPage() {
               <h3 className="text-sm font-semibold text-purple-900 mb-3">Upgrade to Pro for:</h3>
               <div className="space-y-2 text-sm text-purple-700">
                 <div className="flex items-center space-x-2">
-                  <span>🤖</span>
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <Image
+                      src="/logo.png"
+                      alt="AI"
+                      width={20}
+                      height={20}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
                   <span>Direct links to all GPTs</span>
                 </div>
                 <div className="flex items-center space-x-2">

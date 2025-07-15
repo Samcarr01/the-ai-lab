@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 interface InternalMobileNavigationProps {
@@ -84,8 +85,14 @@ export default function InternalMobileNavigation({
             animateItems ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
           }`}>
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse">
-                <span className="text-white text-xl">🤖</span>
+              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse p-2">
+                <Image
+                  src="/logo.png"
+                  alt="thehackai logo"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-xl font-bold text-gradient">thehackai</span>
             </div>
@@ -104,7 +111,7 @@ export default function InternalMobileNavigation({
               {[
                 { href: '/', icon: '🏠', label: 'Home', delay: 'delay-200' },
                 { href: '/dashboard', icon: '📊', label: 'Dashboard', delay: 'delay-300' },
-                { href: '/gpts', icon: '🤖', label: 'GPTs', delay: 'delay-400' },
+                { href: '/gpts', icon: 'logo', label: 'GPTs', delay: 'delay-400' },
                 { href: '/documents', icon: '📚', label: 'Playbooks', delay: 'delay-500' },
                 { href: '/blog', icon: '📝', label: 'Blog', delay: 'delay-600' }
               ].map((item, index) => (
@@ -121,7 +128,19 @@ export default function InternalMobileNavigation({
                   <span className={`mr-4 text-2xl transition-transform duration-200 ${
                     isActivePage(item.href) ? 'scale-110' : 'group-hover:scale-110'
                   }`}>
-                    {item.icon}
+                    {item.icon === 'logo' ? (
+                      <div className="w-6 h-6 flex items-center justify-center">
+                        <Image
+                          src="/logo.png"
+                          alt="GPTs"
+                          width={24}
+                          height={24}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    ) : (
+                      item.icon
+                    )}
                   </span>
                   <span className="font-medium">{item.label}</span>
                   {isActivePage(item.href) && (

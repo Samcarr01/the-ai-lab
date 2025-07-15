@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
@@ -59,8 +60,14 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">
-              <div className="w-9 sm:w-10 h-9 sm:h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-                <span className="text-white text-lg sm:text-xl">🤖</span>
+              <div className="w-9 sm:w-10 h-9 sm:h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 p-2">
+                <Image
+                  src="/logo.png"
+                  alt="thehackai logo"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-purple-600 transition-all duration-300">
                 thehackai
@@ -159,7 +166,16 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto text-center">
           <ScrollAnimation animation="fade-up">
           <div className="inline-flex items-center justify-center px-4 py-2 mb-8 rounded-full bg-purple-100/50 border border-purple-200/50">
-            <span className="text-purple-700 text-sm font-medium">🤖 Curated AI Tools & Playbooks</span>
+            <div className="w-5 h-5 mr-2 flex items-center justify-center">
+              <Image
+                src="/logo.png"
+                alt="thehackai logo"
+                width={20}
+                height={20}
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <span className="text-purple-700 text-sm font-medium">Curated AI Tools & Playbooks</span>
           </div>
           
           <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight text-center min-h-[36px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] flex items-center justify-center px-1">
@@ -238,8 +254,14 @@ export default function HomePage() {
               <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-100/50 hover:border-purple-300/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-              <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
-                <span className="text-3xl animate-pulse transition-all duration-300">🤖</span>
+              <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 p-3">
+                <Image
+                  src="/logo.png"
+                  alt="thehackai logo"
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain animate-pulse transition-all duration-300"
+                />
               </div>
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
                 Proven GPTs
@@ -425,7 +447,15 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 sm:space-x-3 mb-4 md:mb-0">
-              <span className="text-xl sm:text-2xl">🤖</span>
+              <div className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center">
+                <Image
+                  src="/logo.png"
+                  alt="thehackai logo"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-contain"
+                />
+              </div>
               <span className="text-base sm:text-lg font-semibold text-gray-900">thehackai</span>
             </div>
             <div className="flex space-x-4 sm:space-x-6 text-xs sm:text-sm text-gray-600">

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 interface MobileNavigationProps {
@@ -87,8 +88,14 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
             animateItems ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
           }`}>
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse">
-                <span className="text-white text-xl">🤖</span>
+              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse p-2">
+                <Image
+                  src="/logo.png"
+                  alt="thehackai logo"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-xl font-bold text-gradient">thehackai</span>
             </div>

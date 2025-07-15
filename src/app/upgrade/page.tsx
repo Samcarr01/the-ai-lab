@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
@@ -87,8 +88,14 @@ export default function UpgradePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/dashboard" className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white text-xl">🤖</span>
+              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg p-2">
+                <Image
+                  src="/logo.png"
+                  alt="thehackai logo"
+                  width={40}
+                  height={40}
+                  className="w-full h-full object-contain"
+                />
               </div>
               <span className="text-xl font-semibold text-gradient">thehackai</span>
             </Link>

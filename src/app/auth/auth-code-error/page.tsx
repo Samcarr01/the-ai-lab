@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function AuthCodeErrorPage() {
   return (
@@ -7,8 +8,14 @@ export default function AuthCodeErrorPage() {
         {/* Logo */}
         <div className="flex justify-center">
           <Link href="/" className="flex items-center space-x-3">
-            <div className="w-12 h-12 gradient-purple rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white text-2xl">🤖</span>
+            <div className="w-12 h-12 gradient-purple rounded-xl flex items-center justify-center shadow-lg p-3">
+              <Image
+                src="/logo.png"
+                alt="thehackai logo"
+                width={48}
+                height={48}
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="text-2xl font-bold text-gradient">thehackai</span>
           </Link>
