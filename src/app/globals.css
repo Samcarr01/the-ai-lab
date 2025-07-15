@@ -120,8 +120,9 @@
     @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400;
   }
   
-  /* High contrast logo with white background */
+  /* Maximum contrast logo styling */
   .logo-dark-purple-blue-glow {
+    filter: brightness(0.2) saturate(2) contrast(2);
     background-color: white;
     border-radius: 12px;
     padding: 8px;
@@ -130,6 +131,7 @@
   }
   
   .logo-dark-purple-blue-glow:hover {
+    filter: brightness(0.1) saturate(2.5) contrast(2.5);
     transform: scale(1.05);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
   }
