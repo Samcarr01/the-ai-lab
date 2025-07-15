@@ -199,7 +199,7 @@ export default function PrivacyPage() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
               <span className="text-2xl">🧪</span>
-              <span className="text-lg font-semibold text-gray-900">The AI Lab</span>
+              <span className="text-lg font-semibold text-gray-900">thehackai</span>
             </div>
             <div className="flex space-x-6 text-sm text-gray-600">
               <Link href="/terms" className="hover:text-purple-600 transition-colors">Terms</Link>
@@ -208,7 +208,7 @@ export default function PrivacyPage() {
             </div>
           </div>
           <div className="mt-8 text-center text-sm text-gray-500">
-            © 2024 The AI Lab. Made with 💜 for AI enthusiasts.
+            © 2024 thehackai. Made with 💜 for AI enthusiasts.
           </div>
         </div>
       </footer>

@@ -52,7 +52,7 @@ export default function TermsPage() {
               
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
-                By accessing and using The AI Lab service, you accept and agree to be bound by the terms and provision of this agreement. 
+                By accessing and using thehackai service, you accept and agree to be bound by the terms and provision of this agreement. 
                 If you do not agree to abide by the above, please do not use this service.
               </p>
 
@@ -94,7 +94,7 @@ export default function TermsPage() {
 
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Intellectual Property</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
-                All content, including GPTs, playbooks, and service materials, remain the property of The AI Lab. 
+                All content, including GPTs, playbooks, and service materials, remain the property of thehackai. 
                 You receive a limited license to use the content for your personal and business purposes.
               </p>
 
@@ -163,7 +163,7 @@ export default function TermsPage() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
               <span className="text-2xl">🧪</span>
-              <span className="text-lg font-semibold text-gray-900">The AI Lab</span>
+              <span className="text-lg font-semibold text-gray-900">thehackai</span>
             </div>
             <div className="flex space-x-6 text-sm text-gray-600">
               <Link href="/terms" className="text-purple-600 font-medium">Terms</Link>
@@ -172,7 +172,7 @@ export default function TermsPage() {
             </div>
           </div>
           <div className="mt-8 text-center text-sm text-gray-500">
-            © 2024 The AI Lab. Made with 💜 for AI enthusiasts.
+            © 2024 thehackai. Made with 💜 for AI enthusiasts.
           </div>
         </div>
       </footer>

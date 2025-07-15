@@ -88,9 +88,9 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
           }`}>
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse">
-                <span className="text-white text-xl">🧪</span>
+                <span className="text-white text-xl">🤖</span>
               </div>
-              <span className="text-xl font-bold text-gradient">The AI Lab</span>
+              <span className="text-xl font-bold text-gradient">thehackai</span>
             </div>
             <button
               onClick={toggleMenu}

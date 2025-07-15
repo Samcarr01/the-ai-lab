@@ -223,7 +223,7 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'content_generation', status: 'starting' })
           const contentStart = Date.now()
 
-          const systemMessage = `You are an expert SEO blog writer for "The AI Lab" - a subscription platform for AI tools and guides.
+          const systemMessage = `You are an expert SEO blog writer for "thehackai" - a subscription platform for AI tools and guides.
 
 TARGET: Professionals interested in AI productivity tools
 CATEGORIES: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy

@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare system message with context
-    let systemMessage = `You are an expert blog writer for "The AI Lab", a subscription platform for curated AI documents and GPTs. 
+    let systemMessage = `You are an expert blog writer for "thehackai", a subscription platform for curated AI documents and GPTs. 
 
 PLATFORM CONTEXT:
 ${claudeContext}

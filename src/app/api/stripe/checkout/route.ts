@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
           price_data: {
             currency: STRIPE_CONFIG.CURRENCY,
             product_data: {
-              name: 'The AI Lab Pro',
+              name: 'thehackai Pro',
               description: 'Access to all GPTs, PDF guides, and priority support',
             },
             unit_amount: STRIPE_CONFIG.PRO_PLAN_AMOUNT,

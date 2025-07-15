@@ -426,7 +426,7 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 sm:space-x-3 mb-4 md:mb-0">
               <span className="text-xl sm:text-2xl">🧪</span>
-              <span className="text-base sm:text-lg font-semibold text-gray-900">The AI Lab</span>
+              <span className="text-base sm:text-lg font-semibold text-gray-900">thehackai</span>
             </div>
             <div className="flex space-x-4 sm:space-x-6 text-xs sm:text-sm text-gray-600">
               <Link href="/terms" className="hover:text-purple-600 transition-colors">Terms</Link>
@@ -435,7 +435,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm text-gray-500 px-4 sm:px-0">
-            © 2024 The AI Lab. Made with 💜 for AI enthusiasts.
+            © 2024 thehackai. Made with 💜 for AI enthusiasts.
           </div>
         </div>
       </footer>

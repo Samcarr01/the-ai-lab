@@ -349,7 +349,7 @@ export default function SignupPage() {
       <div className="mt-8 text-center">
         <Link href="/" className="text-sm text-gray-500 hover:text-purple-600 transition-colors flex items-center justify-center space-x-1">
           <span>←</span>
-          <span>Back to The AI Lab</span>
+          <span>Back to thehackai</span>
         </Link>
       </div>
     </div>
