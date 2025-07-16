@@ -433,7 +433,7 @@ export default function AdminPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/dashboard" className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-white text-xl">🤖</span>
               </div>
               <span className="text-xl font-semibold text-gradient">thehackai</span>
@@ -468,7 +468,7 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-20 h-20 gradient-purple rounded-2xl mb-6 shadow-2xl animate-float">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl mb-6 shadow-2xl animate-float">
             <span className="text-3xl">🤖</span>
           </div>
           <h1 className="text-5xl font-bold text-white mb-4">
@@ -487,7 +487,7 @@ export default function AdminPage() {
                 onClick={() => setActiveTab('content')}
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'content'
-                    ? 'gradient-purple text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
                     : 'text-gray-100 hover:text-purple-600'
                 }`}
               >
@@ -497,7 +497,7 @@ export default function AdminPage() {
                 onClick={() => setActiveTab('blog')}
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'blog'
-                    ? 'gradient-purple text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
                     : 'text-gray-100 hover:text-purple-600'
                 }`}
               >
@@ -507,7 +507,7 @@ export default function AdminPage() {
                 onClick={() => setActiveTab('tier')}
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'tier'
-                    ? 'gradient-purple text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
                     : 'text-gray-100 hover:text-purple-600'
                 }`}
               >
@@ -534,7 +534,7 @@ export default function AdminPage() {
                   onClick={() => setUploadType('gpt')}
                   className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     uploadType === 'gpt'
-                      ? 'gradient-purple text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
                       : 'text-gray-100 hover:text-purple-600'
                   }`}
                 >
@@ -544,7 +544,7 @@ export default function AdminPage() {
                   onClick={() => setUploadType('document')}
                   className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     uploadType === 'document'
-                      ? 'gradient-purple text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
                       : 'text-gray-100 hover:text-purple-600'
                   }`}
                 >
@@ -594,7 +594,7 @@ export default function AdminPage() {
             <button
               onClick={handleAnalyze}
               disabled={analyzing || (!gptUrl && !documentFile)}
-              className="w-full gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {analyzing ? (
                 <span className="flex items-center justify-center">
@@ -653,7 +653,7 @@ export default function AdminPage() {
                 <button
                   onClick={handleUpload}
                   disabled={uploading}
-                  className="w-full mt-4 gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg disabled:opacity-50"
+                  className="w-full mt-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg disabled:opacity-50"
                 >
                   {uploading ? (
                     <span className="flex items-center justify-center">
@@ -815,7 +815,7 @@ export default function AdminPage() {
                 </h2>
                 <button
                   onClick={() => setIsCreatingPost(true)}
-                  className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
                 >
                   ➕ Create New Post
                 </button>
@@ -877,7 +877,7 @@ export default function AdminPage() {
                   </p>
                   <button
                     onClick={() => setIsCreatingPost(true)}
-                    className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
                   >
                     Create Your First Post ✨
                   </button>
@@ -1251,7 +1251,7 @@ function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPost
             </button>
             <button
               type="submit"
-              className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold button-hover shadow-lg"
             >
               {initialData ? 'Update Post' : 'Create Post'}
             </button>

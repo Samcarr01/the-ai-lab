@@ -151,7 +151,7 @@ export default function DocumentsPage() {
           className={`w-full py-3 px-4 rounded-xl font-semibold shadow-lg transition-all duration-200 ${
             downloadingIds.has(document.id)
               ? 'bg-gray-400 cursor-not-allowed'
-              : 'gradient-purple text-white button-hover'
+              : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white button-hover'
           }`}
         >
           {downloadingIds.has(document.id) ? (
@@ -263,7 +263,7 @@ export default function DocumentsPage() {
 
         {/* Upgrade Banner for Free Users */}
         {effectiveUser && effectiveUser.user_tier === 'free' && (
-          <div className="mb-6 sm:mb-8 gradient-purple rounded-2xl p-4 sm:p-6 text-white">
+          <div className="mb-6 sm:mb-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-4 sm:p-6 text-white">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">Unlock Playbooks! 📚</h3>
@@ -312,7 +312,7 @@ export default function DocumentsPage() {
                     onClick={() => setSelectedCategory(category)}
                     className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                       selectedCategory === category
-                        ? 'gradient-purple text-white shadow-lg transform scale-105'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg transform scale-105'
                         : 'bg-gray-800 text-gray-100 border border-gray-600 hover:border-purple-300 hover:text-purple-400 hover:scale-105'
                     }`}
                   >
@@ -339,7 +339,7 @@ export default function DocumentsPage() {
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600-subtle rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <span className="text-2xl">{getCategoryIcon(document.category)}</span>
                       </div>
                       <div className="flex-1">
@@ -392,7 +392,7 @@ export default function DocumentsPage() {
                     <div className="flex items-center space-x-3">
                       <div className={`w-12 h-12 ${
                         document.is_featured && selectedCategory !== 'All'
-                          ? 'gradient-purple-subtle'
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600-subtle'
                           : 'bg-gray-700'
                       } rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                         <span className="text-2xl">{getCategoryIcon(document.category)}</span>

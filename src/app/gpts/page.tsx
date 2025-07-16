@@ -144,7 +144,7 @@ export default function GPTsPage() {
           href={gpt.chatgpt_url}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full block text-center gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
+          className="w-full block text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
         >
           Open GPT ✨
         </a>
@@ -202,7 +202,7 @@ export default function GPTsPage() {
 
         {/* Upgrade Banner for Free Users */}
         {effectiveUser && effectiveUser.user_tier === 'free' && (
-          <div className="mb-6 sm:mb-8 gradient-purple rounded-2xl p-4 sm:p-6 text-white">
+          <div className="mb-6 sm:mb-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-4 sm:p-6 text-white">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">Unlock GPTs! ⚡</h3>
@@ -250,7 +250,7 @@ export default function GPTsPage() {
                   onClick={() => setSelectedCategory(category)}
                   className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 mobile-touch-target touch-feedback ${
                     selectedCategory === category
-                      ? 'gradient-purple text-white shadow-lg transform scale-105'
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg transform scale-105'
                       : 'bg-gray-800 text-gray-100 border border-gray-600 hover:border-purple-300 hover:text-purple-400 hover:scale-105'
                   }`}
                 >
@@ -276,7 +276,7 @@ export default function GPTsPage() {
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                      <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600-subtle rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <span className="text-2xl">{getCategoryIcon(gpt.category)}</span>
                       </div>
                       <div className="flex-1">
@@ -327,7 +327,7 @@ export default function GPTsPage() {
                     <div className="flex items-center space-x-3">
                       <div className={`w-12 h-12 ${
                         gpt.is_featured && selectedCategory !== 'All'
-                          ? 'gradient-purple-subtle'
+                          ? 'bg-gradient-to-r from-purple-600 to-pink-600-subtle'
                           : 'bg-gray-700'
                       } rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                         <span className="text-2xl">{getCategoryIcon(gpt.category)}</span>

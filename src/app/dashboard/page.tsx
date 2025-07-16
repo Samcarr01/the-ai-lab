@@ -167,20 +167,20 @@ export default function DashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Upgrade Success Message */}
         {showUpgradeSuccess && (
-          <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mb-8 p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <span className="text-2xl">🎉</span>
                 <div>
-                  <h3 className="text-lg font-semibold text-green-800">Welcome to Pro!</h3>
-                  <p className="text-sm text-green-600">
+                  <h3 className="text-lg font-semibold text-green-300">Welcome to Pro!</h3>
+                  <p className="text-sm text-green-200">
                     Your upgrade was successful! You now have full access to all GPTs and PDF guides.
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowUpgradeSuccess(false)}
-                className="text-green-600 hover:text-green-800 text-xl"
+                className="text-green-300 hover:text-green-100 text-xl"
               >
                 ×
               </button>
@@ -194,7 +194,7 @@ export default function DashboardPage() {
             <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-transparent opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center space-x-4 mb-6">
-                <div className="w-16 h-16 gradient-purple rounded-2xl flex items-center justify-center shadow-lg animate-float">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg animate-float">
                   <span className="text-2xl">👋</span>
                 </div>
                 <div>
@@ -232,7 +232,7 @@ export default function DashboardPage() {
 
         {/* Upgrade Banner for Free Users */}
         {user.user_tier === 'free' && (
-          <div className="mb-8 gradient-purple rounded-2xl p-6 text-white">
+          <div className="mb-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-6 text-white">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-4 sm:mb-0">
                 <h3 className="text-xl font-semibold mb-2">Choose Your AI Journey! ⚡</h3>
@@ -272,20 +272,20 @@ export default function DashboardPage() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-500/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-100 mb-1">GPTs Available</p>
                 <p className="text-4xl font-bold text-purple-600">{stats.gpts}</p>
                 <p className="text-xs text-gray-400 mt-1">Ready to explore</p>
               </div>
-              <div className="w-16 h-16 gradient-purple rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-3xl">🤖</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-500/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-100 mb-1">Playbooks</p>
@@ -298,7 +298,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-500/30">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-100 mb-1">Blog Posts</p>
@@ -315,15 +315,15 @@ export default function DashboardPage() {
         {/* Content Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* GPTs Section */}
-          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-500/30">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl flex items-center justify-center">
                   <span className="text-2xl">🤖</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-100">AI GPTs</h3>
-                  <p className="text-sm text-gray-100">
+                  <h3 className="text-xl font-semibold text-white">AI GPTs</h3>
+                  <p className="text-sm text-gray-300">
                     {user.user_tier === 'free' ? 'Preview available • Upgrade for access' : 
                      user.user_tier === 'pro' ? 'Access to 3 essential GPTs' : 
                      'Full access to all 7 GPTs'}
@@ -384,17 +384,17 @@ export default function DashboardPage() {
 
             <Link
               href="/gpts"
-              className="w-full block text-center gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
+              className="w-full block text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
             >
               Browse All GPTs →
             </Link>
           </div>
 
           {/* Playbooks Section */}
-          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-500/30">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-xl flex items-center justify-center">
                   <span className="text-2xl">📚</span>
                 </div>
                 <div>
@@ -460,7 +460,7 @@ export default function DashboardPage() {
 
             <Link
               href="/documents"
-              className="w-full block text-center gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
+              className="w-full block text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
             >
               Browse All Playbooks →
             </Link>
