@@ -225,7 +225,7 @@ export default function DashboardPage() {
               </div>
               <p className="text-xl text-gray-600 leading-relaxed">
                 {(user.user_tier === 'pro' || user.user_tier === 'ultra') || user.email === 'samcarr1232@gmail.com'
-                  ? "You have access to battle-tested AI playbooks and GPTs that actually work. Upload the PDFs directly to ChatGPT, Claude, or any AI to make it smarter at specific tasks."
+                  ? "You have access to battle-tested AI playbooks and GPTs that actually work. Upload the PDFs directly to any LLM (ChatGPT, Claude, Gemini, etc.) to make it smarter at specific tasks."
                   : "Get AI workflows that actually work! Upgrade to Pro (£7/month) or Ultra (£19/month) for full access to battle-tested playbooks and GPTs."
                 }
               </p>
@@ -405,7 +405,7 @@ export default function DashboardPage() {
                   <p className="text-sm text-gray-600">
                     {user.user_tier === 'free' ? 'Preview available • Upgrade to download' :
                      user.user_tier === 'pro' ? 'Download 2 core playbooks' :
-                     'Download all playbooks for ChatGPT/Claude knowledge'}
+                     'Download all playbooks for any LLM knowledge'}
                   </p>
                 </div>
               </div>

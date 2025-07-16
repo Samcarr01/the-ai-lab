@@ -197,7 +197,7 @@ export default function HomePage() {
           
           <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
             Skip months of trial and error. Access my personal collection 
-            of proven GPTs and PDF playbooks you can upload directly to ChatGPT, Claude, or any LLM as knowledge. Choose from 
+            of proven GPTs and PDF playbooks you can upload directly to any LLM as knowledge. Choose from 
             <span className="text-purple-600 font-medium">Pro (£7/month)</span> or <span className="text-pink-600 font-medium">Ultra (£19/month)</span> — with free preview access.
           </p>
           
@@ -261,13 +261,7 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
               <div className="w-20 sm:w-24 h-20 sm:h-24 bg-white rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 p-2 border border-purple-200 shadow-lg">
-                <Image
-                  src="/logo.png"
-                  alt="thehackai logo"
-                  width={96}
-                  height={96}
-                  className="w-full h-full object-contain logo-dark-purple-blue-glow"
-                />
+                <span className="text-4xl sm:text-5xl">🤖</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
                 Proven GPTs
@@ -295,7 +289,7 @@ export default function HomePage() {
                 AI Playbooks
               </h3>
               <p className="text-sm sm:text-base text-gray-600 mb-4 flex-grow mobile-readable">
-                Step-by-step PDF guides perfect for uploading to ChatGPT, Claude, or any LLM as knowledge. Upload these directly to give your AI instant expertise in specific areas.
+                Step-by-step PDF guides perfect for uploading to any LLM as knowledge. Upload these directly to ChatGPT, Claude, Gemini, or any AI to give it instant expertise in specific areas.
               </p>
               <div className="text-sm sm:text-base text-purple-600 font-medium flex items-center space-x-2 mt-auto">
                 <span>{contentStats?.totalPlaybooks || 10} playbooks available</span>
@@ -420,7 +414,7 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-center space-x-3">
                       <span className="text-purple-200">✓</span>
-                      <span>2 core playbooks for ChatGPT/Claude</span>
+                      <span>2 core playbooks for any LLM</span>
                     </li>
                     <li className="flex items-center space-x-3">
                       <span className="text-purple-200">✓</span>
@@ -438,6 +432,9 @@ export default function HomePage() {
             {/* Ultra Tier */}
             <ScrollAnimation animation="slide-right" delay={300}>
               <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-white text-pink-700 px-3 py-1 rounded-full text-xs font-semibold">Best Value</span>
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
                   <h3 className="text-xl sm:text-2xl font-bold mb-2">Ultra - Upscale Your AI Game</h3>

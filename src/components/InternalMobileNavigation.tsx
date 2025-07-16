@@ -111,7 +111,7 @@ export default function InternalMobileNavigation({
               {[
                 { href: '/', icon: '🏠', label: 'Home', delay: 'delay-200' },
                 { href: '/dashboard', icon: '📊', label: 'Dashboard', delay: 'delay-300' },
-                { href: '/gpts', icon: 'logo', label: 'GPTs', delay: 'delay-400' },
+                { href: '/gpts', icon: '🤖', label: 'GPTs', delay: 'delay-400' },
                 { href: '/documents', icon: '📚', label: 'Playbooks', delay: 'delay-500' },
                 { href: '/blog', icon: '📝', label: 'Blog', delay: 'delay-600' }
               ].map((item, index) => (
@@ -128,19 +128,7 @@ export default function InternalMobileNavigation({
                   <span className={`mr-4 text-2xl transition-transform duration-200 ${
                     isActivePage(item.href) ? 'scale-110' : 'group-hover:scale-110'
                   }`}>
-                    {item.icon === 'logo' ? (
-                      <div className="w-6 h-6 flex items-center justify-center">
-                        <Image
-                          src="/logo.png"
-                          alt="GPTs"
-                          width={24}
-                          height={24}
-                          className="w-full h-full object-contain"
-                        />
-                      </div>
-                    ) : (
-                      item.icon
-                    )}
+                    {item.icon}
                   </span>
                   <span className="font-medium">{item.label}</span>
                   {isActivePage(item.href) && (

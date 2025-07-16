@@ -109,7 +109,7 @@ export default function UpgradePage() {
             Supercharge Your AI 🚀
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Battle-tested AI playbooks and GPTs that actually work. Upload our guides to ChatGPT, Claude, or any AI to instantly make it smarter at specific tasks - no months of trial and error needed.
+            Battle-tested AI playbooks and GPTs that actually work. Upload our guides to any LLM (ChatGPT, Claude, Gemini, etc.) to instantly make it smarter at specific tasks - no months of trial and error needed.
           </p>
           
           {/* Current Tier Badge */}
@@ -305,7 +305,10 @@ export default function UpgradePage() {
             </div>
 
             {/* Ultra Content */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-pink-400">
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-pink-400 relative">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <span className="bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Best Value</span>
+              </div>
               <h3 className="text-xl font-semibold text-pink-900 mb-4">
                 ⚡ Ultra - Upscale Your AI Game
               </h3>
@@ -354,7 +357,7 @@ export default function UpgradePage() {
                 <span className="text-2xl">🔄</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-2">2. Upload</h3>
-              <p className="text-gray-600">Upload the PDFs to ChatGPT, Claude, or any LLM as knowledge documents.</p>
+              <p className="text-gray-600">Upload the PDFs to any LLM (ChatGPT, Claude, Gemini, etc.) as knowledge documents.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -381,7 +384,7 @@ export default function UpgradePage() {
               <p className="text-gray-600">You can cancel anytime. You'll keep access until the end of your billing period, then automatically switch to Free.</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">How do the playbooks work with ChatGPT/Claude?</h3>
+              <h3 className="font-semibold text-gray-900 mb-2">How do the playbooks work with any LLM?</h3>
               <p className="text-gray-600">Download the PDFs and upload them as knowledge files. Your AI will reference them to provide expert-level assistance in specific domains.</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-lg">

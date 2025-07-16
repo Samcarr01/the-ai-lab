@@ -115,7 +115,7 @@ export default function DescriptionModal({
             <p className="text-purple-700 text-sm leading-relaxed">
               {type === 'gpt' 
                 ? "Click the GPT link to open it directly in ChatGPT. Start with a clear, specific prompt to get the best results. You can reference previous conversations and build upon them for complex tasks."
-                : "Download the PDF and upload it to ChatGPT, Claude, or your preferred AI tool as knowledge. The playbook contains step-by-step instructions, templates, and real-world examples you can adapt to your needs."
+                : "Download the PDF and upload it to any LLM (ChatGPT, Claude, Gemini, etc.) as knowledge. The playbook contains step-by-step instructions, templates, and real-world examples you can adapt to your needs."
               }
             </p>
           </div>
