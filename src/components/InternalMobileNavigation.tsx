@@ -76,7 +76,7 @@ export default function InternalMobileNavigation({
       }`} onClick={handleLinkClick} />
 
       {/* Mobile Menu Panel */}
-      <div className={`fixed top-0 right-0 h-full w-72 sm:w-80 bg-slate-800 shadow-2xl z-50 transform transition-all duration-300 ease-out md:hidden ${
+      <div className={`fixed top-0 right-0 h-full w-72 sm:w-80 bg-slate-900 shadow-2xl z-50 transform transition-all duration-300 ease-out md:hidden ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         <div className="flex flex-col h-full">
@@ -204,10 +204,10 @@ export default function InternalMobileNavigation({
                 </div>
                 
                 {/* Email Display */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl px-4 py-3 border border-gray-200 shadow-sm">
+                <div className="bg-slate-800 rounded-xl px-4 py-3 border border-purple-500/30 shadow-sm">
                   <div className="flex items-center space-x-3">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-gray-300 font-medium truncate max-w-[200px]" title={userEmail}>
+                    <span className="text-sm text-gray-200 font-medium truncate max-w-[200px]" title={userEmail}>
                       {userEmail}
                     </span>
                   </div>
