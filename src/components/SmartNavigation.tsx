@@ -31,7 +31,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href={effectiveUser ? "/dashboard" : "/"} className="flex items-center space-x-2 sm:space-x-3">
-            <div className="w-12 sm:w-14 h-12 sm:h-14 bg-white rounded-xl flex items-center justify-center shadow-lg p-1 border border-purple-200">
+            <div className="w-12 sm:w-14 h-12 sm:h-14 bg-slate-700 rounded-xl flex items-center justify-center shadow-lg p-1 border border-purple-500/30">
               <Image
                 src="/logo.png"
                 alt="thehackai logo"
@@ -40,7 +40,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                 className="w-full h-full object-contain logo-dark-purple-blue-glow"
               />
             </div>
-            <span className="text-lg sm:text-xl font-semibold text-gradient">thehackai</span>
+            <span className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">thehackai</span>
           </Link>
           
           {/* Desktop Navigation */}
@@ -51,7 +51,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                 <nav className="flex items-center space-x-6">
                   <Link
                     href="/"
-                    className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                    className="text-sm text-gray-300 hover:text-purple-400 transition-colors font-medium"
                   >
                     Home
                   </Link>
@@ -59,8 +59,8 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                     href="/dashboard"
                     className={`text-sm transition-colors font-medium ${
                       currentPage === 'dashboard' 
-                        ? 'text-purple-600' 
-                        : 'text-gray-600 hover:text-purple-600'
+                        ? 'text-purple-400' 
+                        : 'text-gray-300 hover:text-purple-400'
                     }`}
                   >
                     Dashboard
@@ -69,8 +69,8 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                     href="/gpts"
                     className={`text-sm transition-colors font-medium ${
                       currentPage === 'gpts' 
-                        ? 'text-purple-600' 
-                        : 'text-gray-600 hover:text-purple-600'
+                        ? 'text-purple-400' 
+                        : 'text-gray-300 hover:text-purple-400'
                     }`}
                   >
                     GPTs
@@ -79,8 +79,8 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                     href="/documents"
                     className={`text-sm transition-colors font-medium ${
                       currentPage === 'documents' 
-                        ? 'text-purple-600' 
-                        : 'text-gray-600 hover:text-purple-600'
+                        ? 'text-purple-400' 
+                        : 'text-gray-300 hover:text-purple-400'
                     }`}
                   >
                     Playbooks
@@ -89,8 +89,8 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                     href="/blog"
                     className={`text-sm transition-colors font-medium ${
                       currentPage === 'blog' 
-                        ? 'text-purple-600' 
-                        : 'text-gray-600 hover:text-purple-600'
+                        ? 'text-purple-400' 
+                        : 'text-gray-300 hover:text-purple-400'
                     }`}
                   >
                     Blog
@@ -98,7 +98,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                   {user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin' && (
                     <Link
                       href="/admin"
-                      className="text-sm text-purple-600 hover:text-purple-700 transition-colors font-medium"
+                      className="text-sm text-purple-400 hover:text-purple-700 transition-colors font-medium"
                     >
                       Admin
                     </Link>
@@ -106,15 +106,15 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                 </nav>
                 
                 {/* User Profile Section */}
-                <div className="flex items-center space-x-3 pl-6 border-l border-gray-200">
+                <div className="flex items-center space-x-3 pl-6 border-l border-gray-600">
                   <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
                     user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin'
-                      ? 'bg-red-100 text-red-700'
+                      ? 'bg-red-900/50 text-red-300 border border-red-500/30'
                       : effectiveUser && effectiveUser.user_tier === 'ultra'
                         ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
                         : effectiveUser && effectiveUser.user_tier === 'pro' 
-                          ? 'bg-purple-100 text-purple-700' 
-                          : 'bg-gray-100 text-gray-600'
+                          ? 'bg-purple-900/50 text-purple-300 border border-purple-500/30' 
+                          : 'bg-gray-800/50 text-gray-300 border border-gray-600/30'
                   }`}>
                     {user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin' ? (
                       <>
@@ -141,7 +141,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                   
                   <button
                     onClick={handleSignOut}
-                    className="text-sm text-gray-500 hover:text-purple-600 transition-colors"
+                    className="text-sm text-gray-400 hover:text-purple-400 transition-colors"
                   >
                     Sign Out
                   </button>
@@ -153,7 +153,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                 <nav className="flex items-center space-x-6">
                   <Link
                     href="/"
-                    className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                    className="text-sm text-gray-300 hover:text-purple-400 transition-colors font-medium"
                   >
                     Home
                   </Link>
@@ -161,8 +161,8 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                     href="/blog"
                     className={`text-sm transition-colors font-medium ${
                       currentPage === 'blog' 
-                        ? 'text-purple-600' 
-                        : 'text-gray-600 hover:text-purple-600'
+                        ? 'text-purple-400' 
+                        : 'text-gray-300 hover:text-purple-400'
                     }`}
                   >
                     Blog
@@ -173,7 +173,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                 <div className="flex items-center space-x-3">
                   <Link
                     href="/login"
-                    className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                    className="text-sm text-gray-300 hover:text-purple-400 transition-colors font-medium"
                   >
                     Sign In
                   </Link>
@@ -201,7 +201,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
               <div className="flex items-center space-x-3">
                 <Link
                   href="/login"
-                  className="text-sm text-gray-600 hover:text-purple-600 transition-colors font-medium"
+                  className="text-sm text-gray-300 hover:text-purple-400 transition-colors font-medium"
                 >
                   Sign In
                 </Link>

@@ -10,7 +10,7 @@ export default function PrivacyPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple p-2">
+              <div className="w-10 h-10 bg-slate-700 rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple p-2">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
@@ -19,16 +19,16 @@ export default function PrivacyPage() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-xl font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 thehackai
               </span>
             </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-300 hover:text-purple-600 transition-colors">
+              <Link href="/" className="text-gray-300 hover:text-purple-300 transition-colors">
                 Home
               </Link>
-              <Link href="/login" className="text-purple-600 font-medium hover:text-purple-700 transition-colors">
+              <Link href="/login" className="text-purple-400 font-medium hover:text-purple-300 transition-colors">
                 Sign In
               </Link>
               <Link href="/signup" className="gradient-purple text-white px-5 py-2 rounded-full font-medium button-hover shadow-md">
@@ -168,7 +168,7 @@ export default function PrivacyPage() {
               <h2 className="text-2xl font-semibold text-white mb-4">12. Contact Us</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 If you have any questions about this privacy policy or our privacy practices, please contact us through our 
-                <Link href="/contact" className="text-purple-600 hover:text-purple-700 font-medium"> contact page</Link> or 
+                <Link href="/contact" className="text-purple-400 hover:text-purple-300 font-medium"> contact page</Link> or 
                 email us directly.
               </p>
 
@@ -180,13 +180,13 @@ export default function PrivacyPage() {
             <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8">
               <Link 
                 href="/terms" 
-                className="text-purple-600 hover:text-purple-700 font-medium transition-colors"
+                className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
               >
                 Terms of Service
               </Link>
               <Link 
                 href="/contact" 
-                className="text-purple-600 hover:text-purple-700 font-medium transition-colors"
+                className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
               >
                 Contact Us
               </Link>
@@ -218,9 +218,9 @@ export default function PrivacyPage() {
               <span className="text-lg font-semibold text-white">thehackai</span>
             </div>
             <div className="flex space-x-6 text-sm text-gray-300">
-              <Link href="/terms" className="hover:text-purple-600 transition-colors">Terms</Link>
+              <Link href="/terms" className="hover:text-purple-300 transition-colors">Terms</Link>
               <Link href="/privacy" className="text-purple-600 font-medium">Privacy</Link>
-              <Link href="/contact" className="hover:text-purple-600 transition-colors">Contact</Link>
+              <Link href="/contact" className="hover:text-purple-300 transition-colors">Contact</Link>
             </div>
           </div>
           <div className="mt-8 text-center text-sm text-gray-500">

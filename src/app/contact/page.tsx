@@ -49,7 +49,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple p-2">
+              <div className="w-10 h-10 bg-slate-700 rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple p-2">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
@@ -58,16 +58,16 @@ export default function ContactPage() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
+              <span className="text-xl font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                 thehackai
               </span>
             </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-300 hover:text-purple-600 transition-colors">
+              <Link href="/" className="text-gray-300 hover:text-purple-300 transition-colors">
                 Home
               </Link>
-              <Link href="/login" className="text-purple-600 font-medium hover:text-purple-700 transition-colors">
+              <Link href="/login" className="text-purple-400 font-medium hover:text-purple-300 transition-colors">
                 Sign In
               </Link>
               <Link href="/signup" className="gradient-purple text-white px-5 py-2 rounded-full font-medium button-hover shadow-md">
@@ -251,23 +251,23 @@ export default function ContactPage() {
                     </div>
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
-                        <span className="text-purple-600">🔧</span>
+                        <span className="text-purple-400">🔧</span>
                         <span className="text-gray-700">Technical support & troubleshooting</span>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <span className="text-purple-600">💳</span>
+                        <span className="text-purple-400">💳</span>
                         <span className="text-gray-700">Subscription & billing questions</span>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <span className="text-purple-600">🎯</span>
+                        <span className="text-purple-400">🎯</span>
                         <span className="text-gray-700">Content suggestions & requests</span>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <span className="text-purple-600">🤝</span>
+                        <span className="text-purple-400">🤝</span>
                         <span className="text-gray-700">Partnership opportunities</span>
                       </div>
                       <div className="flex items-center space-x-3">
-                        <span className="text-purple-600">⭐</span>
+                        <span className="text-purple-400">⭐</span>
                         <span className="text-gray-700">Feedback & feature requests</span>
                       </div>
                     </div>
@@ -282,7 +282,7 @@ export default function ContactPage() {
           {/* Bottom CTA */}
           <ScrollAnimation animation="scale" delay={300}>
             <div className="mt-16 text-center">
-              <div className="bg-gradient-to-br from-purple-600 to-purple-700 rounded-3xl p-12 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105 relative overflow-hidden">
+              <div className="bg-gradient-to-br from-purple-400 to-purple-500 rounded-3xl p-12 shadow-2xl hover:shadow-3xl transition-all duration-500 transform hover:scale-105 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
                   <h2 className="text-3xl font-bold text-white mb-4">
@@ -293,7 +293,7 @@ export default function ContactPage() {
                   </p>
                   <Link 
                     href="/signup" 
-                    className="inline-flex items-center space-x-2 bg-slate-800/80 text-purple-700 px-8 py-4 rounded-full text-lg font-bold hover:scale-105 transform transition-all duration-300 shadow-lg"
+                    className="inline-flex items-center space-x-2 bg-slate-800/80 text-purple-400 px-8 py-4 rounded-full text-lg font-bold hover:scale-105 transform transition-all duration-300 shadow-lg"
                   >
                     <span>Start Free Account</span>
                     <span className="text-xl">✨</span>
@@ -322,9 +322,9 @@ export default function ContactPage() {
               <span className="text-lg font-semibold text-white">thehackai</span>
             </div>
             <div className="flex space-x-6 text-sm text-gray-300">
-              <Link href="/terms" className="hover:text-purple-600 transition-colors">Terms</Link>
-              <Link href="/privacy" className="hover:text-purple-600 transition-colors">Privacy</Link>
-              <Link href="/contact" className="text-purple-600 font-medium">Contact</Link>
+              <Link href="/terms" className="hover:text-purple-400 transition-colors">Terms</Link>
+              <Link href="/privacy" className="hover:text-purple-400 transition-colors">Privacy</Link>
+              <Link href="/contact" className="text-purple-400 font-medium">Contact</Link>
             </div>
           </div>
           <div className="mt-8 text-center text-sm text-gray-500">
