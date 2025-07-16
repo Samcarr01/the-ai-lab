@@ -185,15 +185,31 @@ export default function HomePage() {
             <span className="text-purple-300 text-sm font-medium">Battle-tested AI Playbooks & GPTs</span>
           </div>
           
-          <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight text-center min-h-[36px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] flex items-center justify-center px-1">
-            <TypewriterText 
-              texts={[
-                "Battle-tested AI workflows",
-                "Make any AI smarter instantly", 
-                "Skip months of trial and error"
-              ]}
-              className="inline-block"
-            />
+          <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight text-center min-h-[60px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] flex items-center justify-center px-1">
+            <>
+              {/* Mobile text - shorter to prevent line breaks */}
+              <div className="sm:hidden">
+                <TypewriterText 
+                  texts={[
+                    "Battle-tested AI tools",
+                    "Make AI smarter now", 
+                    "Skip trial and error"
+                  ]}
+                  className="inline-block"
+                />
+              </div>
+              {/* Desktop text - full length */}
+              <div className="hidden sm:block">
+                <TypewriterText 
+                  texts={[
+                    "Battle-tested AI workflows",
+                    "Make any AI smarter instantly", 
+                    "Skip months of trial and error"
+                  ]}
+                  className="inline-block"
+                />
+              </div>
+            </>
           </h1>
           
           <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">

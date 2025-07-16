@@ -105,12 +105,12 @@ Structure with clear headings and examples.`
   }, []) // Remove dependencies to ensure observer is always created
 
   return (
-    <div ref={containerRef} className="bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50 h-full">
+    <div ref={containerRef} className="bg-slate-800/90 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-500/30 h-full">
       <div className="flex items-center space-x-3 mb-4">
         <div className="w-10 h-10 gradient-purple rounded-xl flex items-center justify-center">
           <span className="text-white text-lg">🔧</span>
         </div>
-        <h3 className="text-xl font-semibold text-gray-900">PromptRefiner</h3>
+        <h3 className="text-xl font-semibold text-gray-100">PromptRefiner</h3>
       </div>
       
       <div className="bg-gray-50/50 rounded-xl p-3 sm:p-4 space-y-2 sm:space-y-3 h-[300px] sm:h-[320px] overflow-hidden relative">
@@ -132,7 +132,7 @@ Structure with clear headings and examples.`
                 <span className="text-white text-xs">🔧</span>
               </div>
               <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-3 sm:px-4 py-2 sm:py-3 shadow-sm">
-                <p className="text-xs sm:text-sm text-gray-800 whitespace-pre-line leading-snug sm:leading-relaxed">{botResponse}</p>
+                <p className="text-xs sm:text-sm text-gray-100 whitespace-pre-line leading-snug sm:leading-relaxed">{botResponse}</p>
               </div>
             </div>
           </div>
@@ -162,7 +162,7 @@ Structure with clear headings and examples.`
                   <span className="text-white text-xs">🔧</span>
                 </div>
                 <div className="bg-white border border-gray-200 rounded-2xl rounded-bl-md px-3 sm:px-4 py-2 sm:py-3 shadow-sm">
-                  <p className="text-xs sm:text-sm text-gray-800 whitespace-pre-line leading-snug sm:leading-relaxed">
+                  <p className="text-xs sm:text-sm text-gray-100 whitespace-pre-line leading-snug sm:leading-relaxed">
                     {botText}
                     {isTypingBot && (
                       <span className="inline-block w-1 h-3 sm:h-4 bg-purple-500 ml-1 animate-pulse rounded-sm"></span>
