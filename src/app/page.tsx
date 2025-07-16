@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { contentStatsService, type ContentStats } from '@/lib/content-stats'
 import GradientBackground from '@/components/NetworkBackground'
+import DarkThemeBackground from '@/components/DarkThemeBackground'
 import ScrollAnimation from '@/components/ScrollAnimation'
 import AnimatedCounter from '@/components/AnimatedCounter'
 import TypewriterText from '@/components/TypewriterText'
@@ -58,7 +59,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative">
+    <DarkThemeBackground>
       {/* Animated Background */}
       <GradientBackground />
       {/* Navigation Header with Glassmorphism */}
@@ -75,7 +76,7 @@ export default function HomePage() {
                   className="w-full h-full object-contain logo-dark-purple-blue-glow"
                 />
               </div>
-              <span className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent group-hover:from-purple-500 group-hover:to-purple-600 transition-all duration-300">
+              <span className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent group-hover:from-purple-300 group-hover:to-pink-300 transition-all duration-300">
                 thehackai
               </span>
             </Link>
@@ -83,7 +84,7 @@ export default function HomePage() {
             <nav className="hidden md:flex items-center space-x-6">
               <a 
                 href="#features" 
-                className="relative text-gray-600 hover:text-purple-600 transition-all duration-300 cursor-pointer font-medium group"
+                className="relative text-gray-300 hover:text-purple-400 transition-all duration-300 cursor-pointer font-medium group"
                 onClick={(e) => {
                   e.preventDefault()
                   handleFeatureClick()
@@ -94,7 +95,7 @@ export default function HomePage() {
               </a>
               <a 
                 href="#pricing" 
-                className="relative text-gray-600 hover:text-purple-600 transition-all duration-300 cursor-pointer font-medium group"
+                className="relative text-gray-300 hover:text-purple-400 transition-all duration-300 cursor-pointer font-medium group"
                 onClick={(e) => {
                   e.preventDefault()
                   handlePricingClick()
@@ -105,7 +106,7 @@ export default function HomePage() {
               </a>
               <Link 
                 href="/blog" 
-                className="relative text-gray-600 hover:text-purple-600 transition-all duration-300 font-medium group"
+                className="relative text-gray-300 hover:text-purple-400 transition-all duration-300 font-medium group"
               >
                 Blog
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-300 group-hover:w-full"></span>
@@ -181,10 +182,10 @@ export default function HomePage() {
                 className="w-full h-full object-contain logo-dark-purple-blue-glow"
               />
             </div>
-            <span className="text-purple-700 text-sm font-medium">Battle-tested AI Playbooks & GPTs</span>
+            <span className="text-purple-300 text-sm font-medium">Battle-tested AI Playbooks & GPTs</span>
           </div>
           
-          <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight text-center min-h-[36px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] flex items-center justify-center px-1">
+          <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-6 leading-tight text-center min-h-[36px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] flex items-center justify-center px-1">
             <TypewriterText 
               texts={[
                 "Battle-tested AI workflows",
@@ -195,10 +196,10 @@ export default function HomePage() {
             />
           </h1>
           
-          <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
             Skip months of trial and error. Access my personal collection 
             of proven GPTs and PDF playbooks you can upload directly to any LLM as knowledge. Choose from 
-            <span className="text-purple-600 font-medium">Pro (£7/month)</span> or <span className="text-pink-600 font-medium">Ultra (£19/month)</span> — with free preview access.
+            <span className="text-purple-400 font-medium">Pro (£7/month)</span> or <span className="text-pink-400 font-medium">Ultra (£19/month)</span> — with free preview access.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -245,10 +246,10 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <ScrollAnimation animation="fade-up">
             <div className="text-center mb-8 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
                 What&apos;s Inside thehackai 🚀
               </h2>
-              <p className="text-xl text-gray-600">
+              <p className="text-xl text-gray-300">
                 Create your free account to explore and upgrade anytime for full access
               </p>
             </div>
@@ -257,19 +258,19 @@ export default function HomePage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {/* Feature Card 1 */}
             <ScrollAnimation animation="fade-up" delay={100}>
-              <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-100/50 hover:border-purple-300/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
+              <div className="group bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-500/30 hover:border-purple-400/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
               <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl animate-pulse transition-all duration-300">🤖</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
+              <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 sm:mb-3">
                 Proven GPTs
               </h3>
-              <p className="text-sm sm:text-base text-gray-600 mb-4 flex-grow mobile-readable">
+              <p className="text-sm sm:text-base text-gray-300 mb-4 flex-grow mobile-readable">
                 Specialized ChatGPT tools for business planning, productivity, and automation. Direct links to working GPTs.
               </p>
-              <div className="text-sm sm:text-base text-purple-600 font-medium flex items-center space-x-2 mt-auto">
+              <div className="text-sm sm:text-base text-purple-400 font-medium flex items-center space-x-2 mt-auto">
                 <span><AnimatedCounter end={contentStats?.totalGPTs || 7} /> GPTs available</span>
                 <span className="text-xl animate-pulse">→</span>
               </div>
@@ -279,19 +280,19 @@ export default function HomePage() {
 
             {/* Feature Card 2 */}
             <ScrollAnimation animation="fade-up" delay={200}>
-              <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-100/50 hover:border-purple-300/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
+              <div className="group bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-500/30 hover:border-purple-400/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
               <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl animate-pulse transition-all duration-300">📚</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
+              <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 sm:mb-3">
                 AI Playbooks
               </h3>
-              <p className="text-sm sm:text-base text-gray-600 mb-4 flex-grow mobile-readable">
+              <p className="text-sm sm:text-base text-gray-300 mb-4 flex-grow mobile-readable">
                 Step-by-step PDF guides perfect for uploading to any LLM as knowledge. Upload these directly to ChatGPT, Claude, Gemini, or any AI to give it instant expertise in specific areas.
               </p>
-              <div className="text-sm sm:text-base text-purple-600 font-medium flex items-center space-x-2 mt-auto">
+              <div className="text-sm sm:text-base text-purple-400 font-medium flex items-center space-x-2 mt-auto">
                 <span>{contentStats?.totalPlaybooks || 10} playbooks available</span>
                 <span className="text-xl">→</span>
               </div>
@@ -301,19 +302,19 @@ export default function HomePage() {
 
             {/* Feature Card 3 */}
             <ScrollAnimation animation="fade-up" delay={300}>
-              <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-100/50 hover:border-purple-300/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
+              <div className="group bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-500/30 hover:border-purple-400/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
               <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl animate-pulse transition-all duration-300">🎯</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
+              <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 sm:mb-3">
                 Regular Updates
               </h3>
-              <p className="text-sm sm:text-base text-gray-600 mb-4 flex-grow mobile-readable">
+              <p className="text-sm sm:text-base text-gray-300 mb-4 flex-grow mobile-readable">
                 New GPTs and playbooks added as I discover and test them. Quality over quantity approach.
               </p>
-              <div className="text-sm sm:text-base text-purple-600 font-medium flex items-center space-x-2 mt-auto">
+              <div className="text-sm sm:text-base text-purple-400 font-medium flex items-center space-x-2 mt-auto">
                 <span>Continuous updates</span>
                 <span className="text-xl">→</span>
               </div>
@@ -325,14 +326,14 @@ export default function HomePage() {
       </section>
 
       {/* Interactive Demo Section */}
-      <section className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/50">
         <div className="max-w-6xl mx-auto">
           <ScrollAnimation animation="fade-up">
             <div className="text-center mb-8 sm:mb-12">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
                 See What You Get 🎯
               </h2>
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 px-2 sm:px-0">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-300 px-2 sm:px-0">
                 Experience the quality of our GPTs and playbooks
               </p>
             </div>
@@ -357,26 +358,7 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900 relative overflow-hidden">
-        {/* Purple/Pink corner glows */}
-        <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-purple-500/30 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-pink-500/25 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-purple-400/20 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tl from-pink-400/30 to-transparent rounded-full blur-3xl"></div>
-        
-        {/* Subtle mesh pattern overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-pink-900/10"></div>
-        
-        {/* Subtle purple and pink floating orbs */}
-        <div className="absolute top-16 left-16 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl animate-pulse opacity-60" style={{animationDuration: '4s'}}></div>
-        <div className="absolute top-20 right-20 w-40 h-40 bg-pink-500/15 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s', animationDuration: '5s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-28 h-28 bg-purple-400/20 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '3s', animationDuration: '6s'}}></div>
-        <div className="absolute bottom-16 right-1/3 w-36 h-36 bg-pink-400/15 rounded-full blur-3xl animate-pulse opacity-45" style={{animationDelay: '1s', animationDuration: '4.5s'}}></div>
-        
-        {/* Additional accent orbs */}
-        <div className="absolute top-1/2 left-8 w-20 h-20 bg-purple-600/15 rounded-full blur-xl opacity-30"></div>
-        <div className="absolute top-1/3 right-8 w-16 h-16 bg-pink-500/20 rounded-full blur-lg opacity-40"></div>
-        <div className="absolute bottom-1/3 left-1/2 w-24 h-24 bg-purple-500/12 rounded-full blur-xl opacity-35"></div>
+      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <ScrollAnimation animation="fade-up">
@@ -517,7 +499,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
+      <footer className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-700">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 sm:space-x-3 mb-4 md:mb-0">
@@ -530,19 +512,19 @@ export default function HomePage() {
                   className="w-full h-full object-contain logo-dark-purple-blue-glow"
                 />
               </div>
-              <span className="text-base sm:text-lg font-semibold text-gray-900">thehackai</span>
+              <span className="text-base sm:text-lg font-semibold text-white">thehackai</span>
             </div>
-            <div className="flex space-x-4 sm:space-x-6 text-xs sm:text-sm text-gray-600">
-              <Link href="/terms" className="hover:text-purple-600 transition-colors">Terms</Link>
-              <Link href="/privacy" className="hover:text-purple-600 transition-colors">Privacy</Link>
-              <Link href="/contact" className="hover:text-purple-600 transition-colors">Contact</Link>
+            <div className="flex space-x-4 sm:space-x-6 text-xs sm:text-sm text-gray-300">
+              <Link href="/terms" className="hover:text-purple-400 transition-colors">Terms</Link>
+              <Link href="/privacy" className="hover:text-purple-400 transition-colors">Privacy</Link>
+              <Link href="/contact" className="hover:text-purple-400 transition-colors">Contact</Link>
             </div>
           </div>
-          <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm text-gray-500 px-4 sm:px-0">
+          <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm text-gray-400 px-4 sm:px-0">
             © 2024 thehackai. Made with 💜 for AI enthusiasts.
           </div>
         </div>
       </footer>
-    </div>
+    </DarkThemeBackground>
   )
 }

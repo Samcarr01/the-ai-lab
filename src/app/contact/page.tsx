@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import DarkThemeBackground from '@/components/DarkThemeBackground'
 import GradientBackground from '@/components/NetworkBackground'
 import ScrollAnimation from '@/components/ScrollAnimation'
 
@@ -41,9 +42,7 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative">
-      {/* Animated Background */}
-      <GradientBackground />
+    <DarkThemeBackground>
       
       {/* Navigation Header */}
       <header className="fixed top-0 w-full z-50 glass">
@@ -65,7 +64,7 @@ export default function ContactPage() {
             </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-600 hover:text-purple-600 transition-colors">
+              <Link href="/" className="text-gray-300 hover:text-purple-600 transition-colors">
                 Home
               </Link>
               <Link href="/login" className="text-purple-600 font-medium hover:text-purple-700 transition-colors">
@@ -89,10 +88,10 @@ export default function ContactPage() {
               <div className="inline-flex items-center justify-center w-20 h-20 gradient-purple rounded-2xl mb-6 shadow-2xl animate-float">
                 <span className="text-3xl">💬</span>
               </div>
-              <h1 className="text-5xl font-bold text-gray-900 mb-4">
+              <h1 className="text-5xl font-bold text-white mb-4">
                 Let's Connect
               </h1>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
                 Have questions about our AI tools? Need help with your subscription? 
                 Want to suggest new GPTs or playbooks? We'd love to hear from you!
               </p>
@@ -103,10 +102,10 @@ export default function ContactPage() {
             
             {/* Contact Form */}
             <ScrollAnimation animation="slide-left" delay={100}>
-              <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden">
+              <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10">
-                  <h2 className="text-2xl font-semibold text-gray-900 mb-6">Send us a message</h2>
+                  <h2 className="text-2xl font-semibold text-white mb-6">Send us a message</h2>
                   
                   {isSubmitted ? (
                     <div className="text-center py-12">
@@ -114,7 +113,7 @@ export default function ContactPage() {
                         <span className="text-2xl">✅</span>
                       </div>
                       <h3 className="text-xl font-semibold text-green-600 mb-2">Message Sent!</h3>
-                      <p className="text-gray-600">Thank you for reaching out. We'll get back to you soon!</p>
+                      <p className="text-gray-300">Thank you for reaching out. We'll get back to you soon!</p>
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -162,7 +161,7 @@ export default function ContactPage() {
                             required
                             value={formData.subject}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors appearance-none bg-white cursor-pointer"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors appearance-none bg-slate-800/80 cursor-pointer"
                           >
                             <option value="">Select a topic</option>
                             <option value="subscription">Subscription & Billing</option>
@@ -224,16 +223,16 @@ export default function ContactPage() {
               <div className="space-y-8">
                 
                 {/* Quick Response */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden">
+                <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="relative z-10">
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
                         <span className="text-2xl">⚡</span>
                       </div>
-                      <h3 className="text-xl font-semibold text-gray-900">Quick Response</h3>
+                      <h3 className="text-xl font-semibold text-white">Quick Response</h3>
                     </div>
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-300 leading-relaxed">
                       We typically respond within 24 hours. For urgent subscription issues, 
                       we'll get back to you even faster!
                     </p>
@@ -241,14 +240,14 @@ export default function ContactPage() {
                 </div>
 
                 {/* Help Topics */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden">
+                <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50 hover:shadow-3xl transition-all duration-500 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                   <div className="relative z-10">
                     <div className="flex items-center space-x-4 mb-6">
                       <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
                         <span className="text-2xl">💡</span>
                       </div>
-                      <h3 className="text-xl font-semibold text-gray-900">How can we help?</h3>
+                      <h3 className="text-xl font-semibold text-white">How can we help?</h3>
                     </div>
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
@@ -294,7 +293,7 @@ export default function ContactPage() {
                   </p>
                   <Link 
                     href="/signup" 
-                    className="inline-flex items-center space-x-2 bg-white text-purple-700 px-8 py-4 rounded-full text-lg font-bold hover:scale-105 transform transition-all duration-300 shadow-lg"
+                    className="inline-flex items-center space-x-2 bg-slate-800/80 text-purple-700 px-8 py-4 rounded-full text-lg font-bold hover:scale-105 transform transition-all duration-300 shadow-lg"
                   >
                     <span>Start Free Account</span>
                     <span className="text-xl">✨</span>
@@ -320,9 +319,9 @@ export default function ContactPage() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-lg font-semibold text-gray-900">thehackai</span>
+              <span className="text-lg font-semibold text-white">thehackai</span>
             </div>
-            <div className="flex space-x-6 text-sm text-gray-600">
+            <div className="flex space-x-6 text-sm text-gray-300">
               <Link href="/terms" className="hover:text-purple-600 transition-colors">Terms</Link>
               <Link href="/privacy" className="hover:text-purple-600 transition-colors">Privacy</Link>
               <Link href="/contact" className="text-purple-600 font-medium">Contact</Link>
@@ -333,6 +332,6 @@ export default function ContactPage() {
           </div>
         </div>
       </footer>
-    </div>
+    </DarkThemeBackground>
   )
 }

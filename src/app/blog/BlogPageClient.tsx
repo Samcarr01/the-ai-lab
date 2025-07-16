@@ -8,7 +8,7 @@ import { userService, type UserProfile } from '@/lib/user'
 import { blogService, type BlogPost } from '@/lib/blog'
 import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
-import GradientBackground from '@/components/NetworkBackground'
+import DarkThemeBackground from '@/components/DarkThemeBackground'
 
 export default function BlogPageClient() {
   const [user, setUser] = useState<UserProfile | null>(null)
@@ -81,7 +81,7 @@ export default function BlogPageClient() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white flex items-center justify-center">
+      <DarkThemeBackground className="flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
       </div>
     )
@@ -90,20 +90,17 @@ export default function BlogPageClient() {
   // Blog is public - don't block access based on login status
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white relative">
-      {/* Animated Background */}
-      <GradientBackground />
-      
+    <DarkThemeBackground>
       {/* Header */}
       <SmartNavigation user={user} currentPage="blog" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header Section */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+          <h1 className="text-5xl font-bold text-white mb-6">
             AI Tools & Strategies 🧠
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
             {effectiveUser ? (
               "Discover powerful AI tools, proven strategies, and actionable insights to boost your productivity. Explore our latest findings and tutorials."
             ) : (
@@ -114,7 +111,7 @@ export default function BlogPageClient() {
 
         {/* Search and Filter Section */}
         <div className="mb-12">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50">
             <div className="flex flex-col md:flex-row gap-4">
               {/* Search Bar */}
               <div className="flex-1">
@@ -143,7 +140,7 @@ export default function BlogPageClient() {
                     className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                       category === selectedCategory
                         ? 'gradient-purple text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        : 'bg-gray-100 text-gray-300 hover:bg-gray-200'
                     }`}
                   >
                     {category}
@@ -159,7 +156,7 @@ export default function BlogPageClient() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPosts.map((post) => (
               <Link key={post.id} href={`/blog/${post.slug}`} className="group">
-                <article className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:border-purple-300 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                <article className="bg-slate-800/80 rounded-2xl p-6 shadow-lg border border-gray-200 hover:border-purple-300 hover:shadow-xl transition-all duration-300 h-full flex flex-col">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-4">
                       <span className="text-xs font-medium bg-purple-100 text-purple-700 px-3 py-1 rounded-full">
@@ -170,11 +167,11 @@ export default function BlogPageClient() {
                       </span>
                     </div>
                     
-                    <h2 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
+                    <h2 className="text-xl font-semibold text-white mb-3 group-hover:text-purple-600 transition-colors">
                       {post.title}
                     </h2>
                     
-                    <p className="text-gray-600 text-sm leading-relaxed mb-4">
+                    <p className="text-gray-300 text-sm leading-relaxed mb-4">
                       {post.meta_description}
                     </p>
                   </div>
@@ -201,21 +198,21 @@ export default function BlogPageClient() {
             <div className="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-8">
               <span className="text-4xl">📚</span>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-white mb-4">
               Content Coming Soon!
             </h2>
-            <p className="text-xl text-gray-600 mb-8 max-w-lg mx-auto">
+            <p className="text-xl text-gray-300 mb-8 max-w-lg mx-auto">
               I'm preparing helpful articles about AI tools, productivity strategies, 
               and actionable guides to help you work smarter with AI.
             </p>
             
             {/* Newsletter Signup */}
             <div className="max-w-md mx-auto">
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100">
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+              <div className="bg-slate-800/80 rounded-2xl p-6 shadow-lg border border-purple-100">
+                <h3 className="text-lg font-semibold text-white mb-3">
                   Get Notified 🔔
                 </h3>
-                <p className="text-sm text-gray-600 mb-4">
+                <p className="text-sm text-gray-300 mb-4">
                   Be the first to read new articles about AI tools and strategies
                 </p>
                 <div className="flex gap-3">
@@ -237,10 +234,10 @@ export default function BlogPageClient() {
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8">
               <span className="text-4xl">🔍</span>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-white mb-4">
               No articles found
             </h2>
-            <p className="text-xl text-gray-600 mb-8 max-w-lg mx-auto">
+            <p className="text-xl text-gray-300 mb-8 max-w-lg mx-auto">
               Try adjusting your search terms or selecting a different category.
             </p>
             <button 
@@ -259,10 +256,10 @@ export default function BlogPageClient() {
         <div className="mt-20 pt-12 border-t border-gray-200">
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              <h3 className="text-xl font-semibold text-white mb-4">
                 What to Expect 🎯
               </h3>
-              <ul className="space-y-3 text-gray-600">
+              <ul className="space-y-3 text-gray-300">
                 <li className="flex items-start space-x-3">
                   <span className="text-purple-600 mt-1">•</span>
                   <span>Step-by-step AI implementation guides</span>
@@ -283,10 +280,10 @@ export default function BlogPageClient() {
             </div>
             
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+              <h3 className="text-xl font-semibold text-white mb-4">
                 Why Subscribe? ⚡
               </h3>
-              <ul className="space-y-3 text-gray-600">
+              <ul className="space-y-3 text-gray-300">
                 <li className="flex items-start space-x-3">
                   <span className="text-purple-600 mt-1">•</span>
                   <span>100% free access to all articles</span>
@@ -308,6 +305,6 @@ export default function BlogPageClient() {
           </div>
         </div>
       </div>
-    </div>
+    </DarkThemeBackground>
   )
 }

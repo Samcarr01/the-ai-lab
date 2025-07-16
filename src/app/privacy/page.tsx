@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import DarkThemeBackground from '@/components/DarkThemeBackground'
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
+    <DarkThemeBackground>
       {/* Navigation Header */}
       <header className="fixed top-0 w-full z-50 glass">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,7 +25,7 @@ export default function PrivacyPage() {
             </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-600 hover:text-purple-600 transition-colors">
+              <Link href="/" className="text-gray-300 hover:text-purple-600 transition-colors">
                 Home
               </Link>
               <Link href="/login" className="text-purple-600 font-medium hover:text-purple-700 transition-colors">
@@ -42,10 +43,10 @@ export default function PrivacyPage() {
       <main className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-white mb-4">
               Privacy Policy
             </h1>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-300">
               Last updated: {new Date().toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
@@ -54,10 +55,10 @@ export default function PrivacyPage() {
             </p>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-purple-100/50">
             <div className="prose prose-lg max-w-none">
               
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Information We Collect</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">1. Information We Collect</h2>
               <p className="mb-4 text-gray-700 leading-relaxed">
                 We collect information you provide directly to us, such as when you create an account, subscribe to our service, or contact us for support.
               </p>
@@ -68,7 +69,7 @@ export default function PrivacyPage() {
                 <li><strong>Technical Data:</strong> IP address, browser type, device information, and session data</li>
               </ul>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. How We Use Your Information</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">2. How We Use Your Information</h2>
               <p className="mb-4 text-gray-700 leading-relaxed">
                 We use the information we collect to provide, maintain, and improve our services:
               </p>
@@ -81,7 +82,7 @@ export default function PrivacyPage() {
                 <li>Ensure security and prevent fraud</li>
               </ul>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">3. Information Sharing</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">3. Information Sharing</h2>
               <p className="mb-4 text-gray-700 leading-relaxed">
                 We do not sell, trade, or otherwise transfer your personal information to third parties, except in the following circumstances:
               </p>
@@ -92,21 +93,21 @@ export default function PrivacyPage() {
                 <li><strong>Business Transfer:</strong> In the event of a merger, acquisition, or sale of assets</li>
               </ul>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. Data Security</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">4. Data Security</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 We implement appropriate security measures to protect your personal information against unauthorized access, 
                 alteration, disclosure, or destruction. This includes encryption, secure servers, and regular security audits. 
                 However, no method of transmission over the internet is 100% secure.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">5. Data Retention</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">5. Data Retention</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 We retain your personal information for as long as your account is active or as needed to provide you services. 
                 We will retain and use your information as necessary to comply with legal obligations, resolve disputes, 
                 and enforce our agreements.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Your Rights</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">6. Your Rights</h2>
               <p className="mb-4 text-gray-700 leading-relaxed">
                 You have certain rights regarding your personal information:
               </p>
@@ -119,7 +120,7 @@ export default function PrivacyPage() {
                 <li><strong>Withdrawal:</strong> Withdraw consent where processing is based on consent</li>
               </ul>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Cookies and Tracking</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">7. Cookies and Tracking</h2>
               <p className="mb-4 text-gray-700 leading-relaxed">
                 We use cookies and similar tracking technologies to enhance your experience:
               </p>
@@ -132,7 +133,7 @@ export default function PrivacyPage() {
                 You can control cookies through your browser settings, but this may affect site functionality.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Third-Party Services</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">8. Third-Party Services</h2>
               <p className="mb-4 text-gray-700 leading-relaxed">
                 Our service integrates with third-party services that have their own privacy policies:
               </p>
@@ -143,28 +144,28 @@ export default function PrivacyPage() {
                 <li><strong>OpenAI/ChatGPT:</strong> Links to external GPT tools (their privacy policies apply)</li>
               </ul>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. International Transfers</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">9. International Transfers</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 Your information may be transferred to and processed in countries other than your own. 
                 We ensure appropriate safeguards are in place to protect your information in accordance with this privacy policy 
                 and applicable data protection laws.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">10. Children's Privacy</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">10. Children's Privacy</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 Our service is not intended for children under 16 years of age. We do not knowingly collect personal 
                 information from children under 16. If we become aware that we have collected personal information from 
                 a child under 16, we will take steps to delete such information.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">11. Updates to This Policy</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">11. Updates to This Policy</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 We may update this privacy policy from time to time. We will notify you of any changes by posting the 
                 new privacy policy on this page and updating the "Last updated" date. We encourage you to review this 
                 policy periodically for any changes.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">12. Contact Us</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">12. Contact Us</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 If you have any questions about this privacy policy or our privacy practices, please contact us through our 
                 <Link href="/contact" className="text-purple-600 hover:text-purple-700 font-medium"> contact page</Link> or 
@@ -214,9 +215,9 @@ export default function PrivacyPage() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-lg font-semibold text-gray-900">thehackai</span>
+              <span className="text-lg font-semibold text-white">thehackai</span>
             </div>
-            <div className="flex space-x-6 text-sm text-gray-600">
+            <div className="flex space-x-6 text-sm text-gray-300">
               <Link href="/terms" className="hover:text-purple-600 transition-colors">Terms</Link>
               <Link href="/privacy" className="text-purple-600 font-medium">Privacy</Link>
               <Link href="/contact" className="hover:text-purple-600 transition-colors">Contact</Link>
@@ -227,6 +228,6 @@ export default function PrivacyPage() {
           </div>
         </div>
       </footer>
-    </div>
+    </DarkThemeBackground>
   )
 }

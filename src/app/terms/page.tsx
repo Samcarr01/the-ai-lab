@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import DarkThemeBackground from '@/components/DarkThemeBackground'
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
+    <DarkThemeBackground>
       {/* Navigation Header */}
       <header className="fixed top-0 w-full z-50 glass">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,7 +25,7 @@ export default function TermsPage() {
             </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-600 hover:text-purple-600 transition-colors">
+              <Link href="/" className="text-gray-300 hover:text-purple-600 transition-colors">
                 Home
               </Link>
               <Link href="/login" className="text-purple-600 font-medium hover:text-purple-700 transition-colors">
@@ -42,10 +43,10 @@ export default function TermsPage() {
       <main className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-white mb-4">
               Terms of Service
             </h1>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-300">
               Last updated: {new Date().toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
@@ -54,28 +55,28 @@ export default function TermsPage() {
             </p>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-purple-100/50">
             <div className="prose prose-lg max-w-none">
               
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Acceptance of Terms</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">1. Acceptance of Terms</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 By accessing and using thehackai service, you accept and agree to be bound by the terms and provision of this agreement. 
                 If you do not agree to abide by the above, please do not use this service.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Service Description</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">2. Service Description</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 thehackai provides access to curated AI tools, GPTs, and PDF playbooks for a monthly subscription fee of £15. 
                 Free accounts have preview access to browse content titles and descriptions.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">3. Account Registration</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">3. Account Registration</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 You must create an account to access our services. You are responsible for maintaining the confidentiality of your 
                 account credentials and for all activities that occur under your account.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. Subscription and Payment</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">4. Subscription and Payment</h2>
               <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
                 <li>Pro subscriptions are billed monthly at £15</li>
                 <li>Payment is processed through Stripe</li>
@@ -84,13 +85,13 @@ export default function TermsPage() {
                 <li>You may cancel your subscription at any time</li>
               </ul>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">5. Content Usage</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">5. Content Usage</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 The GPTs and playbooks provided are for your personal and business use. You may not redistribute, resell, 
                 or share account access with others. Content is provided "as is" without warranty.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Prohibited Uses</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">6. Prohibited Uses</h2>
               <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
                 <li>Sharing account credentials with others</li>
                 <li>Attempting to circumvent payment systems</li>
@@ -99,37 +100,37 @@ export default function TermsPage() {
                 <li>Violating any applicable laws or regulations</li>
               </ul>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Intellectual Property</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">7. Intellectual Property</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 All content, including GPTs, playbooks, and service materials, remain the property of thehackai. 
                 You receive a limited license to use the content for your personal and business purposes.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Limitation of Liability</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">8. Limitation of Liability</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 thehackai shall not be liable for any indirect, incidental, special, consequential, or punitive damages 
                 resulting from your use of the service. Our liability is limited to the amount you paid for the service.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Termination</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">9. Termination</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 We may terminate or suspend your account immediately, without prior notice, for conduct that we believe 
                 violates these Terms of Service or is harmful to other users or the service.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">10. Changes to Terms</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">10. Changes to Terms</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 We reserve the right to modify these terms at any time. We will notify users of significant changes 
                 via email or through the service. Continued use after changes constitutes acceptance.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">11. Governing Law</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">11. Governing Law</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 These Terms shall be interpreted and governed by the laws of the United Kingdom. 
                 Any disputes shall be subject to the exclusive jurisdiction of UK courts.
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">12. Contact Information</h2>
+              <h2 className="text-2xl font-semibold text-white mb-4">12. Contact Information</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
                 If you have any questions about these Terms of Service, please contact us through our 
                 <Link href="/contact" className="text-purple-600 hover:text-purple-700 font-medium"> contact page</Link>.
@@ -178,9 +179,9 @@ export default function TermsPage() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-lg font-semibold text-gray-900">thehackai</span>
+              <span className="text-lg font-semibold text-white">thehackai</span>
             </div>
-            <div className="flex space-x-6 text-sm text-gray-600">
+            <div className="flex space-x-6 text-sm text-gray-300">
               <Link href="/terms" className="text-purple-600 font-medium">Terms</Link>
               <Link href="/privacy" className="hover:text-purple-600 transition-colors">Privacy</Link>
               <Link href="/contact" className="hover:text-purple-600 transition-colors">Contact</Link>
@@ -191,6 +192,6 @@ export default function TermsPage() {
           </div>
         </div>
       </footer>
-    </div>
+    </DarkThemeBackground>
   )
 }

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
+import DarkThemeBackground from '@/components/DarkThemeBackground'
 import { userService, type UserProfile, type UserTier, TIER_FEATURES } from '@/lib/user'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import NotificationModal from '@/components/NotificationModal'
@@ -426,7 +427,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
+    <DarkThemeBackground>
       {/* Header */}
       <header className="glass border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -440,13 +441,13 @@ export default function AdminPage() {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
-              <Link href="/dashboard" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+              <Link href="/dashboard" className="text-sm text-gray-300 hover:text-purple-600 transition-colors">
                 Dashboard
               </Link>
-              <Link href="/gpts" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+              <Link href="/gpts" className="text-sm text-gray-300 hover:text-purple-600 transition-colors">
                 GPTs
               </Link>
-              <Link href="/documents" className="text-sm text-gray-600 hover:text-purple-600 transition-colors">
+              <Link href="/documents" className="text-sm text-gray-300 hover:text-purple-600 transition-colors">
                 Playbooks
               </Link>
               <div className="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
@@ -470,24 +471,24 @@ export default function AdminPage() {
           <div className="inline-flex items-center justify-center w-20 h-20 gradient-purple rounded-2xl mb-6 shadow-2xl animate-float">
             <span className="text-3xl">🤖</span>
           </div>
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-5xl font-bold text-white mb-4">
             Content Management Studio
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Manage your GPTs, playbooks, and blog posts all in one place with AI-powered analysis!
           </p>
         </div>
 
         {/* Tab Navigation */}
         <div className="mb-8">
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-purple-100/50 max-w-2xl mx-auto">
+          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-purple-100/50 max-w-2xl mx-auto">
             <div className="flex gap-2">
               <button
                 onClick={() => setActiveTab('content')}
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'content'
                     ? 'gradient-purple text-white shadow-lg'
-                    : 'text-gray-600 hover:text-purple-600'
+                    : 'text-gray-300 hover:text-purple-600'
                 }`}
               >
                 📚 Content Manager
@@ -497,7 +498,7 @@ export default function AdminPage() {
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'blog'
                     ? 'gradient-purple text-white shadow-lg'
-                    : 'text-gray-600 hover:text-purple-600'
+                    : 'text-gray-300 hover:text-purple-600'
                 }`}
               >
                 ✍️ Blog Manager
@@ -507,7 +508,7 @@ export default function AdminPage() {
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'tier'
                     ? 'gradient-purple text-white shadow-lg'
-                    : 'text-gray-600 hover:text-purple-600'
+                    : 'text-gray-300 hover:text-purple-600'
                 }`}
               >
                 🎯 Tier Testing
@@ -520,8 +521,8 @@ export default function AdminPage() {
         {activeTab === 'content' && (
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Upload Section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+            <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+            <h2 className="text-2xl font-semibold text-white mb-6 flex items-center">
               <span className="text-2xl mr-3">📤</span>
               Upload Content
             </h2>
@@ -534,7 +535,7 @@ export default function AdminPage() {
                   className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     uploadType === 'gpt'
                       ? 'gradient-purple text-white shadow-lg'
-                      : 'text-gray-600 hover:text-purple-600'
+                      : 'text-gray-300 hover:text-purple-600'
                   }`}
                 >
                   🤖 GPT Link
@@ -544,7 +545,7 @@ export default function AdminPage() {
                   className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     uploadType === 'document'
                       ? 'gradient-purple text-white shadow-lg'
-                      : 'text-gray-600 hover:text-purple-600'
+                      : 'text-gray-300 hover:text-purple-600'
                   }`}
                 >
                   📄 PDF Document
@@ -581,7 +582,7 @@ export default function AdminPage() {
                   />
                   <label htmlFor="pdf-upload" className="cursor-pointer">
                     <div className="text-4xl mb-2">📄</div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-300">
                       {documentFile ? documentFile.name : 'Click to upload PDF or drag and drop'}
                     </p>
                   </label>
@@ -608,7 +609,7 @@ export default function AdminPage() {
             {/* Analysis Results */}
             {analyzedContent && (
               <div className="mt-6 p-6 bg-purple-50 rounded-xl border border-purple-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">AI Analysis Results</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">AI Analysis Results</h3>
                 
                 <div className="space-y-4">
                   <div>
@@ -670,8 +671,8 @@ export default function AdminPage() {
           {/* Content Management */}
           <div className="space-y-6">
             {/* GPTs Section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+            <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-2xl font-semibold text-white mb-6 flex items-center">
                 <span className="text-2xl mr-3">🤖</span>
                 GPTs Collection
               </h2>
@@ -684,9 +685,9 @@ export default function AdminPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-2 mb-2">
                             <span className="text-lg flex-shrink-0">🤖</span>
-                            <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
+                            <h3 className="font-semibold text-white text-sm leading-tight truncate">{item.title}</h3>
                           </div>
-                          <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
+                          <p className="text-xs text-gray-300 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
                               {item.category}
@@ -729,14 +730,14 @@ export default function AdminPage() {
               ) : (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">🤖</div>
-                  <p className="text-gray-600">No GPTs uploaded yet. Start by analyzing your first GPT!</p>
+                  <p className="text-gray-300">No GPTs uploaded yet. Start by analyzing your first GPT!</p>
                 </div>
               )}
             </div>
 
             {/* Playbooks Section */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+            <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+              <h2 className="text-2xl font-semibold text-white mb-6 flex items-center">
                 <span className="text-2xl mr-3">📚</span>
                 Playbooks Collection
               </h2>
@@ -749,9 +750,9 @@ export default function AdminPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-2 mb-2">
                             <span className="text-lg flex-shrink-0">📄</span>
-                            <h3 className="font-semibold text-gray-900 text-sm leading-tight truncate">{item.title}</h3>
+                            <h3 className="font-semibold text-white text-sm leading-tight truncate">{item.title}</h3>
                           </div>
-                          <p className="text-xs text-gray-600 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
+                          <p className="text-xs text-gray-300 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
                               {item.category}
@@ -794,7 +795,7 @@ export default function AdminPage() {
               ) : (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">📚</div>
-                  <p className="text-gray-600">No playbooks uploaded yet. Start by analyzing your first PDF!</p>
+                  <p className="text-gray-300">No playbooks uploaded yet. Start by analyzing your first PDF!</p>
                 </div>
               )}
             </div>
@@ -806,9 +807,9 @@ export default function AdminPage() {
         {activeTab === 'blog' && (
           <div className="space-y-6">
             {/* Blog Actions Header */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+            <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900 flex items-center">
+                <h2 className="text-2xl font-semibold text-white flex items-center">
                   <span className="text-2xl mr-3">✍️</span>
                   Blog Posts Management
                 </h2>
@@ -828,15 +829,15 @@ export default function AdminPage() {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="text-lg font-semibold text-gray-900">{post.title}</h3>
+                            <h3 className="text-lg font-semibold text-white">{post.title}</h3>
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
                               {post.category}
                             </span>
-                            <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
+                            <span className="text-xs bg-gray-100 text-gray-300 px-2 py-1 rounded-full">
                               {post.read_time} min read
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 mb-3">{post.meta_description}</p>
+                          <p className="text-sm text-gray-300 mb-3">{post.meta_description}</p>
                           <div className="text-xs text-gray-500">
                             Published: {new Date(post.published_at).toLocaleDateString()}
                           </div>
@@ -868,10 +869,10 @@ export default function AdminPage() {
               ) : (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">✍️</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-white mb-2">
                     No blog posts yet
                   </h3>
-                  <p className="text-gray-600 mb-6">
+                  <p className="text-gray-300 mb-6">
                     Create your first blog post to start sharing AI insights and tutorials!
                   </p>
                   <button
@@ -908,8 +909,8 @@ export default function AdminPage() {
       {activeTab === 'tier' && (
         <div className="space-y-6">
           {/* Current Tier Status */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+            <h2 className="text-2xl font-semibold text-white mb-6 flex items-center">
               <span className="text-2xl mr-3">🎯</span>
               Admin Tier Management
             </h2>
@@ -918,8 +919,8 @@ export default function AdminPage() {
             <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border border-purple-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Current Admin Tier</h3>
-                  <p className="text-gray-600">Testing subscription access as: {user?.email}</p>
+                  <h3 className="text-lg font-semibold text-white">Current Admin Tier</h3>
+                  <p className="text-gray-300">Testing subscription access as: {user?.email}</p>
                 </div>
                 <div className={`px-4 py-2 rounded-full text-sm font-bold ${
                   user?.user_tier === 'ultra' 
@@ -935,7 +936,7 @@ export default function AdminPage() {
 
             {/* Tier Switch Buttons */}
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Tier Switch</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Quick Tier Switch</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {(['free', 'pro', 'ultra'] as UserTier[]).map((tier) => {
                   const isCurrentTier = user?.user_tier === tier
@@ -950,15 +951,15 @@ export default function AdminPage() {
                       className={`p-4 rounded-xl border-2 transition-all duration-200 ${
                         isCurrentTier
                           ? 'bg-green-50 border-green-200 text-green-800 cursor-not-allowed'
-                          : 'bg-white border-gray-200 hover:border-purple-300 hover:shadow-md'
+                          : 'bg-slate-800/80 border-gray-200 hover:border-purple-300 hover:shadow-md'
                       }`}
                     >
                       <div className="text-left">
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-semibold text-gray-900">{tierInfo.name}</h4>
+                          <h4 className="font-semibold text-white">{tierInfo.name}</h4>
                           <span className="text-sm text-gray-500">£{tierInfo.price}/mo</span>
                         </div>
-                        <p className="text-sm text-gray-600 mb-3">{tierInfo.description}</p>
+                        <p className="text-sm text-gray-300 mb-3">{tierInfo.description}</p>
                         <div className="text-xs text-gray-500">
                           <div>📱 {accessSummary.accessibleGpts}/{accessSummary.totalGpts} GPTs</div>
                           <div>📚 {accessSummary.accessibleDocs}/{accessSummary.totalDocs} Playbooks</div>
@@ -988,8 +989,8 @@ export default function AdminPage() {
           </div>
 
           {/* Tier Access Summary */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+            <h2 className="text-2xl font-semibold text-white mb-6 flex items-center">
               <span className="text-2xl mr-3">📊</span>
               Content Access Summary
             </h2>
@@ -1006,7 +1007,7 @@ export default function AdminPage() {
                       : 'bg-gray-50 border-gray-200'
                   }`}>
                     <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">{accessSummary.name}</h3>
+                      <h3 className="text-lg font-semibold text-white">{accessSummary.name}</h3>
                       {isCurrentTier && (
                         <span className="text-sm bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
                           Current
@@ -1016,13 +1017,13 @@ export default function AdminPage() {
                     
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">GPTs Access</span>
+                        <span className="text-sm text-gray-300">GPTs Access</span>
                         <span className="text-sm font-medium">
                           {accessSummary.accessibleGpts}/{accessSummary.totalGpts}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Playbooks Access</span>
+                        <span className="text-sm text-gray-300">Playbooks Access</span>
                         <span className="text-sm font-medium">
                           {accessSummary.accessibleDocs}/{accessSummary.totalDocs}
                         </span>
@@ -1038,8 +1039,8 @@ export default function AdminPage() {
           </div>
 
           {/* Quick Test Links */}
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center">
+          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-purple-100/50">
+            <h2 className="text-2xl font-semibold text-white mb-6 flex items-center">
               <span className="text-2xl mr-3">🧪</span>
               Quick Testing Links
             </h2>
@@ -1092,16 +1093,16 @@ export default function AdminPage() {
       {/* Tier Change Confirmation Modal */}
       {confirmTierChange.isOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Confirm Tier Change</h3>
-            <p className="text-gray-600 mb-6">
+          <div className="bg-slate-800/80 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <h3 className="text-lg font-semibold text-white mb-4">Confirm Tier Change</h3>
+            <p className="text-gray-300 mb-6">
               Are you sure you want to switch to <strong>{TIER_FEATURES[confirmTierChange.targetTier!]?.name}</strong> tier?
               This will immediately change your access level for testing purposes.
             </p>
             <div className="flex items-center justify-end space-x-4">
               <button
                 onClick={() => setConfirmTierChange({ isOpen: false, targetTier: null })}
-                className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-gray-300 border border-gray-300 rounded-lg hover:bg-gray-50"
                 disabled={switchingTier}
               >
                 Cancel
@@ -1126,7 +1127,7 @@ export default function AdminPage() {
         message={notification.message}
         type={notification.type}
       />
-    </div>
+    </DarkThemeBackground>
   )
 }
 
@@ -1169,9 +1170,9 @@ function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPost
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div className="bg-slate-800/80 rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
         <div className="flex items-center justify-between mb-6">
-          <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
+          <h3 className="text-2xl font-semibold text-white">{title}</h3>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100"
@@ -1244,7 +1245,7 @@ function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPost
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 text-gray-300 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>
@@ -1257,6 +1258,6 @@ function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPost
           </div>
         </form>
       </div>
-    </div>
+    </DarkThemeBackground>
   )
 }

@@ -8,6 +8,7 @@ import { auth } from '@/lib/auth'
 import { userService, type UserProfile, type UserTier, TIER_FEATURES } from '@/lib/user'
 import { stripeHelpers } from '@/lib/stripe'
 import SmartNavigation from '@/components/SmartNavigation'
+import DarkThemeBackground from '@/components/DarkThemeBackground'
 
 export default function UpgradePage() {
   const [user, setUser] = useState<UserProfile | null>(null)
@@ -99,22 +100,22 @@ export default function UpgradePage() {
   const upgradeOptions = stripeHelpers.getUpgradeOptions(currentTier)
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
+    <DarkThemeBackground>
       <SmartNavigation user={user} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+          <h1 className="text-5xl font-bold text-white mb-4">
             Supercharge Your AI 🚀
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
             Battle-tested AI playbooks and GPTs that actually work. Upload our guides to any LLM (ChatGPT, Claude, Gemini, etc.) to instantly make it smarter at specific tasks - no months of trial and error needed.
           </p>
           
           {/* Current Tier Badge */}
-          <div className="mt-8 inline-flex items-center px-4 py-2 bg-purple-100 rounded-full">
-            <span className="text-purple-800 font-medium">
+          <div className="mt-8 inline-flex items-center px-4 py-2 bg-purple-900/30 rounded-full border border-purple-500/30">
+            <span className="text-purple-300 font-medium">
               Currently on {TIER_FEATURES[currentTier].name} plan
             </span>
           </div>
@@ -140,7 +141,7 @@ export default function UpgradePage() {
             return (
               <div
                 key={tier}
-                className={`relative bg-white rounded-3xl p-8 shadow-lg border-2 transition-all duration-300 hover:shadow-xl ${
+                className={`relative bg-slate-800/80 rounded-3xl p-8 shadow-lg border-2 transition-all duration-300 hover:shadow-xl ${
                   tier === 'pro' 
                     ? 'border-purple-300 scale-105' 
                     : tier === 'ultra'
@@ -168,16 +169,16 @@ export default function UpgradePage() {
 
                 {/* Plan Header */}
                 <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  <h3 className="text-2xl font-bold text-white mb-2">
                     {config.name}
                   </h3>
-                  <p className="text-gray-600 mb-4">{config.description}</p>
+                  <p className="text-gray-300 mb-4">{config.description}</p>
                   <div className="flex items-baseline justify-center">
-                    <span className="text-4xl font-bold text-gray-900">
+                    <span className="text-4xl font-bold text-white">
                       £{config.price}
                     </span>
                     {config.price > 0 && (
-                      <span className="text-xl text-gray-600 ml-2">/month</span>
+                      <span className="text-xl text-gray-300 ml-2">/month</span>
                     )}
                   </div>
                 </div>
@@ -187,7 +188,7 @@ export default function UpgradePage() {
                   {config.features.map((feature, index) => (
                     <div key={index} className="flex items-center space-x-3">
                       <span className="text-green-600 text-lg">✅</span>
-                      <span className="text-gray-700">{feature}</span>
+                      <span className="text-gray-300">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -248,20 +249,20 @@ export default function UpgradePage() {
 
         {/* Content Breakdown */}
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+          <h2 className="text-3xl font-bold text-white text-center mb-12">
             Make Any AI Smarter at What You Need 🧠
           </h2>
           
           <div className="grid md:grid-cols-3 gap-6 pt-4">
             {/* Free Preview */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 mt-4">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            <div className="bg-slate-800/80 rounded-2xl p-6 shadow-lg border border-purple-500/30 mt-4">
+              <h3 className="text-xl font-semibold text-white mb-4">
                 🆓 Free Preview
               </h3>
               <div className="space-y-3">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Browse & Explore:</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <h4 className="font-medium text-white mb-2">Browse & Explore:</h4>
+                  <ul className="text-sm text-gray-300 space-y-1">
                     <li>• Preview all GPT titles & descriptions</li>
                     <li>• Browse playbook summaries</li>
                     <li>• See what's inside before upgrading</li>
@@ -275,25 +276,25 @@ export default function UpgradePage() {
             </div>
 
             {/* Pro Content */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-300 relative mt-4">
+            <div className="bg-slate-800/80 rounded-2xl p-6 shadow-lg border border-purple-400/50 relative mt-4">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                 <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">Most Popular</span>
               </div>
-              <h3 className="text-xl font-semibold text-purple-900 mb-4">
+              <h3 className="text-xl font-semibold text-purple-300 mb-4">
                 🚀 Pro - Daily AI Use
               </h3>
               <div className="space-y-3">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">3 Essential GPTs:</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <h4 className="font-medium text-white mb-2">3 Essential GPTs:</h4>
+                  <ul className="text-sm text-gray-300 space-y-1">
                     <li>• Email Enhancer - Professional writing</li>
                     <li>• PromptRefiner - Optimize AI prompts</li>
                     <li>• Better Ideerer - Enhanced brainstorming</li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">2 Core Playbooks:</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <h4 className="font-medium text-white mb-2">2 Core Playbooks:</h4>
+                  <ul className="text-sm text-gray-300 space-y-1">
                     <li>• Email Writing Mastery Guide</li>
                     <li>• GPT Prompting Fundamentals</li>
                   </ul>
@@ -313,17 +314,17 @@ export default function UpgradePage() {
                   animation: 'spin 3s linear infinite'
                 }}></div>
               </div>
-              <div className="absolute inset-0 rounded-2xl bg-white z-10"></div>
+              <div className="absolute inset-0 rounded-2xl bg-slate-800/80 z-10"></div>
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                 <span className="bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">Best Value</span>
               </div>
-              <h3 className="text-xl font-semibold text-pink-900 mb-4">
+              <h3 className="text-xl font-semibold text-pink-300 mb-4">
                 ⚡ Ultra - Upscale Your AI Game
               </h3>
               <div className="space-y-3">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">All 7 GPTs:</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <h4 className="font-medium text-white mb-2">All 7 GPTs:</h4>
+                  <ul className="text-sm text-gray-300 space-y-1">
                     <li>• Everything in Pro PLUS:</li>
                     <li>• SaaS Planner - Business strategy</li>
                     <li>• The Executor - Advanced automation</li>
@@ -332,8 +333,8 @@ export default function UpgradePage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">All 4 Playbooks:</h4>
-                  <ul className="text-sm text-gray-600 space-y-1">
+                  <h4 className="font-medium text-white mb-2">All 4 Playbooks:</h4>
+                  <ul className="text-sm text-gray-300 space-y-1">
                     <li>• Everything in Pro PLUS:</li>
                     <li>• Advanced business automation</li>
                     <li>• Scaling & growth strategies</li>
@@ -349,7 +350,7 @@ export default function UpgradePage() {
 
         {/* How It Works Section */}
         <div className="max-w-6xl mx-auto mt-16">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+          <h2 className="text-3xl font-bold text-white text-center mb-12">
             How to Hack Your AI in 3 Steps 🔧
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -357,62 +358,62 @@ export default function UpgradePage() {
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">📥</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">1. Download</h3>
-              <p className="text-gray-600">Get access to our battle-tested GPTs and PDF playbooks that have been proven to work.</p>
+              <h3 className="text-xl font-semibold text-white mb-2">1. Download</h3>
+              <p className="text-gray-300">Get access to our battle-tested GPTs and PDF playbooks that have been proven to work.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🔄</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">2. Upload</h3>
-              <p className="text-gray-600">Upload the PDFs to any LLM (ChatGPT, Claude, Gemini, etc.) as knowledge documents.</p>
+              <h3 className="text-xl font-semibold text-white mb-2">2. Upload</h3>
+              <p className="text-gray-300">Upload the PDFs to any LLM (ChatGPT, Claude, Gemini, etc.) as knowledge documents.</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">🚀</span>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">3. Supercharge</h3>
-              <p className="text-gray-600">Your AI instantly becomes much better at specific tasks without months of trial and error.</p>
+              <h3 className="text-xl font-semibold text-white mb-2">3. Supercharge</h3>
+              <p className="text-gray-300">Your AI instantly becomes much better at specific tasks without months of trial and error.</p>
             </div>
           </div>
         </div>
 
         {/* FAQ Section */}
         <div className="max-w-4xl mx-auto mt-16">
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">
+          <h2 className="text-3xl font-bold text-white text-center mb-12">
             Frequently Asked Questions
           </h2>
           <div className="space-y-6">
-            <div className="bg-white rounded-xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">Can I change plans anytime?</h3>
-              <p className="text-gray-600">Yes! You can upgrade from Free → Pro → Ultra anytime. Changes take effect immediately.</p>
+            <div className="bg-slate-800/80 rounded-xl p-6 shadow-lg border border-purple-500/20">
+              <h3 className="font-semibold text-white mb-2">Can I change plans anytime?</h3>
+              <p className="text-gray-300">Yes! You can upgrade from Free → Pro → Ultra anytime. Changes take effect immediately.</p>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">What if I want to cancel?</h3>
-              <p className="text-gray-600">You can cancel anytime. You'll keep access until the end of your billing period, then automatically switch to Free.</p>
+            <div className="bg-slate-800/80 rounded-xl p-6 shadow-lg border border-purple-500/20">
+              <h3 className="font-semibold text-white mb-2">What if I want to cancel?</h3>
+              <p className="text-gray-300">You can cancel anytime. You'll keep access until the end of your billing period, then automatically switch to Free.</p>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">How do the playbooks work with any LLM?</h3>
-              <p className="text-gray-600">Download the PDFs and upload them as knowledge files. Your AI will reference them to provide expert-level assistance in specific domains.</p>
+            <div className="bg-slate-800/80 rounded-xl p-6 shadow-lg border border-purple-500/20">
+              <h3 className="font-semibold text-white mb-2">How do the playbooks work with any LLM?</h3>
+              <p className="text-gray-300">Download the PDFs and upload them as knowledge files. Your AI will reference them to provide expert-level assistance in specific domains.</p>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">What makes these GPTs and playbooks "battle-tested"?</h3>
-              <p className="text-gray-600">Every tool and guide has been personally used and refined through real-world application. No theory - just proven workflows that deliver results.</p>
+            <div className="bg-slate-800/80 rounded-xl p-6 shadow-lg border border-purple-500/20">
+              <h3 className="font-semibold text-white mb-2">What makes these GPTs and playbooks "battle-tested"?</h3>
+              <p className="text-gray-300">Every tool and guide has been personally used and refined through real-world application. No theory - just proven workflows that deliver results.</p>
             </div>
           </div>
         </div>
 
         {/* Footer */}
         <div className="text-center mt-16">
-          <p className="text-sm text-gray-500">
-            Questions? <Link href="/contact" className="text-purple-600 hover:text-purple-700">Get in touch</Link> • 
-            <Link href="/dashboard" className="text-purple-600 hover:text-purple-700 ml-2">Back to Dashboard</Link>
+          <p className="text-sm text-gray-300">
+            Questions? <Link href="/contact" className="text-purple-400 hover:text-purple-300">Get in touch</Link> • 
+            <Link href="/dashboard" className="text-purple-400 hover:text-purple-300 ml-2">Back to Dashboard</Link>
           </p>
           <p className="text-xs text-gray-400 mt-2">
             Secure payments powered by Stripe • All plans include 30-day money-back guarantee
           </p>
         </div>
       </div>
-    </div>
+    </DarkThemeBackground>
   )
 }
