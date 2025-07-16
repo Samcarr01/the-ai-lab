@@ -359,11 +359,13 @@ export default function HomePage() {
       {/* Pricing Section */}
       <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900 relative overflow-hidden">
         {/* Cool line patterns */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
-          <div className="absolute top-32 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500 to-transparent"></div>
-          <div className="absolute bottom-32 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-400 to-transparent"></div>
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent"></div>
+          <div className="absolute top-32 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/30 to-transparent"></div>
+          <div className="absolute top-64 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400/20 to-transparent"></div>
+          <div className="absolute bottom-64 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-400/25 to-transparent"></div>
+          <div className="absolute bottom-32 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/35 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/30 to-transparent"></div>
         </div>
         
         {/* Subtle purple and pink floating orbs */}
