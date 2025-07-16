@@ -432,8 +432,11 @@ export default function HomePage() {
             {/* Ultra Tier */}
             <ScrollAnimation animation="slide-right" delay={300}>
               <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-visible h-full flex flex-col touch-feedback mt-4">
-                {/* Animated glowing border */}
-                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-pink-400 via-purple-400 via-pink-400 to-purple-400 opacity-75 blur-sm animate-spin" style={{animationDuration: '3s'}}></div>
+                {/* Animated traveling border */}
+                <div className="absolute -inset-1 rounded-2xl opacity-75 animate-spin" style={{
+                  background: `conic-gradient(from 0deg, transparent, transparent, #ff69b4, #8b5cf6, #ff69b4, transparent, transparent)`,
+                  animationDuration: '3s'
+                }}></div>
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600"></div>
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                   <span className="bg-white text-pink-700 px-3 py-1 rounded-full text-xs font-semibold shadow-md">Best Value</span>
