@@ -80,8 +80,9 @@ export const userService = {
       return null
     }
     
-    // Give admin Ultra access (highest tier) only if user_tier is not already set in database
-    if (data && data.email === 'samcarr1232@gmail.com' && (!data.user_tier || data.user_tier === 'free')) {
+    // Give admin Ultra access (highest tier) only if user_tier is not explicitly set
+    // Skip auto-upgrade if admin has manually set a tier for testing
+    if (data && data.email === 'samcarr1232@gmail.com' && !data.user_tier) {
       return {
         ...data,
         is_pro: true,  // Backward compatibility
