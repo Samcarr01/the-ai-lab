@@ -197,7 +197,7 @@ export default function HomePage() {
           
           <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
             Skip months of trial and error. Access my personal collection 
-            of proven GPTs and PDF playbooks you can upload directly to any LLM as knowledge. Choose from  
+            of proven GPTs and PDF playbooks you can upload directly to any LLM as knowledge. Choose from 
             <span className="text-purple-600 font-medium">Pro (£7/month)</span> or <span className="text-pink-600 font-medium">Ultra (£19/month)</span> — with free preview access.
           </p>
           
@@ -370,7 +370,7 @@ export default function HomePage() {
           <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto pt-4">
             {/* Free Preview */}
             <ScrollAnimation animation="slide-left" delay={100}>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200/50 hover:border-gray-300/50 transform hover:scale-105 hover:-translate-y-2 hover:-rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200/50 hover:border-gray-300/50 transform hover:scale-105 hover:-translate-y-2 hover:-rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback mt-4">
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Free Preview</h3>
@@ -431,7 +431,7 @@ export default function HomePage() {
             
             {/* Ultra Tier */}
             <ScrollAnimation animation="slide-right" delay={300}>
-              <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-visible h-full flex flex-col touch-feedback mt-4">
+              <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-visible h-full flex flex-col touch-feedback mt-4 ring-2 ring-pink-300 ring-opacity-50 animate-pulse">
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                   <span className="bg-white text-pink-700 px-3 py-1 rounded-full text-xs font-semibold shadow-md">Best Value</span>
                 </div>
