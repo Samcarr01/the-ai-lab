@@ -358,15 +358,14 @@ export default function HomePage() {
 
       {/* Pricing Section */}
       <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900 relative overflow-hidden">
-        {/* Cool line patterns */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/40 to-transparent"></div>
-          <div className="absolute top-32 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/30 to-transparent"></div>
-          <div className="absolute top-64 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400/20 to-transparent"></div>
-          <div className="absolute bottom-64 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-400/25 to-transparent"></div>
-          <div className="absolute bottom-32 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/35 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500/30 to-transparent"></div>
-        </div>
+        {/* Purple/Pink corner glows */}
+        <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-to-br from-purple-500/30 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-pink-500/25 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-purple-400/20 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tl from-pink-400/30 to-transparent rounded-full blur-3xl"></div>
+        
+        {/* Subtle mesh pattern overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-pink-900/10"></div>
         
         {/* Subtle purple and pink floating orbs */}
         <div className="absolute top-16 left-16 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl animate-pulse opacity-60" style={{animationDuration: '4s'}}></div>
