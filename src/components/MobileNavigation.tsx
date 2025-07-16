@@ -73,22 +73,40 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
         </div>
       </button>
 
-      {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-0 bg-black z-40 md:hidden transition-all duration-300 ease-out ${
-        isOpen ? 'bg-opacity-50 backdrop-blur-sm' : 'bg-opacity-0 pointer-events-none'
-      }`} onClick={handleLinkClick} />
-
-      {/* Mobile Menu Panel - Solid Dark Background for Readability */}
+      {/* Mobile Menu Overlay - NO BLUR */}
       <div 
-        className={`mobile-nav-panel mobile-nav-solid fixed top-0 right-0 h-full w-72 sm:w-80 shadow-2xl transform transition-all duration-300 ease-out md:hidden ${
+        className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ease-out ${
+          isOpen ? '' : 'pointer-events-none'
+        }`} 
+        style={{
+          backgroundColor: isOpen ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
+          backdropFilter: 'none',
+          WebkitBackdropFilter: 'none'
+        }}
+        onClick={handleLinkClick} 
+      />
+
+      {/* Mobile Menu Panel - FORCE SOLID BACKGROUND */}
+      <div 
+        className={`fixed top-0 right-0 h-full w-72 sm:w-80 shadow-2xl transform transition-all duration-300 ease-out md:hidden ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`} 
         style={{ 
-          backgroundColor: '#0f172a',
-          zIndex: 9999
+          backgroundColor: '#1a1a2e',
+          background: '#1a1a2e',
+          zIndex: 9999,
+          backdropFilter: 'none',
+          WebkitBackdropFilter: 'none',
+          opacity: 1
         }}
       >
-        <div className="flex flex-col h-full bg-slate-900">
+        <div 
+          className="flex flex-col h-full" 
+          style={{ 
+            backgroundColor: '#1a1a2e',
+            background: '#1a1a2e' 
+          }}
+        >
           {/* Header */}
           <div className={`flex items-center justify-between p-6 border-b border-gray-700 transition-all duration-500 ${
             animateItems ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'

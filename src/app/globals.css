@@ -138,40 +138,55 @@
 }
 
 @layer utilities {
-  /* Mobile-only navigation solid background - ensures readability */
+  /* NUCLEAR MOBILE NAVIGATION FIX - FORCE SOLID BACKGROUND */
   @media (max-width: 768px) {
-    .mobile-nav-panel {
-      background-color: #0f172a !important;
+    /* Remove ALL transparency effects from mobile navigation */
+    .mobile-nav-panel,
+    .mobile-nav-solid,
+    [class*="mobile-nav"],
+    .fixed.top-0.right-0 {
+      background-color: #1a1a2e !important;
+      background: #1a1a2e !important;
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
       opacity: 1 !important;
-      background: #0f172a !important;
+      background-image: none !important;
+      background-attachment: scroll !important;
     }
     
-    /* Force solid background for mobile navigation */
-    .mobile-nav-solid {
-      background-color: #0f172a !important;
+    /* Force solid on any mobile navigation elements */
+    .md\\:hidden div[class*="flex"] {
+      background-color: #1a1a2e !important;
+      background: #1a1a2e !important;
+    }
+    
+    /* Remove blur from overlays */
+    .backdrop-blur-sm,
+    .backdrop-blur,
+    [class*="backdrop-blur"] {
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;
-      background-image: none !important;
-      background-attachment: fixed !important;
     }
     
-    /* High contrast text for mobile navigation */
-    .mobile-nav-panel .text-gray-200 {
-      color: #f1f5f9 !important;
+    /* Force opacity on all mobile nav elements */
+    .md\\:hidden * {
+      opacity: 1 !important;
     }
     
-    .mobile-nav-panel .text-gray-300 {
+    /* Enhanced text contrast for solid background */
+    .text-gray-200 {
+      color: #f8fafc !important;
+    }
+    
+    .text-gray-300 {
       color: #e2e8f0 !important;
     }
     
-    /* Enhanced purple accents for mobile */
-    .mobile-nav-panel .text-purple-400 {
+    .text-purple-400 {
       color: #c084fc !important;
     }
     
-    .mobile-nav-panel .text-purple-300 {
+    .text-purple-300 {
       color: #d8b4fe !important;
     }
   }
