@@ -432,14 +432,13 @@ export default function HomePage() {
             {/* Ultra Tier */}
             <ScrollAnimation animation="slide-right" delay={300}>
               <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-visible h-full flex flex-col touch-feedback mt-4">
-                {/* Beautiful static border */}
-                <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 opacity-50"></div>
-                {/* Traveling light on the border */}
-                <div className="absolute -inset-0.5 rounded-2xl" style={{
-                  background: `conic-gradient(from 0deg, transparent 0%, transparent 80%, #ffffff 85%, #ffd700 90%, #ffffff 95%, transparent 100%)`,
-                  animation: 'spin 4s linear infinite',
-                  filter: 'blur(2px)'
-                }}></div>
+                {/* Traveling light segment around border */}
+                <div className="absolute -inset-1 rounded-2xl overflow-hidden">
+                  <div className="absolute inset-0 rounded-2xl" style={{
+                    background: `conic-gradient(from 0deg, transparent 0%, transparent 85%, #ff69b4 90%, #8b5cf6 95%, transparent 100%)`,
+                    animation: 'spin 3s linear infinite'
+                  }}></div>
+                </div>
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-pink-500 to-purple-600 z-10"></div>
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                   <span className="bg-white text-pink-700 px-3 py-1 rounded-full text-xs font-semibold shadow-md">Best Value</span>
