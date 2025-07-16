@@ -357,25 +357,25 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={{
-        background: `radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.6) 0%, transparent 70%), 
-                    radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.5) 0%, transparent 70%),
-                    radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.3) 0%, transparent 50%),
-                    linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)`
-      }}>
-        {/* Enhanced purple mesh gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-purple-800/20 to-purple-900/30"></div>
+      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900 relative overflow-hidden">
+        {/* Cool line patterns */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+          <div className="absolute top-32 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-500 to-transparent"></div>
+          <div className="absolute bottom-32 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-pink-400 to-transparent"></div>
+        </div>
         
-        {/* More prominent floating purple orbs with subtle animation */}
-        <div className="absolute top-10 left-10 w-40 h-40 bg-purple-500/50 rounded-full blur-3xl animate-pulse opacity-80" style={{animationDuration: '4s'}}></div>
-        <div className="absolute top-20 right-20 w-48 h-48 bg-purple-400/40 rounded-full blur-3xl animate-pulse opacity-70" style={{animationDelay: '2s', animationDuration: '5s'}}></div>
-        <div className="absolute bottom-20 left-1/4 w-32 h-32 bg-purple-600/45 rounded-full blur-2xl animate-pulse opacity-75" style={{animationDelay: '3s', animationDuration: '6s'}}></div>
-        <div className="absolute bottom-10 right-1/3 w-44 h-44 bg-purple-500/35 rounded-full blur-3xl animate-pulse opacity-60" style={{animationDelay: '1s', animationDuration: '4.5s'}}></div>
+        {/* Subtle purple and pink floating orbs */}
+        <div className="absolute top-16 left-16 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl animate-pulse opacity-60" style={{animationDuration: '4s'}}></div>
+        <div className="absolute top-20 right-20 w-40 h-40 bg-pink-500/15 rounded-full blur-3xl animate-pulse opacity-50" style={{animationDelay: '2s', animationDuration: '5s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-28 h-28 bg-purple-400/20 rounded-full blur-2xl animate-pulse opacity-40" style={{animationDelay: '3s', animationDuration: '6s'}}></div>
+        <div className="absolute bottom-16 right-1/3 w-36 h-36 bg-pink-400/15 rounded-full blur-3xl animate-pulse opacity-45" style={{animationDelay: '1s', animationDuration: '4.5s'}}></div>
         
-        {/* Additional purple accent elements */}
-        <div className="absolute top-1/2 left-0 w-24 h-24 bg-purple-600/40 rounded-full blur-xl"></div>
-        <div className="absolute top-1/3 right-0 w-20 h-20 bg-pink-500/40 rounded-full blur-xl"></div>
-        <div className="absolute bottom-1/3 left-1/2 w-28 h-28 bg-purple-500/30 rounded-full blur-2xl"></div>
+        {/* Additional accent orbs */}
+        <div className="absolute top-1/2 left-8 w-20 h-20 bg-purple-600/15 rounded-full blur-xl opacity-30"></div>
+        <div className="absolute top-1/3 right-8 w-16 h-16 bg-pink-500/20 rounded-full blur-lg opacity-40"></div>
+        <div className="absolute bottom-1/3 left-1/2 w-24 h-24 bg-purple-500/12 rounded-full blur-xl opacity-35"></div>
         
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <ScrollAnimation animation="fade-up">
