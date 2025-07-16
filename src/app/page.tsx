@@ -357,17 +357,25 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900 relative overflow-hidden">
-        {/* Subtle background enhancements */}
-        <div className="absolute inset-0 opacity-20">
-          {/* Corner glows */}
-          <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
-        </div>
+      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={{
+        background: `radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.6) 0%, transparent 70%), 
+                    radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.5) 0%, transparent 70%),
+                    radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.3) 0%, transparent 50%),
+                    linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)`
+      }}>
+        {/* Enhanced purple mesh gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-purple-800/20 to-purple-900/30"></div>
         
-        {/* Subtle texture overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-purple-900/5 to-transparent"></div>
+        {/* More prominent floating purple orbs with subtle animation */}
+        <div className="absolute top-10 left-10 w-40 h-40 bg-purple-500/50 rounded-full blur-3xl animate-pulse opacity-80" style={{animationDuration: '4s'}}></div>
+        <div className="absolute top-20 right-20 w-48 h-48 bg-purple-400/40 rounded-full blur-3xl animate-pulse opacity-70" style={{animationDelay: '2s', animationDuration: '5s'}}></div>
+        <div className="absolute bottom-20 left-1/4 w-32 h-32 bg-purple-600/45 rounded-full blur-2xl animate-pulse opacity-75" style={{animationDelay: '3s', animationDuration: '6s'}}></div>
+        <div className="absolute bottom-10 right-1/3 w-44 h-44 bg-purple-500/35 rounded-full blur-3xl animate-pulse opacity-60" style={{animationDelay: '1s', animationDuration: '4.5s'}}></div>
+        
+        {/* Additional purple accent elements */}
+        <div className="absolute top-1/2 left-0 w-24 h-24 bg-purple-600/40 rounded-full blur-xl"></div>
+        <div className="absolute top-1/3 right-0 w-20 h-20 bg-pink-500/40 rounded-full blur-xl"></div>
+        <div className="absolute bottom-1/3 left-1/2 w-28 h-28 bg-purple-500/30 rounded-full blur-2xl"></div>
         
         <div className="max-w-6xl mx-auto text-center relative z-10">
           <ScrollAnimation animation="fade-up">
