@@ -176,8 +176,16 @@ export const userService = {
 
   // Check if user has access to specific tier content
   hasAccessToTier(userTier: UserTier, requiredTier: UserTier): boolean {
-    const tierLevels = { free: 0, pro: 1, ultra: 2 }
-    return tierLevels[userTier] >= tierLevels[requiredTier]
+    // Free content: everyone can access
+    if (requiredTier === 'free') return true
+    
+    // Pro content: Pro and Ultra users can access
+    if (requiredTier === 'pro') return userTier === 'pro' || userTier === 'ultra'
+    
+    // Ultra content: Only Ultra users can access
+    if (requiredTier === 'ultra') return userTier === 'ultra'
+    
+    return false
   },
 
   // Get available content for user tier
