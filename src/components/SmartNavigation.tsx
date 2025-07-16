@@ -129,20 +129,6 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                     )}
                   </div>
                   
-                  {/* Admin Toggle Button (only for admin) */}
-                  {user && user.email === 'samcarr1232@gmail.com' && (
-                    <button
-                      onClick={toggleAdminView}
-                      className={`text-xs px-3 py-1.5 rounded-full font-medium transition-all ${
-                        adminViewMode === 'admin' 
-                          ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
-                          : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                      }`}
-                      title={`Currently viewing as: ${adminViewMode === 'admin' ? 'Admin' : 'Free User'}`}
-                    >
-                      {adminViewMode === 'admin' ? '👤 View as Free' : '🔧 View as Admin'}
-                    </button>
-                  )}
                   
                   {effectiveUser && effectiveUser.user_tier !== 'ultra' && effectiveUser.email !== 'samcarr1232@gmail.com' && (
                     <Link
