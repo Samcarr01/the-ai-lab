@@ -62,12 +62,12 @@ export default function HomePage() {
     <DarkThemeBackground>
       {/* Animated Background */}
       <GradientBackground />
-      {/* Navigation Header with Glassmorphism */}
-      <header className="fixed top-0 w-full z-50 glass">
+      {/* Navigation Header with Dark Glassmorphism */}
+      <header className="fixed top-0 w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-700/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">
-              <div className="w-12 sm:w-14 h-12 sm:h-14 bg-white rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 p-1 border border-purple-200">
+              <div className="w-12 sm:w-14 h-12 sm:h-14 bg-slate-800 rounded-xl flex items-center justify-center shadow-lg animate-pulse-purple group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 p-1 border border-purple-500/30">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
@@ -119,7 +119,7 @@ export default function HomePage() {
               ) : user ? (
                 <Link 
                   href="/dashboard" 
-                  className="gradient-purple text-white px-6 py-2.5 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1 relative overflow-hidden group"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2.5 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1 relative overflow-hidden group"
                 >
                   <span className="relative z-10 flex items-center space-x-2">
                     <span>Dashboard</span>
@@ -131,14 +131,14 @@ export default function HomePage() {
                 <>
                   <Link 
                     href="/login" 
-                    className="relative text-purple-600 font-medium hover:text-purple-700 transition-all duration-300 px-4 py-2 rounded-lg hover:bg-purple-50 group"
+                    className="relative text-gray-300 font-medium hover:text-purple-400 transition-all duration-300 px-4 py-2 rounded-lg hover:bg-purple-500/10 group"
                   >
                     Sign In
-                    <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-100 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
+                    <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500/10 to-purple-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></span>
                   </Link>
                   <Link 
                     href="/signup" 
-                    className="gradient-purple text-white px-6 py-2.5 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1 relative overflow-hidden group"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2.5 rounded-full font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:rotate-1 relative overflow-hidden group"
                   >
                     <span className="relative z-10 flex items-center space-x-2">
                       <span>Get Started</span>
@@ -172,7 +172,7 @@ export default function HomePage() {
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto text-center">
           <ScrollAnimation animation="fade-up">
-          <div className="inline-flex items-center justify-center px-4 py-2 mb-8 rounded-full bg-purple-100/50 border border-purple-200/50">
+          <div className="inline-flex items-center justify-center px-4 py-2 mb-8 rounded-full bg-purple-500/20 border border-purple-500/30">
             <div className="w-6 h-6 mr-2 flex items-center justify-center">
               <Image
                 src="/logo.png"
@@ -205,7 +205,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link 
               href="/signup" 
-              className="gradient-purple text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold button-hover shadow-xl flex items-center justify-center space-x-2 w-full sm:w-auto mobile-touch-target touch-feedback"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold button-hover shadow-xl flex items-center justify-center space-x-2 w-full sm:w-auto mobile-touch-target touch-feedback"
             >
               <span>Create Free Account</span>
               <span className="text-xl">🚀</span>
@@ -261,7 +261,7 @@ export default function HomePage() {
               <div className="group bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-500/30 hover:border-purple-400/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-              <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-14 sm:w-16 h-14 sm:h-16 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl animate-pulse transition-all duration-300">🤖</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 sm:mb-3">
@@ -283,7 +283,7 @@ export default function HomePage() {
               <div className="group bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-500/30 hover:border-purple-400/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-              <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-14 sm:w-16 h-14 sm:h-16 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl animate-pulse transition-all duration-300">📚</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 sm:mb-3">
@@ -305,7 +305,7 @@ export default function HomePage() {
               <div className="group bg-slate-800/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-500/30 hover:border-purple-400/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-              <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-14 sm:w-16 h-14 sm:h-16 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
                 <span className="text-3xl animate-pulse transition-all duration-300">🎯</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-semibold text-white mb-2 sm:mb-3">
