@@ -208,8 +208,8 @@ export default function DashboardPage() {
                         : user.user_tier === 'ultra' 
                           ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' 
                           : user.user_tier === 'pro'
-                            ? 'bg-purple-100 text-purple-700'
-                            : 'bg-gray-100 text-gray-700'
+                            ? 'bg-purple-900/30 text-purple-200'
+                            : 'bg-gray-700 text-gray-100'
                     }`}>
                       {user.email === 'samcarr1232@gmail.com' ? '🔧 Admin' : 
                        user.user_tier === 'ultra' ? '🚀 Ultra Member' :
@@ -471,7 +471,7 @@ export default function DashboardPage() {
         <div className="mt-8 bg-slate-800/60 rounded-2xl p-8 shadow-lg border border-green-500/30">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+              <div className="w-12 h-12 bg-green-900/30 rounded-xl flex items-center justify-center">
                 <span className="text-2xl">💡</span>
               </div>
               <div>

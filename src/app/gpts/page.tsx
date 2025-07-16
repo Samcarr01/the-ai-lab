@@ -152,7 +152,7 @@ export default function GPTsPage() {
     } else {
       return (
         <div className="w-full text-center">
-          <div className="w-full text-center bg-gray-100 text-gray-100 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-100 mb-3">
+          <div className="w-full text-center bg-gray-700 text-gray-100 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-500 mb-3">
             🔒 Upgrade to Access
           </div>
           {gpt.upgradeMessage && (
@@ -283,7 +283,7 @@ export default function GPTsPage() {
                         <h3 className="text-lg font-semibold text-white mb-1">
                           {gpt.title}
                         </h3>
-                        <span className="text-xs font-medium text-purple-600 bg-purple-100 px-2 py-1 rounded-full">
+                        <span className="text-xs font-medium text-purple-200 bg-purple-900/30 px-2 py-1 rounded-full">
                           {gpt.category}
                         </span>
                       </div>
@@ -328,7 +328,7 @@ export default function GPTsPage() {
                       <div className={`w-12 h-12 ${
                         gpt.is_featured && selectedCategory !== 'All'
                           ? 'gradient-purple-subtle'
-                          : 'bg-gray-100'
+                          : 'bg-gray-700'
                       } rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                         <span className="text-2xl">{getCategoryIcon(gpt.category)}</span>
                       </div>
@@ -338,8 +338,8 @@ export default function GPTsPage() {
                         </h3>
                         <span className={`text-xs font-medium px-2 py-1 rounded-full ${
                           gpt.is_featured && selectedCategory !== 'All'
-                            ? 'text-purple-600 bg-purple-100'
-                            : 'text-gray-100 bg-gray-100'
+                            ? 'text-purple-200 bg-purple-900/30'
+                            : 'text-gray-100 bg-gray-700'
                         }`}>
                           {gpt.category}
                         </span>
@@ -368,7 +368,7 @@ export default function GPTsPage() {
         {/* Empty State */}
         {filteredGpts.length === 0 && (
           <div className="text-center py-12">
-            <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-24 h-24 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-4xl">🤖</span>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">

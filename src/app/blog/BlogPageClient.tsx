@@ -140,7 +140,7 @@ export default function BlogPageClient() {
                     className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                       category === selectedCategory
                         ? 'gradient-purple text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-100 hover:bg-gray-200'
+                        : 'bg-gray-700 text-gray-100 hover:bg-gray-600'
                     }`}
                   >
                     {category}

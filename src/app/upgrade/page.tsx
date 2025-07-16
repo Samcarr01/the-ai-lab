@@ -123,8 +123,8 @@ export default function UpgradePage() {
 
         {/* Cancelled Message */}
         {cancelled && (
-          <div className="mb-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg max-w-2xl mx-auto">
-            <p className="text-sm text-yellow-800 text-center">
+          <div className="mb-8 p-4 bg-yellow-900/20 border border-yellow-500/30 rounded-lg max-w-2xl mx-auto">
+            <p className="text-sm text-yellow-100 text-center">
               Payment was cancelled. You can try again anytime! 😊
             </p>
           </div>
@@ -242,8 +242,8 @@ export default function UpgradePage() {
 
         {/* Error Message */}
         {error && (
-          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600 text-center">{error}</p>
+          <div className="max-w-2xl mx-auto mb-8 p-4 bg-red-900/20 border border-red-500/30 rounded-lg">
+            <p className="text-sm text-red-200 text-center">{error}</p>
           </div>
         )}
 
@@ -306,7 +306,7 @@ export default function UpgradePage() {
             </div>
 
             {/* Ultra Content */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg relative mt-4">
+            <div className="bg-slate-800/80 rounded-2xl p-6 shadow-lg relative mt-4">
               {/* Traveling light segment around border */}
               <div className="absolute -inset-1 rounded-2xl overflow-hidden">
                 <div className="absolute inset-0 rounded-2xl" style={{
@@ -318,10 +318,10 @@ export default function UpgradePage() {
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                 <span className="bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">Best Value</span>
               </div>
-              <h3 className="text-xl font-semibold text-pink-300 mb-4">
+              <h3 className="text-xl font-semibold text-pink-300 mb-4 relative z-20">
                 ⚡ Ultra - Upscale Your AI Game
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-3 relative z-20">
                 <div>
                   <h4 className="font-medium text-white mb-2">All 7 GPTs:</h4>
                   <ul className="text-sm text-gray-100 space-y-1">
@@ -341,7 +341,7 @@ export default function UpgradePage() {
                   </ul>
                 </div>
                 <div className="pt-2">
-                  <span className="text-xs text-pink-600 italic">For serious AI power users</span>
+                  <span className="text-xs text-pink-300 italic">For serious AI power users</span>
                 </div>
               </div>
             </div>

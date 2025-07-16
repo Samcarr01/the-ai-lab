@@ -529,7 +529,7 @@ export default function AdminPage() {
 
             {/* Upload Type Toggle */}
             <div className="mb-6">
-              <div className="flex flex-col sm:flex-row bg-gray-100 rounded-xl p-1 gap-1 sm:gap-0">
+              <div className="flex flex-col sm:flex-row bg-gray-800 rounded-xl p-1 gap-1 sm:gap-0">
                 <button
                   onClick={() => setUploadType('gpt')}
                   className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
@@ -556,7 +556,7 @@ export default function AdminPage() {
             {/* Input Section */}
             {uploadType === 'gpt' ? (
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
                   ChatGPT URL
                 </label>
                 <input
@@ -569,7 +569,7 @@ export default function AdminPage() {
               </div>
             ) : (
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-100 mb-2">
                   PDF Document
                 </label>
                 <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-purple-400 transition-colors">
@@ -608,12 +608,12 @@ export default function AdminPage() {
 
             {/* Analysis Results */}
             {analyzedContent && (
-              <div className="mt-6 p-6 bg-purple-50 rounded-xl border border-purple-200">
+              <div className="mt-6 p-6 bg-purple-900/20 rounded-xl border border-purple-500/30">
                 <h3 className="text-lg font-semibold text-white mb-4">AI Analysis Results</h3>
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                    <label className="block text-sm font-medium text-gray-100 mb-1">Title</label>
                     <input
                       type="text"
                       value={analyzedContent.title}
@@ -623,7 +623,7 @@ export default function AdminPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <label className="block text-sm font-medium text-gray-100 mb-1">Description</label>
                     <textarea
                       value={analyzedContent.description}
                       onChange={(e) => setAnalyzedContent({ ...analyzedContent, description: e.target.value })}
@@ -633,7 +633,7 @@ export default function AdminPage() {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                    <label className="block text-sm font-medium text-gray-100 mb-1">Category</label>
                     <select
                       value={analyzedContent.category}
                       onChange={(e) => setAnalyzedContent({ ...analyzedContent, category: e.target.value })}
@@ -833,7 +833,7 @@ export default function AdminPage() {
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
                               {post.category}
                             </span>
-                            <span className="text-xs bg-gray-100 text-gray-100 px-2 py-1 rounded-full">
+                            <span className="text-xs bg-gray-700 text-gray-100 px-2 py-1 rounded-full">
                               {post.read_time} min read
                             </span>
                           </div>
@@ -916,7 +916,7 @@ export default function AdminPage() {
             </h2>
             
             {/* Current Status */}
-            <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl border border-purple-200">
+            <div className="mb-6 p-4 bg-gradient-to-r from-purple-900/20 to-blue-900/20 rounded-xl border border-purple-500/30">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-white">Current Admin Tier</h3>
@@ -926,8 +926,8 @@ export default function AdminPage() {
                   user?.user_tier === 'ultra' 
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' 
                     : user?.user_tier === 'pro'
-                      ? 'bg-purple-100 text-purple-700'
-                      : 'bg-gray-100 text-gray-700'
+                      ? 'bg-purple-900/30 text-purple-200'
+                      : 'bg-gray-800 text-gray-100'
                 }`}>
                   {user?.user_tier?.toUpperCase() || 'FREE'} TIER
                 </div>
@@ -950,7 +950,7 @@ export default function AdminPage() {
                       disabled={isCurrentTier || switchingTier}
                       className={`p-4 rounded-xl border-2 transition-all duration-200 ${
                         isCurrentTier
-                          ? 'bg-green-50 border-green-200 text-green-800 cursor-not-allowed'
+                          ? 'bg-green-900/20 border-green-500/30 text-green-300 cursor-not-allowed'
                           : 'bg-slate-800/80 border-gray-200 hover:border-purple-300 hover:shadow-md'
                       }`}
                     >
@@ -977,9 +977,9 @@ export default function AdminPage() {
             </div>
 
             {/* Testing Information */}
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-              <h4 className="font-semibold text-yellow-800 mb-2">⚠️ Admin Testing Mode</h4>
-              <ul className="text-sm text-yellow-700 space-y-1">
+            <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-4">
+              <h4 className="font-semibold text-yellow-200 mb-2">⚠️ Admin Testing Mode</h4>
+              <ul className="text-sm text-yellow-100 space-y-1">
                 <li>• This bypasses Stripe and changes your tier instantly</li>
                 <li>• Only works for admin email: samcarr1232@gmail.com</li>
                 <li>• Use this to test content access and upgrade flows</li>
@@ -1003,13 +1003,13 @@ export default function AdminPage() {
                 return (
                   <div key={tier} className={`p-6 rounded-xl border-2 ${
                     isCurrentTier 
-                      ? 'bg-purple-50 border-purple-200' 
-                      : 'bg-gray-50 border-gray-200'
+                      ? 'bg-purple-900/20 border-purple-500/30' 
+                      : 'bg-gray-800 border-gray-700'
                   }`}>
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-white">{accessSummary.name}</h3>
                       {isCurrentTier && (
-                        <span className="text-sm bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
+                        <span className="text-sm bg-purple-900/30 text-purple-200 px-2 py-1 rounded-full">
                           Current
                         </span>
                       )}
@@ -1028,7 +1028,7 @@ export default function AdminPage() {
                           {accessSummary.accessibleDocs}/{accessSummary.totalDocs}
                         </span>
                       </div>
-                      <div className="pt-2 border-t border-gray-200">
+                      <div className="pt-2 border-t border-gray-700">
                         <p className="text-xs text-gray-100">{accessSummary.description}</p>
                       </div>
                     </div>
@@ -1050,40 +1050,40 @@ export default function AdminPage() {
                 href="/gpts"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 bg-purple-50 border border-purple-200 rounded-xl hover:bg-purple-100 transition-colors"
+                className="p-4 bg-purple-900/20 border border-purple-500/30 rounded-xl hover:bg-purple-900/30 transition-colors"
               >
-                <h3 className="font-semibold text-purple-900">🤖 Test GPTs Page</h3>
-                <p className="text-sm text-purple-700">Test tier-based GPT access and upgrade prompts</p>
+                <h3 className="font-semibold text-purple-200">🤖 Test GPTs Page</h3>
+                <p className="text-sm text-purple-100">Test tier-based GPT access and upgrade prompts</p>
               </a>
               
               <a
                 href="/documents"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 bg-blue-50 border border-blue-200 rounded-xl hover:bg-blue-100 transition-colors"
+                className="p-4 bg-blue-900/20 border border-blue-500/30 rounded-xl hover:bg-blue-900/30 transition-colors"
               >
-                <h3 className="font-semibold text-blue-900">📚 Test Playbooks Page</h3>
-                <p className="text-sm text-blue-700">Test tier-based document access and downloads</p>
+                <h3 className="font-semibold text-blue-200">📚 Test Playbooks Page</h3>
+                <p className="text-sm text-blue-100">Test tier-based document access and downloads</p>
               </a>
               
               <a
                 href="/dashboard"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition-colors"
+                className="p-4 bg-green-900/20 border border-green-500/30 rounded-xl hover:bg-green-900/30 transition-colors"
               >
-                <h3 className="font-semibold text-green-900">📊 Test Dashboard</h3>
-                <p className="text-sm text-green-700">Test tier-specific dashboard content</p>
+                <h3 className="font-semibold text-green-200">📊 Test Dashboard</h3>
+                <p className="text-sm text-green-100">Test tier-specific dashboard content</p>
               </a>
               
               <a
                 href="/upgrade"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 bg-orange-50 border border-orange-200 rounded-xl hover:bg-orange-100 transition-colors"
+                className="p-4 bg-orange-900/20 border border-orange-500/30 rounded-xl hover:bg-orange-900/30 transition-colors"
               >
-                <h3 className="font-semibold text-orange-900">💳 Test Upgrade Page</h3>
-                <p className="text-sm text-orange-700">Test tier-based upgrade flows and pricing</p>
+                <h3 className="font-semibold text-orange-200">💳 Test Upgrade Page</h3>
+                <p className="text-sm text-orange-100">Test tier-based upgrade flows and pricing</p>
               </a>
             </div>
           </div>
