@@ -197,7 +197,7 @@ export default function HomePage() {
           
           <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
             Skip months of trial and error. Access my personal collection 
-            of proven GPTs and PDF playbooks you can upload directly to any LLM as knowledge. Choose from 
+            of proven GPTs and PDF playbooks you can upload directly to any LLM as knowledge. Choose from  
             <span className="text-purple-600 font-medium">Pro (£7/month)</span> or <span className="text-pink-600 font-medium">Ultra (£19/month)</span> — with free preview access.
           </p>
           
@@ -260,8 +260,8 @@ export default function HomePage() {
               <div className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-purple-100/50 hover:border-purple-300/50 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-              <div className="w-20 sm:w-24 h-20 sm:h-24 bg-white rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300 p-2 border border-purple-200 shadow-lg">
-                <span className="text-4xl sm:text-5xl">🤖</span>
+              <div className="w-14 sm:w-16 h-14 sm:h-16 gradient-purple-subtle rounded-2xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-3xl animate-pulse transition-all duration-300">🤖</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 sm:mb-3">
                 Proven GPTs
@@ -367,7 +367,7 @@ export default function HomePage() {
               Battle-tested AI playbooks and GPTs that actually work. Make any AI smarter at what you need.
             </p>
           </ScrollAnimation>
-          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
+          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto pt-4">
             {/* Free Preview */}
             <ScrollAnimation animation="slide-left" delay={100}>
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200/50 hover:border-gray-300/50 transform hover:scale-105 hover:-translate-y-2 hover:-rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
@@ -399,9 +399,9 @@ export default function HomePage() {
             
             {/* Pro Tier */}
             <ScrollAnimation animation="fade-up" delay={200}>
-              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 relative overflow-hidden h-full flex flex-col touch-feedback border-2 border-purple-300">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-white text-purple-700 px-3 py-1 rounded-full text-xs font-semibold">Most Popular</span>
+              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 relative overflow-visible h-full flex flex-col touch-feedback border-2 border-purple-300 mt-4">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                  <span className="bg-white text-purple-700 px-3 py-1 rounded-full text-xs font-semibold shadow-md">Most Popular</span>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
@@ -431,9 +431,9 @@ export default function HomePage() {
             
             {/* Ultra Tier */}
             <ScrollAnimation animation="slide-right" delay={300}>
-              <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-white text-pink-700 px-3 py-1 rounded-full text-xs font-semibold">Best Value</span>
+              <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-visible h-full flex flex-col touch-feedback mt-4">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                  <span className="bg-white text-pink-700 px-3 py-1 rounded-full text-xs font-semibold shadow-md">Best Value</span>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">

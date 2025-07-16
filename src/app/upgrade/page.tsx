@@ -252,7 +252,7 @@ export default function UpgradePage() {
             Make Any AI Smarter at What You Need 🧠
           </h2>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6 pt-4">
             {/* Free Preview */}
             <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">
@@ -275,9 +275,9 @@ export default function UpgradePage() {
             </div>
 
             {/* Pro Content */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-300 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Most Popular</span>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-300 relative mt-4">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                <span className="bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">Most Popular</span>
               </div>
               <h3 className="text-xl font-semibold text-purple-900 mb-4">
                 🚀 Pro - Daily AI Use
@@ -305,9 +305,9 @@ export default function UpgradePage() {
             </div>
 
             {/* Ultra Content */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-pink-400 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold">Best Value</span>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-pink-400 relative mt-4">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                <span className="bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">Best Value</span>
               </div>
               <h3 className="text-xl font-semibold text-pink-900 mb-4">
                 ⚡ Ultra - Upscale Your AI Game
