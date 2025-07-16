@@ -357,8 +357,19 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900">
-        <div className="max-w-6xl mx-auto text-center">
+      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900 relative overflow-hidden">
+        {/* Subtle background enhancements */}
+        <div className="absolute inset-0 opacity-20">
+          {/* Corner glows */}
+          <div className="absolute top-0 left-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl"></div>
+        </div>
+        
+        {/* Subtle texture overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-purple-900/5 to-transparent"></div>
+        
+        <div className="max-w-6xl mx-auto text-center relative z-10">
           <ScrollAnimation animation="fade-up">
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
               Choose Your AI Mastery Level 🚀
