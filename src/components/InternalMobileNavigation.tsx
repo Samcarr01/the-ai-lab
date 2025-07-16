@@ -75,21 +75,31 @@ export default function InternalMobileNavigation({
         isOpen ? 'bg-opacity-50 backdrop-blur-sm' : 'bg-opacity-0 pointer-events-none'
       }`} onClick={handleLinkClick} />
 
-      {/* Mobile Menu Panel */}
+      {/* Mobile Menu Panel - Force Solid Background */}
       <div 
-        className={`mobile-nav-panel fixed top-0 right-0 h-full w-72 sm:w-80 shadow-2xl transform transition-all duration-300 ease-out md:hidden ${
+        className={`fixed top-0 right-0 h-full w-72 sm:w-80 shadow-2xl transform transition-all duration-300 ease-out md:hidden ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`} 
         style={{ 
-          backgroundColor: '#0f172a !important', 
-          zIndex: 9999,
-          backdropFilter: 'none !important',
-          WebkitBackdropFilter: 'none !important',
-          opacity: '1 !important',
-          background: '#0f172a !important'
+          zIndex: 9999
         }}
       >
-        <div className="flex flex-col h-full" style={{ backgroundColor: 'rgb(15, 23, 42)' }}>
+        {/* Solid Background Layer */}
+        <div 
+          className="absolute inset-0 w-full h-full"
+          style={{ 
+            backgroundColor: '#0f172a',
+            zIndex: 1
+          }}
+        />
+        {/* Content Layer */}
+        <div 
+          className="relative flex flex-col h-full w-full" 
+          style={{ 
+            backgroundColor: '#0f172a',
+            zIndex: 2
+          }}
+        >
           {/* Header */}
           <div className={`flex items-center justify-between p-6 border-b border-gray-700 transition-all duration-500 ${
             animateItems ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
