@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { documentsService, type Document, type DocumentWithAccess } from '@/lib/documents'
+import { contentStatsService, type ContentStats } from '@/lib/content-stats'
 import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
 import GradientBackground from '@/components/NetworkBackground'
@@ -20,6 +21,7 @@ export default function DocumentsPage() {
   const [loading, setLoading] = useState(true)
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null)
   const [downloadingIds, setDownloadingIds] = useState<Set<string>>(new Set())
+  const [contentStats, setContentStats] = useState<ContentStats | null>(null)
   const { getEffectiveUser } = useAdmin()
   const router = useRouter()
   
@@ -51,17 +53,19 @@ export default function DocumentsPage() {
         return
       }
 
-      // Load documents and categories with access control
+      // Load documents, categories, and content stats with access control
       console.log('🔄 Fetching fresh documents data...')
       const effectiveUserTier = getEffectiveUser(userProfile)?.user_tier || 'free'
-      const [allDocuments, allCategories] = await Promise.all([
+      const [allDocuments, allCategories, stats] = await Promise.all([
         documentsService.getAllDocumentsWithAccess(effectiveUserTier),
-        documentsService.getCategories()
+        documentsService.getCategories(),
+        contentStatsService.getContentStats(effectiveUserTier)
       ])
       console.log('📊 Loaded documents:', allDocuments.length)
       
       setDocuments(allDocuments)
       setCategories(['All', ...allCategories])
+      setContentStats(stats)
     } catch (err) {
       console.error('Error loading data:', err)
       router.push('/login')
@@ -261,19 +265,39 @@ export default function DocumentsPage() {
 
         {/* Upgrade Banner for Free Users */}
         {effectiveUser && effectiveUser.user_tier === 'free' && (
-          <div className="mb-8 gradient-purple rounded-2xl p-6 text-white">
-            <div className="flex items-center justify-between">
+          <div className="mb-6 sm:mb-8 gradient-purple rounded-2xl p-4 sm:p-6 text-white">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-xl font-semibold mb-2">Unlock All Playbooks! 📚</h3>
-                <p className="text-purple-100">
-                  Currently viewing previews only. Upgrade to Pro (£7/month) or Ultra (£19/month) to download playbooks.
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">Unlock Playbooks! 📚</h3>
+                <p className="text-sm sm:text-base text-purple-100">
+                  Pro (£7/month): 2 core playbooks | Ultra (£19/month): All {contentStats?.totalPlaybooks || 10} playbooks
                 </p>
               </div>
               <Link
                 href="/upgrade"
-                className="bg-white text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap"
+                className="bg-white text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
               >
-                Upgrade Now 🚀
+                View Pricing 🚀
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Upgrade Banner for Pro Users */}
+        {effectiveUser && effectiveUser.user_tier === 'pro' && (
+          <div className="mb-6 sm:mb-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-4 sm:p-6 text-white">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">Upgrade to Ultra! 🚀</h3>
+                <p className="text-sm sm:text-base text-purple-100">
+                  Get access to all {contentStats?.totalPlaybooks || 10} playbooks for the complete toolkit.
+                </p>
+              </div>
+              <Link
+                href="/upgrade"
+                className="bg-white text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
+              >
+                Upgrade to Ultra ✨
               </Link>
             </div>
           </div>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { gptsService, type GPT, type GPTWithAccess } from '@/lib/gpts'
+import { contentStatsService, type ContentStats } from '@/lib/content-stats'
 import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
 import GradientBackground from '@/components/NetworkBackground'
@@ -19,6 +20,7 @@ export default function GPTsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [loading, setLoading] = useState(true)
   const [selectedGpt, setSelectedGpt] = useState<GPT | null>(null)
+  const [contentStats, setContentStats] = useState<ContentStats | null>(null)
   const { getEffectiveUser } = useAdmin()
   const router = useRouter()
   
@@ -50,15 +52,17 @@ export default function GPTsPage() {
         return
       }
 
-      // Load GPTs and categories with access control
+      // Load GPTs, categories, and content stats with access control
       const effectiveUserTier = getEffectiveUser(userProfile)?.user_tier || 'free'
-      const [allGpts, allCategories] = await Promise.all([
+      const [allGpts, allCategories, stats] = await Promise.all([
         gptsService.getAllGPTsWithAccess(effectiveUserTier),
-        gptsService.getCategories()
+        gptsService.getCategories(),
+        contentStatsService.getContentStats(effectiveUserTier)
       ])
       
       setGpts(allGpts)
       setCategories(['All', ...allCategories])
+      setContentStats(stats)
     } catch (err) {
       console.error('Error loading data:', err)
       router.push('/login')
@@ -205,7 +209,7 @@ export default function GPTsPage() {
               <div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">Unlock GPTs! ⚡</h3>
                 <p className="text-sm sm:text-base text-purple-100">
-                  Pro (£7/month): 3 essential GPTs | Ultra (£19/month): All 7 GPTs
+                  Pro (£7/month): 3 essential GPTs | Ultra (£19/month): All {contentStats?.totalGPTs || 7} GPTs
                 </p>
               </div>
               <Link
@@ -225,7 +229,7 @@ export default function GPTsPage() {
               <div>
                 <h3 className="text-lg sm:text-xl font-semibold mb-2">Upgrade to Ultra! 🚀</h3>
                 <p className="text-sm sm:text-base text-purple-100">
-                  Get access to all 7 GPTs for the complete AI toolkit.
+                  Get access to all {contentStats?.totalGPTs || 7} GPTs for the complete AI toolkit.
                 </p>
               </div>
               <Link
