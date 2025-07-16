@@ -191,7 +191,7 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
             <Link
               href="/signup"
               onClick={handleLinkClick}
-              className="group flex items-center justify-center w-full gradient-purple text-white py-4 px-6 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
+              className="group flex items-center justify-center w-full gradient-purple text-white py-4 px-6 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 min-h-[56px]"
             >
               <span className="mr-3 text-xl transition-transform duration-200 group-hover:scale-110">🚀</span>
               Get Started

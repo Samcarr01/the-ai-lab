@@ -205,8 +205,8 @@ export default function InternalMobileNavigation({
             </div>
           </nav>
 
-          {/* Authentication-based CTA Button */}
-          <div className={`px-6 transition-all duration-500 delay-600 ${
+          {/* Authentication-based CTA Button - Consistent Spacing */}
+          <div className={`p-6 border-t border-gray-700 bg-gray-700/50 transition-all duration-500 delay-600 ${
             animateItems ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`}>
             {/* Show Sign Out button for authenticated users */}
@@ -225,7 +225,7 @@ export default function InternalMobileNavigation({
                   window.location.href = '/'
                 }
               }}
-              className="group flex items-center justify-center w-full gradient-purple text-white py-4 px-6 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
+              className="group flex items-center justify-center w-full gradient-purple text-white py-4 px-6 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95 min-h-[56px]"
             >
               <span className="mr-3 text-xl transition-transform duration-200 group-hover:scale-110">👋</span>
               Sign Out
