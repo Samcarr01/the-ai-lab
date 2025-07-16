@@ -1,4 +1,5 @@
 import { createClient } from './supabase/client'
+import { userService, type UserTier } from './user'
 
 export interface Document {
   id: string
@@ -7,6 +8,7 @@ export interface Document {
   pdf_url: string
   category: string
   is_featured: boolean
+  required_tier: UserTier
   added_date: string
   created_at: string
   updated_at: string
@@ -18,6 +20,13 @@ export interface CreateDocumentData {
   file: File
   category: string
   is_featured?: boolean
+  required_tier?: UserTier
+}
+
+export interface DocumentWithAccess extends Document {
+  hasAccess: boolean
+  canUpgrade: boolean
+  upgradeMessage?: string
 }
 
 export const documentsService = {
@@ -33,6 +42,83 @@ export const documentsService = {
     
     if (error) {
       console.error('Error fetching documents:', error)
+      return []
+    }
+    
+    return data || []
+  },
+
+  async getAllDocumentsWithAccess(userTier: UserTier): Promise<DocumentWithAccess[]> {
+    const documents = await this.getAllDocuments()
+    
+    return documents.map(doc => ({
+      ...doc,
+      hasAccess: userService.hasAccessToTier(userTier, doc.required_tier || 'free'),
+      canUpgrade: userTier === 'free' && (doc.required_tier === 'pro' || doc.required_tier === 'ultra'),
+      upgradeMessage: this.getUpgradeMessage(userTier, doc.required_tier || 'free')
+    }))
+  },
+
+  getUpgradeMessage(userTier: UserTier, requiredTier: UserTier): string | undefined {
+    if (userService.hasAccessToTier(userTier, requiredTier)) {
+      return undefined
+    }
+    
+    if (userTier === 'free' && requiredTier === 'pro') {
+      return 'Upgrade to Pro (£7/month) to download this playbook'
+    }
+    if (userTier === 'free' && requiredTier === 'ultra') {
+      return 'Upgrade to Ultra (£19/month) to download this playbook'
+    }
+    if (userTier === 'pro' && requiredTier === 'ultra') {
+      return 'Upgrade to Ultra (£19/month) to download this playbook'
+    }
+    
+    return 'Upgrade required to download this playbook'
+  },
+
+  async getFeaturedDocumentsWithAccess(userTier: UserTier): Promise<DocumentWithAccess[]> {
+    const documents = await this.getFeaturedDocuments()
+    
+    return documents.map(doc => ({
+      ...doc,
+      hasAccess: userService.hasAccessToTier(userTier, doc.required_tier || 'free'),
+      canUpgrade: userTier === 'free' && (doc.required_tier === 'pro' || doc.required_tier === 'ultra'),
+      upgradeMessage: this.getUpgradeMessage(userTier, doc.required_tier || 'free')
+    }))
+  },
+
+  async getDocumentsByCategoryWithAccess(category: string, userTier: UserTier): Promise<DocumentWithAccess[]> {
+    const documents = await this.getDocumentsByCategory(category)
+    
+    return documents.map(doc => ({
+      ...doc,
+      hasAccess: userService.hasAccessToTier(userTier, doc.required_tier || 'free'),
+      canUpgrade: userTier === 'free' && (doc.required_tier === 'pro' || doc.required_tier === 'ultra'),
+      upgradeMessage: this.getUpgradeMessage(userTier, doc.required_tier || 'free')
+    }))
+  },
+
+  async getAccessibleDocuments(userTier: UserTier): Promise<Document[]> {
+    const documents = await this.getAllDocuments()
+    
+    return documents.filter(doc => 
+      userService.hasAccessToTier(userTier, doc.required_tier || 'free')
+    )
+  },
+
+  async getDocumentsByTier(tier: UserTier): Promise<Document[]> {
+    const supabase = createClient()
+    
+    const { data, error } = await supabase
+      .from('documents')
+      .select('*')
+      .eq('required_tier', tier)
+      .order('is_featured', { ascending: false })
+      .order('added_date', { ascending: false })
+    
+    if (error) {
+      console.error('Error fetching documents by tier:', error)
       return []
     }
     
@@ -93,19 +179,25 @@ export const documentsService = {
     return categories
   },
 
-  async downloadDocument(documentId: string): Promise<string | null> {
+  async downloadDocument(documentId: string, userTier: UserTier): Promise<string | null> {
     const supabase = createClient()
     
     // Get document details
     const { data: document, error } = await supabase
       .from('documents')
-      .select('pdf_url, title')
+      .select('pdf_url, title, required_tier')
       .eq('id', documentId)
       .single()
     
     if (error || !document) {
       console.error('Error fetching document:', error)
       return null
+    }
+    
+    // Check if user has access to this tier
+    const requiredTier = document.required_tier || 'free'
+    if (!userService.hasAccessToTier(userTier, requiredTier)) {
+      throw new Error(`Access denied. This document requires ${requiredTier} tier access.`)
     }
     
     // Return the PDF URL for download
@@ -140,6 +232,7 @@ export const documentsService = {
         pdf_url: publicUrl,
         category: documentData.category,
         is_featured: documentData.is_featured ?? false,
+        required_tier: documentData.required_tier ?? 'free',
         added_date: new Date().toISOString().split('T')[0]
       }])
       .select()

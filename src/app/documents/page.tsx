@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
-import { documentsService, type Document } from '@/lib/documents'
+import { documentsService, type Document, type DocumentWithAccess } from '@/lib/documents'
 import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
 import GradientBackground from '@/components/NetworkBackground'
@@ -14,7 +14,7 @@ import DescriptionModal from '@/components/DescriptionModal'
 
 export default function DocumentsPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
-  const [documents, setDocuments] = useState<Document[]>([])
+  const [documents, setDocuments] = useState<DocumentWithAccess[]>([])
   const [categories, setCategories] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [loading, setLoading] = useState(true)
@@ -51,10 +51,10 @@ export default function DocumentsPage() {
         return
       }
 
-      // Load documents and categories
+      // Load documents and categories with access control
       console.log('🔄 Fetching fresh documents data...')
       const [allDocuments, allCategories] = await Promise.all([
-        documentsService.getAllDocuments(),
+        documentsService.getAllDocumentsWithAccess(userProfile.user_tier || 'free'),
         documentsService.getCategories()
       ])
       console.log('📊 Loaded documents:', allDocuments.length)
@@ -113,7 +113,7 @@ export default function DocumentsPage() {
     }
   }
 
-  const renderDescription = (document: Document) => {
+  const renderDescription = (document: DocumentWithAccess) => {
     const shouldTruncate = document.description.length > 120
     const truncatedText = shouldTruncate 
       ? document.description.slice(0, 120) + '...'
@@ -136,8 +136,50 @@ export default function DocumentsPage() {
     )
   }
 
-  const handleDownload = async (doc: Document) => {
-    if (!user?.is_pro) {
+  const renderDownloadButton = (document: DocumentWithAccess) => {
+    if (document.hasAccess) {
+      return (
+        <button
+          onClick={() => handleDownload(document)}
+          disabled={downloadingIds.has(document.id)}
+          className={`w-full py-3 px-4 rounded-xl font-semibold shadow-lg transition-all duration-200 ${
+            downloadingIds.has(document.id)
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'gradient-purple text-white button-hover'
+          }`}
+        >
+          {downloadingIds.has(document.id) ? (
+            <>
+              <span className="inline-block animate-spin mr-2">⏳</span>
+              Downloading...
+            </>
+          ) : (
+            'Download PDF 📥'
+          )}
+        </button>
+      )
+    } else {
+      return (
+        <div className="w-full text-center">
+          <div className="w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-300 mb-3">
+            🔒 Upgrade to Download
+          </div>
+          {document.upgradeMessage && (
+            <p className="text-xs text-gray-600 mb-2">{document.upgradeMessage}</p>
+          )}
+          <Link
+            href="/upgrade"
+            className="inline-block text-purple-600 hover:text-purple-700 text-xs font-medium"
+          >
+            View Upgrade Options →
+          </Link>
+        </div>
+      )
+    }
+  }
+
+  const handleDownload = async (doc: DocumentWithAccess) => {
+    if (!doc.hasAccess) {
       router.push('/upgrade')
       return
     }
@@ -146,7 +188,7 @@ export default function DocumentsPage() {
     setDownloadingIds(prev => new Set(prev).add(doc.id))
 
     try {
-      const downloadUrl = await documentsService.downloadDocument(doc.id)
+      const downloadUrl = await documentsService.downloadDocument(doc.id, effectiveUser?.user_tier || 'free')
       if (downloadUrl) {
         // Fetch the file as a blob and create download
         const response = await fetch(downloadUrl)
@@ -209,21 +251,21 @@ export default function DocumentsPage() {
             AI Playbooks Collection 📚
           </h1>
           <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-2 sm:px-0 mobile-readable">
-            {effectiveUser && effectiveUser.is_pro 
-              ? "Download any playbook below and start implementing proven AI workflows today!"
-              : "Explore our playbook collection. Upgrade to Pro to download all PDF playbooks!"
+            {effectiveUser && (effectiveUser.user_tier === 'pro' || effectiveUser.user_tier === 'ultra')
+              ? "Download playbooks below and start implementing proven AI workflows today!"
+              : "Explore our playbook collection. Upgrade to access playbooks!"
             }
           </p>
         </div>
 
         {/* Upgrade Banner for Free Users */}
-        {!effectiveUser && effectiveUser.is_pro && (
+        {effectiveUser && effectiveUser.user_tier === 'free' && (
           <div className="mb-8 gradient-purple rounded-2xl p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-semibold mb-2">Unlock All Playbooks! 📚</h3>
                 <p className="text-purple-100">
-                  Currently viewing previews only. Upgrade to Pro to download all {documents.length} PDF playbooks.
+                  Currently viewing previews only. Upgrade to Pro (£7/month) or Ultra (£19/month) to download playbooks.
                 </p>
               </div>
               <Link
@@ -298,30 +340,7 @@ export default function DocumentsPage() {
                   </div>
                   
                   <div className="mt-auto">
-                    {effectiveUser && effectiveUser.is_pro ? (
-                      <button
-                        onClick={() => handleDownload(document)}
-                        disabled={downloadingIds.has(document.id)}
-                        className={`w-full py-3 px-4 rounded-xl font-semibold shadow-lg transition-all duration-200 ${
-                          downloadingIds.has(document.id)
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'gradient-purple text-white button-hover'
-                        }`}
-                      >
-                        {downloadingIds.has(document.id) ? (
-                          <>
-                            <span className="inline-block animate-spin mr-2">⏳</span>
-                            Downloading...
-                          </>
-                        ) : (
-                          'Download PDF 📥'
-                        )}
-                      </button>
-                    ) : (
-                      <div className="w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-300">
-                        🔒 Upgrade to Download
-                      </div>
-                    )}
+                    {renderDownloadButton(document)}
                   </div>
                 </div>
               ))}
@@ -382,30 +401,7 @@ export default function DocumentsPage() {
                   </div>
                   
                   <div className="mt-auto">
-                    {effectiveUser && effectiveUser.is_pro ? (
-                      <button
-                        onClick={() => handleDownload(document)}
-                        disabled={downloadingIds.has(document.id)}
-                        className={`w-full py-3 px-4 rounded-xl font-semibold shadow-lg transition-all duration-200 ${
-                          downloadingIds.has(document.id)
-                            ? 'bg-gray-400 cursor-not-allowed'
-                            : 'gradient-purple text-white button-hover'
-                        }`}
-                      >
-                        {downloadingIds.has(document.id) ? (
-                          <>
-                            <span className="inline-block animate-spin mr-2">⏳</span>
-                            Downloading...
-                          </>
-                        ) : (
-                          'Download PDF 📥'
-                        )}
-                      </button>
-                    ) : (
-                      <div className="w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-300">
-                        🔒 Upgrade to Download
-                      </div>
-                    )}
+                    {renderDownloadButton(document)}
                   </div>
                 </div>
               ))}

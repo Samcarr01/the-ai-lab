@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe, STRIPE_CONFIG } from '@/lib/stripe'
+import { stripeHelpers } from '@/lib/stripe'
 import { auth } from '@/lib/auth'
 import { createClient } from '@/lib/supabase/server'
+import { userService, type UserTier } from '@/lib/user'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,61 +15,55 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get user profile from Supabase
-    const supabase = createClient()
-    const { data: userProfile, error: profileError } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', user.id)
-      .single()
+    // Parse request body
+    const { tier, userId, userEmail } = await request.json()
 
-    if (profileError || !userProfile) {
+    // Validate tier
+    if (!tier || !['pro', 'ultra'].includes(tier)) {
+      return NextResponse.json(
+        { error: 'Invalid tier specified' },
+        { status: 400 }
+      )
+    }
+
+    // Validate user data
+    if (userId !== user.id) {
+      return NextResponse.json(
+        { error: 'User ID mismatch' },
+        { status: 400 }
+      )
+    }
+
+    // Get user profile from Supabase
+    const userProfile = await userService.getProfile(user.id)
+    if (!userProfile) {
       return NextResponse.json(
         { error: 'User profile not found' },
         { status: 404 }
       )
     }
 
-    // Check if user is already pro
-    if (userProfile.is_pro) {
+    const currentTier = userProfile.user_tier || 'free'
+
+    // Check if this is a valid upgrade
+    if (!stripeHelpers.isValidUpgrade(currentTier, tier)) {
       return NextResponse.json(
-        { error: 'User is already a Pro subscriber' },
+        { error: `Cannot upgrade from ${currentTier} to ${tier}` },
         { status: 400 }
       )
     }
 
-    const { origin } = new URL(request.url)
-
     // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: STRIPE_CONFIG.CURRENCY,
-            product_data: {
-              name: 'thehackai Pro',
-              description: 'Access to all GPTs, PDF guides, and priority support',
-            },
-            unit_amount: STRIPE_CONFIG.PRO_PLAN_AMOUNT,
-            recurring: {
-              interval: 'month',
-            },
-          },
-          quantity: 1,
-        },
-      ],
-      customer_email: user.email,
-      metadata: {
-        user_id: user.id,
-      },
-      success_url: `${origin}/dashboard?upgrade=success`,
-      cancel_url: `${origin}/upgrade?upgrade=cancelled`,
-      allow_promotion_codes: true,
-    })
+    const session = await stripeHelpers.createCheckoutSession(
+      tier as UserTier,
+      user.id,
+      userEmail || user.email!
+    )
 
-    return NextResponse.json({ sessionId: session.id, url: session.url })
+    return NextResponse.json({ 
+      sessionId: session.id, 
+      url: session.url 
+    })
   } catch (error) {
     console.error('Stripe checkout error:', error)
     return NextResponse.json(

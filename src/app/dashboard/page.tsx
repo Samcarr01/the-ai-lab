@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
-import { userService, type UserProfile } from '@/lib/user'
+import { userService, type UserProfile, type UserTier, TIER_FEATURES } from '@/lib/user'
 import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
@@ -203,11 +203,15 @@ export default function DashboardPage() {
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                       user.email === 'samcarr1232@gmail.com'
                         ? 'bg-red-100 text-red-700'
-                        : user.is_pro 
-                          ? 'bg-purple-100 text-purple-700' 
-                          : 'bg-gray-100 text-gray-600'
+                        : user.user_tier === 'ultra' 
+                          ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' 
+                          : user.user_tier === 'pro'
+                            ? 'bg-purple-100 text-purple-700'
+                            : 'bg-gray-100 text-gray-600'
                     }`}>
-                      {user.email === 'samcarr1232@gmail.com' ? '🔧 Admin' : user.is_pro ? '✨ Pro Member' : '🆓 Free Member'}
+                      {user.email === 'samcarr1232@gmail.com' ? '🔧 Admin' : 
+                       user.user_tier === 'ultra' ? '🚀 Ultra Member' :
+                       user.user_tier === 'pro' ? '✨ Pro Member' : '🆓 Free Member'}
                     </span>
                     <span className="text-sm text-gray-500">•</span>
                     <span className="text-sm text-gray-500">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
@@ -215,9 +219,9 @@ export default function DashboardPage() {
                 </div>
               </div>
               <p className="text-xl text-gray-600 leading-relaxed">
-                {user.is_pro || user.email === 'samcarr1232@gmail.com'
-                  ? "You have full access to my personal collection of GPTs and playbooks. Upload the PDFs directly to ChatGPT, Claude, or any LLM as knowledge."
-                  : "Start exploring my AI collection. Upgrade anytime for full access to download PDFs and unlock all GPTs!"
+                {(user.user_tier === 'pro' || user.user_tier === 'ultra') || user.email === 'samcarr1232@gmail.com'
+                  ? "You have access to my personal collection of GPTs and playbooks. Upload the PDFs directly to ChatGPT, Claude, or any LLM as knowledge."
+                  : "Start exploring my AI collection. Upgrade to Pro (£7/month) or Ultra (£19/month) for full access!"
                 }
               </p>
             </div>
@@ -225,20 +229,40 @@ export default function DashboardPage() {
         </div>
 
         {/* Upgrade Banner for Free Users */}
-        {!user.is_pro && (
+        {user.user_tier === 'free' && (
           <div className="mb-8 gradient-purple rounded-2xl p-6 text-white">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-4 sm:mb-0">
-                <h3 className="text-xl font-semibold mb-2">Unlock Everything with Pro! ⚡</h3>
+                <h3 className="text-xl font-semibold mb-2">Choose Your AI Journey! ⚡</h3>
                 <p className="text-purple-100">
-                  Get direct access to all 7 GPTs and download PDF playbooks you can upload to ChatGPT, Claude, or any LLM as knowledge.
+                  Pro (£7/month): 3 essential GPTs + 2 core playbooks | Ultra (£19/month): All 7 GPTs + all playbooks
                 </p>
               </div>
               <Link
                 href="/upgrade"
                 className="bg-white text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg sm:whitespace-nowrap w-full sm:w-auto text-center"
               >
-                Upgrade for £15/month 🚀
+                View Pricing 🚀
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Upgrade Banner for Pro Users */}
+        {user.user_tier === 'pro' && (
+          <div className="mb-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 text-white">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+              <div className="mb-4 sm:mb-0">
+                <h3 className="text-xl font-semibold mb-2">Upgrade to Ultra for Full Access! 🚀</h3>
+                <p className="text-purple-100">
+                  Get access to all 7 GPTs and all playbooks. Perfect for scaling your AI workflows.
+                </p>
+              </div>
+              <Link
+                href="/upgrade"
+                className="bg-white text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg sm:whitespace-nowrap w-full sm:w-auto text-center"
+              >
+                Upgrade to Ultra ✨
               </Link>
             </div>
           </div>
@@ -298,7 +322,9 @@ export default function DashboardPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900">AI GPTs</h3>
                   <p className="text-sm text-gray-600">
-                    {user.is_pro ? 'Direct access to all GPTs' : 'Preview available • Upgrade for full access'}
+                    {user.user_tier === 'free' ? 'Preview available • Upgrade for access' : 
+                     user.user_tier === 'pro' ? 'Access to 3 essential GPTs' : 
+                     'Full access to all 7 GPTs'}
                   </p>
                 </div>
               </div>
@@ -310,10 +336,10 @@ export default function DashboardPage() {
                   <span className="text-lg">💼</span>
                   <span className="font-medium text-gray-900">Business Planning</span>
                 </div>
-                {user.is_pro ? (
-                  <span className="text-green-600 text-sm">✅ Access</span>
-                ) : (
+                {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
+                ) : (
+                  <span className="text-green-600 text-sm">✅ Access</span>
                 )}
               </div>
               
@@ -322,10 +348,10 @@ export default function DashboardPage() {
                   <span className="text-lg">⚡</span>
                   <span className="font-medium text-gray-900">Productivity</span>
                 </div>
-                {user.is_pro ? (
-                  <span className="text-green-600 text-sm">✅ Access</span>
-                ) : (
+                {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
+                ) : (
+                  <span className="text-green-600 text-sm">✅ Access</span>
                 )}
               </div>
               
@@ -334,10 +360,10 @@ export default function DashboardPage() {
                   <span className="text-lg">🗣️</span>
                   <span className="font-medium text-gray-900">Communication</span>
                 </div>
-                {user.is_pro ? (
-                  <span className="text-green-600 text-sm">✅ Access</span>
-                ) : (
+                {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
+                ) : (
+                  <span className="text-green-600 text-sm">✅ Access</span>
                 )}
               </div>
               
@@ -346,10 +372,10 @@ export default function DashboardPage() {
                   <span className="text-lg">🤖</span>
                   <span className="font-medium text-gray-900">Automation</span>
                 </div>
-                {user.is_pro ? (
-                  <span className="text-green-600 text-sm">✅ Access</span>
-                ) : (
+                {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
+                ) : (
+                  <span className="text-green-600 text-sm">✅ Access</span>
                 )}
               </div>
             </div>
@@ -372,7 +398,9 @@ export default function DashboardPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-gray-900">AI Playbooks</h3>
                   <p className="text-sm text-gray-600">
-                    {user.is_pro ? 'Download PDFs for ChatGPT/Claude knowledge' : 'Preview available • Upgrade to download'}
+                    {user.user_tier === 'free' ? 'Preview available • Upgrade to download' :
+                     user.user_tier === 'pro' ? 'Download 2 core playbooks' :
+                     'Download all playbooks for ChatGPT/Claude knowledge'}
                   </p>
                 </div>
               </div>
@@ -384,10 +412,10 @@ export default function DashboardPage() {
                   <span className="text-lg">💼</span>
                   <span className="font-medium text-gray-900">Business Strategy</span>
                 </div>
-                {user.is_pro ? (
-                  <span className="text-green-600 text-sm">📥 Download</span>
-                ) : (
+                {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
+                ) : (
+                  <span className="text-green-600 text-sm">📥 Download</span>
                 )}
               </div>
               
@@ -396,10 +424,10 @@ export default function DashboardPage() {
                   <span className="text-lg">⚡</span>
                   <span className="font-medium text-gray-900">Productivity Systems</span>
                 </div>
-                {user.is_pro ? (
-                  <span className="text-green-600 text-sm">📥 Download</span>
-                ) : (
+                {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
+                ) : (
+                  <span className="text-green-600 text-sm">📥 Download</span>
                 )}
               </div>
               
@@ -408,10 +436,10 @@ export default function DashboardPage() {
                   <span className="text-lg">🎯</span>
                   <span className="font-medium text-gray-900">Marketing & Content</span>
                 </div>
-                {user.is_pro ? (
-                  <span className="text-green-600 text-sm">📥 Download</span>
-                ) : (
+                {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
+                ) : (
+                  <span className="text-green-600 text-sm">📥 Download</span>
                 )}
               </div>
               
@@ -420,10 +448,10 @@ export default function DashboardPage() {
                   <span className="text-lg">🤖</span>
                   <span className="font-medium text-gray-900">AI Workflows</span>
                 </div>
-                {user.is_pro ? (
-                  <span className="text-green-600 text-sm">📥 Download</span>
-                ) : (
+                {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
+                ) : (
+                  <span className="text-green-600 text-sm">📥 Download</span>
                 )}
               </div>
             </div>

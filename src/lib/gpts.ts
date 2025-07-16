@@ -1,4 +1,5 @@
 import { createClient } from './supabase/client'
+import { userService, type UserTier } from './user'
 
 export interface GPT {
   id: string
@@ -7,6 +8,7 @@ export interface GPT {
   chatgpt_url: string
   category: string
   is_featured: boolean
+  required_tier: UserTier
   added_date: string
   created_at: string
   updated_at: string
@@ -18,6 +20,13 @@ export interface CreateGPTData {
   chatgpt_url: string
   category: string
   is_featured?: boolean
+  required_tier?: UserTier
+}
+
+export interface GPTWithAccess extends GPT {
+  hasAccess: boolean
+  canUpgrade: boolean
+  upgradeMessage?: string
 }
 
 export const gptsService = {
@@ -33,6 +42,83 @@ export const gptsService = {
     
     if (error) {
       console.error('Error fetching GPTs:', error)
+      return []
+    }
+    
+    return data || []
+  },
+
+  async getAllGPTsWithAccess(userTier: UserTier): Promise<GPTWithAccess[]> {
+    const gpts = await this.getAllGPTs()
+    
+    return gpts.map(gpt => ({
+      ...gpt,
+      hasAccess: userService.hasAccessToTier(userTier, gpt.required_tier || 'free'),
+      canUpgrade: userTier === 'free' && (gpt.required_tier === 'pro' || gpt.required_tier === 'ultra'),
+      upgradeMessage: this.getUpgradeMessage(userTier, gpt.required_tier || 'free')
+    }))
+  },
+
+  getUpgradeMessage(userTier: UserTier, requiredTier: UserTier): string | undefined {
+    if (userService.hasAccessToTier(userTier, requiredTier)) {
+      return undefined
+    }
+    
+    if (userTier === 'free' && requiredTier === 'pro') {
+      return 'Upgrade to Pro (£7/month) to access this GPT'
+    }
+    if (userTier === 'free' && requiredTier === 'ultra') {
+      return 'Upgrade to Ultra (£19/month) to access this GPT'
+    }
+    if (userTier === 'pro' && requiredTier === 'ultra') {
+      return 'Upgrade to Ultra (£19/month) to access this GPT'
+    }
+    
+    return 'Upgrade required to access this GPT'
+  },
+
+  async getFeaturedGPTsWithAccess(userTier: UserTier): Promise<GPTWithAccess[]> {
+    const gpts = await this.getFeaturedGPTs()
+    
+    return gpts.map(gpt => ({
+      ...gpt,
+      hasAccess: userService.hasAccessToTier(userTier, gpt.required_tier || 'free'),
+      canUpgrade: userTier === 'free' && (gpt.required_tier === 'pro' || gpt.required_tier === 'ultra'),
+      upgradeMessage: this.getUpgradeMessage(userTier, gpt.required_tier || 'free')
+    }))
+  },
+
+  async getGPTsByCategoryWithAccess(category: string, userTier: UserTier): Promise<GPTWithAccess[]> {
+    const gpts = await this.getGPTsByCategory(category)
+    
+    return gpts.map(gpt => ({
+      ...gpt,
+      hasAccess: userService.hasAccessToTier(userTier, gpt.required_tier || 'free'),
+      canUpgrade: userTier === 'free' && (gpt.required_tier === 'pro' || gpt.required_tier === 'ultra'),
+      upgradeMessage: this.getUpgradeMessage(userTier, gpt.required_tier || 'free')
+    }))
+  },
+
+  async getAccessibleGPTs(userTier: UserTier): Promise<GPT[]> {
+    const gpts = await this.getAllGPTs()
+    
+    return gpts.filter(gpt => 
+      userService.hasAccessToTier(userTier, gpt.required_tier || 'free')
+    )
+  },
+
+  async getGPTsByTier(tier: UserTier): Promise<GPT[]> {
+    const supabase = createClient()
+    
+    const { data, error } = await supabase
+      .from('gpts')
+      .select('*')
+      .eq('required_tier', tier)
+      .order('is_featured', { ascending: false })
+      .order('added_date', { ascending: false })
+    
+    if (error) {
+      console.error('Error fetching GPTs by tier:', error)
       return []
     }
     
@@ -104,6 +190,7 @@ export const gptsService = {
         chatgpt_url: gptData.chatgpt_url,
         category: gptData.category,
         is_featured: gptData.is_featured ?? false,
+        required_tier: gptData.required_tier ?? 'free',
         added_date: new Date().toISOString().split('T')[0]
       }])
       .select()

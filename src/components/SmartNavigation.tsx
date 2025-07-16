@@ -110,9 +110,11 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                   <div className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center space-x-1 ${
                     user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin'
                       ? 'bg-red-100 text-red-700'
-                      : effectiveUser && effectiveUser.is_pro 
-                        ? 'bg-purple-100 text-purple-700' 
-                        : 'bg-gray-100 text-gray-600'
+                      : effectiveUser && effectiveUser.user_tier === 'ultra'
+                        ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                        : effectiveUser && effectiveUser.user_tier === 'pro' 
+                          ? 'bg-purple-100 text-purple-700' 
+                          : 'bg-gray-100 text-gray-600'
                   }`}>
                     {user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin' ? (
                       <>
@@ -121,8 +123,8 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                       </>
                     ) : (
                       <>
-                        <span>{effectiveUser && effectiveUser.is_pro ? '✨' : '🆓'}</span>
-                        <span>{effectiveUser && effectiveUser.is_pro ? 'Pro' : 'Free'}</span>
+                        <span>{effectiveUser && effectiveUser.user_tier === 'ultra' ? '🚀' : effectiveUser && effectiveUser.user_tier === 'pro' ? '✨' : '🆓'}</span>
+                        <span>{effectiveUser && effectiveUser.user_tier === 'ultra' ? 'Ultra' : effectiveUser && effectiveUser.user_tier === 'pro' ? 'Pro' : 'Free'}</span>
                       </>
                     )}
                   </div>
@@ -142,12 +144,12 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                     </button>
                   )}
                   
-                  {effectiveUser && !effectiveUser.is_pro && effectiveUser.email !== 'samcarr1232@gmail.com' && (
+                  {effectiveUser && effectiveUser.user_tier !== 'ultra' && effectiveUser.email !== 'samcarr1232@gmail.com' && (
                     <Link
                       href="/upgrade"
                       className="text-sm gradient-purple text-white px-4 py-2 rounded-full font-medium button-hover"
                     >
-                      Upgrade
+                      {effectiveUser.user_tier === 'pro' ? 'Upgrade to Ultra' : 'Upgrade'}
                     </Link>
                   )}
                   
@@ -204,7 +206,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
           {effectiveUser ? (
             <InternalMobileNavigation 
               userEmail={effectiveUser.email}
-              isPro={effectiveUser.is_pro}
+              userTier={effectiveUser.user_tier || 'free'}
               showAdminLink={!!(user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin')}
             />
           ) : (

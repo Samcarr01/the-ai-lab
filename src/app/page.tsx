@@ -147,7 +147,7 @@ export default function HomePage() {
             {user ? (
               <InternalMobileNavigation 
                 userEmail={user.email}
-                isPro={user.is_pro}
+                userTier={user.user_tier || 'free'}
                 showAdminLink={user.email === 'samcarr1232@gmail.com'}
                 showSignOut={false}
               />

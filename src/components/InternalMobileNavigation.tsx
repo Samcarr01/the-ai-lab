@@ -7,14 +7,14 @@ import { usePathname } from 'next/navigation'
 
 interface InternalMobileNavigationProps {
   userEmail?: string
-  isPro?: boolean
+  userTier?: 'free' | 'pro' | 'ultra'
   showAdminLink?: boolean
   showSignOut?: boolean
 }
 
 export default function InternalMobileNavigation({ 
   userEmail, 
-  isPro = false, 
+  userTier = 'free', 
   showAdminLink = false,
   showSignOut = true
 }: InternalMobileNavigationProps) {
@@ -171,7 +171,7 @@ export default function InternalMobileNavigation({
                 </Link>
               )}
 
-              {!isPro && (
+              {userTier !== 'ultra' && (
                 <Link
                   href="/upgrade"
                   onClick={handleLinkClick}
@@ -186,7 +186,7 @@ export default function InternalMobileNavigation({
                   }`}>
                     ⭐
                   </span>
-                  <span className="font-medium">Upgrade to Pro</span>
+                  <span className="font-medium">{userTier === 'pro' ? 'Upgrade to Ultra' : 'Upgrade'}</span>
                   {isActivePage('/upgrade') && (
                     <div className="ml-auto w-2 h-2 bg-purple-600 rounded-full animate-pulse"></div>
                   )}
@@ -203,13 +203,15 @@ export default function InternalMobileNavigation({
               <div className="flex flex-col space-y-3">
                 {/* Premium Badge */}
                 <div className={`self-start px-5 py-3 rounded-2xl text-base font-bold shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl ${
-                  isPro 
-                    ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-2 border-purple-300 shadow-purple-200' 
-                    : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white border-2 border-blue-300 shadow-blue-200'
+                  userTier === 'ultra'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white border-2 border-purple-300 shadow-purple-200' 
+                    : userTier === 'pro' 
+                      ? 'bg-gradient-to-r from-purple-500 to-purple-600 text-white border-2 border-purple-300 shadow-purple-200' 
+                      : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white border-2 border-blue-300 shadow-blue-200'
                 }`}>
                   <div className="flex items-center space-x-2">
-                    <span className="text-xl">{isPro ? '✨' : '🆓'}</span>
-                    <span className="tracking-wide">{isPro ? 'PRO MEMBER' : 'FREE ACCOUNT'}</span>
+                    <span className="text-xl">{userTier === 'ultra' ? '🚀' : userTier === 'pro' ? '✨' : '🆓'}</span>
+                    <span className="tracking-wide">{userTier === 'ultra' ? 'ULTRA MEMBER' : userTier === 'pro' ? 'PRO MEMBER' : 'FREE ACCOUNT'}</span>
                   </div>
                 </div>
                 

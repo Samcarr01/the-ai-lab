@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
-import { gptsService, type GPT } from '@/lib/gpts'
+import { gptsService, type GPT, type GPTWithAccess } from '@/lib/gpts'
 import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
 import GradientBackground from '@/components/NetworkBackground'
@@ -14,7 +14,7 @@ import DescriptionModal from '@/components/DescriptionModal'
 
 export default function GPTsPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
-  const [gpts, setGpts] = useState<GPT[]>([])
+  const [gpts, setGpts] = useState<GPTWithAccess[]>([])
   const [categories, setCategories] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [loading, setLoading] = useState(true)
@@ -50,9 +50,9 @@ export default function GPTsPage() {
         return
       }
 
-      // Load GPTs and categories
+      // Load GPTs and categories with access control
       const [allGpts, allCategories] = await Promise.all([
-        gptsService.getAllGPTs(),
+        gptsService.getAllGPTsWithAccess(userProfile.user_tier || 'free'),
         gptsService.getCategories()
       ])
       
@@ -108,7 +108,7 @@ export default function GPTsPage() {
     }
   }
 
-  const renderDescription = (gpt: GPT) => {
+  const renderDescription = (gpt: GPTWithAccess) => {
     const shouldTruncate = gpt.description.length > 120
     const truncatedText = shouldTruncate 
       ? gpt.description.slice(0, 120) + '...'
@@ -129,6 +129,38 @@ export default function GPTsPage() {
         )}
       </div>
     )
+  }
+
+  const renderAccessButton = (gpt: GPTWithAccess) => {
+    if (gpt.hasAccess) {
+      return (
+        <a
+          href={gpt.chatgpt_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full block text-center gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
+        >
+          Open GPT ✨
+        </a>
+      )
+    } else {
+      return (
+        <div className="w-full text-center">
+          <div className="w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-300 mb-3">
+            🔒 Upgrade to Access
+          </div>
+          {gpt.upgradeMessage && (
+            <p className="text-xs text-gray-600 mb-2">{gpt.upgradeMessage}</p>
+          )}
+          <Link
+            href="/upgrade"
+            className="inline-block text-purple-600 hover:text-purple-700 text-xs font-medium"
+          >
+            View Upgrade Options →
+          </Link>
+        </div>
+      )
+    }
   }
 
   if (loading) {
@@ -158,28 +190,48 @@ export default function GPTsPage() {
             AI GPTs Collection 🤖
           </h1>
           <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-2 sm:px-0 mobile-readable">
-            {effectiveUser && effectiveUser.is_pro 
+            {effectiveUser && (effectiveUser.user_tier === 'pro' || effectiveUser.user_tier === 'ultra')
               ? "Click any GPT below to open it directly in ChatGPT and start using it!"
-              : "Explore my personal GPT collection. Upgrade to Pro for direct access to all GPTs!"
+              : "Explore my personal GPT collection. Upgrade for direct access to GPTs!"
             }
           </p>
         </div>
 
         {/* Upgrade Banner for Free Users */}
-        {!(effectiveUser && effectiveUser.is_pro) && (
+        {effectiveUser && effectiveUser.user_tier === 'free' && (
           <div className="mb-6 sm:mb-8 gradient-purple rounded-2xl p-4 sm:p-6 text-white">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2">Unlock All GPTs! ⚡</h3>
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">Unlock GPTs! ⚡</h3>
                 <p className="text-sm sm:text-base text-purple-100">
-                  Currently viewing previews only. Upgrade to Pro for direct access to all {gpts.length} GPTs.
+                  Pro (£7/month): 3 essential GPTs | Ultra (£19/month): All 7 GPTs
                 </p>
               </div>
               <Link
                 href="/upgrade"
                 className="bg-white text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
               >
-                Upgrade Now 🚀
+                View Pricing 🚀
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Upgrade Banner for Pro Users */}
+        {effectiveUser && effectiveUser.user_tier === 'pro' && (
+          <div className="mb-6 sm:mb-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-4 sm:p-6 text-white">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-2">Upgrade to Ultra! 🚀</h3>
+                <p className="text-sm sm:text-base text-purple-100">
+                  Get access to all 7 GPTs for the complete AI toolkit.
+                </p>
+              </div>
+              <Link
+                href="/upgrade"
+                className="bg-white text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
+              >
+                Upgrade to Ultra ✨
               </Link>
             </div>
           </div>
@@ -243,20 +295,7 @@ export default function GPTsPage() {
                   </div>
                   
                   <div className="mt-auto">
-                    {effectiveUser && effectiveUser.is_pro ? (
-                      <a
-                        href={gpt.chatgpt_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full block text-center gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
-                      >
-                        Open GPT ✨
-                      </a>
-                    ) : (
-                      <div className="w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-300">
-                        🔒 Upgrade to Access
-                      </div>
-                    )}
+                    {renderAccessButton(gpt)}
                   </div>
                 </div>
               ))}
@@ -315,20 +354,7 @@ export default function GPTsPage() {
                   </div>
                   
                   <div className="mt-auto">
-                    {effectiveUser && effectiveUser.is_pro ? (
-                      <a
-                        href={gpt.chatgpt_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full block text-center gradient-purple text-white py-3 px-4 rounded-xl font-semibold button-hover shadow-lg"
-                      >
-                        Open GPT ✨
-                      </a>
-                    ) : (
-                      <div className="w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-300">
-                        🔒 Upgrade to Access
-                      </div>
-                    )}
+                    {renderAccessButton(gpt)}
                   </div>
                 </div>
               ))}

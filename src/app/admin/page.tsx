@@ -375,7 +375,7 @@ export default function AdminPage() {
             {/* Mobile Navigation */}
             <InternalMobileNavigation 
               userEmail={user.email}
-              isPro={user.is_pro}
+              userTier={user.user_tier || 'free'}
               showAdminLink={true}
             />
           </div>
