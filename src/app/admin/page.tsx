@@ -1258,6 +1258,6 @@ function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPost
           </div>
         </form>
       </div>
-    </DarkThemeBackground>
+    </div>
   )
 }
