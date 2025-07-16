@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile, type UserTier, TIER_FEATURES } from '@/lib/user'
+import { contentStatsService, type ContentStats } from '@/lib/content-stats'
 import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
@@ -17,6 +18,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(false)
   const [stats, setStats] = useState({ gpts: 0, documents: 0, blogPosts: 0 })
+  const [contentStats, setContentStats] = useState<ContentStats | null>(null)
   const { getEffectiveUser } = useAdmin()
   const router = useRouter()
   
@@ -107,9 +109,10 @@ export default function DashboardPage() {
 
     const loadStats = async () => {
       try {
-        const [gptsData, documentsData] = await Promise.all([
+        const [gptsData, documentsData, contentStatsData] = await Promise.all([
           gptsService.getAllGPTs(),
-          documentsService.getAllDocuments()
+          documentsService.getAllDocuments(),
+          contentStatsService.getContentStats(effectiveUser?.user_tier || 'free')
         ])
         
         setStats({
@@ -117,6 +120,8 @@ export default function DashboardPage() {
           documents: documentsData.length,
           blogPosts: 0 // Will be updated when blog is implemented
         })
+        
+        setContentStats(contentStatsData)
       } catch (error) {
         console.error('Error loading stats:', error)
       }
@@ -235,7 +240,7 @@ export default function DashboardPage() {
               <div className="mb-4 sm:mb-0">
                 <h3 className="text-xl font-semibold mb-2">Choose Your AI Journey! ⚡</h3>
                 <p className="text-purple-100">
-                  Pro (£7/month): 3 essential GPTs + 2 core playbooks | Ultra (£19/month): All 7 GPTs + all playbooks
+                  Pro (£7/month): 3 essential GPTs + 2 core playbooks | Ultra (£19/month): All {contentStats?.totalGPTs || 7} GPTs + all {contentStats?.totalPlaybooks || 10} playbooks
                 </p>
               </div>
               <Link
@@ -255,7 +260,7 @@ export default function DashboardPage() {
               <div className="mb-4 sm:mb-0">
                 <h3 className="text-xl font-semibold mb-2">Upgrade to Ultra for Full Access! 🚀</h3>
                 <p className="text-purple-100">
-                  Get access to all 7 GPTs and all playbooks. Perfect for scaling your AI workflows.
+                  Get access to all {contentStats?.totalGPTs || 7} GPTs and all {contentStats?.totalPlaybooks || 10} playbooks. Perfect for scaling your AI workflows.
                 </p>
               </div>
               <Link

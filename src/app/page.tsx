@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
+import { contentStatsService, type ContentStats } from '@/lib/content-stats'
 import GradientBackground from '@/components/NetworkBackground'
 import ScrollAnimation from '@/components/ScrollAnimation'
 import AnimatedCounter from '@/components/AnimatedCounter'
@@ -17,6 +18,7 @@ import MobileNavigation from '@/components/MobileNavigation'
 export default function HomePage() {
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [contentStats, setContentStats] = useState<ContentStats | null>(null)
   
   // Check authentication status and get user profile
   useEffect(() => {
@@ -33,6 +35,10 @@ export default function HomePage() {
         } else {
           setUser(null)
         }
+        
+        // Load content stats
+        const stats = await contentStatsService.getContentStats('free')
+        setContentStats(stats)
       } catch (error) {
         setUser(null)
       } finally {
@@ -270,7 +276,7 @@ export default function HomePage() {
                 Specialized ChatGPT tools for business planning, productivity, and automation. Direct links to working GPTs.
               </p>
               <div className="text-sm sm:text-base text-purple-600 font-medium flex items-center space-x-2 mt-auto">
-                <span><AnimatedCounter end={7} /> GPTs available</span>
+                <span><AnimatedCounter end={contentStats?.totalGPTs || 7} /> GPTs available</span>
                 <span className="text-xl animate-pulse">→</span>
               </div>
                 </div>
@@ -292,7 +298,7 @@ export default function HomePage() {
                 Step-by-step PDF guides perfect for uploading to ChatGPT, Claude, or any LLM as knowledge. Upload these directly to give your AI instant expertise in specific areas.
               </p>
               <div className="text-sm sm:text-base text-purple-600 font-medium flex items-center space-x-2 mt-auto">
-                <span>Growing collection</span>
+                <span>{contentStats?.totalPlaybooks || 10} playbooks available</span>
                 <span className="text-xl">→</span>
               </div>
                 </div>
