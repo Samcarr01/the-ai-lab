@@ -225,8 +225,8 @@ export default function DashboardPage() {
               </div>
               <p className="text-xl text-gray-600 leading-relaxed">
                 {(user.user_tier === 'pro' || user.user_tier === 'ultra') || user.email === 'samcarr1232@gmail.com'
-                  ? "You have access to my personal collection of GPTs and playbooks. Upload the PDFs directly to ChatGPT, Claude, or any LLM as knowledge."
-                  : "Start exploring my AI collection. Upgrade to Pro (£7/month) or Ultra (£19/month) for full access!"
+                  ? "You have access to battle-tested AI playbooks and GPTs that actually work. Upload the PDFs directly to ChatGPT, Claude, or any AI to make it smarter at specific tasks."
+                  : "Get AI workflows that actually work! Upgrade to Pro (£7/month) or Ultra (£19/month) for full access to battle-tested playbooks and GPTs."
                 }
               </p>
             </div>

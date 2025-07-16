@@ -181,15 +181,15 @@ export default function HomePage() {
                 className="w-full h-full object-contain logo-dark-purple-blue-glow"
               />
             </div>
-            <span className="text-purple-700 text-sm font-medium">Curated AI Tools & Playbooks</span>
+            <span className="text-purple-700 text-sm font-medium">Battle-tested AI Playbooks & GPTs</span>
           </div>
           
           <h1 className="text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 mb-6 leading-tight text-center min-h-[36px] sm:min-h-[70px] md:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] flex items-center justify-center px-1">
             <TypewriterText 
               texts={[
                 "Battle-tested AI workflows",
-                "Proven GPT collections", 
-                "Ready-to-use playbooks"
+                "Make any AI smarter instantly", 
+                "Skip months of trial and error"
               ]}
               className="inline-block"
             />
@@ -197,8 +197,8 @@ export default function HomePage() {
           
           <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
             Skip months of trial and error. Access my personal collection 
-            of proven GPTs and PDF playbooks you can upload directly to ChatGPT, Claude, or any LLM as knowledge for 
-            <span className="text-purple-600 font-medium">£15/month</span> — with free preview access.
+            of proven GPTs and PDF playbooks you can upload directly to ChatGPT, Claude, or any LLM as knowledge. Choose from 
+            <span className="text-purple-600 font-medium">Pro (£7/month)</span> or <span className="text-pink-600 font-medium">Ultra (£19/month)</span> — with free preview access.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -364,59 +364,102 @@ export default function HomePage() {
 
       {/* Pricing Section */}
       <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-purple-50/50 to-white">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-6xl mx-auto text-center">
           <ScrollAnimation animation="fade-up">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
-              Simple, Honest Pricing 💜
+              Choose Your AI Mastery Level 🚀
             </h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-8 sm:mb-12 px-2 sm:px-0">
-              Create a free account to explore, then upgrade for full access
+              Battle-tested AI playbooks and GPTs that actually work. Make any AI smarter at what you need.
             </p>
           </ScrollAnimation>
-          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 max-w-2xl mx-auto">
+          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto">
+            {/* Free Preview */}
             <ScrollAnimation animation="slide-left" delay={100}>
               <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200/50 hover:border-gray-300/50 transform hover:scale-105 hover:-translate-y-2 hover:-rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
                 <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Free Preview</h3>
-              <div className="text-3xl sm:text-4xl font-bold text-gray-600 mb-4">£0</div>
-              <ul className="text-left space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-600 flex-grow">
-                <li className="flex items-center space-x-3">
-                  <span className="text-green-500">✓</span>
-                  <span>Browse all GPTs and playbooks</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                  <span className="text-green-500">✓</span>
-                  <span>Preview descriptions</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                  <span className="text-green-500">✓</span>
-                  <span>Access to blog content</span>
-                </li>
-              </ul>
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Free Preview</h3>
+                  <div className="text-3xl sm:text-4xl font-bold text-gray-600 mb-4">£0</div>
+                  <ul className="text-left space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-600 flex-grow">
+                    <li className="flex items-center space-x-3">
+                      <span className="text-green-500">✓</span>
+                      <span>Browse all GPTs and playbooks</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <span className="text-green-500">✓</span>
+                      <span>Preview descriptions</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <span className="text-green-500">✓</span>
+                      <span>Access to blog content</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <span className="text-green-500">✓</span>
+                      <span>Explore what's inside</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </ScrollAnimation>
-            <ScrollAnimation animation="slide-right" delay={200}>
-              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
+            
+            {/* Pro Tier */}
+            <ScrollAnimation animation="fade-up" delay={200}>
+              <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 relative overflow-hidden h-full flex flex-col touch-feedback border-2 border-purple-300">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-white text-purple-700 px-3 py-1 rounded-full text-xs font-semibold">Most Popular</span>
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-              <h3 className="text-xl sm:text-2xl font-bold mb-2">Pro Access</h3>
-              <div className="text-3xl sm:text-4xl font-bold mb-4">£<AnimatedCounter end={15} duration={2500} className="inline" /><span className="text-lg sm:text-xl">/month</span></div>
-              <ul className="text-left space-y-2 sm:space-y-3 text-sm sm:text-base flex-grow">
-                <li className="flex items-center space-x-3">
-                  <span className="text-purple-200">✓</span>
-                  <span>Direct links to all GPTs</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                  <span className="text-purple-200">✓</span>
-                  <span>Download PDF playbooks for LLM knowledge</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                  <span className="text-purple-200">✓</span>
-                  <span>New content as it's added</span>
-                </li>
-              </ul>
+                  <h3 className="text-xl sm:text-2xl font-bold mb-2">Pro - Daily AI Use</h3>
+                  <div className="text-3xl sm:text-4xl font-bold mb-4">£<AnimatedCounter end={7} duration={2500} className="inline" /><span className="text-lg sm:text-xl">/month</span></div>
+                  <ul className="text-left space-y-2 sm:space-y-3 text-sm sm:text-base flex-grow">
+                    <li className="flex items-center space-x-3">
+                      <span className="text-purple-200">✓</span>
+                      <span>3 essential GPTs for daily productivity</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <span className="text-purple-200">✓</span>
+                      <span>2 core playbooks for ChatGPT/Claude</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <span className="text-purple-200">✓</span>
+                      <span>Email support</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <span className="text-purple-200">✓</span>
+                      <span>Perfect for getting started</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </ScrollAnimation>
+            
+            {/* Ultra Tier */}
+            <ScrollAnimation animation="slide-right" delay={300}>
+              <div className="bg-gradient-to-br from-pink-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl hover:shadow-2xl text-white transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="relative z-10 flex flex-col h-full">
+                  <h3 className="text-xl sm:text-2xl font-bold mb-2">Ultra - Upscale Your AI Game</h3>
+                  <div className="text-3xl sm:text-4xl font-bold mb-4">£<AnimatedCounter end={19} duration={2500} className="inline" /><span className="text-lg sm:text-xl">/month</span></div>
+                  <ul className="text-left space-y-2 sm:space-y-3 text-sm sm:text-base flex-grow">
+                    <li className="flex items-center space-x-3">
+                      <span className="text-pink-200">✓</span>
+                      <span>All {contentStats?.totalGPTs || 7} GPTs for complete AI mastery</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <span className="text-pink-200">✓</span>
+                      <span>All {contentStats?.totalPlaybooks || 10} playbooks for expert knowledge</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <span className="text-pink-200">✓</span>
+                      <span>Priority support + early access</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <span className="text-pink-200">✓</span>
+                      <span>For serious AI power users</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </ScrollAnimation>
@@ -431,10 +474,10 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative z-10">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
-            Ready to Join thehackai? 🚀
+            Ready to Hack Your AI? 🔓
           </h2>
           <p className="text-base sm:text-lg lg:text-xl text-purple-100 mb-6 sm:mb-8 px-2 sm:px-0">
-            Create your free account now and start exploring. Upgrade to Pro for full access to everything.
+            Make any AI smarter at what you need with our battle-tested playbooks and GPTs. Create your free account to explore!
           </p>
           <Link 
             href="/signup" 
