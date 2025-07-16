@@ -77,14 +77,16 @@ export default function InternalMobileNavigation({
 
       {/* Mobile Menu Panel */}
       <div 
-        className={`fixed top-0 right-0 h-full w-72 sm:w-80 shadow-2xl transform transition-all duration-300 ease-out md:hidden ${
+        className={`mobile-nav-panel fixed top-0 right-0 h-full w-72 sm:w-80 shadow-2xl transform transition-all duration-300 ease-out md:hidden ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`} 
         style={{ 
-          backgroundColor: 'rgb(15, 23, 42)', 
+          backgroundColor: '#0f172a !important', 
           zIndex: 9999,
-          backdropFilter: 'none',
-          WebkitBackdropFilter: 'none'
+          backdropFilter: 'none !important',
+          WebkitBackdropFilter: 'none !important',
+          opacity: '1 !important',
+          background: '#0f172a !important'
         }}
       >
         <div className="flex flex-col h-full" style={{ backgroundColor: 'rgb(15, 23, 42)' }}>
