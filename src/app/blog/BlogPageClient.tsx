@@ -100,7 +100,7 @@ export default function BlogPageClient() {
           <h1 className="text-5xl font-bold text-white mb-6">
             AI Tools & Strategies 🧠
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-100 max-w-2xl mx-auto leading-relaxed">
             {effectiveUser ? (
               "Discover powerful AI tools, proven strategies, and actionable insights to boost your productivity. Explore our latest findings and tutorials."
             ) : (
@@ -124,7 +124,7 @@ export default function BlogPageClient() {
                     className="w-full px-4 py-3 pl-12 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
                   />
                   <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                    <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                   </div>
@@ -140,7 +140,7 @@ export default function BlogPageClient() {
                     className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
                       category === selectedCategory
                         ? 'gradient-purple text-white shadow-lg'
-                        : 'bg-gray-100 text-gray-300 hover:bg-gray-200'
+                        : 'bg-gray-100 text-gray-100 hover:bg-gray-200'
                     }`}
                   >
                     {category}
@@ -162,7 +162,7 @@ export default function BlogPageClient() {
                       <span className="text-xs font-medium bg-purple-100 text-purple-700 px-3 py-1 rounded-full">
                         {post.category}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-gray-300">
                         {post.read_time} min read
                       </span>
                     </div>
@@ -171,12 +171,12 @@ export default function BlogPageClient() {
                       {post.title}
                     </h2>
                     
-                    <p className="text-gray-300 text-sm leading-relaxed mb-4">
+                    <p className="text-gray-100 text-sm leading-relaxed mb-4">
                       {post.meta_description}
                     </p>
                   </div>
                   
-                  <div className="flex items-center justify-between text-xs text-gray-500 pt-4 border-t border-gray-100">
+                  <div className="flex items-center justify-between text-xs text-gray-300 pt-4 border-t border-gray-100">
                     <time dateTime={post.published_at}>
                       {new Date(post.published_at).toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -201,7 +201,7 @@ export default function BlogPageClient() {
             <h2 className="text-3xl font-bold text-white mb-4">
               Content Coming Soon!
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-lg mx-auto">
+            <p className="text-xl text-gray-100 mb-8 max-w-lg mx-auto">
               I'm preparing helpful articles about AI tools, productivity strategies, 
               and actionable guides to help you work smarter with AI.
             </p>
@@ -212,7 +212,7 @@ export default function BlogPageClient() {
                 <h3 className="text-lg font-semibold text-white mb-3">
                   Get Notified 🔔
                 </h3>
-                <p className="text-sm text-gray-300 mb-4">
+                <p className="text-sm text-gray-100 mb-4">
                   Be the first to read new articles about AI tools and strategies
                 </p>
                 <div className="flex gap-3">
@@ -237,7 +237,7 @@ export default function BlogPageClient() {
             <h2 className="text-3xl font-bold text-white mb-4">
               No articles found
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-lg mx-auto">
+            <p className="text-xl text-gray-100 mb-8 max-w-lg mx-auto">
               Try adjusting your search terms or selecting a different category.
             </p>
             <button 
@@ -259,7 +259,7 @@ export default function BlogPageClient() {
               <h3 className="text-xl font-semibold text-white mb-4">
                 What to Expect 🎯
               </h3>
-              <ul className="space-y-3 text-gray-300">
+              <ul className="space-y-3 text-gray-100">
                 <li className="flex items-start space-x-3">
                   <span className="text-purple-600 mt-1">•</span>
                   <span>Step-by-step AI implementation guides</span>
@@ -283,7 +283,7 @@ export default function BlogPageClient() {
               <h3 className="text-xl font-semibold text-white mb-4">
                 Why Subscribe? ⚡
               </h3>
-              <ul className="space-y-3 text-gray-300">
+              <ul className="space-y-3 text-gray-100">
                 <li className="flex items-start space-x-3">
                   <span className="text-purple-600 mt-1">•</span>
                   <span>100% free access to all articles</span>

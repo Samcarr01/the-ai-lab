@@ -25,7 +25,7 @@ export default function PrivacyPage() {
             </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-300 hover:text-purple-300 transition-colors">
+              <Link href="/" className="text-gray-100 hover:text-purple-300 transition-colors">
                 Home
               </Link>
               <Link href="/login" className="text-purple-400 font-medium hover:text-purple-300 transition-colors">
@@ -46,7 +46,7 @@ export default function PrivacyPage() {
             <h1 className="text-4xl font-bold text-white mb-4">
               Privacy Policy
             </h1>
-            <p className="text-xl text-gray-300">
+            <p className="text-xl text-gray-100">
               Last updated: {new Date().toLocaleDateString('en-US', { 
                 year: 'numeric', 
                 month: 'long', 
@@ -217,13 +217,13 @@ export default function PrivacyPage() {
               </div>
               <span className="text-lg font-semibold text-white">thehackai</span>
             </div>
-            <div className="flex space-x-6 text-sm text-gray-300">
+            <div className="flex space-x-6 text-sm text-gray-100">
               <Link href="/terms" className="hover:text-purple-300 transition-colors">Terms</Link>
               <Link href="/privacy" className="text-purple-600 font-medium">Privacy</Link>
               <Link href="/contact" className="hover:text-purple-300 transition-colors">Contact</Link>
             </div>
           </div>
-          <div className="mt-8 text-center text-sm text-gray-500">
+          <div className="mt-8 text-center text-sm text-gray-300">
             © 2024 thehackai. Made with 💜 for AI enthusiasts.
           </div>
         </div>

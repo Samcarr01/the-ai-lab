@@ -441,13 +441,13 @@ export default function AdminPage() {
             
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6">
-              <Link href="/dashboard" className="text-sm text-gray-300 hover:text-purple-600 transition-colors">
+              <Link href="/dashboard" className="text-sm text-gray-100 hover:text-purple-600 transition-colors">
                 Dashboard
               </Link>
-              <Link href="/gpts" className="text-sm text-gray-300 hover:text-purple-600 transition-colors">
+              <Link href="/gpts" className="text-sm text-gray-100 hover:text-purple-600 transition-colors">
                 GPTs
               </Link>
-              <Link href="/documents" className="text-sm text-gray-300 hover:text-purple-600 transition-colors">
+              <Link href="/documents" className="text-sm text-gray-100 hover:text-purple-600 transition-colors">
                 Playbooks
               </Link>
               <div className="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700">
@@ -474,7 +474,7 @@ export default function AdminPage() {
           <h1 className="text-5xl font-bold text-white mb-4">
             Content Management Studio
           </h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-100 max-w-3xl mx-auto leading-relaxed">
             Manage your GPTs, playbooks, and blog posts all in one place with AI-powered analysis!
           </p>
         </div>
@@ -488,7 +488,7 @@ export default function AdminPage() {
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'content'
                     ? 'gradient-purple text-white shadow-lg'
-                    : 'text-gray-300 hover:text-purple-600'
+                    : 'text-gray-100 hover:text-purple-600'
                 }`}
               >
                 📚 Content Manager
@@ -498,7 +498,7 @@ export default function AdminPage() {
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'blog'
                     ? 'gradient-purple text-white shadow-lg'
-                    : 'text-gray-300 hover:text-purple-600'
+                    : 'text-gray-100 hover:text-purple-600'
                 }`}
               >
                 ✍️ Blog Manager
@@ -508,7 +508,7 @@ export default function AdminPage() {
                 className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
                   activeTab === 'tier'
                     ? 'gradient-purple text-white shadow-lg'
-                    : 'text-gray-300 hover:text-purple-600'
+                    : 'text-gray-100 hover:text-purple-600'
                 }`}
               >
                 🎯 Tier Testing
@@ -535,7 +535,7 @@ export default function AdminPage() {
                   className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     uploadType === 'gpt'
                       ? 'gradient-purple text-white shadow-lg'
-                      : 'text-gray-300 hover:text-purple-600'
+                      : 'text-gray-100 hover:text-purple-600'
                   }`}
                 >
                   🤖 GPT Link
@@ -545,7 +545,7 @@ export default function AdminPage() {
                   className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm sm:text-base ${
                     uploadType === 'document'
                       ? 'gradient-purple text-white shadow-lg'
-                      : 'text-gray-300 hover:text-purple-600'
+                      : 'text-gray-100 hover:text-purple-600'
                   }`}
                 >
                   📄 PDF Document
@@ -582,7 +582,7 @@ export default function AdminPage() {
                   />
                   <label htmlFor="pdf-upload" className="cursor-pointer">
                     <div className="text-4xl mb-2">📄</div>
-                    <p className="text-sm text-gray-300">
+                    <p className="text-sm text-gray-100">
                       {documentFile ? documentFile.name : 'Click to upload PDF or drag and drop'}
                     </p>
                   </label>
@@ -687,7 +687,7 @@ export default function AdminPage() {
                             <span className="text-lg flex-shrink-0">🤖</span>
                             <h3 className="font-semibold text-white text-sm leading-tight truncate">{item.title}</h3>
                           </div>
-                          <p className="text-xs text-gray-300 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
+                          <p className="text-xs text-gray-100 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
                               {item.category}
@@ -705,7 +705,7 @@ export default function AdminPage() {
                             className={`p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
                               item.is_featured
                                 ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
-                                : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
+                                : 'text-gray-200 hover:text-yellow-600 hover:bg-yellow-50'
                             }`}
                             title={item.is_featured ? 'Remove from featured' : 'Add to featured'}
                           >
@@ -730,7 +730,7 @@ export default function AdminPage() {
               ) : (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">🤖</div>
-                  <p className="text-gray-300">No GPTs uploaded yet. Start by analyzing your first GPT!</p>
+                  <p className="text-gray-100">No GPTs uploaded yet. Start by analyzing your first GPT!</p>
                 </div>
               )}
             </div>
@@ -752,7 +752,7 @@ export default function AdminPage() {
                             <span className="text-lg flex-shrink-0">📄</span>
                             <h3 className="font-semibold text-white text-sm leading-tight truncate">{item.title}</h3>
                           </div>
-                          <p className="text-xs text-gray-300 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
+                          <p className="text-xs text-gray-100 mb-2 leading-relaxed">{item.description.slice(0, 80)}...</p>
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full whitespace-nowrap">
                               {item.category}
@@ -770,7 +770,7 @@ export default function AdminPage() {
                             className={`p-2 rounded-lg transition-colors min-w-[36px] min-h-[36px] flex items-center justify-center ${
                               item.is_featured
                                 ? 'text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50'
-                                : 'text-gray-400 hover:text-yellow-600 hover:bg-yellow-50'
+                                : 'text-gray-200 hover:text-yellow-600 hover:bg-yellow-50'
                             }`}
                             title={item.is_featured ? 'Remove from featured' : 'Add to featured'}
                           >
@@ -795,7 +795,7 @@ export default function AdminPage() {
               ) : (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-2">📚</div>
-                  <p className="text-gray-300">No playbooks uploaded yet. Start by analyzing your first PDF!</p>
+                  <p className="text-gray-100">No playbooks uploaded yet. Start by analyzing your first PDF!</p>
                 </div>
               )}
             </div>
@@ -833,12 +833,12 @@ export default function AdminPage() {
                             <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
                               {post.category}
                             </span>
-                            <span className="text-xs bg-gray-100 text-gray-300 px-2 py-1 rounded-full">
+                            <span className="text-xs bg-gray-100 text-gray-100 px-2 py-1 rounded-full">
                               {post.read_time} min read
                             </span>
                           </div>
-                          <p className="text-sm text-gray-300 mb-3">{post.meta_description}</p>
-                          <div className="text-xs text-gray-500">
+                          <p className="text-sm text-gray-100 mb-3">{post.meta_description}</p>
+                          <div className="text-xs text-gray-100">
                             Published: {new Date(post.published_at).toLocaleDateString()}
                           </div>
                         </div>
@@ -872,7 +872,7 @@ export default function AdminPage() {
                   <h3 className="text-xl font-semibold text-white mb-2">
                     No blog posts yet
                   </h3>
-                  <p className="text-gray-300 mb-6">
+                  <p className="text-gray-100 mb-6">
                     Create your first blog post to start sharing AI insights and tutorials!
                   </p>
                   <button
@@ -920,7 +920,7 @@ export default function AdminPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-semibold text-white">Current Admin Tier</h3>
-                  <p className="text-gray-300">Testing subscription access as: {user?.email}</p>
+                  <p className="text-gray-100">Testing subscription access as: {user?.email}</p>
                 </div>
                 <div className={`px-4 py-2 rounded-full text-sm font-bold ${
                   user?.user_tier === 'ultra' 
@@ -957,10 +957,10 @@ export default function AdminPage() {
                       <div className="text-left">
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-semibold text-white">{tierInfo.name}</h4>
-                          <span className="text-sm text-gray-500">£{tierInfo.price}/mo</span>
+                          <span className="text-sm text-gray-100">£{tierInfo.price}/mo</span>
                         </div>
-                        <p className="text-sm text-gray-300 mb-3">{tierInfo.description}</p>
-                        <div className="text-xs text-gray-500">
+                        <p className="text-sm text-gray-100 mb-3">{tierInfo.description}</p>
+                        <div className="text-xs text-gray-300">
                           <div>📱 {accessSummary.accessibleGpts}/{accessSummary.totalGpts} GPTs</div>
                           <div>📚 {accessSummary.accessibleDocs}/{accessSummary.totalDocs} Playbooks</div>
                         </div>
@@ -1017,19 +1017,19 @@ export default function AdminPage() {
                     
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-300">GPTs Access</span>
+                        <span className="text-sm text-gray-100">GPTs Access</span>
                         <span className="text-sm font-medium">
                           {accessSummary.accessibleGpts}/{accessSummary.totalGpts}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-300">Playbooks Access</span>
+                        <span className="text-sm text-gray-100">Playbooks Access</span>
                         <span className="text-sm font-medium">
                           {accessSummary.accessibleDocs}/{accessSummary.totalDocs}
                         </span>
                       </div>
                       <div className="pt-2 border-t border-gray-200">
-                        <p className="text-xs text-gray-500">{accessSummary.description}</p>
+                        <p className="text-xs text-gray-100">{accessSummary.description}</p>
                       </div>
                     </div>
                   </div>
@@ -1095,14 +1095,14 @@ export default function AdminPage() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-slate-800/80 rounded-2xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <h3 className="text-lg font-semibold text-white mb-4">Confirm Tier Change</h3>
-            <p className="text-gray-300 mb-6">
+            <p className="text-gray-100 mb-6">
               Are you sure you want to switch to <strong>{TIER_FEATURES[confirmTierChange.targetTier!]?.name}</strong> tier?
               This will immediately change your access level for testing purposes.
             </p>
             <div className="flex items-center justify-end space-x-4">
               <button
                 onClick={() => setConfirmTierChange({ isOpen: false, targetTier: null })}
-                className="px-4 py-2 text-gray-300 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-gray-100 border border-gray-300 rounded-lg hover:bg-gray-50"
                 disabled={switchingTier}
               >
                 Cancel
@@ -1175,7 +1175,7 @@ function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPost
           <h3 className="text-2xl font-semibold text-white">{title}</h3>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100"
+            className="text-gray-100 hover:text-gray-200 p-2 rounded-lg hover:bg-gray-700"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1245,7 +1245,7 @@ function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPost
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 text-gray-300 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 text-gray-100 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
             >
               Cancel
             </button>

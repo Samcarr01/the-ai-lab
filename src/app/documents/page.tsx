@@ -127,7 +127,7 @@ export default function DocumentsPage() {
     
     return (
       <div className="mb-4">
-        <p className="text-gray-300 text-sm leading-relaxed mb-3">
+        <p className="text-gray-100 text-sm leading-relaxed mb-3">
           {truncatedText}
         </p>
         {shouldTruncate && (
@@ -167,11 +167,11 @@ export default function DocumentsPage() {
     } else {
       return (
         <div className="w-full text-center">
-          <div className="w-full text-center bg-gray-100 text-gray-500 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-300 mb-3">
+          <div className="w-full text-center bg-gray-100 text-gray-100 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-100 mb-3">
             🔒 Upgrade to Download
           </div>
           {document.upgradeMessage && (
-            <p className="text-xs text-gray-300 mb-2">{document.upgradeMessage}</p>
+            <p className="text-xs text-gray-100 mb-2">{document.upgradeMessage}</p>
           )}
           <Link
             href="/upgrade"
@@ -253,7 +253,7 @@ export default function DocumentsPage() {
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-3 sm:mb-4">
             AI Playbooks Collection 📚
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-3xl mx-auto px-2 sm:px-0 mobile-readable">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-100 max-w-3xl mx-auto px-2 sm:px-0 mobile-readable">
             {effectiveUser && (effectiveUser.user_tier === 'pro' || effectiveUser.user_tier === 'ultra')
               ? "Download playbooks below and start implementing proven AI workflows today!"
               : "Explore our playbook collection. Upgrade to access playbooks!"
@@ -313,7 +313,7 @@ export default function DocumentsPage() {
                     className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                       selectedCategory === category
                         ? 'gradient-purple text-white shadow-lg transform scale-105'
-                        : 'bg-gray-50 text-gray-300 border border-gray-200 hover:border-purple-300 hover:text-purple-600 hover:scale-105'
+                        : 'bg-gray-50 text-gray-100 border border-gray-200 hover:border-purple-300 hover:text-purple-600 hover:scale-105'
                     }`}
                   >
                     {category === 'All' ? '📋' : getCategoryIcon(category)} {category}
@@ -404,7 +404,7 @@ export default function DocumentsPage() {
                         <span className={`text-xs font-medium px-2 py-1 rounded-full ${
                           document.is_featured && selectedCategory !== 'All'
                             ? 'text-purple-600 bg-purple-100'
-                            : 'text-gray-300 bg-gray-100'
+                            : 'text-gray-100 bg-gray-100'
                         }`}>
                           {document.category}
                         </span>
@@ -441,7 +441,7 @@ export default function DocumentsPage() {
             <h3 className="text-xl font-semibold text-white mb-2">
               No playbooks available yet
             </h3>
-            <p className="text-gray-300">
+            <p className="text-gray-100">
               I'm currently building my collection of step-by-step AI playbooks. Check back soon!
             </p>
           </div>
@@ -456,7 +456,7 @@ export default function DocumentsPage() {
             <h3 className="text-xl font-semibold text-white mb-2">
               No playbooks found in this category
             </h3>
-            <p className="text-gray-300">
+            <p className="text-gray-100">
               Try selecting a different category or check back later for new playbooks!
             </p>
           </div>

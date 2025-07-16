@@ -64,7 +64,7 @@ export default function ContactPage() {
             </Link>
             
             <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-300 hover:text-purple-300 transition-colors">
+              <Link href="/" className="text-gray-100 hover:text-purple-300 transition-colors">
                 Home
               </Link>
               <Link href="/login" className="text-purple-400 font-medium hover:text-purple-300 transition-colors">
@@ -91,7 +91,7 @@ export default function ContactPage() {
               <h1 className="text-5xl font-bold text-white mb-4">
                 Let's Connect
               </h1>
-              <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-xl text-gray-100 max-w-2xl mx-auto leading-relaxed">
                 Have questions about our AI tools? Need help with your subscription? 
                 Want to suggest new GPTs or playbooks? We'd love to hear from you!
               </p>
@@ -113,7 +113,7 @@ export default function ContactPage() {
                         <span className="text-2xl">✅</span>
                       </div>
                       <h3 className="text-xl font-semibold text-green-600 mb-2">Message Sent!</h3>
-                      <p className="text-gray-300">Thank you for reaching out. We'll get back to you soon!</p>
+                      <p className="text-gray-100">Thank you for reaching out. We'll get back to you soon!</p>
                     </div>
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -172,7 +172,7 @@ export default function ContactPage() {
                             <option value="other">Other</option>
                           </select>
                           <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none">
-                            <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="w-5 h-5 text-gray-200" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd"/>
                             </svg>
                           </div>
@@ -232,7 +232,7 @@ export default function ContactPage() {
                       </div>
                       <h3 className="text-xl font-semibold text-white">Quick Response</h3>
                     </div>
-                    <p className="text-gray-300 leading-relaxed">
+                    <p className="text-gray-100 leading-relaxed">
                       We typically respond within 24 hours. For urgent subscription issues, 
                       we'll get back to you even faster!
                     </p>
@@ -321,13 +321,13 @@ export default function ContactPage() {
               </div>
               <span className="text-lg font-semibold text-white">thehackai</span>
             </div>
-            <div className="flex space-x-6 text-sm text-gray-300">
+            <div className="flex space-x-6 text-sm text-gray-100">
               <Link href="/terms" className="hover:text-purple-400 transition-colors">Terms</Link>
               <Link href="/privacy" className="hover:text-purple-400 transition-colors">Privacy</Link>
               <Link href="/contact" className="text-purple-400 font-medium">Contact</Link>
             </div>
           </div>
-          <div className="mt-8 text-center text-sm text-gray-500">
+          <div className="mt-8 text-center text-sm text-gray-300">
             © 2024 thehackai. Made with 💜 for AI enthusiasts.
           </div>
         </div>

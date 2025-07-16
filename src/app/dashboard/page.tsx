@@ -209,18 +209,18 @@ export default function DashboardPage() {
                           ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' 
                           : user.user_tier === 'pro'
                             ? 'bg-purple-100 text-purple-700'
-                            : 'bg-gray-100 text-gray-300'
+                            : 'bg-gray-100 text-gray-700'
                     }`}>
                       {user.email === 'samcarr1232@gmail.com' ? '🔧 Admin' : 
                        user.user_tier === 'ultra' ? '🚀 Ultra Member' :
                        user.user_tier === 'pro' ? '✨ Pro Member' : '🆓 Free Member'}
                     </span>
-                    <span className="text-sm text-gray-500">•</span>
-                    <span className="text-sm text-gray-500">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                    <span className="text-sm text-gray-400">•</span>
+                    <span className="text-sm text-gray-400">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
                   </div>
                 </div>
               </div>
-              <p className="text-xl text-gray-300 leading-relaxed">
+              <p className="text-xl text-gray-100 leading-relaxed">
                 {(user.user_tier === 'pro' || user.user_tier === 'ultra') || user.email === 'samcarr1232@gmail.com'
                   ? "You have access to battle-tested AI playbooks and GPTs that actually work. Upload the PDFs directly to any LLM (ChatGPT, Claude, Gemini, etc.) to make it smarter at specific tasks."
                   : "Get AI workflows that actually work! Upgrade to Pro (£7/month) or Ultra (£19/month) for full access to battle-tested playbooks and GPTs."
@@ -272,12 +272,12 @@ export default function DashboardPage() {
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-300 mb-1">GPTs Available</p>
+                <p className="text-sm font-medium text-gray-100 mb-1">GPTs Available</p>
                 <p className="text-4xl font-bold text-purple-600">{stats.gpts}</p>
-                <p className="text-xs text-gray-500 mt-1">Ready to explore</p>
+                <p className="text-xs text-gray-400 mt-1">Ready to explore</p>
               </div>
               <div className="w-16 h-16 gradient-purple rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-3xl">🤖</span>
@@ -285,12 +285,12 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-300 mb-1">Playbooks</p>
+                <p className="text-sm font-medium text-gray-100 mb-1">Playbooks</p>
                 <p className="text-4xl font-bold text-purple-600">{stats.documents}</p>
-                <p className="text-xs text-gray-500 mt-1">PDF guides available</p>
+                <p className="text-xs text-gray-400 mt-1">PDF guides available</p>
               </div>
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-3xl">📚</span>
@@ -298,12 +298,12 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-6 shadow-lg border border-purple-100/50">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-300 mb-1">Blog Posts</p>
+                <p className="text-sm font-medium text-gray-100 mb-1">Blog Posts</p>
                 <p className="text-4xl font-bold text-purple-600">{stats.blogPosts}</p>
-                <p className="text-xs text-gray-500 mt-1">Coming soon</p>
+                <p className="text-xs text-gray-400 mt-1">Coming soon</p>
               </div>
               <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-3xl">📝</span>
@@ -315,15 +315,15 @@ export default function DashboardPage() {
         {/* Content Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* GPTs Section */}
-          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100/50">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center">
                   <span className="text-2xl">🤖</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white">AI GPTs</h3>
-                  <p className="text-sm text-gray-300">
+                  <h3 className="text-xl font-semibold text-gray-100">AI GPTs</h3>
+                  <p className="text-sm text-gray-100">
                     {user.user_tier === 'free' ? 'Preview available • Upgrade for access' : 
                      user.user_tier === 'pro' ? 'Access to 3 essential GPTs' : 
                      'Full access to all 7 GPTs'}
@@ -333,10 +333,10 @@ export default function DashboardPage() {
             </div>
             
             <div className="space-y-3 mb-6">
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-gray-700/50 rounded-xl">
                 <div className="flex items-center space-x-3">
                   <span className="text-lg">💼</span>
-                  <span className="font-medium text-white">Business Planning</span>
+                  <span className="font-medium text-gray-100">Business Planning</span>
                 </div>
                 {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
@@ -345,10 +345,10 @@ export default function DashboardPage() {
                 )}
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-gray-700/50 rounded-xl">
                 <div className="flex items-center space-x-3">
                   <span className="text-lg">⚡</span>
-                  <span className="font-medium text-white">Productivity</span>
+                  <span className="font-medium text-gray-100">Productivity</span>
                 </div>
                 {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
@@ -357,10 +357,10 @@ export default function DashboardPage() {
                 )}
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-gray-700/50 rounded-xl">
                 <div className="flex items-center space-x-3">
                   <span className="text-lg">🗣️</span>
-                  <span className="font-medium text-white">Communication</span>
+                  <span className="font-medium text-gray-100">Communication</span>
                 </div>
                 {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
@@ -369,10 +369,10 @@ export default function DashboardPage() {
                 )}
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-gray-700/50 rounded-xl">
                 <div className="flex items-center space-x-3">
                   <span className="text-lg">🤖</span>
-                  <span className="font-medium text-white">Automation</span>
+                  <span className="font-medium text-gray-100">Automation</span>
                 </div>
                 {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
@@ -391,15 +391,15 @@ export default function DashboardPage() {
           </div>
 
           {/* Playbooks Section */}
-          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-8 shadow-lg border border-purple-100/50">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 gradient-purple-subtle rounded-xl flex items-center justify-center">
                   <span className="text-2xl">📚</span>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white">AI Playbooks</h3>
-                  <p className="text-sm text-gray-300">
+                  <h3 className="text-xl font-semibold text-gray-100">AI Playbooks</h3>
+                  <p className="text-sm text-gray-100">
                     {user.user_tier === 'free' ? 'Preview available • Upgrade to download' :
                      user.user_tier === 'pro' ? 'Download 2 core playbooks' :
                      'Download all playbooks for any LLM knowledge'}
@@ -409,10 +409,10 @@ export default function DashboardPage() {
             </div>
             
             <div className="space-y-3 mb-6">
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-gray-700/50 rounded-xl">
                 <div className="flex items-center space-x-3">
                   <span className="text-lg">💼</span>
-                  <span className="font-medium text-white">Business Strategy</span>
+                  <span className="font-medium text-gray-100">Business Strategy</span>
                 </div>
                 {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
@@ -421,10 +421,10 @@ export default function DashboardPage() {
                 )}
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-gray-700/50 rounded-xl">
                 <div className="flex items-center space-x-3">
                   <span className="text-lg">⚡</span>
-                  <span className="font-medium text-white">Productivity Systems</span>
+                  <span className="font-medium text-gray-100">Productivity Systems</span>
                 </div>
                 {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
@@ -433,10 +433,10 @@ export default function DashboardPage() {
                 )}
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-gray-700/50 rounded-xl">
                 <div className="flex items-center space-x-3">
                   <span className="text-lg">🎯</span>
-                  <span className="font-medium text-white">Marketing & Content</span>
+                  <span className="font-medium text-gray-100">Marketing & Content</span>
                 </div>
                 {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
@@ -445,10 +445,10 @@ export default function DashboardPage() {
                 )}
               </div>
               
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-between p-3 bg-gray-700/50 rounded-xl">
                 <div className="flex items-center space-x-3">
                   <span className="text-lg">🤖</span>
-                  <span className="font-medium text-white">AI Workflows</span>
+                  <span className="font-medium text-gray-100">AI Workflows</span>
                 </div>
                 {user.user_tier === 'free' ? (
                   <span className="text-purple-600 text-sm">👀 Preview</span>
@@ -468,47 +468,47 @@ export default function DashboardPage() {
         </div>
 
         {/* How to Use Section */}
-        <div className="mt-8 bg-slate-800/80 rounded-2xl p-8 shadow-lg border border-green-100">
+        <div className="mt-8 bg-slate-800/60 rounded-2xl p-8 shadow-lg border border-green-500/30">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
               <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
                 <span className="text-2xl">💡</span>
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white">How to Use Your Playbooks</h3>
-                <p className="text-sm text-green-600">Step-by-step instructions 📚</p>
+                <h3 className="text-xl font-semibold text-gray-100">How to Use Your Playbooks</h3>
+                <p className="text-sm text-green-400">Step-by-step instructions 📚</p>
               </div>
             </div>
           </div>
           
           <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div className="p-4 bg-green-50 rounded-xl">
+            <div className="p-4 bg-green-900/30 rounded-xl">
               <h4 className="font-semibold text-white mb-2 flex items-center space-x-2">
                 <span>🤖</span>
                 <span>For ChatGPT</span>
               </h4>
-              <p className="text-sm text-gray-300 mb-3">
+              <p className="text-sm text-gray-100 mb-3">
                 Download PDFs → Upload to ChatGPT → Select "Create GPT" → Upload as knowledge files → Start chatting with enhanced AI
               </p>
             </div>
             
-            <div className="p-4 bg-green-50 rounded-xl">
+            <div className="p-4 bg-green-900/30 rounded-xl">
               <h4 className="font-semibold text-white mb-2 flex items-center space-x-2">
                 <span>🧠</span>
                 <span>For Claude</span>
               </h4>
-              <p className="text-sm text-gray-300 mb-3">
+              <p className="text-sm text-gray-100 mb-3">
                 Download PDFs → Start new conversation → Upload files → Claude will reference them in responses → Enhanced AI assistance
               </p>
             </div>
           </div>
 
-          <div className="p-4 bg-purple-50 rounded-xl">
+          <div className="p-4 bg-purple-900/30 rounded-xl">
             <h4 className="font-semibold text-white mb-2 flex items-center space-x-2">
               <span>⚡</span>
               <span>Pro Tip</span>
             </h4>
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-gray-100">
               Upload multiple playbooks together for comprehensive AI knowledge. Each PDF contains battle-tested workflows and strategies that enhance your AI assistant's capabilities.
             </p>
           </div>
