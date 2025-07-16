@@ -305,7 +305,10 @@ export default function UpgradePage() {
             </div>
 
             {/* Ultra Content */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-pink-400 relative mt-4 ring-2 ring-pink-300 ring-opacity-50 animate-pulse">
+            <div className="bg-white rounded-2xl p-6 shadow-lg relative mt-4">
+              {/* Animated glowing border */}
+              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-pink-400 via-purple-400 via-pink-400 to-purple-400 opacity-50 blur-sm animate-spin" style={{animationDuration: '3s'}}></div>
+              <div className="absolute inset-0 rounded-2xl bg-white"></div>
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
                 <span className="bg-pink-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-md">Best Value</span>
               </div>
