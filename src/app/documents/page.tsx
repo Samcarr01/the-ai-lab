@@ -313,7 +313,7 @@ export default function DocumentsPage() {
                     className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
                       selectedCategory === category
                         ? 'gradient-purple text-white shadow-lg transform scale-105'
-                        : 'bg-gray-50 text-gray-100 border border-gray-200 hover:border-purple-300 hover:text-purple-600 hover:scale-105'
+                        : 'bg-gray-800 text-gray-100 border border-gray-600 hover:border-purple-300 hover:text-purple-400 hover:scale-105'
                     }`}
                   >
                     {category === 'All' ? '📋' : getCategoryIcon(category)} {category}

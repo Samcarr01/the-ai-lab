@@ -190,8 +190,8 @@ export default function DashboardPage() {
 
         {/* Welcome Section */}
         <div className="mb-12">
-          <div className="bg-gradient-to-br from-purple-50 via-white to-purple-50/30 rounded-3xl p-8 border border-purple-100/50 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-100/20 to-transparent opacity-50"></div>
+          <div className="bg-gradient-to-br from-purple-900/20 via-slate-800 to-purple-900/10 rounded-3xl p-8 border border-purple-500/30 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 to-transparent opacity-50"></div>
             <div className="relative z-10">
               <div className="flex items-center space-x-4 mb-6">
                 <div className="w-16 h-16 gradient-purple rounded-2xl flex items-center justify-center shadow-lg animate-float">

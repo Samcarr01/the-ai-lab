@@ -1102,7 +1102,7 @@ export default function AdminPage() {
             <div className="flex items-center justify-end space-x-4">
               <button
                 onClick={() => setConfirmTierChange({ isOpen: false, targetTier: null })}
-                className="px-4 py-2 text-gray-100 border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 text-gray-100 border border-gray-600 rounded-lg hover:bg-gray-700"
                 disabled={switchingTier}
               >
                 Cancel
@@ -1245,7 +1245,7 @@ function BlogPostModal({ isOpen, onClose, onSave, initialData, title }: BlogPost
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 text-gray-100 border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 text-gray-100 border border-gray-600 rounded-xl hover:bg-gray-700 transition-colors"
             >
               Cancel
             </button>
