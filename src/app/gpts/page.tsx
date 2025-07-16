@@ -51,8 +51,9 @@ export default function GPTsPage() {
       }
 
       // Load GPTs and categories with access control
+      const effectiveUserTier = getEffectiveUser(userProfile)?.user_tier || 'free'
       const [allGpts, allCategories] = await Promise.all([
-        gptsService.getAllGPTsWithAccess(userProfile.user_tier || 'free'),
+        gptsService.getAllGPTsWithAccess(effectiveUserTier),
         gptsService.getCategories()
       ])
       

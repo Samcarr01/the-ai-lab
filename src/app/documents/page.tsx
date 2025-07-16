@@ -53,8 +53,9 @@ export default function DocumentsPage() {
 
       // Load documents and categories with access control
       console.log('🔄 Fetching fresh documents data...')
+      const effectiveUserTier = getEffectiveUser(userProfile)?.user_tier || 'free'
       const [allDocuments, allCategories] = await Promise.all([
-        documentsService.getAllDocumentsWithAccess(userProfile.user_tier || 'free'),
+        documentsService.getAllDocumentsWithAccess(effectiveUserTier),
         documentsService.getCategories()
       ])
       console.log('📊 Loaded documents:', allDocuments.length)
