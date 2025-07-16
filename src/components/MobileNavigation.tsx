@@ -79,10 +79,18 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
       }`} onClick={handleLinkClick} />
 
       {/* Mobile Menu Panel */}
-      <div className={`fixed top-0 right-0 h-full w-72 sm:w-80 bg-slate-900 shadow-2xl z-50 transform transition-all duration-300 ease-out md:hidden ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
-      }`} style={{ backgroundColor: 'rgb(15 23 42)' }}>
-        <div className="flex flex-col h-full">
+      <div 
+        className={`fixed top-0 right-0 h-full w-72 sm:w-80 shadow-2xl transform transition-all duration-300 ease-out md:hidden ${
+          isOpen ? 'translate-x-0' : 'translate-x-full'
+        }`} 
+        style={{ 
+          backgroundColor: 'rgb(15, 23, 42)', 
+          zIndex: 9999,
+          backdropFilter: 'none',
+          WebkitBackdropFilter: 'none'
+        }}
+      >
+        <div className="flex flex-col h-full" style={{ backgroundColor: 'rgb(15, 23, 42)' }}>
           {/* Header */}
           <div className={`flex items-center justify-between p-6 border-b border-gray-700 transition-all duration-500 ${
             animateItems ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
