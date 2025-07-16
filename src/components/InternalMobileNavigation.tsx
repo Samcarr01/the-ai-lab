@@ -9,14 +9,12 @@ interface InternalMobileNavigationProps {
   userEmail?: string
   userTier?: 'free' | 'pro' | 'ultra'
   showAdminLink?: boolean
-  showSignOut?: boolean
 }
 
 export default function InternalMobileNavigation({ 
   userEmail, 
   userTier = 'free', 
-  showAdminLink = false,
-  showSignOut = true
+  showAdminLink = false
 }: InternalMobileNavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [animateItems, setAnimateItems] = useState(false)
@@ -207,22 +205,31 @@ export default function InternalMobileNavigation({
             </div>
           </nav>
 
-          {/* CTA Button - Match homepage style */}
+          {/* Authentication-based CTA Button */}
           <div className={`px-6 transition-all duration-500 delay-600 ${
             animateItems ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           }`}>
-            {userTier !== 'ultra' && (
-              <Link
-                href="/upgrade"
-                onClick={handleLinkClick}
-                className="group flex items-center justify-center w-full gradient-purple text-white py-4 px-6 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
-              >
-                <span className="mr-3 text-xl transition-transform duration-200 group-hover:scale-110">
-                  {userTier === 'pro' ? '🚀' : '⭐'}
-                </span>
-                {userTier === 'pro' ? 'Upgrade to Ultra' : 'Get Started'}
-              </Link>
-            )}
+            {/* Show Sign Out button for authenticated users */}
+            <button
+              onClick={async () => {
+                try {
+                  handleLinkClick()
+                  // Use proper auth signOut method
+                  const { auth } = await import('@/lib/auth')
+                  await auth.signOut()
+                  // Redirect to home page after sign out
+                  window.location.href = '/'
+                } catch (error) {
+                  console.error('Sign out error:', error)
+                  // Fallback redirect on error
+                  window.location.href = '/'
+                }
+              }}
+              className="group flex items-center justify-center w-full gradient-purple text-white py-4 px-6 rounded-xl font-medium text-lg shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95"
+            >
+              <span className="mr-3 text-xl transition-transform duration-200 group-hover:scale-110">👋</span>
+              Sign Out
+            </button>
           </div>
 
           {/* User Info Section - Moved to Bottom */}
@@ -258,31 +265,6 @@ export default function InternalMobileNavigation({
             </div>
           )}
 
-          {/* Sign Out Button */}
-          {showSignOut && (
-            <div className={`p-6 border-t border-gray-700 bg-gray-700/50 transition-all duration-500 delay-900 ${
-              animateItems ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-            }`}>
-              <button
-                onClick={async () => {
-                  try {
-                    handleLinkClick()
-                    // Use proper auth signOut method
-                    const { auth } = await import('@/lib/auth')
-                    await auth.signOut()
-                    window.location.href = '/'
-                  } catch (error) {
-                    console.error('Sign out error:', error)
-                    window.location.href = '/'
-                  }
-                }}
-                className="group flex items-center justify-center w-full text-gray-300 hover:text-red-400 py-4 px-4 rounded-xl hover:bg-red-900/20 border border-gray-600 hover:border-red-500/30 transition-all duration-200 hover:scale-105 active:scale-95 font-medium"
-              >
-                <span className="mr-3 text-xl transition-transform duration-200 group-hover:scale-110">👋</span>
-                Sign Out
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </>

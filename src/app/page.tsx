@@ -156,7 +156,6 @@ export default function HomePage() {
                 userEmail={user.email}
                 userTier={user.user_tier || 'free'}
                 showAdminLink={user.email === 'samcarr1232@gmail.com'}
-                showSignOut={false}
               />
             ) : (
               <MobileNavigation 
