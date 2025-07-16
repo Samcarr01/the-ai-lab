@@ -138,12 +138,42 @@
 }
 
 @layer utilities {
-  /* Force mobile navigation solid background */
-  .mobile-nav-panel {
-    background-color: #0f172a !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    opacity: 1 !important;
+  /* Mobile-only navigation solid background - ensures readability */
+  @media (max-width: 768px) {
+    .mobile-nav-panel {
+      background-color: #0f172a !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      opacity: 1 !important;
+      background: #0f172a !important;
+    }
+    
+    /* Force solid background for mobile navigation */
+    .mobile-nav-solid {
+      background-color: #0f172a !important;
+      backdrop-filter: none !important;
+      -webkit-backdrop-filter: none !important;
+      background-image: none !important;
+      background-attachment: fixed !important;
+    }
+    
+    /* High contrast text for mobile navigation */
+    .mobile-nav-panel .text-gray-200 {
+      color: #f1f5f9 !important;
+    }
+    
+    .mobile-nav-panel .text-gray-300 {
+      color: #e2e8f0 !important;
+    }
+    
+    /* Enhanced purple accents for mobile */
+    .mobile-nav-panel .text-purple-400 {
+      color: #c084fc !important;
+    }
+    
+    .mobile-nav-panel .text-purple-300 {
+      color: #d8b4fe !important;
+    }
   }
 
   /* Custom animations */

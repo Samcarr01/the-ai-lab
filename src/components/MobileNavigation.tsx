@@ -78,31 +78,17 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
         isOpen ? 'bg-opacity-50 backdrop-blur-sm' : 'bg-opacity-0 pointer-events-none'
       }`} onClick={handleLinkClick} />
 
-      {/* Mobile Menu Panel - Force Solid Background */}
+      {/* Mobile Menu Panel - Solid Dark Background for Readability */}
       <div 
-        className={`fixed top-0 right-0 h-full w-72 sm:w-80 shadow-2xl transform transition-all duration-300 ease-out md:hidden ${
+        className={`mobile-nav-panel mobile-nav-solid fixed top-0 right-0 h-full w-72 sm:w-80 shadow-2xl transform transition-all duration-300 ease-out md:hidden ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`} 
         style={{ 
+          backgroundColor: '#0f172a',
           zIndex: 9999
         }}
       >
-        {/* Solid Background Layer */}
-        <div 
-          className="absolute inset-0 w-full h-full"
-          style={{ 
-            backgroundColor: '#0f172a',
-            zIndex: 1
-          }}
-        />
-        {/* Content Layer */}
-        <div 
-          className="relative flex flex-col h-full w-full" 
-          style={{ 
-            backgroundColor: '#0f172a',
-            zIndex: 2
-          }}
-        >
+        <div className="flex flex-col h-full bg-slate-900">
           {/* Header */}
           <div className={`flex items-center justify-between p-6 border-b border-gray-700 transition-all duration-500 ${
             animateItems ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'
