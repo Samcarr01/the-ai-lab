@@ -357,39 +357,39 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-purple-50/50 to-white">
+      <section id="pricing" className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900">
         <div className="max-w-6xl mx-auto text-center">
           <ScrollAnimation animation="fade-up">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
               Choose Your AI Mastery Level 🚀
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-8 sm:mb-12 px-2 sm:px-0">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-8 sm:mb-12 px-2 sm:px-0">
               Battle-tested AI playbooks and GPTs that actually work. Make any AI smarter at what you need.
             </p>
           </ScrollAnimation>
           <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-5xl mx-auto pt-4">
             {/* Free Preview */}
             <ScrollAnimation animation="slide-left" delay={100}>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-200/50 hover:border-gray-300/50 transform hover:scale-105 hover:-translate-y-2 hover:-rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback mt-4">
-                <div className="absolute inset-0 bg-gradient-to-br from-gray-50/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="bg-slate-800/90 backdrop-blur-sm rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-600/50 hover:border-gray-500/50 transform hover:scale-105 hover:-translate-y-2 hover:-rotate-1 relative overflow-hidden h-full flex flex-col touch-feedback mt-4">
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-700/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500"></div>
                 <div className="relative z-10 flex flex-col h-full">
-                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Free Preview</h3>
-                  <div className="text-3xl sm:text-4xl font-bold text-gray-600 mb-4">£0</div>
-                  <ul className="text-left space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-600 flex-grow">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Free Preview</h3>
+                  <div className="text-3xl sm:text-4xl font-bold text-gray-300 mb-4">£0</div>
+                  <ul className="text-left space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-300 flex-grow">
                     <li className="flex items-center space-x-3">
-                      <span className="text-green-500">✓</span>
+                      <span className="text-green-400">✓</span>
                       <span>Browse all GPTs and playbooks</span>
                     </li>
                     <li className="flex items-center space-x-3">
-                      <span className="text-green-500">✓</span>
+                      <span className="text-green-400">✓</span>
                       <span>Preview descriptions</span>
                     </li>
                     <li className="flex items-center space-x-3">
-                      <span className="text-green-500">✓</span>
+                      <span className="text-green-400">✓</span>
                       <span>Access to blog content</span>
                     </li>
                     <li className="flex items-center space-x-3">
-                      <span className="text-green-500">✓</span>
+                      <span className="text-green-400">✓</span>
                       <span>Explore what's inside</span>
                     </li>
                   </ul>
@@ -449,19 +449,19 @@ export default function HomePage() {
                   <div className="text-3xl sm:text-4xl font-bold mb-4">£<AnimatedCounter end={19} duration={2500} className="inline" /><span className="text-lg sm:text-xl">/month</span></div>
                   <ul className="text-left space-y-2 sm:space-y-3 text-sm sm:text-base flex-grow">
                     <li className="flex items-center space-x-3">
-                      <span className="text-pink-200">✓</span>
+                      <span className="text-pink-300">✓</span>
                       <span>All {contentStats?.totalGPTs || 7} GPTs for complete AI mastery</span>
                     </li>
                     <li className="flex items-center space-x-3">
-                      <span className="text-pink-200">✓</span>
+                      <span className="text-pink-300">✓</span>
                       <span>All {contentStats?.totalPlaybooks || 10} playbooks for expert knowledge</span>
                     </li>
                     <li className="flex items-center space-x-3">
-                      <span className="text-pink-200">✓</span>
+                      <span className="text-pink-300">✓</span>
                       <span>Priority support + early access</span>
                     </li>
                     <li className="flex items-center space-x-3">
-                      <span className="text-pink-200">✓</span>
+                      <span className="text-pink-300">✓</span>
                       <span>For serious AI power users</span>
                     </li>
                   </ul>
