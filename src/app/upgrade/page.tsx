@@ -306,17 +306,13 @@ export default function UpgradePage() {
 
             {/* Ultra Content */}
             <div className="bg-white rounded-2xl p-6 shadow-lg relative mt-4">
-              {/* Glowing animated border */}
-              <div className="absolute -inset-1 rounded-2xl" style={{
-                background: `conic-gradient(from 0deg, 
-                  #ff69b4 0%, 
-                  #8b5cf6 25%, 
-                  #ffd700 50%, 
-                  #ff69b4 75%, 
-                  #8b5cf6 100%)`,
-                animation: 'spin 3s linear infinite',
-                filter: 'blur(1px)',
-                opacity: 0.6
+              {/* Beautiful static border */}
+              <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 opacity-30"></div>
+              {/* Traveling light on the border */}
+              <div className="absolute -inset-0.5 rounded-2xl" style={{
+                background: `conic-gradient(from 0deg, transparent 0%, transparent 80%, #ffffff 85%, #ffd700 90%, #ffffff 95%, transparent 100%)`,
+                animation: 'spin 4s linear infinite',
+                filter: 'blur(2px)'
               }}></div>
               <div className="absolute inset-0 rounded-2xl bg-white z-10"></div>
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
