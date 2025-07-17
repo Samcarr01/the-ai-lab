@@ -46,7 +46,7 @@ export default function CheckoutSuccessPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white">
-        <SmartNavigation />
+        <SmartNavigation user={null} />
         <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
         </div>
@@ -56,7 +56,7 @@ export default function CheckoutSuccessPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <SmartNavigation />
+      <SmartNavigation user={userProfile} />
       
       <div className="pt-20 pb-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
