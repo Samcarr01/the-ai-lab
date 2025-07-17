@@ -86,7 +86,7 @@ export const stripeHelpers = {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'apple_pay', 'google_pay'],
       line_items: [
         {
           price: plan.priceId,
@@ -98,14 +98,25 @@ export const stripeHelpers = {
         userId,
         tier,
       },
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard?success=true&tier=${tier}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/upgrade?canceled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?tier=${tier}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout?tier=${tier}&canceled=true`,
       subscription_data: {
         metadata: {
           userId,
           tier,
         },
       },
+      // Enable additional payment methods
+      allow_promotion_codes: true,
+      billing_address_collection: 'auto',
+      phone_number_collection: {
+        enabled: false,
+      },
+      automatic_tax: {
+        enabled: false,
+      },
+      // Optimize for mobile
+      locale: 'en',
     })
 
     return session

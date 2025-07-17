@@ -54,34 +54,8 @@ export default function UpgradePage() {
   const handleUpgrade = async (tier: UserTier) => {
     if (upgrading || !user) return
 
-    setUpgrading(tier)
-    setError(null)
-
-    try {
-      const response = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tier,
-          userId: user.id,
-          userEmail: user.email,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to create checkout session')
-      }
-
-      const { url } = await response.json()
-      window.location.href = url
-    } catch (err) {
-      console.error('Upgrade failed:', err)
-      setError(err instanceof Error ? err.message : 'Upgrade failed. Please try again.')
-    } finally {
-      setUpgrading(null)
-    }
+    // Redirect to dedicated checkout page
+    router.push(`/checkout?tier=${tier}`)
   }
 
   if (loading) {
