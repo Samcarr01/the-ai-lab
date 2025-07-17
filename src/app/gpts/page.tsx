@@ -150,20 +150,21 @@ export default function GPTsPage() {
         </a>
       )
     } else {
+      // Determine the required tier and appropriate checkout URL
+      const requiredTier = gpt.required_tier || 'pro'
+      const checkoutUrl = `/checkout?tier=${requiredTier}`
+      
       return (
         <div className="w-full text-center">
-          <div className="w-full text-center bg-gray-700 text-gray-100 py-3 px-4 rounded-xl font-semibold border-2 border-dashed border-gray-500 mb-3">
-            🔒 Upgrade to Access
-          </div>
-          {gpt.upgradeMessage && (
-            <p className="text-xs text-gray-100 mb-2">{gpt.upgradeMessage}</p>
-          )}
           <Link
-            href="/upgrade"
-            className="inline-block text-purple-600 hover:text-purple-700 text-xs font-medium"
+            href={checkoutUrl}
+            className="w-full block text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200 hover:scale-105 shadow-lg"
           >
-            View Upgrade Options →
+            🔒 Unlock with {requiredTier === 'ultra' ? 'Ultra' : 'Pro'}
           </Link>
+          {gpt.upgradeMessage && (
+            <p className="text-xs text-gray-100 mt-2">{gpt.upgradeMessage}</p>
+          )}
         </div>
       )
     }
@@ -211,10 +212,10 @@ export default function GPTsPage() {
                 </p>
               </div>
               <Link
-                href="/upgrade"
+                href="/checkout?tier=pro"
                 className="bg-slate-800/80 text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
               >
-                View Pricing 🚀
+                Choose Pro Plan 🚀
               </Link>
             </div>
           </div>
@@ -231,7 +232,7 @@ export default function GPTsPage() {
                 </p>
               </div>
               <Link
-                href="/upgrade"
+                href="/checkout?tier=ultra"
                 className="bg-slate-800/80 text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
               >
                 Upgrade to Ultra ✨

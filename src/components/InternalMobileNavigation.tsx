@@ -183,7 +183,7 @@ export default function InternalMobileNavigation({
 
               {userTier !== 'ultra' && (
                 <Link
-                  href="/upgrade"
+                  href={userTier === 'pro' ? '/checkout?tier=ultra' : '/checkout?tier=pro'}
                   onClick={handleLinkClick}
                   className={`group flex items-center text-lg py-4 px-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-sm active:scale-95 bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 ${
                     isActivePage('/upgrade')

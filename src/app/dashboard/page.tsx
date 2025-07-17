@@ -242,10 +242,10 @@ export default function DashboardPage() {
                 </p>
               </div>
               <Link
-                href="/upgrade"
+                href="/checkout?tier=pro"
                 className="bg-slate-800/80 text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg sm:whitespace-nowrap w-full sm:w-auto text-center"
               >
-                View Pricing 🚀
+                Choose Pro Plan 🚀
               </Link>
             </div>
           </div>
@@ -262,7 +262,7 @@ export default function DashboardPage() {
                 </p>
               </div>
               <Link
-                href="/upgrade"
+                href="/checkout?tier=ultra"
                 className="bg-slate-800/80 text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg sm:whitespace-nowrap w-full sm:w-auto text-center"
               >
                 Upgrade to Ultra ✨
