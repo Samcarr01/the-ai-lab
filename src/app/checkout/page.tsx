@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { getStripe } from '@/lib/stripe'
@@ -8,7 +8,7 @@ import SmartNavigation from '@/components/SmartNavigation'
 import { STRIPE_CONFIG } from '@/lib/stripe'
 import { UserTier } from '@/lib/user'
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const tier = searchParams?.get('tier') as UserTier || 'pro'
@@ -300,5 +300,20 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white">
+        <SmartNavigation user={null} />
+        <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        </div>
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   )
 }
