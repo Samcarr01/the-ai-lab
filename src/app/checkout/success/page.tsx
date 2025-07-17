@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { SmartNavigation } from '@/components/SmartNavigation'
+import SmartNavigation from '@/components/SmartNavigation'
 import { STRIPE_CONFIG } from '@/lib/stripe'
 import { UserTier } from '@/lib/user'
 
