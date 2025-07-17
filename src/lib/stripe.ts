@@ -12,7 +12,7 @@ if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
 
 // Server-side Stripe instance
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-05-28.basil',
+  apiVersion: '2024-12-18.acacia',
   typescript: true,
 })
 
@@ -86,7 +86,7 @@ export const stripeHelpers = {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
-      payment_method_types: ['card', 'apple_pay', 'google_pay'],
+      payment_method_types: ['card'],
       line_items: [
         {
           price: plan.priceId,
@@ -106,18 +106,9 @@ export const stripeHelpers = {
           tier,
         },
       },
-      // Enable additional payment methods
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
-      phone_number_collection: {
-        enabled: false,
-      },
-      automatic_tax: {
-        enabled: false,
-      },
-      // Optimize for mobile
-      locale: 'en',
-    })
+    } as Stripe.Checkout.SessionCreateParams)
 
     return session
   },
