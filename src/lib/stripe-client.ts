@@ -1,4 +1,4 @@
-import { getStripe } from './stripe'
+import { getStripe } from './stripe-config'
 
 export const stripeService = {
   async createCheckoutSession(): Promise<{ sessionId: string; url: string }> {
