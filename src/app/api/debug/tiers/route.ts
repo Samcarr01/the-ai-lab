@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const supabase = createClient()
     
-    // Get all GPTs with their tier assignments
+    // Get all GPTs with their tier assignments - handle missing columns gracefully
     const { data: gpts, error: gptsError } = await supabase
       .from('gpts')
       .select('title, required_tier, is_featured')
@@ -15,7 +15,14 @@ export async function GET() {
     
     if (gptsError) {
       console.error('Error fetching GPTs:', gptsError)
-      return NextResponse.json({ error: 'Failed to fetch GPTs' }, { status: 500 })
+      // Return empty data instead of failing
+      return NextResponse.json({
+        message: 'Debug API - database schema issues',
+        error: gptsError.message,
+        gpts: [],
+        documents: [],
+        summary: { gpts: { total: 0, counts: {} }, documents: { total: 0, counts: {} } }
+      })
     }
     
     // Get all documents with their tier assignments
