@@ -94,8 +94,8 @@ export default function DashboardPage() {
         if (userProfile) {
           setUser(userProfile)
           
-          // Load live stats
-          await loadStats()
+          // Load live stats with user tier
+          await loadStats(userProfile.user_tier || 'free')
         } else {
           console.error('Failed to load or create user profile')
           router.push('/login')
@@ -108,13 +108,19 @@ export default function DashboardPage() {
       }
     }
 
-    const loadStats = async () => {
+    const loadStats = async (userTier: UserTier = 'free') => {
       try {
+        console.log('Dashboard: Loading stats for tier:', userTier)
         const [gptsData, documentsData, contentStatsData] = await Promise.all([
           gptsService.getAllGPTs(),
           documentsService.getAllDocuments(),
-          contentStatsService.getContentStats(effectiveUser?.user_tier || 'free')
+          contentStatsService.getContentStats(userTier)
         ])
+        
+        console.log('Dashboard: Stats loaded successfully', { 
+          gpts: gptsData.length, 
+          documents: documentsData.length 
+        })
         
         setStats({
           gpts: gptsData.length,
@@ -124,7 +130,17 @@ export default function DashboardPage() {
         
         setContentStats(contentStatsData)
       } catch (error) {
-        console.error('Error loading stats:', error)
+        console.error('Dashboard: Error loading stats:', error)
+        // Set default values on error
+        setStats({ gpts: 0, documents: 0, blogPosts: 0 })
+        setContentStats({
+          totalGPTs: 0,
+          totalDocuments: 0,
+          totalPlaybooks: 0,
+          accessibleGPTs: 0,
+          accessibleDocuments: 0,
+          accessiblePlaybooks: 0
+        })
       }
     }
 
@@ -157,7 +173,17 @@ export default function DashboardPage() {
   }
 
   if (!user) {
-    return null
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white">
+        <SmartNavigation user={null} />
+        <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading dashboard...</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
