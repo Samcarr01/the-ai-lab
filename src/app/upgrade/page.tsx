@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile, type UserTier, TIER_FEATURES } from '@/lib/user'
-import { stripeHelpers } from '@/lib/stripe'
+import { stripeClientHelpers } from '@/lib/stripe-config'
 import SmartNavigation from '@/components/SmartNavigation'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
 
@@ -71,7 +71,7 @@ export default function UpgradePage() {
   }
 
   const currentTier = user.user_tier || 'free'
-  const upgradeOptions = stripeHelpers.getUpgradeOptions(currentTier)
+  const upgradeOptions = stripeClientHelpers.getUpgradeOptions(currentTier)
 
   return (
     <DarkThemeBackground>

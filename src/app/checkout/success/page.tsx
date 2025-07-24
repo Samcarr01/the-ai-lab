@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import SmartNavigation from '@/components/SmartNavigation'
-import { STRIPE_CONFIG } from '@/lib/stripe'
+import { STRIPE_CONFIG } from '@/lib/stripe-config'
 import { UserTier } from '@/lib/user'
 
 function CheckoutSuccessContent() {

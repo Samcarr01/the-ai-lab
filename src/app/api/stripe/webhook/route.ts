@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe, stripeHelpers } from '@/lib/stripe'
+import { getStripe, stripeHelpers } from '@/lib/stripe'
 import { createClient } from '@/lib/supabase/server'
 import { userService, type UserTier } from '@/lib/user'
 import Stripe from 'stripe'
@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
 
   try {
     // Verify webhook signature
+    const stripe = getStripe()
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
   } catch (error) {
     console.error('Webhook signature verification failed:', error)
@@ -38,6 +39,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Get subscription details
+        const stripe = getStripe()
         const subscription = await stripe.subscriptions.retrieve(session.subscription as string)
         
         // Update user tier and subscription data

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe, stripeHelpers } from '@/lib/stripe'
+import { getStripe, stripeHelpers } from '@/lib/stripe'
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 

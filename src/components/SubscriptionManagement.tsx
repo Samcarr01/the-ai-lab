@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { STRIPE_CONFIG, stripeHelpers } from '@/lib/stripe'
+import { STRIPE_CONFIG, stripeClientHelpers } from '@/lib/stripe-config'
 import { UserProfile, UserTier } from '@/lib/user'
 
 interface SubscriptionManagementProps {
@@ -17,7 +17,7 @@ export default function SubscriptionManagement({ user, onUpdate }: SubscriptionM
 
   const currentTier = user.user_tier || 'free'
   const planConfig = STRIPE_CONFIG.PLANS[currentTier]
-  const upgradeOptions = stripeHelpers.getUpgradeOptions(currentTier)
+  const upgradeOptions = stripeClientHelpers.getUpgradeOptions(currentTier)
 
   const handleUpgrade = (tier: UserTier) => {
     router.push(`/checkout?tier=${tier}`)
