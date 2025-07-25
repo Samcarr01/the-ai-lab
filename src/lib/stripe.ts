@@ -49,7 +49,7 @@ export const stripeHelpers = {
 
     const session = await stripeInstance.checkout.sessions.create({
       mode: 'subscription',
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'apple_pay', 'google_pay'],
       line_items: [
         {
           price: plan.priceId,
@@ -71,6 +71,36 @@ export const stripeHelpers = {
       },
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
+      // Custom branding to match our Apple-inspired design
+      custom_text: {
+        submit: {
+          message: 'Secure payment powered by Stripe • Complete your upgrade to unlock all features'
+        }
+      },
+      // Invoice settings for professional branding
+      invoice_creation: {
+        enabled: true,
+        invoice_data: {
+          description: `${plan.name} Plan - thehackai Premium Subscription`,
+          metadata: {
+            tier,
+            userId,
+          },
+          footer: 'Thank you for choosing thehackai! Questions? Contact us at support@thehackai.com'
+        }
+      },
+      // Phone number collection for better user experience
+      phone_number_collection: {
+        enabled: false
+      },
+      // Shipping address collection (disabled for digital products)
+      shipping_address_collection: {
+        allowed_countries: []
+      },
+      // Tax ID collection (disabled for consumer products)
+      tax_id_collection: {
+        enabled: false
+      },
     } as Stripe.Checkout.SessionCreateParams)
 
     return session
