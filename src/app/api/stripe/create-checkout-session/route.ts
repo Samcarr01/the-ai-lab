@@ -70,33 +70,18 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error: any) {
-    console.error('=== CHECKOUT SESSION ERROR ===')
-    console.error('Full error object:', error)
-    console.error('Error message:', error.message)
-    console.error('Error stack:', error.stack)
-    console.error('Error type:', error.type)
-    console.error('Error code:', error.code)
-    console.error('Request tier:', tier)
-    console.error('User ID:', user?.id)
-    console.error('User email:', user?.email)
-    console.error('=== END ERROR DETAILS ===')
-    
-    // Also log what we were trying to do
-    console.error('Attempted operation: Creating Stripe checkout session')
-    console.error('Tier requested:', tier)
-    console.error('Environment variables present:', {
-      hasStripeSecretKey: !!process.env.STRIPE_SECRET_KEY,
-      hasProPriceId: !!process.env.STRIPE_PRO_PRICE_ID,
-      hasUltraPriceId: !!process.env.STRIPE_ULTRA_PRICE_ID,
-      siteUrl: process.env.NEXT_PUBLIC_SITE_URL
+    console.error('Checkout session creation failed:', {
+      error: error.message,
+      type: error.type,
+      tier,
+      userId: user?.id,
+      userEmail: user?.email
     })
     
     return NextResponse.json(
       { 
         error: 'Failed to create checkout session',
-        details: error.message || 'Unknown error',
-        type: error.type || 'unknown',
-        code: error.code || 'unknown'
+        details: error.message || 'Unknown error'
       },
       { status: 500 }
     )

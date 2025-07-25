@@ -77,18 +77,7 @@ export const stripeHelpers = {
           message: 'Secure payment powered by Stripe • Complete your upgrade to unlock all features'
         }
       },
-      // Invoice settings for professional branding
-      invoice_creation: {
-        enabled: true,
-        invoice_data: {
-          description: `${plan.name} Plan - thehackai Premium Subscription`,
-          metadata: {
-            tier,
-            userId,
-          },
-          footer: 'Thank you for choosing thehackai! Questions? Contact us at support@thehackai.com'
-        }
-      },
+      // Note: Invoice creation is automatic for subscription mode
       // Phone number collection for better user experience
       phone_number_collection: {
         enabled: false
