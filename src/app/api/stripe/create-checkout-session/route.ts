@@ -29,11 +29,11 @@ export async function POST(request: NextRequest) {
     // Validate upgrade path
     const { data: userProfile } = await supabase
       .from('users')
-      .select('current_tier')
+      .select('user_tier')
       .eq('id', user.id)
       .single()
 
-    const currentTier = (userProfile?.current_tier || 'free') as UserTier
+    const currentTier = (userProfile?.user_tier || 'free') as UserTier
 
     if (!stripeHelpers.isValidUpgrade(currentTier, tier as UserTier)) {
       return NextResponse.json(

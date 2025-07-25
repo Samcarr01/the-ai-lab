@@ -39,7 +39,12 @@ export const stripeHelpers = {
     const plan = STRIPE_CONFIG.PLANS[tier]
     
     if (!plan.priceId) {
-      throw new Error(`No price ID configured for tier: ${tier}`)
+      throw new Error(`No price ID configured for tier: ${tier}. Please set STRIPE_${tier.toUpperCase()}_PRICE_ID in your environment variables.`)
+    }
+
+    // Validate that price ID looks correct (should start with 'price_')
+    if (!plan.priceId.startsWith('price_')) {
+      throw new Error(`Invalid price ID format for ${tier}: ${plan.priceId}. Price IDs should start with 'price_', not 'prod_'. Please check your Stripe Dashboard.`)
     }
 
     const session = await stripeInstance.checkout.sessions.create({

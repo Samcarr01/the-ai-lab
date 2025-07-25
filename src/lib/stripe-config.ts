@@ -29,7 +29,7 @@ export const STRIPE_CONFIG = {
     pro: {
       name: 'Pro',
       price: 700, // £7.00 in pence
-      priceId: process.env.STRIPE_PRO_PRICE_ID || 'price_pro_monthly',
+      priceId: process.env.STRIPE_PRO_PRICE_ID || null,
       description: 'Daily AI Use',
       features: [
         'Everything in Free',
@@ -41,7 +41,7 @@ export const STRIPE_CONFIG = {
     ultra: {
       name: 'Ultra',
       price: 1900, // £19.00 in pence
-      priceId: process.env.STRIPE_ULTRA_PRICE_ID || 'price_ultra_monthly',
+      priceId: process.env.STRIPE_ULTRA_PRICE_ID || null,
       description: 'Upscale Your AI Game',
       features: [
         'Everything in Pro',
