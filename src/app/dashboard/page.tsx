@@ -13,7 +13,6 @@ import { useAdmin } from '@/contexts/AdminContext'
 import SmartNavigation from '@/components/SmartNavigation'
 import InternalMobileNavigation from '@/components/InternalMobileNavigation'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
-import SubscriptionManagement from '@/components/SubscriptionManagement'
 import { gptsService } from '@/lib/gpts'
 import { documentsService } from '@/lib/documents'
 
@@ -314,16 +313,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Subscription Management */}
-        <div className="mb-12">
-          <SubscriptionManagement 
-            user={user} 
-            onUpdate={() => {
-              // Refresh user data after subscription changes
-              window.location.reload()
-            }} 
-          />
-        </div>
 
         {/* Content Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
