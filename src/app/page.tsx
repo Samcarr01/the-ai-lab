@@ -536,7 +536,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm text-gray-400 px-4 sm:px-0">
-            © 2024 thehackai. Made with 💜 for AI enthusiasts.
+            © 2025 thehackai. All rights reserved.
           </div>
         </div>
       </footer>

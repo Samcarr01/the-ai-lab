@@ -224,7 +224,7 @@ export default function PrivacyPage() {
             </div>
           </div>
           <div className="mt-8 text-center text-sm text-gray-300">
-            © 2024 thehackai. Made with 💜 for AI enthusiasts.
+            © 2025 thehackai. All rights reserved.
           </div>
         </div>
       </footer>
