@@ -17,16 +17,42 @@ function CheckoutContent() {
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    // Check authentication
-    const supabase = createClient()
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    // Check authentication and user status
+    const checkUserAndRedirect = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
       if (!user) {
         router.push('/login?redirect=/checkout')
         return
       }
+      
+      // Check user's current tier to prevent inappropriate access
+      const { data: userProfile } = await supabase
+        .from('users')
+        .select('user_tier')
+        .eq('id', user.id)
+        .single()
+      
+      const currentTier = userProfile?.user_tier || 'free'
+      
+      // If user is already Pro and trying to access Pro checkout, redirect to Ultra
+      if (currentTier === 'pro' && tier === 'pro') {
+        router.push('/checkout?tier=ultra')
+        return
+      }
+      
+      // If user is already Ultra, redirect to plan management
+      if (currentTier === 'ultra') {
+        router.push('/plan')
+        return
+      }
+      
       setUser(user)
-    })
-  }, [router])
+    }
+    
+    checkUserAndRedirect()
+  }, [router, tier])
 
   const handleCheckout = async () => {
     if (!user) return
@@ -65,10 +91,13 @@ function CheckoutContent() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
         <SmartNavigation user={null} />
         <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading checkout...</p>
+          </div>
         </div>
       </div>
     )
