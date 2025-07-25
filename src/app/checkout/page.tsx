@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { getStripe, STRIPE_CONFIG } from '@/lib/stripe-config'
 import SmartNavigation from '@/components/SmartNavigation'
+import DarkThemeBackground from '@/components/DarkThemeBackground'
 import { UserTier } from '@/lib/user'
 
 function CheckoutContent() {
@@ -91,30 +92,30 @@ function CheckoutContent() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
+      <DarkThemeBackground>
         <SmartNavigation user={null} />
         <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading checkout...</p>
+            <p className="text-white">Loading checkout...</p>
           </div>
         </div>
-      </div>
+      </DarkThemeBackground>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50">
+    <DarkThemeBackground>
       <SmartNavigation user={user} />
       
       <div className="pt-24 pb-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               Complete Your <span className="bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">Upgrade</span>
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
               Secure checkout powered by Stripe with Apple Pay, Google Pay, and card payments
             </p>
           </div>
@@ -137,7 +138,7 @@ function CheckoutContent() {
           <div className="grid lg:grid-cols-3 gap-6 items-start max-w-5xl mx-auto">
             {/* Selected Plan */}
             <div className="lg:col-span-2 order-2 lg:order-1">
-              <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-8 border border-gray-200/50 shadow-xl">
+              <div className="bg-slate-800/90 backdrop-blur-xl rounded-2xl p-8 border border-purple-500/30 shadow-xl">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl flex items-center justify-center shadow-lg">
                     <span className="text-white text-xl">
@@ -145,8 +146,8 @@ function CheckoutContent() {
                     </span>
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">{planConfig.name}</h2>
-                    <p className="text-purple-600 font-medium">{planConfig.description}</p>
+                    <h2 className="text-2xl font-bold text-white">{planConfig.name}</h2>
+                    <p className="text-purple-400 font-medium">{planConfig.description}</p>
                   </div>
                 </div>
 
@@ -155,9 +156,9 @@ function CheckoutContent() {
                     <span className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
                       £{(planConfig.price / 100).toFixed(0)}
                     </span>
-                    <span className="text-lg text-gray-600">/month</span>
+                    <span className="text-lg text-gray-300">/month</span>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-4 text-sm text-gray-300">
                     <span className="flex items-center gap-1">
                       <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
                       Cancel anytime
@@ -179,7 +180,7 @@ function CheckoutContent() {
                       <div className="w-5 h-5 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center">
                         <span className="text-white text-xs font-bold">✓</span>
                       </div>
-                      <span className="text-gray-800 font-medium">{feature}</span>
+                      <span className="text-gray-200 font-medium">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -213,27 +214,27 @@ function CheckoutContent() {
                 )}
 
                 {/* Payment Methods */}
-                <div className="text-center text-gray-600 mb-4">
+                <div className="text-center text-gray-300 mb-4">
                   <p className="text-sm font-medium">Supported payment methods:</p>
                 </div>
                 <div className="flex items-center justify-center gap-3 mb-6">
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-700 rounded-lg border border-purple-500/30">
                     <span className="text-lg">💳</span>
-                    <span className="text-xs font-medium text-gray-700">Cards</span>
+                    <span className="text-xs font-medium text-gray-200">Cards</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-700 rounded-lg border border-purple-500/30">
                     <span className="text-lg">🍎</span>
-                    <span className="text-xs font-medium text-gray-700">Apple Pay</span>
+                    <span className="text-xs font-medium text-gray-200">Apple Pay</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-700 rounded-lg border border-purple-500/30">
                     <span className="text-lg">🔵</span>
-                    <span className="text-xs font-medium text-gray-700">Google Pay</span>
+                    <span className="text-xs font-medium text-gray-200">Google Pay</span>
                   </div>
                 </div>
 
                 {/* Security Badge */}
-                <div className="flex items-center justify-center gap-2 text-gray-600 bg-green-50 rounded-lg p-3 border border-green-200">
-                  <span className="text-green-600">🔒</span>
+                <div className="flex items-center justify-center gap-2 text-gray-200 bg-green-900/30 rounded-lg p-3 border border-green-500/30">
+                  <span className="text-green-400">🔒</span>
                   <span className="text-sm font-medium">Secured by Stripe • SSL encrypted</span>
                 </div>
               </div>
@@ -241,39 +242,39 @@ function CheckoutContent() {
 
             {/* Alternative Plan */}
             <div className="order-1 lg:order-2">
-              <div className="bg-white/90 backdrop-blur-xl border border-gray-200/50 rounded-2xl p-6 shadow-lg">
+              <div className="bg-slate-800/90 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-6 shadow-lg">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                  <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
                     <span className="text-lg">
                       {otherTier === 'pro' ? '⚡' : '🚀'}
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-gray-900">{otherPlan.name}</h3>
-                    <p className="text-gray-600 text-sm">{otherPlan.description}</p>
+                    <h3 className="text-lg font-bold text-white">{otherPlan.name}</h3>
+                    <p className="text-gray-300 text-sm">{otherPlan.description}</p>
                   </div>
                 </div>
 
                 <div className="mb-4">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-gray-900">
+                    <span className="text-2xl font-bold text-white">
                       £{(otherPlan.price / 100).toFixed(0)}
                     </span>
-                    <span className="text-gray-600">/month</span>
+                    <span className="text-gray-300">/month</span>
                   </div>
                 </div>
 
                 <div className="space-y-2 mb-6">
                   {otherPlan.features.slice(0, 3).map((feature, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center">
-                        <span className="text-gray-600 text-xs">✓</span>
+                      <div className="w-4 h-4 bg-slate-600 rounded-full flex items-center justify-center">
+                        <span className="text-gray-300 text-xs">✓</span>
                       </div>
-                      <span className="text-gray-700 text-sm">{feature}</span>
+                      <span className="text-gray-200 text-sm">{feature}</span>
                     </div>
                   ))}
                   {otherPlan.features.length > 3 && (
-                    <p className="text-gray-500 text-xs pl-6">
+                    <p className="text-gray-400 text-xs pl-6">
                       +{otherPlan.features.length - 3} more features
                     </p>
                   )}
@@ -281,7 +282,7 @@ function CheckoutContent() {
 
                 <button
                   onClick={() => router.push(`/checkout?tier=${otherTier}`)}
-                  className="w-full h-10 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors text-sm"
+                  className="w-full h-10 bg-slate-700 text-gray-200 font-medium rounded-lg hover:bg-slate-600 transition-colors text-sm"
                 >
                   Switch to {otherPlan.name}
                 </button>
@@ -314,29 +315,29 @@ function CheckoutContent() {
 
           {/* FAQ Section */}
           <div className="mt-16 text-center">
-            <h3 className="text-2xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h3>
+            <h3 className="text-2xl font-bold text-white mb-8">Frequently Asked Questions</h3>
             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              <div className="bg-white/80 backdrop-blur-xl rounded-xl p-6 border border-gray-200/50 shadow-lg text-left">
-                <h4 className="font-bold text-gray-900 mb-2">Can I cancel anytime?</h4>
-                <p className="text-gray-700 text-sm">
+              <div className="bg-slate-800/80 backdrop-blur-xl rounded-xl p-6 border border-purple-500/30 shadow-lg text-left">
+                <h4 className="font-bold text-white mb-2">Can I cancel anytime?</h4>
+                <p className="text-gray-200 text-sm">
                   Yes! Cancel your subscription anytime from your dashboard. You'll retain access until the end of your billing period.
                 </p>
               </div>
-              <div className="bg-white/80 backdrop-blur-xl rounded-xl p-6 border border-gray-200/50 shadow-lg text-left">
-                <h4 className="font-bold text-gray-900 mb-2">Is my payment information secure?</h4>
-                <p className="text-gray-700 text-sm">
+              <div className="bg-slate-800/80 backdrop-blur-xl rounded-xl p-6 border border-purple-500/30 shadow-lg text-left">
+                <h4 className="font-bold text-white mb-2">Is my payment information secure?</h4>
+                <p className="text-gray-200 text-sm">
                   Absolutely. We use Stripe for payment processing, which is PCI DSS compliant and trusted by millions of businesses worldwide.
                 </p>
               </div>
-              <div className="bg-white/80 backdrop-blur-xl rounded-xl p-6 border border-gray-200/50 shadow-lg text-left">
-                <h4 className="font-bold text-gray-900 mb-2">Can I upgrade or downgrade later?</h4>
-                <p className="text-gray-700 text-sm">
+              <div className="bg-slate-800/80 backdrop-blur-xl rounded-xl p-6 border border-purple-500/30 shadow-lg text-left">
+                <h4 className="font-bold text-white mb-2">Can I upgrade or downgrade later?</h4>
+                <p className="text-gray-200 text-sm">
                   Yes! You can change your plan anytime from your dashboard. Changes take effect at your next billing cycle.
                 </p>
               </div>
-              <div className="bg-white/80 backdrop-blur-xl rounded-xl p-6 border border-gray-200/50 shadow-lg text-left">
-                <h4 className="font-bold text-gray-900 mb-2">Can I cancel anytime?</h4>
-                <p className="text-gray-700 text-sm">
+              <div className="bg-slate-800/80 backdrop-blur-xl rounded-xl p-6 border border-purple-500/30 shadow-lg text-left">
+                <h4 className="font-bold text-white mb-2">Can I cancel anytime?</h4>
+                <p className="text-gray-200 text-sm">
                   Yes! You have complete control over your subscription. Cancel anytime from your dashboard with no questions asked.
                 </p>
               </div>
@@ -344,19 +345,19 @@ function CheckoutContent() {
           </div>
         </div>
       </div>
-    </div>
+    </DarkThemeBackground>
   )
 }
 
 export default function CheckoutPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-white">
+      <DarkThemeBackground>
         <SmartNavigation user={null} />
         <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
         </div>
-      </div>
+      </DarkThemeBackground>
     }>
       <CheckoutContent />
     </Suspense>
