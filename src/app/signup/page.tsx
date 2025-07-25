@@ -90,11 +90,16 @@ export default function SignupPage() {
         </div>
         
         <h2 className="mt-6 text-center text-3xl font-bold text-white">
-          Create your free account! 🚀
+          Start Your AI Journey! 🚀
         </h2>
         <p className="mt-2 text-center text-sm text-gray-100">
-          No credit card required • Free account required to explore
+          Get instant access to curated AI tools and expert playbooks
         </p>
+        <div className="mt-4 text-center">
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-900/30 text-green-300 border border-green-500/30">
+            ✨ 100% Free • No Credit Card Required
+          </span>
+        </div>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -113,46 +118,84 @@ export default function SignupPage() {
             </div>
           )}
 
-          {success && (
-            <div className="mb-6 p-6 rounded-xl bg-green-900/20 border border-green-500/30 shadow-sm">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-green-900/30 rounded-full flex items-center justify-center">
-                  <span className="text-3xl">✅</span>
+          {success ? (
+            <div className="text-center py-8">
+              <div className="w-20 h-20 mx-auto mb-6 bg-green-500/20 border-2 border-green-500/30 rounded-full flex items-center justify-center animate-pulse">
+                <span className="text-4xl">✅</span>
+              </div>
+              <h3 className="text-2xl font-bold text-green-400 mb-4">
+                🎉 Account Created Successfully!
+              </h3>
+              <p className="text-gray-300 mb-6">
+                We've sent a confirmation link to <strong className="text-white">{email}</strong>
+              </p>
+              
+              <div className="bg-gradient-to-r from-green-900/30 to-blue-900/30 rounded-2xl p-6 mb-6 border border-green-500/30">
+                <h4 className="font-bold text-green-300 mb-4 text-lg">📧 What happens next:</h4>
+                <div className="space-y-3 text-left">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">1</div>
+                    <span className="text-gray-200">Check your email inbox (and spam folder if needed)</span>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">2</div>
+                    <span className="text-gray-200">Click the "Confirm your account" link in the email</span>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">3</div>
+                    <span className="text-gray-200">You'll be instantly signed in and can explore all free content!</span>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">4</div>
+                    <span className="text-gray-200">Upgrade to Pro (£15/month) anytime for direct GPT links and PDF downloads</span>
+                  </div>
                 </div>
-                <h3 className="text-lg font-semibold text-green-200 mb-2">
-                  Account Created Successfully!
-                </h3>
-                <p className="text-sm text-green-100 mb-4">
-                  We've sent a confirmation link to <strong>{email}</strong>
-                </p>
-                <div className="bg-green-900/20 rounded-lg p-4 mb-4">
-                  <h4 className="font-semibold text-green-200 mb-2 text-sm">📧 Next Steps:</h4>
-                  <ol className="text-xs text-green-100 space-y-1 text-left">
-                    <li><strong>1.</strong> Check your email inbox (and spam folder)</li>
-                    <li><strong>2.</strong> Click the confirmation link in the email</li>
-                    <li><strong>3.</strong> You'll be automatically signed in and ready to explore!</li>
-                  </ol>
-                </div>
-                <p className="text-xs text-green-100">
-                  💡 Didn't receive the email? Check your spam folder or{' '}
+              </div>
+              
+              <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-xl p-4 mb-6">
+                <p className="text-yellow-200 text-sm">
+                  💡 <strong>Didn't receive the email?</strong> Check your spam folder first, then{' '}
                   <button 
                     onClick={() => {
                       setSuccess(false)
                       setEmail('')
                       setPassword('')
                       setConfirmPassword('')
+                      setError('')
                     }}
-                    className="underline hover:no-underline"
+                    className="text-yellow-300 underline hover:no-underline font-medium"
                   >
-                    try again
+                    click here to try again
                   </button>
                 </p>
               </div>
-            </div>
-          )}
 
-          {/* What's included free vs pro */}
-          <div className="mb-6 space-y-4">
+              <div className="text-center">
+                <Link 
+                  href="/login"
+                  className="inline-flex items-center space-x-2 bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-medium transition-colors"
+                >
+                  <span>Already confirmed? Sign in here</span>
+                  <span>→</span>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <>
+              {error && (
+                <div className="mb-6 bg-red-900/30 border border-red-500/30 rounded-xl p-4 backdrop-blur-sm">
+                  <div className="flex items-center gap-3">
+                    <span className="text-red-400 text-xl">❌</span>
+                    <div>
+                      <h3 className="font-medium text-red-200">Error</h3>
+                      <p className="text-red-300 text-sm">{error}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* What's included free vs pro */}
+              <div className="mb-6 space-y-4">
             <div className="p-4 bg-green-900/20 rounded-xl border border-green-500/30">
               <h3 className="text-sm font-semibold text-green-200 mb-3">Free access includes:</h3>
               <div className="space-y-2 text-sm text-green-100">
@@ -200,7 +243,7 @@ export default function SignupPage() {
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
                 Email address
               </label>
               <input
@@ -217,7 +260,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-200 mb-2">
                 Password
               </label>
               <input
@@ -235,7 +278,7 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-200 mb-2">
                 Confirm password
               </label>
               <input
@@ -264,13 +307,13 @@ export default function SignupPage() {
                 />
               </div>
               <div className="ml-3 text-sm">
-                <label htmlFor="agree" className="text-gray-700">
+                <label htmlFor="agree" className="text-gray-200">
                   I agree to the{' '}
-                  <Link href="/terms" className="text-purple-600 hover:text-purple-500 underline">
+                  <Link href="/terms" className="text-purple-400 hover:text-purple-300 underline">
                     Terms of Service
                   </Link>{' '}
                   and{' '}
-                  <Link href="/privacy" className="text-purple-600 hover:text-purple-500 underline">
+                  <Link href="/privacy" className="text-purple-400 hover:text-purple-300 underline">
                     Privacy Policy
                   </Link>
                 </label>
@@ -334,14 +377,16 @@ export default function SignupPage() {
             </div>
           </div>
 
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-100">
-              Already have an account?{' '}
-              <Link href="/login" className="font-medium text-purple-600 hover:text-purple-500 transition-colors">
-                Sign in here 👋
-              </Link>
-            </p>
-          </div>
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-100">
+                  Already have an account?{' '}
+                  <Link href="/login" className="font-medium text-purple-600 hover:text-purple-500 transition-colors">
+                    Sign in here 👋
+                  </Link>
+                </p>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Trust indicators */}
