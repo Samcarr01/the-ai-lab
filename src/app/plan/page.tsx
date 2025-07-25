@@ -44,57 +44,82 @@ export default function PlanPage() {
     getUser()
   }, [router])
 
-  const handleUpgrade = async (tier: UserTier) => {
+  const handleUpgrade = async (tier: UserTier, event?: React.MouseEvent) => {
+    event?.preventDefault()
+    console.log('Upgrade button clicked for tier:', tier)
     setUpgrading(tier)
     try {
+      console.log('Redirecting to checkout...')
       router.push(`/checkout?tier=${tier}`)
     } catch (error) {
       console.error('Upgrade error:', error)
+      alert(`Failed to redirect to checkout: ${error}`)
       setUpgrading(null)
     }
   }
 
-  const handleManageBilling = async () => {
+  const handleManageBilling = async (event?: React.MouseEvent) => {
+    event?.preventDefault()
+    console.log('Manage billing button clicked')
     setManaging(true)
     try {
+      console.log('Calling create-portal-session API...')
       const response = await fetch('/api/stripe/create-portal-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       })
       
+      console.log('Portal session response status:', response.status)
+      
       if (response.ok) {
-        const { url } = await response.json()
-        window.location.href = url
+        const data = await response.json()
+        console.log('Portal session data:', data)
+        if (data.url) {
+          console.log('Redirecting to portal:', data.url)
+          window.location.href = data.url
+        } else {
+          console.error('No URL in response:', data)
+          alert('No billing portal URL received. Please try again.')
+        }
       } else {
-        console.error('Failed to create billing portal session')
-        alert('Unable to open billing portal. Please try again.')
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('Portal session failed:', response.status, errorData)
+        alert(`Unable to open billing portal: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
       console.error('Error opening billing portal:', error)
-      alert('Unable to open billing portal. Please try again.')
+      alert(`Network error: ${error}`)
     } finally {
       setManaging(false)
     }
   }
 
-  const handleCancel = async () => {
+  const handleCancel = async (event?: React.MouseEvent) => {
+    event?.preventDefault()
+    console.log('Cancel subscription button clicked')
     setCancelling(true)
     try {
+      console.log('Calling subscription cancel API...')
       const response = await fetch('/api/subscription/cancel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       })
       
+      console.log('Cancel response status:', response.status)
+      
       if (response.ok) {
+        const data = await response.json()
+        console.log('Cancel response:', data)
         alert('Your subscription will be cancelled at the end of the current billing period.')
         window.location.reload()
       } else {
-        const errorData = await response.json()
-        alert(`Failed to cancel subscription: ${errorData.error}`)
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('Cancel failed:', response.status, errorData)
+        alert(`Failed to cancel subscription: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
       console.error('Cancel error:', error)
-      alert('Unable to cancel subscription. Please try again.')
+      alert(`Network error: ${error}`)
     } finally {
       setCancelling(false)
       setShowCancelConfirm(false)
@@ -189,14 +214,14 @@ export default function PlanPage() {
                   {currentTier === 'free' && (
                     <>
                       <button
-                        onClick={() => handleUpgrade('pro')}
+                        onClick={(e) => handleUpgrade('pro', e)}
                         disabled={upgrading === 'pro'}
                         className="w-full gradient-purple text-white px-4 py-3 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg text-sm"
                       >
                         {upgrading === 'pro' ? 'Processing...' : 'Upgrade to Pro - £7/month'}
                       </button>
                       <button
-                        onClick={() => handleUpgrade('ultra')}
+                        onClick={(e) => handleUpgrade('ultra', e)}
                         disabled={upgrading === 'ultra'}
                         className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-3 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg text-sm"
                       >
@@ -208,21 +233,25 @@ export default function PlanPage() {
                   {currentTier === 'pro' && (
                     <>
                       <button
-                        onClick={() => handleUpgrade('ultra')}
+                        onClick={(e) => handleUpgrade('ultra', e)}
                         disabled={upgrading === 'ultra'}
                         className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-3 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg text-sm"
                       >
                         {upgrading === 'ultra' ? 'Processing...' : 'Upgrade to Ultra - £19/month'}
                       </button>
                       <button
-                        onClick={handleManageBilling}
+                        onClick={(e) => handleManageBilling(e)}
                         disabled={managing}
                         className="w-full bg-slate-700 text-white px-4 py-3 rounded-xl font-semibold hover:bg-slate-600 transition-colors text-sm"
                       >
                         {managing ? 'Opening...' : 'Manage Billing'}
                       </button>
                       <button
-                        onClick={() => setShowCancelConfirm(true)}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          console.log('Cancel subscription button clicked')
+                          setShowCancelConfirm(true)
+                        }}
                         className="w-full bg-red-900/50 text-red-300 px-4 py-3 rounded-xl font-semibold hover:bg-red-900/70 transition-colors border border-red-500/30 text-sm"
                       >
                         Cancel Subscription
@@ -236,14 +265,18 @@ export default function PlanPage() {
                         ✨ Highest Plan ✨
                       </div>
                       <button
-                        onClick={handleManageBilling}
+                        onClick={(e) => handleManageBilling(e)}
                         disabled={managing}
                         className="w-full bg-slate-700 text-white px-4 py-3 rounded-xl font-semibold hover:bg-slate-600 transition-colors text-sm"
                       >
                         {managing ? 'Opening...' : 'Manage Billing'}
                       </button>
                       <button
-                        onClick={() => setShowCancelConfirm(true)}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          console.log('Cancel subscription button clicked')
+                          setShowCancelConfirm(true)
+                        }}
                         className="w-full bg-red-900/50 text-red-300 px-4 py-3 rounded-xl font-semibold hover:bg-red-900/70 transition-colors border border-red-500/30 text-sm"
                       >
                         Cancel Subscription
@@ -320,7 +353,7 @@ export default function PlanPage() {
 
                 {tier !== currentTier && tier !== 'free' && (
                   <button
-                    onClick={() => handleUpgrade(tier as UserTier)}
+                    onClick={(e) => handleUpgrade(tier as UserTier, e)}
                     disabled={upgrading === tier}
                     className={`w-full py-3 px-4 rounded-xl font-semibold hover:scale-105 transition-transform text-sm ${
                       tier === 'ultra' 
@@ -365,7 +398,7 @@ export default function PlanPage() {
                   Keep Plan
                 </button>
                 <button
-                  onClick={handleCancel}
+                  onClick={(e) => handleCancel(e)}
                   disabled={cancelling}
                   className="flex-1 bg-red-900 text-white py-3 px-4 rounded-xl font-semibold hover:bg-red-800 transition-colors"
                 >
