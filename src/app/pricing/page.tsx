@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile, type UserTier } from '@/lib/user'
+import { contentStatsService, type ContentStats } from '@/lib/content-stats'
 import { STRIPE_CONFIG } from '@/lib/stripe-config'
 import SmartNavigation from '@/components/SmartNavigation'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
@@ -12,6 +13,7 @@ export default function PricingPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [upgrading, setUpgrading] = useState<UserTier | null>(null)
+  const [contentStats, setContentStats] = useState<ContentStats | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -27,6 +29,10 @@ export default function PricingPage() {
           }
           setUser(userProfile)
         }
+
+        // Load content stats
+        const stats = await contentStatsService.getContentStats('ultra')
+        setContentStats(stats)
       } catch (err) {
         console.error('Error fetching user:', err)
       } finally {
@@ -53,63 +59,73 @@ export default function PricingPage() {
     }
   }
 
-  const plans = [
-    {
-      tier: 'free' as UserTier,
-      name: 'Free',
-      price: '£0',
-      period: 'forever',
-      description: 'Get started with AI tools',
-      features: [
-        'Browse all GPTs and playbooks',
-        'Read all blog posts',
-        'Community access',
-        'Preview descriptions'
-      ],
-      buttonText: 'Current Plan',
-      buttonStyle: 'bg-gray-600 text-gray-300 cursor-not-allowed',
-      popular: false
-    },
-    {
-      tier: 'pro' as UserTier,
-      name: 'Pro',
-      price: '£7',
-      period: 'per month',
-      description: 'Essential AI tools for daily use',
-      features: [
-        'Everything in Free',
-        'Access to 3 essential GPTs',
-        'Download 2 core playbooks',
-        'Email support',
-        'Early access to new content'
-      ],
-      buttonText: 'Choose Pro',
-      buttonStyle: 'gradient-purple text-white hover:scale-105 transition-transform',
-      popular: true
-    },
-    {
-      tier: 'ultra' as UserTier,
-      name: 'Ultra',
-      price: '£19',
-      period: 'per month',
-      description: 'Full access to scale your AI game',
-      features: [
-        'Everything in Pro',
-        'Access to all 7 GPTs',
-        'Download all playbooks',
-        'Priority support',
-        'Early access to new features',
-        'Custom AI workflows'
-      ],
-      buttonText: 'Choose Ultra',
-      buttonStyle: 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:scale-105 transition-transform',
-      popular: false
-    }
-  ]
+  const getPlans = () => {
+    const totalGPTs = contentStats?.totalGPTs || 7
+    const totalPlaybooks = contentStats?.totalPlaybooks || 4
+    
+    // Calculate Pro tier access (typically 3 GPTs and 2 playbooks, but let's be dynamic)
+    const proGPTs = Math.min(3, totalGPTs)
+    const proPlaybooks = Math.min(2, totalPlaybooks)
+    
+    return [
+      {
+        tier: 'free' as UserTier,
+        name: 'Free',
+        price: '£0',
+        period: 'forever',
+        description: 'Get started with AI tools',
+        features: [
+          'Browse all GPTs and playbooks',
+          'Read all blog posts',
+          'Community access',
+          'Preview descriptions'
+        ],
+        buttonText: 'Current Plan',
+        buttonStyle: 'bg-gray-600 text-gray-300 cursor-not-allowed',
+        popular: false
+      },
+      {
+        tier: 'pro' as UserTier,
+        name: 'Pro',
+        price: '£7',
+        period: 'per month',
+        description: 'Essential AI tools for daily use',
+        features: [
+          'Everything in Free',
+          `Access to ${proGPTs} essential GPTs`,
+          `Download ${proPlaybooks} core playbooks`,
+          'Email support',
+          'Early access to new content'
+        ],
+        buttonText: 'Choose Pro',
+        buttonStyle: 'gradient-purple text-white hover:scale-105 transition-transform',
+        popular: true
+      },
+      {
+        tier: 'ultra' as UserTier,
+        name: 'Ultra',
+        price: '£19',
+        period: 'per month',
+        description: 'Full access to scale your AI game',
+        features: [
+          'Everything in Pro',
+          `Access to all ${totalGPTs} GPTs`,
+          `Download all ${totalPlaybooks} playbooks`,
+          'Priority support',
+          'Early access to new features',
+          'Custom AI workflows'
+        ],
+        buttonText: 'Choose Ultra',
+        buttonStyle: 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:scale-105 transition-transform',
+        popular: false
+      }
+    ]
+  }
 
   // Update button text and style based on user's current tier
   const getUpdatedPlans = () => {
     const currentTier = user?.user_tier || 'free'
+    const plans = getPlans()
     
     return plans.map(plan => {
       if (plan.tier === currentTier) {
