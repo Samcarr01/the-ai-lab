@@ -41,6 +41,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Debug logging
+    console.log('Creating checkout session for:', {
+      tier,
+      userId: user.id,
+      userEmail: user.email,
+      currentTier
+    })
+
     // Create checkout session
     const session = await stripeHelpers.createCheckoutSession(
       tier as UserTier,
@@ -55,8 +63,17 @@ export async function POST(request: NextRequest) {
 
   } catch (error: any) {
     console.error('Checkout session creation failed:', error)
+    console.error('Error message:', error.message)
+    console.error('Error stack:', error.stack)
+    console.error('Request tier:', tier)
+    console.error('User ID:', user?.id)
+    console.error('User email:', user?.email)
+    
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { 
+        error: 'Failed to create checkout session',
+        details: error.message || 'Unknown error'
+      },
       { status: 500 }
     )
   }
