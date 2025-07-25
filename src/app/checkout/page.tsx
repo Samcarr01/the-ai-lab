@@ -240,73 +240,26 @@ function CheckoutContent() {
               </div>
             </div>
 
-            {/* Alternative Plan */}
+            {/* Trust Signals */}
             <div className="order-1 lg:order-2">
-              <div className="bg-slate-800/90 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-6 shadow-lg">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
-                    <span className="text-lg">
-                      {otherTier === 'pro' ? '⚡' : '🚀'}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-white">{otherPlan.name}</h3>
-                    <p className="text-gray-300 text-sm">{otherPlan.description}</p>
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-2xl font-bold text-white">
-                      £{(otherPlan.price / 100).toFixed(0)}
-                    </span>
-                    <span className="text-gray-300">/month</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2 mb-6">
-                  {otherPlan.features.slice(0, 3).map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                      <div className="w-4 h-4 bg-slate-600 rounded-full flex items-center justify-center">
-                        <span className="text-gray-300 text-xs">✓</span>
-                      </div>
-                      <span className="text-gray-200 text-sm">{feature}</span>
-                    </div>
-                  ))}
-                  {otherPlan.features.length > 3 && (
-                    <p className="text-gray-400 text-xs pl-6">
-                      +{otherPlan.features.length - 3} more features
-                    </p>
-                  )}
-                </div>
-
-                <button
-                  onClick={() => router.push(`/checkout?tier=${otherTier}`)}
-                  className="w-full h-10 bg-slate-700 text-gray-200 font-medium rounded-lg hover:bg-slate-600 transition-colors text-sm"
-                >
-                  Switch to {otherPlan.name}
-                </button>
-              </div>
-
-              {/* Trust Signals */}
-              <div className="mt-6 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200/50">
-                <h4 className="font-bold text-gray-900 mb-3 text-sm">Why choose us?</h4>
+              <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-xl p-4 border border-purple-500/30">
+                <h4 className="font-bold text-white mb-3 text-sm">Why choose us?</h4>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-green-600">✓</span>
-                    <span className="text-gray-700 text-sm">Industry-leading AI tools</span>
+                    <span className="text-green-400">✓</span>
+                    <span className="text-gray-200 text-sm">Industry-leading AI tools</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-green-600">✓</span>
-                    <span className="text-gray-700 text-sm">Cancel anytime, no questions asked</span>
+                    <span className="text-green-400">✓</span>
+                    <span className="text-gray-200 text-sm">Cancel anytime, no questions asked</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-green-600">✓</span>
-                    <span className="text-gray-700 text-sm">Instant access after payment</span>
+                    <span className="text-green-400">✓</span>
+                    <span className="text-gray-200 text-sm">Instant access after payment</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-green-600">✓</span>
-                    <span className="text-gray-700 text-sm">24/7 customer support</span>
+                    <span className="text-green-400">✓</span>
+                    <span className="text-gray-200 text-sm">24/7 customer support</span>
                   </div>
                 </div>
               </div>
