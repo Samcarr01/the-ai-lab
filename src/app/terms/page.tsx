@@ -66,7 +66,7 @@ export default function TermsPage() {
 
               <h2 className="text-2xl font-semibold text-white mb-4">2. Service Description</h2>
               <p className="mb-6 text-gray-700 leading-relaxed">
-                thehackai provides access to curated AI tools, GPTs, and PDF playbooks for a monthly subscription fee of £15. 
+                thehackai provides access to curated AI tools, GPTs, and PDF playbooks through Pro (£7/month) and Ultra (£19/month) subscription plans. 
                 Free accounts have preview access to browse content titles and descriptions.
               </p>
 
@@ -78,7 +78,8 @@ export default function TermsPage() {
 
               <h2 className="text-2xl font-semibold text-white mb-4">4. Subscription and Payment</h2>
               <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
-                <li>Pro subscriptions are billed monthly at £15</li>
+                <li>Pro subscriptions are billed monthly at £7</li>
+                <li>Ultra subscriptions are billed monthly at £19</li>
                 <li>Payment is processed through Stripe</li>
                 <li>Subscriptions auto-renew unless cancelled</li>
                 <li>No refunds for partial months</li>

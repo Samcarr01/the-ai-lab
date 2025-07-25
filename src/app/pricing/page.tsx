@@ -201,7 +201,7 @@ export default function PricingPage() {
         {/* FAQ or additional info */}
         <div className="mt-16 text-center">
           <p className="text-gray-400 text-sm mb-4">
-            All plans include a 30-day money-back guarantee. Cancel anytime.
+            Cancel anytime, no questions asked. Complete control over your subscription.
           </p>
           <p className="text-gray-400 text-sm">
             Need help choosing? <a href="/contact" className="text-purple-400 hover:text-purple-300">Contact us</a>

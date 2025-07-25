@@ -293,7 +293,7 @@ function CheckoutContent() {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="text-green-600">✓</span>
-                    <span className="text-gray-700 text-sm">30-day money-back guarantee</span>
+                    <span className="text-gray-700 text-sm">Industry-leading AI tools</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-green-600">✓</span>
@@ -335,9 +335,9 @@ function CheckoutContent() {
                 </p>
               </div>
               <div className="bg-white/80 backdrop-blur-xl rounded-xl p-6 border border-gray-200/50 shadow-lg text-left">
-                <h4 className="font-bold text-gray-900 mb-2">Do you offer refunds?</h4>
+                <h4 className="font-bold text-gray-900 mb-2">Can I cancel anytime?</h4>
                 <p className="text-gray-700 text-sm">
-                  We offer a 30-day money-back guarantee. If you're not satisfied, contact us for a full refund within 30 days.
+                  Yes! You have complete control over your subscription. Cancel anytime from your dashboard with no questions asked.
                 </p>
               </div>
             </div>
