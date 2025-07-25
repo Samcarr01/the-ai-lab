@@ -49,7 +49,7 @@ export const stripeHelpers = {
 
     const session = await stripeInstance.checkout.sessions.create({
       mode: 'subscription',
-      payment_method_types: ['card', 'apple_pay', 'google_pay'],
+      payment_method_types: ['card'],
       line_items: [
         {
           price: plan.priceId,

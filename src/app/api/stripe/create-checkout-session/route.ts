@@ -54,15 +54,8 @@ export async function POST(request: NextRequest) {
       currentTier
     })
 
-    // Debug environment variables
-    console.log('Environment check:', {
-      hasStripeSecretKey: !!process.env.STRIPE_SECRET_KEY,
-      stripeKeyPrefix: process.env.STRIPE_SECRET_KEY?.substring(0, 8),
-      hasProPriceId: !!process.env.STRIPE_PRO_PRICE_ID,
-      hasUltraPriceId: !!process.env.STRIPE_ULTRA_PRICE_ID,
-      actualProPriceId: process.env.STRIPE_PRO_PRICE_ID,
-      siteUrl: process.env.NEXT_PUBLIC_SITE_URL
-    })
+    // Debug logging for checkout session creation
+    console.log('Creating checkout session with valid payment methods')
 
     // Create checkout session
     const session = await stripeHelpers.createCheckoutSession(
