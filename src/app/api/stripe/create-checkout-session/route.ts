@@ -54,6 +54,14 @@ export async function POST(request: NextRequest) {
       currentTier
     })
 
+    // Debug environment variables
+    console.log('Environment check:', {
+      hasStripeSecretKey: !!process.env.STRIPE_SECRET_KEY,
+      hasProPriceId: !!process.env.STRIPE_PRO_PRICE_ID,
+      hasUltraPriceId: !!process.env.STRIPE_ULTRA_PRICE_ID,
+      siteUrl: process.env.NEXT_PUBLIC_SITE_URL
+    })
+
     // Create checkout session
     const session = await stripeHelpers.createCheckoutSession(
       tier as UserTier,
