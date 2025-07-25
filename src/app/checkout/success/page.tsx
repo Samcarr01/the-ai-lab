@@ -2,7 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabase/client'
 import SmartNavigation from '@/components/SmartNavigation'
 import { STRIPE_CONFIG } from '@/lib/stripe-config'
 import { UserTier } from '@/lib/user'
@@ -13,11 +13,11 @@ function CheckoutSuccessContent() {
   const tier = searchParams?.get('tier') as UserTier || 'pro'
   const [userProfile, setUserProfile] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClientComponentClient()
 
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
+        const supabase = createClient()
         const { data: { user } } = await supabase.auth.getUser()
         if (!user) {
           router.push('/login')

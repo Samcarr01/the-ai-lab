@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabase/client'
 import { getStripe, STRIPE_CONFIG } from '@/lib/stripe-config'
 import SmartNavigation from '@/components/SmartNavigation'
 import { UserTier } from '@/lib/user'
@@ -15,10 +15,10 @@ function CheckoutContent() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [user, setUser] = useState<any>(null)
-  const supabase = createClientComponentClient()
 
   useEffect(() => {
     // Check authentication
+    const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) {
         router.push('/login?redirect=/checkout')
@@ -26,7 +26,7 @@ function CheckoutContent() {
       }
       setUser(user)
     })
-  }, [router, supabase])
+  }, [router])
 
   const handleCheckout = async () => {
     if (!user) return
