@@ -39,7 +39,7 @@ function CheckoutSuccessContent() {
     }
 
     fetchUserProfile()
-  }, [router, supabase])
+  }, [router])
 
   const planConfig = STRIPE_CONFIG.PLANS[tier]
 
