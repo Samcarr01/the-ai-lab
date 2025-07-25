@@ -64,7 +64,7 @@ export default function PlanPage() {
       
       if (response.ok) {
         const { url } = await response.json()
-        window.location.href = url // Use location.href instead of window.open
+        window.location.href = url
       } else {
         console.error('Failed to create billing portal session')
         alert('Unable to open billing portal. Please try again.')
@@ -124,184 +124,229 @@ export default function PlanPage() {
     <DarkThemeBackground>
       <SmartNavigation user={user} />
       
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">Your Plan</h1>
-          <p className="text-xl text-gray-300">
-            Manage your subscription and upgrade options
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">Your Plan</h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            Manage your subscription and explore upgrade options
           </p>
         </div>
 
-        {/* Current Plan - Simplified */}
-        <div className="bg-slate-800/60 backdrop-blur-sm rounded-3xl p-8 mb-12 border border-purple-500/30">
-          <div className="text-center mb-8">
-            <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-4 ${
-              currentTier === 'ultra' 
-                ? 'bg-gradient-to-r from-purple-500 to-pink-500' 
-                : currentTier === 'pro'
-                  ? 'bg-purple-900/50 border border-purple-500/30'
-                  : 'bg-gray-800/50 border border-gray-600/30'
-            }`}>
-              <span className="text-3xl">
-                {currentTier === 'ultra' ? '🚀' : currentTier === 'pro' ? '✨' : '🆓'}
-              </span>
-            </div>
-            
-            <h2 className="text-3xl font-bold text-white mb-2">{currentPlan.name} Plan</h2>
-            <div className="text-2xl font-bold text-purple-400 mb-4">
-              {currentPlan.price === 0 ? 'Free' : `£${currentPlan.price / 100}/month`}
-            </div>
-            <p className="text-gray-300 text-lg">{currentPlan.description}</p>
-          </div>
-
-          {/* What's Included */}
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold text-white mb-4 text-center">What's Included:</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl mx-auto">
-              {currentPlan.features.map((feature, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <div className="w-5 h-5 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-sm">✓</span>
-                  </div>
-                  <span className="text-gray-200">{feature}</span>
+        {/* Current Plan - Enhanced */}
+        <div className="bg-gradient-to-br from-slate-800/80 via-slate-800/60 to-slate-900/80 backdrop-blur-sm rounded-3xl p-8 md:p-12 mb-12 border border-purple-500/30 shadow-2xl">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div className="lg:w-2/3 mb-8 lg:mb-0">
+              <div className="flex items-center space-x-4 mb-6">
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg ${
+                  currentTier === 'ultra' 
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500' 
+                    : currentTier === 'pro'
+                      ? 'bg-purple-900/50 border border-purple-500/30'
+                      : 'bg-gray-800/50 border border-gray-600/30'
+                }`}>
+                  <span className="text-3xl">
+                    {currentTier === 'ultra' ? '🚀' : currentTier === 'pro' ? '✨' : '🆓'}
+                  </span>
                 </div>
-              ))}
+                <div>
+                  <h2 className="text-3xl font-bold text-white">{currentPlan.name} Plan</h2>
+                  <div className="flex items-baseline space-x-2">
+                    <span className="text-2xl font-bold text-purple-400">
+                      {currentPlan.price === 0 ? 'Free' : `£${currentPlan.price / 100}`}
+                    </span>
+                    {currentPlan.price > 0 && (
+                      <span className="text-gray-400">per month</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <p className="text-gray-300 text-lg mb-6">{currentPlan.description}</p>
+
+              {/* Features in a more compact layout */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-3">What's included:</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {currentPlan.features.map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <div className="w-4 h-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-xs">✓</span>
+                      </div>
+                      <span className="text-gray-200 text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
-            {/* Upgrade Options */}
-            {currentTier === 'free' && (
-              <>
-                <button
-                  onClick={() => handleUpgrade('pro')}
-                  disabled={upgrading === 'pro'}
-                  className="gradient-purple text-white px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg"
-                >
-                  {upgrading === 'pro' ? 'Processing...' : 'Upgrade to Pro £7'}
-                </button>
-                <button
-                  onClick={() => handleUpgrade('ultra')}
-                  disabled={upgrading === 'ultra'}
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg"
-                >
-                  {upgrading === 'ultra' ? 'Processing...' : 'Upgrade to Ultra £19'}
-                </button>
-              </>
-            )}
+            {/* Action Buttons - Sidebar */}
+            <div className="lg:w-1/3 lg:pl-8">
+              <div className="bg-slate-900/50 rounded-2xl p-6 border border-purple-500/20">
+                <h3 className="text-lg font-semibold text-white mb-4 text-center">Manage Plan</h3>
+                <div className="space-y-3">
+                  {/* Upgrade Options */}
+                  {currentTier === 'free' && (
+                    <>
+                      <button
+                        onClick={() => handleUpgrade('pro')}
+                        disabled={upgrading === 'pro'}
+                        className="w-full gradient-purple text-white px-4 py-3 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg text-sm"
+                      >
+                        {upgrading === 'pro' ? 'Processing...' : 'Upgrade to Pro - £7/month'}
+                      </button>
+                      <button
+                        onClick={() => handleUpgrade('ultra')}
+                        disabled={upgrading === 'ultra'}
+                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-3 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg text-sm"
+                      >
+                        {upgrading === 'ultra' ? 'Processing...' : 'Upgrade to Ultra - £19/month'}
+                      </button>
+                    </>
+                  )}
 
-            {currentTier === 'pro' && (
-              <>
-                <button
-                  onClick={() => handleUpgrade('ultra')}
-                  disabled={upgrading === 'ultra'}
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg"
-                >
-                  {upgrading === 'ultra' ? 'Processing...' : 'Upgrade to Ultra £19'}
-                </button>
-                <button
-                  onClick={handleManageBilling}
-                  disabled={managing}
-                  className="bg-slate-700 text-white px-6 py-3 rounded-xl font-semibold hover:bg-slate-600 transition-colors"
-                >
-                  {managing ? 'Opening...' : 'Manage Billing'}
-                </button>
-                <button
-                  onClick={() => setShowCancelConfirm(true)}
-                  className="bg-red-900/50 text-red-300 px-6 py-3 rounded-xl font-semibold hover:bg-red-900/70 transition-colors border border-red-500/30"
-                >
-                  Cancel Plan
-                </button>
-              </>
-            )}
+                  {currentTier === 'pro' && (
+                    <>
+                      <button
+                        onClick={() => handleUpgrade('ultra')}
+                        disabled={upgrading === 'ultra'}
+                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-3 rounded-xl font-semibold hover:scale-105 transition-transform shadow-lg text-sm"
+                      >
+                        {upgrading === 'ultra' ? 'Processing...' : 'Upgrade to Ultra - £19/month'}
+                      </button>
+                      <button
+                        onClick={handleManageBilling}
+                        disabled={managing}
+                        className="w-full bg-slate-700 text-white px-4 py-3 rounded-xl font-semibold hover:bg-slate-600 transition-colors text-sm"
+                      >
+                        {managing ? 'Opening...' : 'Manage Billing'}
+                      </button>
+                      <button
+                        onClick={() => setShowCancelConfirm(true)}
+                        className="w-full bg-red-900/50 text-red-300 px-4 py-3 rounded-xl font-semibold hover:bg-red-900/70 transition-colors border border-red-500/30 text-sm"
+                      >
+                        Cancel Subscription
+                      </button>
+                    </>
+                  )}
 
-            {currentTier === 'ultra' && (
-              <>
-                <button
-                  onClick={handleManageBilling}
-                  disabled={managing}
-                  className="bg-slate-700 text-white px-6 py-3 rounded-xl font-semibold hover:bg-slate-600 transition-colors"
-                >
-                  {managing ? 'Opening...' : 'Manage Billing'}
-                </button>
-                <button
-                  onClick={() => setShowCancelConfirm(true)}
-                  className="bg-red-900/50 text-red-300 px-6 py-3 rounded-xl font-semibold hover:bg-red-900/70 transition-colors border border-red-500/30"
-                >
-                  Cancel Plan
-                </button>
-              </>
-            )}
+                  {currentTier === 'ultra' && (
+                    <>
+                      <div className="text-center text-green-400 font-semibold mb-2">
+                        ✨ Highest Plan ✨
+                      </div>
+                      <button
+                        onClick={handleManageBilling}
+                        disabled={managing}
+                        className="w-full bg-slate-700 text-white px-4 py-3 rounded-xl font-semibold hover:bg-slate-600 transition-colors text-sm"
+                      >
+                        {managing ? 'Opening...' : 'Manage Billing'}
+                      </button>
+                      <button
+                        onClick={() => setShowCancelConfirm(true)}
+                        className="w-full bg-red-900/50 text-red-300 px-4 py-3 rounded-xl font-semibold hover:bg-red-900/70 transition-colors border border-red-500/30 text-sm"
+                      >
+                        Cancel Subscription
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Other Plans - Only for Free users */}
-        {currentTier === 'free' && (
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-white mb-6">Or choose a different plan:</h3>
-            <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-              <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
-                <div className="text-center mb-6">
-                  <h4 className="text-xl font-bold text-white mb-2">Pro</h4>
-                  <div className="text-2xl font-bold text-purple-400 mb-2">£7/month</div>
-                  <p className="text-gray-300 text-sm">Daily AI Use</p>
+        {/* All Plans Comparison */}
+        <div className="mb-8">
+          <h3 className="text-3xl font-bold text-white mb-8 text-center">All Available Plans</h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            {Object.entries(STRIPE_CONFIG.PLANS).map(([tier, plan]) => (
+              <div
+                key={tier}
+                className={`bg-slate-800/60 backdrop-blur-sm rounded-2xl p-6 border transition-all hover:scale-105 relative ${
+                  tier === currentTier
+                    ? 'border-purple-500/50 ring-2 ring-purple-500/20 shadow-lg shadow-purple-500/10'
+                    : 'border-purple-500/30'
+                }`}
+              >
+                {tier === currentTier && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="gradient-purple text-white px-4 py-1 rounded-full text-xs font-semibold shadow-lg">
+                      Your Current Plan
+                    </span>
+                  </div>
+                )}
+                
+                {tier === 'pro' && tier !== currentTier && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <span className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-4 py-1 rounded-full text-xs font-semibold shadow-lg">
+                      Most Popular
+                    </span>
+                  </div>
+                )}
+                
+                <div className="text-center mb-6 pt-2">
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 ${
+                    tier === 'ultra' ? 'bg-gradient-to-r from-purple-500 to-pink-500' :
+                    tier === 'pro' ? 'bg-purple-900/50 border border-purple-500/30' :
+                    'bg-gray-800/50 border border-gray-600/30'
+                  }`}>
+                    <span className="text-2xl">
+                      {tier === 'ultra' ? '🚀' : tier === 'pro' ? '✨' : '🆓'}
+                    </span>
+                  </div>
+                  <h4 className="text-xl font-bold text-white mb-2">{plan.name}</h4>
+                  <div className="mb-2">
+                    <span className="text-2xl font-bold text-purple-400">
+                      {plan.price === 0 ? 'Free' : `£${plan.price / 100}`}
+                    </span>
+                    {plan.price > 0 && (
+                      <span className="text-gray-400 text-sm ml-1">per month</span>
+                    )}
+                  </div>
+                  <p className="text-gray-300 text-sm">{plan.description}</p>
                 </div>
-                <ul className="space-y-2 mb-6 text-sm">
-                  <li className="flex items-center space-x-2">
-                    <span className="text-purple-400">✓</span>
-                    <span className="text-gray-200">3 essential GPTs</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <span className="text-purple-400">✓</span>
-                    <span className="text-gray-200">2 core playbooks</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <span className="text-purple-400">✓</span>
-                    <span className="text-gray-200">Email support</span>
-                  </li>
-                </ul>
-                <button
-                  onClick={() => handleUpgrade('pro')}
-                  disabled={upgrading === 'pro'}
-                  className="w-full gradient-purple text-white py-3 px-4 rounded-xl font-semibold hover:scale-105 transition-transform"
-                >
-                  {upgrading === 'pro' ? 'Processing...' : 'Choose Pro'}
-                </button>
-              </div>
 
-              <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-6 border border-purple-500/30">
-                <div className="text-center mb-6">
-                  <h4 className="text-xl font-bold text-white mb-2">Ultra</h4>
-                  <div className="text-2xl font-bold text-purple-400 mb-2">£19/month</div>
-                  <p className="text-gray-300 text-sm">Full AI Access</p>
-                </div>
-                <ul className="space-y-2 mb-6 text-sm">
-                  <li className="flex items-center space-x-2">
-                    <span className="text-purple-400">✓</span>
-                    <span className="text-gray-200">All 7 GPTs</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <span className="text-purple-400">✓</span>
-                    <span className="text-gray-200">All playbooks</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <span className="text-purple-400">✓</span>
-                    <span className="text-gray-200">Priority support</span>
-                  </li>
+                <ul className="space-y-2 mb-6">
+                  {plan.features.slice(0, 4).map((feature, index) => (
+                    <li key={index} className="flex items-start space-x-2">
+                      <div className="w-4 h-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-white text-xs">✓</span>
+                      </div>
+                      <span className="text-gray-200 text-xs leading-relaxed">{feature}</span>
+                    </li>
+                  ))}
                 </ul>
-                <button
-                  onClick={() => handleUpgrade('ultra')}
-                  disabled={upgrading === 'ultra'}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold hover:scale-105 transition-transform"
-                >
-                  {upgrading === 'ultra' ? 'Processing...' : 'Choose Ultra'}
-                </button>
+
+                {tier !== currentTier && tier !== 'free' && (
+                  <button
+                    onClick={() => handleUpgrade(tier as UserTier)}
+                    disabled={upgrading === tier}
+                    className={`w-full py-3 px-4 rounded-xl font-semibold hover:scale-105 transition-transform text-sm ${
+                      tier === 'ultra' 
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
+                        : 'gradient-purple text-white'
+                    }`}
+                  >
+                    {upgrading === tier ? 'Processing...' : `Choose ${plan.name}`}
+                  </button>
+                )}
+                
+                {tier === currentTier && (
+                  <div className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-green-900/30 text-green-300 border border-green-500/30 text-center">
+                    ✓ Current Plan
+                  </div>
+                )}
+                
+                {tier === 'free' && currentTier !== 'free' && (
+                  <div className="w-full py-3 px-4 rounded-xl font-semibold text-sm bg-gray-700/50 text-gray-400 text-center">
+                    Contact Support to Downgrade
+                  </div>
+                )}
               </div>
-            </div>
+            ))}
           </div>
-        )}
+        </div>
 
         {/* Cancellation Confirmation Modal */}
         {showCancelConfirm && (
