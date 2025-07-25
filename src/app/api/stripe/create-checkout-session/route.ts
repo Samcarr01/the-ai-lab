@@ -4,8 +4,12 @@ import { createClient } from '@/lib/supabase/server'
 import { UserTier } from '@/lib/user'
 
 export async function POST(request: NextRequest) {
+  let tier: string | undefined
+  let user: any
+  
   try {
-    const { tier } = await request.json()
+    const requestData = await request.json()
+    tier = requestData.tier
 
     if (!tier || !['pro', 'ultra'].includes(tier)) {
       return NextResponse.json(
@@ -16,7 +20,8 @@ export async function POST(request: NextRequest) {
 
     // Get current user
     const supabase = createClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser()
+    user = authUser
 
     if (authError || !user) {
       return NextResponse.json(
