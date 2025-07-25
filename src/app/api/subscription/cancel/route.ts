@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     )
 
     // Update user's subscription status in database
-    await userService.updateSubscriptionStatus(user.id, {
+    await userService.updateTier(user.id, userProfile.user_tier || 'free', {
       subscriptionStatus: 'cancelling',
       cancelAtPeriodEnd: true
     })
