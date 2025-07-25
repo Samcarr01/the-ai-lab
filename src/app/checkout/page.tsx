@@ -78,7 +78,15 @@ function CheckoutContent() {
 
       const stripe = await getStripe()
       if (stripe) {
-        await stripe.redirectToCheckout({ sessionId: data.sessionId })
+        // Don't set loading false here - keep it true during redirect
+        const result = await stripe.redirectToCheckout({ sessionId: data.sessionId })
+        
+        // Only handle errors if redirect failed
+        if (result.error) {
+          setError(result.error.message || 'Failed to redirect to checkout')
+          setLoading(false)
+        }
+        // If successful, user will be redirected and won't see this page anymore
       }
     } catch (error: any) {
       setError(error.message || 'Something went wrong')
@@ -122,12 +130,12 @@ function CheckoutContent() {
 
           {/* Canceled Message */}
           {canceled && (
-            <div className="max-w-2xl mx-auto mb-8 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+            <div className="max-w-2xl mx-auto mb-8 bg-yellow-900/30 border border-yellow-500/30 rounded-xl p-4 backdrop-blur-sm">
               <div className="flex items-center gap-3">
-                <span className="text-yellow-500 text-xl">⚠️</span>
+                <span className="text-yellow-400 text-xl">⚠️</span>
                 <div>
-                  <h3 className="font-medium text-yellow-800">Payment Canceled</h3>
-                  <p className="text-yellow-700 text-sm">
+                  <h3 className="font-medium text-yellow-200">Payment Canceled</h3>
+                  <p className="text-yellow-300 text-sm">
                     No worries! You can complete your upgrade anytime. Your account remains unchanged.
                   </p>
                 </div>
