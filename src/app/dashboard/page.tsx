@@ -259,17 +259,17 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Simple Upgrade Section */}
-        {user.user_tier !== 'ultra' && user.email !== 'samcarr1232@gmail.com' && (
-          <div className="mb-8 text-center">
-            <Link
-              href="/pricing"
-              className="inline-flex items-center gradient-purple text-white px-8 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg"
-            >
-              {user.user_tier === 'pro' ? 'Upgrade to Ultra' : 'Upgrade to Pro'} ⚡
-            </Link>
-          </div>
-        )}
+        {/* Plan Management Section */}
+        <div className="mb-8 text-center">
+          <Link
+            href="/plan"
+            className="inline-flex items-center gradient-purple text-white px-8 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg"
+          >
+            {user.user_tier === 'ultra' ? 'Manage Plan' : 
+             user.user_tier === 'pro' ? 'Manage Plan & Upgrade' : 
+             'View Plans'} ⚡
+          </Link>
+        </div>
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">

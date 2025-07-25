@@ -96,10 +96,10 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                     Blog
                   </Link>
                   <Link
-                    href="/pricing"
+                    href="/plan"
                     className="text-sm text-gray-300 hover:text-purple-400 transition-colors font-medium"
                   >
-                    Pricing
+                    Plan
                   </Link>
                   {user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin' && (
                     <Link
