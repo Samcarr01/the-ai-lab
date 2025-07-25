@@ -217,18 +217,20 @@ function CheckoutContent() {
                 <div className="text-center text-gray-300 mb-4">
                   <p className="text-sm font-medium">Supported payment methods:</p>
                 </div>
-                <div className="flex items-center justify-center gap-3 mb-6">
-                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-700 rounded-lg border border-purple-500/30">
-                    <span className="text-lg">💳</span>
-                    <span className="text-xs font-medium text-gray-200">Cards</span>
+                <div className="flex items-center justify-center gap-4 mb-6">
+                  <div className="flex items-center gap-3 px-4 py-3 bg-slate-700/80 rounded-xl border border-purple-500/30 shadow-lg hover:bg-slate-600/80 transition-colors">
+                    <div className="w-8 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">💳</span>
+                    </div>
+                    <span className="text-sm font-medium text-gray-200">Credit Cards</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-700 rounded-lg border border-purple-500/30">
-                    <span className="text-lg">🍎</span>
-                    <span className="text-xs font-medium text-gray-200">Apple Pay</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-700 rounded-lg border border-purple-500/30">
-                    <span className="text-lg">🔵</span>
-                    <span className="text-xs font-medium text-gray-200">Google Pay</span>
+                  <div className="flex items-center gap-3 px-4 py-3 bg-black rounded-xl border border-gray-600 shadow-lg hover:bg-gray-900 transition-colors">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                        <span className="text-black text-sm font-black"></span>
+                      </div>
+                      <span className="text-white text-sm font-medium tracking-tight"> Pay</span>
+                    </div>
                   </div>
                 </div>
 
