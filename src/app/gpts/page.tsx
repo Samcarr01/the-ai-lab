@@ -152,7 +152,7 @@ export default function GPTsPage() {
     } else {
       // Determine the required tier and redirect to pricing page
       const requiredTier = gpt.required_tier || 'pro'
-      const pricingUrl = '/pricing'
+      const pricingUrl = '/plan'
       
       return (
         <div className="w-full text-center">
@@ -212,10 +212,10 @@ export default function GPTsPage() {
                 </p>
               </div>
               <Link
-                href="/pricing"
+                href="/plan"
                 className="bg-slate-800/80 text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
               >
-                Choose Pro Plan 🚀
+                View Plans 🚀
               </Link>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function GPTsPage() {
                 </p>
               </div>
               <Link
-                href="/pricing"
+                href="/plan"
                 className="bg-slate-800/80 text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
               >
                 Upgrade to Ultra ✨

@@ -63,9 +63,9 @@ export default function PricingPage() {
     const totalGPTs = contentStats?.totalGPTs || 7
     const totalPlaybooks = contentStats?.totalPlaybooks || 4
     
-    // Calculate Pro tier access (typically 3 GPTs and 2 playbooks, but let's be dynamic)
-    const proGPTs = Math.min(3, totalGPTs)
-    const proPlaybooks = Math.min(2, totalPlaybooks)
+    // Pro tier is always 3 GPTs and 2 playbooks (fixed)
+    const proGPTs = 3
+    const proPlaybooks = 2
     
     return [
       {
