@@ -107,7 +107,7 @@ export default function SignupPage() {
         <div className="mb-6 text-center">
           <div className="inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-green-900/20 border border-green-500/30 shadow-md">
             <span className="text-green-300 font-semibold text-lg">Free to start</span>
-            <span className="text-green-200 ml-2">• Upgrade for £15/month</span>
+            <span className="text-green-200 ml-2">• Upgrade to Pro or Ultra</span>
           </div>
         </div>
 
@@ -147,7 +147,7 @@ export default function SignupPage() {
                   </div>
                   <div className="flex items-start space-x-3">
                     <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-0.5">4</div>
-                    <span className="text-gray-200">Upgrade to Pro (£15/month) anytime for direct GPT links and PDF downloads</span>
+                    <span className="text-gray-200">Upgrade to Pro or Ultra anytime for direct GPT links and PDF downloads</span>
                   </div>
                 </div>
               </div>

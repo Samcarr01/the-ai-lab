@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (!error) {
+      // Success - redirect to dashboard
       const forwardedHost = request.headers.get('x-forwarded-host')
       const isLocalEnv = process.env.NODE_ENV === 'development'
       
@@ -21,9 +22,13 @@ export async function GET(request: NextRequest) {
       } else {
         return NextResponse.redirect(`${origin}${next}`)
       }
+    } else {
+      // Auth error - redirect to error page
+      console.error('Auth callback error:', error)
+      return NextResponse.redirect(`${origin}/auth/auth-code-error`)
     }
   }
 
-  // Return the user to an error page with instructions
+  // No code parameter - redirect to error page
   return NextResponse.redirect(`${origin}/auth/auth-code-error`)
 }
