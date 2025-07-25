@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Debug logging for checkout session creation
-    console.log('Creating checkout session with valid payment methods')
+    console.log('Creating checkout session with site URL:', process.env.NEXT_PUBLIC_SITE_URL)
 
     // Create checkout session
     const session = await stripeHelpers.createCheckoutSession(
