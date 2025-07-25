@@ -183,21 +183,21 @@ export default function InternalMobileNavigation({
 
               {userTier !== 'ultra' && (
                 <Link
-                  href={userTier === 'pro' ? '/checkout?tier=ultra' : '/checkout?tier=pro'}
+                  href="/pricing"
                   onClick={handleLinkClick}
                   className={`group flex items-center text-lg py-4 px-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-sm active:scale-95 bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 ${
-                    isActivePage('/upgrade')
+                    isActivePage('/pricing')
                       ? 'text-purple-300 font-medium shadow-md'
                       : 'text-purple-400 hover:text-purple-300 hover:shadow-md'
                   } ${animateItems ? 'translate-x-0 opacity-100 delay-800' : 'translate-x-8 opacity-0'}`}
                 >
                   <span className={`mr-4 text-2xl transition-transform duration-200 ${
-                    isActivePage('/upgrade') ? 'scale-110' : 'group-hover:scale-110'
+                    isActivePage('/pricing') ? 'scale-110' : 'group-hover:scale-110'
                   }`}>
                     ⭐
                   </span>
-                  <span className="font-medium">{userTier === 'pro' ? 'Upgrade to Ultra' : 'Upgrade'}</span>
-                  {isActivePage('/upgrade') && (
+                  <span className="font-medium">Pricing</span>
+                  {isActivePage('/pricing') && (
                     <div className="ml-auto w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
                   )}
                 </Link>

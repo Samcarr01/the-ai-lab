@@ -165,17 +165,16 @@ export default function DocumentsPage() {
         </button>
       )
     } else {
-      // Determine the required tier and appropriate checkout URL
-      const requiredTier = document.required_tier || 'pro'
-      const checkoutUrl = `/checkout?tier=${requiredTier}`
+      // Redirect to pricing page for all upgrades
+      const pricingUrl = '/pricing'
       
       return (
         <div className="w-full text-center">
           <Link
-            href={checkoutUrl}
+            href={pricingUrl}
             className="w-full block text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-200 hover:scale-105 shadow-lg"
           >
-            🔒 Unlock with {requiredTier === 'ultra' ? 'Ultra' : 'Pro'}
+            🔒 View Pricing
           </Link>
           {document.upgradeMessage && (
             <p className="text-xs text-gray-100 mt-2">{document.upgradeMessage}</p>
@@ -188,7 +187,7 @@ export default function DocumentsPage() {
   const handleDownload = async (doc: DocumentWithAccess) => {
     if (!doc.hasAccess) {
       const requiredTier = doc.required_tier || 'pro'
-      router.push(`/checkout?tier=${requiredTier}`)
+      router.push('/pricing')
       return
     }
 
@@ -274,7 +273,7 @@ export default function DocumentsPage() {
                 </p>
               </div>
               <Link
-                href="/checkout?tier=pro"
+                href="/pricing"
                 className="bg-slate-800/80 text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
               >
                 Choose Pro Plan 🚀
@@ -294,7 +293,7 @@ export default function DocumentsPage() {
                 </p>
               </div>
               <Link
-                href="/checkout?tier=ultra"
+                href="/pricing"
                 className="bg-slate-800/80 text-purple-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg whitespace-nowrap text-sm sm:text-base mobile-touch-target touch-feedback"
               >
                 Upgrade to Ultra ✨

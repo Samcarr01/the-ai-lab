@@ -95,6 +95,12 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                   >
                     Blog
                   </Link>
+                  <Link
+                    href="/pricing"
+                    className="text-sm text-gray-300 hover:text-purple-400 transition-colors font-medium"
+                  >
+                    Pricing
+                  </Link>
                   {user && user.email === 'samcarr1232@gmail.com' && adminViewMode === 'admin' && (
                     <Link
                       href="/admin"
@@ -130,14 +136,7 @@ export default function SmartNavigation({ user, currentPage }: SmartNavigationPr
                   </div>
                   
                   
-                  {effectiveUser && effectiveUser.user_tier !== 'ultra' && effectiveUser.email !== 'samcarr1232@gmail.com' && (
-                    <Link
-                      href="/upgrade"
-                      className="text-sm gradient-purple text-white px-4 py-2 rounded-full font-medium button-hover"
-                    >
-                      {effectiveUser.user_tier === 'pro' ? 'Upgrade to Ultra' : 'Upgrade'}
-                    </Link>
-                  )}
+                  {/* Upgrade button removed - users go to /pricing page instead */}
                   
                   <button
                     onClick={handleSignOut}

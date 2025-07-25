@@ -260,43 +260,15 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Upgrade Banner for Free Users */}
-        {user.user_tier === 'free' && (
-          <div className="mb-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-6 text-white">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <div className="mb-4 sm:mb-0">
-                <h3 className="text-xl font-semibold mb-2">Choose Your AI Journey! ⚡</h3>
-                <p className="text-purple-100">
-                  Pro (£7/month): 3 essential GPTs + 2 core playbooks | Ultra (£19/month): All {contentStats?.totalGPTs || 7} GPTs + all {contentStats?.totalPlaybooks || 10} playbooks
-                </p>
-              </div>
-              <Link
-                href="/checkout?tier=pro"
-                className="bg-slate-800/80 text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg sm:whitespace-nowrap w-full sm:w-auto text-center"
-              >
-                Choose Pro Plan 🚀
-              </Link>
-            </div>
-          </div>
-        )}
-
-        {/* Upgrade Banner for Pro Users */}
-        {user.user_tier === 'pro' && (
-          <div className="mb-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 text-white">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <div className="mb-4 sm:mb-0">
-                <h3 className="text-xl font-semibold mb-2">Upgrade to Ultra for Full Access! 🚀</h3>
-                <p className="text-purple-100">
-                  Get access to all {contentStats?.totalGPTs || 7} GPTs and all {contentStats?.totalPlaybooks || 10} playbooks. Perfect for scaling your AI workflows.
-                </p>
-              </div>
-              <Link
-                href="/checkout?tier=ultra"
-                className="bg-slate-800/80 text-purple-700 px-6 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg sm:whitespace-nowrap w-full sm:w-auto text-center"
-              >
-                Upgrade to Ultra ✨
-              </Link>
-            </div>
+        {/* Simple Upgrade Section */}
+        {user.user_tier !== 'ultra' && user.email !== 'samcarr1232@gmail.com' && (
+          <div className="mb-8 text-center">
+            <Link
+              href="/pricing"
+              className="inline-flex items-center gradient-purple text-white px-8 py-3 rounded-xl font-semibold hover:scale-105 transform transition-all duration-300 shadow-lg"
+            >
+              {user.user_tier === 'pro' ? 'Upgrade to Ultra' : 'Upgrade to Pro'} ⚡
+            </Link>
           </div>
         )}
 
