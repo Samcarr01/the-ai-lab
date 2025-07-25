@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripe, stripeHelpers } from '@/lib/stripe'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
     // Get current user
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
