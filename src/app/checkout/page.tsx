@@ -218,9 +218,9 @@ function CheckoutContent() {
                   <p className="text-sm font-medium">Supported payment methods:</p>
                 </div>
                 <div className="flex items-center justify-center gap-3 mb-6">
-                  <div className="flex items-center gap-2 px-3 py-2 bg-slate-700 rounded-lg border border-purple-500/30">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-slate-700 rounded-lg border border-purple-500/30">
                     <span className="text-lg">💳</span>
-                    <span className="text-xs font-medium text-gray-200">Cards</span>
+                    <span className="text-sm font-medium text-gray-200">Cards</span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2 bg-black rounded-lg border border-gray-700 shadow-lg">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
