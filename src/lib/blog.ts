@@ -77,6 +77,15 @@ export const blogService = {
 
   async createPost(post: Omit<BlogPost, 'id' | 'created_at' | 'updated_at'>): Promise<BlogPost | null> {
     const supabase = createClient()
+    
+    // Log the post data being saved
+    console.log('Creating blog post with data:', {
+      title: post.title,
+      slug: post.slug,
+      category: post.category,
+      fieldsPresent: Object.keys(post)
+    })
+    
     const { data, error } = await supabase
       .from('blog_posts')
       .insert([post])
@@ -85,9 +94,11 @@ export const blogService = {
 
     if (error) {
       console.error('Error creating blog post:', error)
+      console.error('Post data that failed:', post)
       return null
     }
 
+    console.log('Blog post created successfully:', data?.id)
     return data
   },
 

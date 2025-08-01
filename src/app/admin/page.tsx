@@ -966,7 +966,26 @@ export default function AdminPage() {
                   <button
                     onClick={async () => {
                       try {
-                        await blogService.createPost(previewBlog)
+                        console.log('Saving blog post...', previewBlog)
+                        
+                        // Clean the blog post data to only include required fields
+                        const cleanPost = {
+                          title: previewBlog.title,
+                          content: previewBlog.content,
+                          slug: previewBlog.slug,
+                          published_at: previewBlog.published_at,
+                          meta_description: previewBlog.meta_description,
+                          category: previewBlog.category,
+                          read_time: previewBlog.read_time
+                        }
+                        
+                        const result = await blogService.createPost(cleanPost)
+                        
+                        if (!result) {
+                          throw new Error('Failed to save blog post - check console for details')
+                        }
+                        
+                        console.log('Blog saved, refreshing posts...')
                         const posts = await blogService.getAllPosts(true)
                         setBlogPosts(posts)
                         setShowPreviewModal(false)
@@ -975,7 +994,8 @@ export default function AdminPage() {
                         setBlogKnowledge('')
                         showNotification('Success', 'Blog post saved successfully!', 'success')
                       } catch (error) {
-                        showNotification('Error', 'Failed to save blog post', 'error')
+                        console.error('Save error:', error)
+                        showNotification('Error', error instanceof Error ? error.message : 'Failed to save blog post', 'error')
                       }
                     }}
                     className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
