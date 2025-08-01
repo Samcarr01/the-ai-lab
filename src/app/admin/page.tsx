@@ -14,6 +14,7 @@ import DarkThemeBackground from '@/components/DarkThemeBackground'
 import SmartNavigation from '@/components/SmartNavigation'
 import NotificationModal from '@/components/NotificationModal'
 import BlogGenerationProgress from '@/components/BlogGenerationProgress'
+import ReactMarkdown from 'react-markdown'
 
 interface AnalyzedContent {
   title: string
@@ -53,6 +54,10 @@ export default function AdminPage() {
   const [includeWebSearch, setIncludeWebSearch] = useState(true)
   const [includeImages, setIncludeImages] = useState(true)
   const [generatingBlog, setGeneratingBlog] = useState(false)
+  
+  // Blog preview state
+  const [showPreviewModal, setShowPreviewModal] = useState(false)
+  const [previewBlog, setPreviewBlog] = useState<any>(null)
 
   // Tier testing state
   const [switchingTier, setSwitchingTier] = useState(false)
@@ -883,6 +888,107 @@ export default function AdminPage() {
         type={notification.type}
       />
 
+      {/* Blog Preview Modal */}
+      {showPreviewModal && previewBlog && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowPreviewModal(false)} />
+          <div className="relative bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden shadow-2xl flex flex-col">
+            {/* Header */}
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-2xl font-bold text-gray-900">
+                📝 Preview Generated Blog Post
+              </h2>
+            </div>
+            
+            {/* Blog Preview */}
+            <div className="flex-1 overflow-y-auto p-6 sm:p-8">
+              <div className="max-w-4xl mx-auto">
+                {/* Blog Title */}
+                <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                  {previewBlog.title}
+                </h1>
+                
+                {/* Metadata */}
+                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-8">
+                  <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full">
+                    {previewBlog.category}
+                  </span>
+                  <span>{previewBlog.read_time} min read</span>
+                  <span>{previewBlog.word_count} words</span>
+                </div>
+                
+                {/* Content */}
+                <div className="prose prose-lg max-w-none">
+                  <ReactMarkdown
+                    components={{
+                      img: ({ src, alt }) => (
+                        <img 
+                          src={src} 
+                          alt={alt} 
+                          className="rounded-lg shadow-xl w-full my-6"
+                        />
+                      ),
+                      h2: ({ children }) => (
+                        <h2 className="text-2xl font-bold mt-8 mb-4">{children}</h2>
+                      ),
+                      h3: ({ children }) => (
+                        <h3 className="text-xl font-semibold mt-6 mb-3">{children}</h3>
+                      ),
+                      blockquote: ({ children }) => (
+                        <blockquote className="border-l-4 border-purple-500 pl-4 my-6 italic text-gray-700">
+                          {children}
+                        </blockquote>
+                      ),
+                    }}
+                  >
+                    {previewBlog.content}
+                  </ReactMarkdown>
+                </div>
+              </div>
+            </div>
+            
+            {/* Actions */}
+            <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <div className="flex justify-between items-center">
+                <div className="text-sm text-gray-600">
+                  Review the content before publishing
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => {
+                      setShowPreviewModal(false)
+                      setPreviewBlog(null)
+                    }}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Discard
+                  </button>
+                  <button
+                    onClick={async () => {
+                      try {
+                        await blogService.createPost(previewBlog)
+                        const posts = await blogService.getAllPosts(true)
+                        setBlogPosts(posts)
+                        setShowPreviewModal(false)
+                        setPreviewBlog(null)
+                        setBlogPrompt('')
+                        setBlogKnowledge('')
+                        showNotification('Success', 'Blog post saved successfully!', 'success')
+                      } catch (error) {
+                        showNotification('Error', 'Failed to save blog post', 'error')
+                      }
+                    }}
+                    className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                  >
+                    Save Blog Post
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Blog Generation Modal */}
       {showBlogModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -999,33 +1105,21 @@ export default function AdminPage() {
                         .replace(/[^a-z0-9]+/g, '-')
                         .replace(/^-+|-+$/g, '')
                       
-                      // Save the blog post
-                      const postData: any = {
+                      // Store the blog post for preview
+                      setPreviewBlog({
                         ...blogPost,
                         slug,
                         published_at: new Date().toISOString()
-                      }
+                      })
                       
-                      // Only add status if column exists
-                      // Remove this after migration
-                      // postData.status = 'draft'
-                      
-                      await blogService.createPost(postData)
-                      
-                      // Refresh blog posts (including drafts)
-                      const posts = await blogService.getAllPosts(true)
-                      setBlogPosts(posts)
-                      
-                      // Reset and close
+                      // Close generation modal and show preview
                       setGeneratingBlog(false)
                       setShowBlogModal(false)
-                      setBlogPrompt('')
-                      setBlogKnowledge('')
+                      setShowPreviewModal(true)
                       
-                      showNotification('Success', 'Blog post generated and saved successfully!', 'success')
                     } catch (error) {
-                      console.error('Error saving blog post:', error)
-                      showNotification('Error', 'Failed to save blog post', 'error')
+                      console.error('Error processing blog post:', error)
+                      showNotification('Error', 'Failed to process blog post', 'error')
                       setGeneratingBlog(false)
                     }
                   }}

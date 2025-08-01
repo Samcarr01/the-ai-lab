@@ -26,7 +26,7 @@ export default function BlogPageClient() {
       try {
         // Load blog posts and categories first (always accessible - public content)
         const [posts, blogCategories] = await Promise.all([
-          blogService.getAllPosts(),
+          blogService.getAllPosts(true), // Show all posts until status column is added
           blogService.getCategories()
         ])
         
