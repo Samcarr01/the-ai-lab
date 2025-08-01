@@ -242,6 +242,8 @@ LINKING REQUIREMENTS (MUST FOLLOW):
 - Internal links (3-5): Use format [descriptive text](/gpts) or [descriptive text](/documents) or [descriptive text](/blog)
 - External links (2-3): Use format [source name](https://actual-url.com) - link to real websites
 - Example: "Check out our [AI productivity tools](/gpts)" or "According to [OpenAI's research](https://openai.com/research)"
+- DO NOT use citation-style references like [1], [2], [3] - always use proper markdown links
+- DO NOT put numbers in square brackets - that's for academic papers, not blog posts
 
 IMAGE PLACEHOLDERS:
 - Add [IMAGE: specific description] where visuals would help
@@ -253,6 +255,16 @@ STRUCTURE YOUR BLOG POST:
 3. 5-8 main sections with descriptive H2 headings
 4. Include lists, comparisons, step-by-step guides
 5. Strong conclusion with clear call-to-action
+
+TABLE FORMATTING (if using tables):
+- Use proper markdown table syntax with pipes and hyphens
+- Example of correct table format:
+| Feature | Tool A | Tool B | Tool C |
+|---------|--------|--------|--------|
+| Price | $29/mo | $49/mo | Free |
+| Users | 1-5 | Unlimited | 1 |
+- Ensure columns align and all rows have same number of cells
+- Keep cell content concise
 
 FORMAT YOUR RESPONSE AS JSON:
 {
@@ -466,7 +478,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               const jsonString = jsonMatch[0];
               blogPost = JSON.parse(jsonString);
               
-              // Clean the content field to remove any escape sequences
+              // Clean the content field to remove any escape sequences and citation references
               if (blogPost.content) {
                 // Replace literal \n with actual newlines
                 blogPost.content = blogPost.content
@@ -481,7 +493,9 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                   .replace(/\\\[/g, '[')
                   .replace(/\\\]/g, ']')
                   .replace(/\\\(/g, '(')
-                  .replace(/\\\)/g, ')');
+                  .replace(/\\\)/g, ')')
+                  // Remove citation-style references like [1], [2], etc.
+                  .replace(/\[\d+\]/g, '');
               }
               
               // Ensure we have long-form content
