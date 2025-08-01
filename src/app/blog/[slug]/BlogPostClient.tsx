@@ -177,12 +177,22 @@ export default function BlogPostClient({ post, user }: Props) {
               // Custom link renderer to handle internal/external links
               a: ({ href, children }) => {
                 const isInternal = href?.startsWith('/') || href?.startsWith('#')
+                if (isInternal) {
+                  return (
+                    <Link 
+                      href={href || '#'}
+                      className="text-purple-600 hover:text-purple-700 underline transition-colors"
+                    >
+                      {children}
+                    </Link>
+                  )
+                }
                 return (
                   <a 
                     href={href}
-                    className="text-purple-600 hover:text-purple-700 transition-colors"
-                    target={isInternal ? undefined : '_blank'}
-                    rel={isInternal ? undefined : 'noopener noreferrer'}
+                    className="text-purple-600 hover:text-purple-700 underline transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {children}
                   </a>
@@ -225,6 +235,43 @@ export default function BlogPostClient({ post, user }: Props) {
                     {children}
                   </table>
                 </div>
+              ),
+              thead: ({ children }) => (
+                <thead className="bg-gray-50">{children}</thead>
+              ),
+              tbody: ({ children }) => (
+                <tbody className="bg-white divide-y divide-gray-200">{children}</tbody>
+              ),
+              tr: ({ children }) => (
+                <tr>{children}</tr>
+              ),
+              th: ({ children }) => (
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  {children}
+                </th>
+              ),
+              td: ({ children }) => (
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {children}
+                </td>
+              ),
+              ul: ({ children }) => (
+                <ul className="list-disc pl-6 my-4 space-y-2">{children}</ul>
+              ),
+              ol: ({ children }) => (
+                <ol className="list-decimal pl-6 my-4 space-y-2">{children}</ol>
+              ),
+              li: ({ children }) => (
+                <li className="text-gray-700">{children}</li>
+              ),
+              p: ({ children }) => (
+                <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>
+              ),
+              strong: ({ children }) => (
+                <strong className="font-semibold text-gray-900">{children}</strong>
+              ),
+              em: ({ children }) => (
+                <em className="italic">{children}</em>
               ),
             }}
           >

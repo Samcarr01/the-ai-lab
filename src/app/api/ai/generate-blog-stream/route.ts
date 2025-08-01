@@ -162,48 +162,38 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'setup', status: 'starting' })
           const setupStart = Date.now()
 
-          // Enhanced SEO knowledge for long-form content
-          const seoKnowledge = `
-# SEO Blog Writing Essentials for Long-Form Content
+          // Load comprehensive SEO knowledge
+          const seoKnowledge = knowledgeBase || `
+# Professional Blog Writing Guidelines
 
-## Blog Structure & Length
-- **Target length: 2,000-3,000 words** for comprehensive coverage and SEO performance
-- **Headline**: 60-70 characters, include primary keyword near beginning
-- **Introduction**: Hook reader in first 10-15 seconds, outline what they'll learn
-- **Body Structure**:
-  - 5-8 main sections with H2 headings
-  - 2-4 subsections with H3 headings under each H2
-  - Each section: 200-400 words
-  - Use transition phrases between sections
-- **Conclusion**: Summarize key takeaways, reinforce main points, strong CTA
+## Content Structure Requirements
+- Target length: 2,000-3,000 words of high-quality, comprehensive content
+- Clear hierarchy with H2 and H3 sections
+- Short paragraphs (2-4 sentences) for readability
+- Strategic use of lists, bold text, and visual breaks
+- Smooth transitions between sections
 
-## Content Quality Requirements
-- **Scannable format**: Use visual hierarchy with clear headings
-- **Paragraph length**: 2-4 sentences max for readability
-- **Lists and bullets**: At least 2-3 lists per 1,000 words
-- **Visual breaks**: Use bold, italics, blockquotes for emphasis
-- **Examples**: Include real-world examples and case studies
-- **Data and stats**: Cite sources with [links](url) format
+## Quality Standards
+- Write in clear, conversational tone
+- Include specific examples and actionable tips
+- Support claims with data and research
+- Use varied sentence structure
+- Ensure proper grammar and spelling
+- NO escape characters or formatting errors
 
-## Advanced SEO Optimization
-- **Keyword density**: Primary keyword 1-2% density
-- **LSI keywords**: Include related semantic keywords naturally
-- **Internal linking**: 3-5 internal links to relevant pages
-- **External linking**: 2-3 authoritative external sources
-- **Meta description**: 150-160 characters with primary keyword
-- **Featured snippets**: Format content for position zero
-  - Use "What is" sections
-  - Include definition boxes
-  - Create numbered/bulleted lists
+## SEO Optimization
+- Natural keyword integration (1-2% density)
+- Include related keywords and variations
+- Add 3-5 internal links to /gpts, /documents, /blog
+- Include 2-3 external links to authoritative sources
+- Write compelling meta description (150-160 chars)
 
-## Writing Approach for Long-Form
-- **Comprehensive coverage**: Answer all related questions
-- **Logical flow**: Each section builds on previous
-- **Engaging style**: Mix short and medium sentences
-- **Practical value**: Include actionable tips and how-tos
-- **Expert positioning**: Demonstrate deep knowledge
-- **Storytelling**: Use anecdotes to illustrate points
-`
+## Required Formatting
+- Use proper markdown syntax
+- Include [IMAGE: description] placeholders for relevant visuals
+- Format lists with proper spacing
+- Use **bold** for emphasis
+- Include > blockquotes for key insights`
 
           sendProgress({
             step: 'setup',
@@ -235,49 +225,47 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'content_generation', status: 'starting' })
           const contentStart = Date.now()
 
-          const systemMessage = `You are an expert SEO blog writer for "thehackai" - a subscription platform for AI tools and guides.
+          const systemMessage = `You are an expert blog writer for thehackai.com, a premium AI tools platform.
 
-TARGET: Professionals interested in AI productivity tools
-CATEGORIES: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy
+IMPORTANT INSTRUCTIONS:
+1. Write a comprehensive blog post (2,000-3,000 words) about: ${prompt}
+2. Use clear, conversational tone that engages professionals interested in AI productivity
+3. Include practical examples, actionable tips, and real-world applications
+4. ${includeWebSearch ? 'Research current trends, statistics, and tools for 2025' : 'Focus on proven strategies and timeless principles'}
 
-SEO BEST PRACTICES:
-${seoKnowledge}
+CONTENT STRUCTURE:
+- Compelling title (60-70 chars) with main keyword near the beginning
+- Introduction that hooks readers and outlines value (150-200 words)
+- 5-8 main sections with descriptive H2 headings
+- Subsections (H3) for detailed topics within each section
+- Lists, bullet points, and tables where appropriate
+- Conclusion with clear call-to-action (150-200 words)
 
-${knowledgeBase ? `ADDITIONAL CONTEXT: ${knowledgeBase.slice(0, 1000)}` : ''}
+FORMATTING REQUIREMENTS:
+- Use proper Markdown syntax (# for H1, ## for H2, ### for H3)
+- Bold text with **text** for emphasis
+- Lists with proper - or 1. syntax
+- Include [IMAGE: specific description] placeholders where visuals would help
+- IMPORTANT: Add internal links using markdown syntax: [link text](/gpts), [link text](/documents), [link text](/blog)
+- IMPORTANT: Include 2-3 external links using markdown syntax: [link text](https://example.com)
+- Ensure all links are properly formatted with square brackets for text and parentheses for URLs
 
-REQUIREMENTS FOR LONG-FORM CONTENT:
-- Write **2,000-3,000 words** of high-quality, comprehensive content
-- Use proper markdown formatting with clear hierarchy
-- Structure with 5-8 main sections (H2) and subsections (H3)
-- Include practical examples, case studies, and actionable tips
-- Format content for featured snippets (definitions, lists, tables)
-- Add image placeholders with [IMAGE: description] tags
-- Use transition phrases between sections for flow
-- Include at least 3 lists or bullet points
-- Add 3-5 internal links: [relevant text](/gpts), [relevant text](/documents), [relevant text](/blog)
-- Include 2-3 external links to authoritative sources
-- Use **bold** for key points and *italics* for emphasis
-- Create engaging subheadings that tell a story
-- End with a compelling conclusion and clear CTA
+SEO OPTIMIZATION:
+- Natural keyword usage (1-2% density)
+- Meta description (150-160 chars) that summarizes value
+- Use one category: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy
 
-FORMATTING EXAMPLES:
-- Lists with proper spacing
-- Code blocks with \`\`\` when relevant
-- Blockquotes with > for expert quotes
-- Tables using markdown table syntax when comparing options
-
-You MUST return ONLY valid JSON with this exact structure:
+OUTPUT FORMAT:
+Return a JSON object with this EXACT structure:
 {
-  "title": "SEO-optimized title (60-70 chars, keyword near start)",
-  "content": "# Title Here\\n\\n## Introduction\\n\\nEngaging intro paragraph that hooks the reader and outlines what they'll learn...\\n\\n## What is [Topic]?\\n\\nDefinition and overview for featured snippet...\\n\\n## Section 1 Title\\n\\nComprehensive content with examples...\\n\\n### Subsection 1.1\\n\\nDetailed explanation...\\n\\n[IMAGE: Relevant diagram showing concept]\\n\\n### Subsection 1.2\\n\\n- Bullet point 1\\n- Bullet point 2\\n- Bullet point 3\\n\\n## Section 2 Title\\n\\nMore content with [internal link](/gpts)...\\n\\n### Real-World Example\\n\\n> \\"Quote from expert or case study\\"\\n\\n## How to Implement [Topic]\\n\\n1. Step one with details\\n2. Step two with explanation\\n3. Step three with tips\\n\\n[IMAGE: Step-by-step process diagram]\\n\\n## Common Mistakes to Avoid\\n\\n- Mistake 1 and why it matters\\n- Mistake 2 and how to fix it\\n\\n## Best Practices\\n\\n### Practice 1\\nDetailed explanation...\\n\\n### Practice 2\\nMore details...\\n\\n## Tools and Resources\\n\\n| Tool | Purpose | Price |\\n|------|---------|-------|\\n| Tool 1 | Description | Free/Paid |\\n| Tool 2 | Description | Price |\\n\\n## Conclusion\\n\\nSummarize key points and reinforce value...\\n\\n**Ready to transform your [topic]?** Explore our [AI GPTs collection](/gpts) and [downloadable playbooks](/documents) to take your skills to the next level.\\n\\n---\\n\\n*Want unlimited access to cutting-edge AI tools? [Upgrade to Pro](/upgrade) and join thousands of professionals leveraging AI for success.*",
-  "meta_description": "Comprehensive meta description (150-160 chars) with keyword",
-  "category": "One category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy",
-  "read_time": 10
+  "title": "Your SEO-optimized title here",
+  "content": "Your full markdown content here with proper formatting",
+  "meta_description": "Your 150-160 character meta description",
+  "category": "One category from the list above",
+  "read_time": calculated based on word count (words/200)
 }
 
-${includeWebSearch ? 'Use web search to find latest statistics, trends, tools, and expert opinions. Include current year (2025) data when relevant.' : 'Focus on timeless strategies and proven methods.'}
-
-CRITICAL: Return ONLY the JSON object, no other text or markdown. The content must be 2,000-3,000 words.`
+Write naturally without escape sequences. The content field should contain clean markdown text.`
 
           // Choose model and API endpoint
           let modelToUse, apiEndpoint, apiKey
@@ -440,10 +428,32 @@ CRITICAL: Return ONLY the JSON object, no other text or markdown. The content mu
 
           // Try to parse the final content as JSON blog post
           try {
-            // First try to extract JSON from the response
-            const jsonMatch = accumulatedContent.match(/\{[\s\S]*\}/);
+            // Clean the accumulated content to handle potential formatting issues
+            let cleanedContent = accumulatedContent.trim();
+            
+            // Extract JSON from the response
+            const jsonMatch = cleanedContent.match(/\{[\s\S]*\}/);
             if (jsonMatch) {
-              blogPost = JSON.parse(jsonMatch[0]);
+              const jsonString = jsonMatch[0];
+              blogPost = JSON.parse(jsonString);
+              
+              // Clean the content field to remove any escape sequences
+              if (blogPost.content) {
+                // Replace literal \n with actual newlines
+                blogPost.content = blogPost.content
+                  .replace(/\\n/g, '\n')
+                  .replace(/\\\*/g, '*')
+                  .replace(/\\"/g, '"')
+                  .replace(/\\\\/g, '\\')
+                  .replace(/\\#/g, '#')
+                  .replace(/\\-/g, '-')
+                  .replace(/\\>/g, '>')
+                  .replace(/\\`/g, '`')
+                  .replace(/\\\[/g, '[')
+                  .replace(/\\\]/g, ']')
+                  .replace(/\\\(/g, '(')
+                  .replace(/\\\)/g, ')');
+              }
               
               // Ensure we have long-form content
               const wordCount = blogPost.content?.split(' ').length || 0
@@ -455,16 +465,15 @@ CRITICAL: Return ONLY the JSON object, no other text or markdown. The content mu
             }
           } catch (parseError) {
             console.error('Failed to parse blog JSON:', parseError);
-            // If not JSON, create a structured blog post from the content
-            const lines = accumulatedContent.split('\n');
-            const title = lines[0]?.replace(/^#\s*/, '') || `AI Tools Guide: ${prompt.slice(0, 50)}...`;
+            console.error('Raw content preview:', accumulatedContent.slice(0, 500));
             
+            // Create a fallback blog post
             blogPost = {
-              title: title.slice(0, 70),
-              content: accumulatedContent || `# ${title}\n\n## Introduction\n\nContent generation failed. Please try again.`,
-              meta_description: `Learn about ${prompt}. Expert insights on AI tools, strategies, and best practices.`.slice(0, 160),
+              title: `${prompt.slice(0, 60)}...`,
+              content: `# ${prompt}\n\nWe apologize, but there was an error generating this blog post. Please try again.`,
+              meta_description: `Learn about ${prompt}. Expert insights and strategies.`.slice(0, 160),
               category: 'AI Tools',
-              read_time: Math.ceil(accumulatedContent.split(' ').length / 200)
+              read_time: 5
             };
           }
 
@@ -488,10 +497,8 @@ CRITICAL: Return ONLY the JSON object, no other text or markdown. The content mu
                 placeholder.replace(/\[IMAGE: ([^\]]+)\]/, '$1')
               )
 
-              // Generate 1-2 relevant images to stay within timeout
-              const imagePrompts = imageDescriptions.length > 0 
-                ? imageDescriptions.slice(0, 2) // Limit to 2 images max
-                : [`Hero image for blog post: ${blogPost.title}`] // Just hero image
+              // Generate only 1 hero image to stay within timeout and ensure quality
+              const imagePrompts = [`${blogPost.title}`] // Just generate hero image with blog title
 
               sendProgress({
                 step: 'image_generation',
@@ -510,7 +517,7 @@ CRITICAL: Return ONLY the JSON object, no other text or markdown. The content mu
                     },
                     body: JSON.stringify({
                       model: 'dall-e-3',
-                      prompt: `Professional blog illustration: ${prompt}. Style: Modern, clean, minimalist, tech-focused, purple/blue gradient accents, high quality, no text or words in image.`,
+                      prompt: `Create a professional blog hero image for an article about ${blogPost.title}. The image should be modern, clean, and visually represent the topic through abstract or conceptual imagery. Use a purple and blue gradient color scheme. Style: minimalist, professional, tech-focused. No text, letters, or words in the image.`,
                       size: '1792x1024', // 16:9 aspect ratio for blog hero images
                       quality: 'standard',
                       n: 1

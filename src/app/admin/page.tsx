@@ -4,6 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile, type UserTier, TIER_FEATURES } from '@/lib/user'
 import { gptsService } from '@/lib/gpts'
@@ -938,6 +939,41 @@ export default function AdminPage() {
                         <blockquote className="border-l-4 border-purple-500 pl-4 my-6 italic text-gray-700">
                           {children}
                         </blockquote>
+                      ),
+                      a: ({ href, children }) => {
+                        const isInternal = href?.startsWith('/') || href?.startsWith('#')
+                        if (isInternal) {
+                          return (
+                            <Link 
+                              href={href || '#'}
+                              className="text-purple-600 hover:text-purple-700 underline transition-colors"
+                            >
+                              {children}
+                            </Link>
+                          )
+                        }
+                        return (
+                          <a 
+                            href={href}
+                            className="text-purple-600 hover:text-purple-700 underline transition-colors"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {children}
+                          </a>
+                        )
+                      },
+                      ul: ({ children }) => (
+                        <ul className="list-disc pl-6 my-4 space-y-2">{children}</ul>
+                      ),
+                      ol: ({ children }) => (
+                        <ol className="list-decimal pl-6 my-4 space-y-2">{children}</ol>
+                      ),
+                      p: ({ children }) => (
+                        <p className="mb-4">{children}</p>
+                      ),
+                      strong: ({ children }) => (
+                        <strong className="font-semibold">{children}</strong>
                       ),
                     }}
                   >
