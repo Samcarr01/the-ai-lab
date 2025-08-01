@@ -222,38 +222,48 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'content_generation', status: 'starting' })
           const contentStart = Date.now()
 
-          const systemMessage = `You are a professional blog writer. Write a high-quality blog post about: ${prompt}
+          const systemMessage = `You are a professional blog writer specializing in AI tools and technology. Write a comprehensive, well-researched blog post about: ${prompt}
 
-${includeWebSearch ? 'Use web search to find current 2025 trends, statistics, and relevant information.' : ''}
+${includeWebSearch ? `RESEARCH REQUIREMENTS:
+- Find specific information about actual AI tools, companies, features, pricing
+- Include recent statistics, case studies, and real-world examples
+- Look for authoritative sources like official websites, tech publications, research papers
+- Gather concrete data points, user testimonials, and comparison information` : ''}
 
 Follow these SEO guidelines:
 ${seoKnowledge}
 
-SPECIFIC REQUIREMENTS:
-- Write 2,000-3,000 words of engaging, valuable content
-- Use conversational tone with "you", contractions, and active voice
-- Include practical examples and actionable tips
-- Add 3-5 internal links: [relevant text](/gpts), [relevant text](/documents), [relevant text](/blog)
-- Add 2-3 external links to authoritative sources
-- Include [IMAGE: description] placeholders for visuals
+CRITICAL REQUIREMENTS:
+1. Write 2,000-3,000 words of in-depth, valuable content
+2. Use conversational tone with "you", contractions, and active voice
+3. Include specific examples, real tools, actual features, and practical use cases
+
+LINKING REQUIREMENTS (MUST FOLLOW):
+- Internal links (3-5): Use format [descriptive text](/gpts) or [descriptive text](/documents) or [descriptive text](/blog)
+- External links (2-3): Use format [source name](https://actual-url.com) - link to real websites
+- Example: "Check out our [AI productivity tools](/gpts)" or "According to [OpenAI's research](https://openai.com/research)"
+
+IMAGE PLACEHOLDERS:
+- Add [IMAGE: specific description] where visuals would help
+- Be specific about what should be shown (e.g., "[IMAGE: Screenshot of ChatGPT-4 interface with code generation example]")
 
 STRUCTURE YOUR BLOG POST:
-1. Title (60-70 chars, keyword near start)
-2. Introduction (150-200 words, hook + value proposition)
-3. 5-8 main sections with H2 headings
-4. Subsections with H3 headings as needed
-5. Conclusion with call-to-action
+1. Title (60-70 chars, keyword near start, specific and compelling)
+2. Introduction (150-200 words, hook + clear value proposition)
+3. 5-8 main sections with descriptive H2 headings
+4. Include lists, comparisons, step-by-step guides
+5. Strong conclusion with clear call-to-action
 
 FORMAT YOUR RESPONSE AS JSON:
 {
-  "title": "SEO-optimized title here",
-  "content": "# Title\\n\\n## Introduction\\n\\nYour intro text...\\n\\n## Section 1\\n\\nContent...\\n\\n[Continue with all sections]",
-  "meta_description": "150-160 character description with keyword",
+  "title": "Specific, SEO-optimized title",
+  "content": "# Title\\n\\n## Introduction\\n\\nEngaging intro...\\n\\n[Your full blog with proper markdown, real links, specific examples]",
+  "meta_description": "150-160 character description with main keyword",
   "category": "Choose one: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy",
-  "read_time": number (calculate: total words / 200)
+  "read_time": calculated number (total words / 200)
 }
 
-Write clean markdown without escape characters. Focus on providing genuine value to readers.`
+IMPORTANT: Include ACTUAL external links to real websites and proper internal links in the markdown format shown above.`
 
           // Choose model and API endpoint
           let modelToUse, apiEndpoint, apiKey
@@ -528,6 +538,23 @@ Write clean markdown without escape characters. Focus on providing genuine value
               // Generate images using DALL-E 3 (limit to 1 for speed)
               const imagePromises = imagePrompts.slice(0, 1).map(async (prompt: string, index: number) => {
                 try {
+                  // Create a more specific image prompt based on the blog content
+                  let imagePrompt = prompt
+                  
+                  // Extract the main topic from the blog title for more relevant images
+                  if (blogPost.title) {
+                    const titleLower = blogPost.title.toLowerCase()
+                    if (titleLower.includes('ai tools') || titleLower.includes('artificial intelligence')) {
+                      imagePrompt = `Create a detailed hero image showing specific AI tools interfaces. Include visual representations of ChatGPT, Claude, and Midjourney interfaces on computer screens. Show a modern workspace with multiple monitors displaying these AI applications. Use purple and blue accents, professional tech aesthetic. No text or words.`
+                    } else if (titleLower.includes('productivity')) {
+                      imagePrompt = `Design a hero image showing productivity dashboards and workflow automation tools. Include visual elements like task boards, analytics graphs, automation flows. Modern tech workspace setting. Purple and blue color scheme. No text.`
+                    } else if (titleLower.includes('marketing')) {
+                      imagePrompt = `Create an image showing digital marketing tools and analytics dashboards. Include social media interfaces, email campaign builders, and analytics charts. Modern, professional design with purple/blue accents. No text.`
+                    } else {
+                      imagePrompt = `Professional hero image for article: "${blogPost.title}". Show specific tools, interfaces, or visual representations related to the topic. Modern tech aesthetic with purple/blue gradient. Clean, detailed, relevant to the subject. No text.`
+                    }
+                  }
+                  
                   const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
                     method: 'POST',
                     headers: {
@@ -536,7 +563,7 @@ Write clean markdown without escape characters. Focus on providing genuine value
                     },
                     body: JSON.stringify({
                       model: 'dall-e-3',
-                      prompt: `Create a professional blog hero image for an article about ${blogPost.title}. The image should be modern, clean, and visually represent the topic through abstract or conceptual imagery. Use a purple and blue gradient color scheme. Style: minimalist, professional, tech-focused. No text, letters, or words in the image.`,
+                      prompt: imagePrompt,
                       size: '1792x1024', // 16:9 aspect ratio for blog hero images
                       quality: 'standard',
                       n: 1
@@ -567,18 +594,32 @@ Write clean markdown without escape characters. Focus on providing genuine value
               const generatedImages = await Promise.all(imagePromises)
               blogPost.generated_images = generatedImages.filter(img => img !== null)
 
-              // Replace image placeholders with actual images
+              // Replace ALL image placeholders with actual images or remove them
               if (blogPost.generated_images.length > 0) {
                 let contentWithImages = blogPost.content
-                blogPost.generated_images.forEach((img: any, index: number) => {
-                  if (index < imagePlaceholders.length) {
-                    contentWithImages = contentWithImages.replace(
-                      imagePlaceholders[index],
-                      `![${img.description}](${img.url})`
-                    )
-                  }
+                
+                // Replace the first placeholder with the generated image
+                const firstImage = blogPost.generated_images[0]
+                if (imagePlaceholders.length > 0) {
+                  contentWithImages = contentWithImages.replace(
+                    imagePlaceholders[0],
+                    `![${firstImage.description || 'Blog hero image'}](${firstImage.url})`
+                  )
+                }
+                
+                // Remove any remaining image placeholders
+                imagePlaceholders.slice(1).forEach((placeholder: string) => {
+                  contentWithImages = contentWithImages.replace(placeholder, '')
                 })
+                
                 blogPost.content = contentWithImages
+              } else {
+                // Remove all image placeholders if no images were generated
+                let contentWithoutPlaceholders = blogPost.content
+                imagePlaceholders.forEach((placeholder: string) => {
+                  contentWithoutPlaceholders = contentWithoutPlaceholders.replace(placeholder, '')
+                })
+                blogPost.content = contentWithoutPlaceholders
               }
 
               sendProgress({
