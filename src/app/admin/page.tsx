@@ -926,7 +926,16 @@ export default function AdminPage() {
                         <img 
                           src={src} 
                           alt={alt} 
-                          className="rounded-lg shadow-xl w-full my-6"
+                          className="rounded-lg shadow-xl w-full my-6 transition-opacity duration-300"
+                          loading="eager"
+                          onLoad={(e) => {
+                            e.currentTarget.style.opacity = '1';
+                          }}
+                          onError={(e) => {
+                            console.warn('Preview image failed to load:', src);
+                            e.currentTarget.style.display = 'none';
+                          }}
+                          style={{ opacity: 0 }}
                         />
                       ),
                       h2: ({ children }) => (

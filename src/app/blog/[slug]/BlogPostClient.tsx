@@ -198,18 +198,49 @@ export default function BlogPostClient({ post, user }: Props) {
                   </a>
                 )
               },
-              // Custom image renderer with caption support
-              img: ({ src, alt }) => (
-                <figure className="my-8">
-                  <img 
-                    src={src} 
-                    alt={alt} 
-                    className="rounded-lg shadow-xl w-full"
-                    loading="lazy"
-                  />
-                  {alt && <figcaption className="text-center text-sm text-gray-600 mt-2">{alt}</figcaption>}
-                </figure>
-              ),
+              // Custom image renderer with caption support and loading optimization
+              img: ({ src, alt }) => {
+                const [imageLoaded, setImageLoaded] = useState(false);
+                const [imageError, setImageError] = useState(false);
+                
+                return (
+                  <figure className="my-8">
+                    {!imageError && (
+                      <img 
+                        src={src} 
+                        alt={alt} 
+                        className={`rounded-lg shadow-xl w-full transition-opacity duration-500 ${
+                          imageLoaded ? 'opacity-100' : 'opacity-0'
+                        }`}
+                        loading="eager"
+                        decoding="async"
+                        crossOrigin="anonymous"
+                        referrerPolicy="no-referrer"
+                        onLoad={() => {
+                          setImageLoaded(true);
+                        }}
+                        onError={() => {
+                          console.warn('Image failed to load:', src);
+                          setImageError(true);
+                        }}
+                        style={{
+                          minHeight: imageLoaded ? 'auto' : '200px',
+                          backgroundColor: imageLoaded ? 'transparent' : '#f3f4f6'
+                        }}
+                      />
+                    )}
+                    {imageError && (
+                      <div className="bg-gray-100 rounded-lg p-8 text-center text-gray-500">
+                        <svg className="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <p>Image unavailable</p>
+                      </div>
+                    )}
+                    {alt && !imageError && <figcaption className="text-center text-sm text-gray-600 mt-2">{alt}</figcaption>}
+                  </figure>
+                );
+              },
               // Custom code block renderer
               code: ({ children, ...props }) => {
                 const isInline = !('className' in props && typeof props.className === 'string' && props.className.includes('language-'))
