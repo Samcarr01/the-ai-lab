@@ -162,38 +162,35 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'setup', status: 'starting' })
           const setupStart = Date.now()
 
-          // Load comprehensive SEO knowledge
+          // Load SEO knowledge - use custom knowledge base if provided
           const seoKnowledge = knowledgeBase || `
-# Professional Blog Writing Guidelines
+## Blog Structure & Length
+- Optimal length: 1,500-2,500 words for best SEO performance
+- Headline: 60-70 characters, include primary keyword near beginning
+- Introduction: Hook reader in first 10-15 seconds, clear value proposition
+- Body: Use H2/H3 headings hierarchically, 2-4 sentence paragraphs
+- Conclusion: Summarize key takeaways, include clear call-to-action
 
-## Content Structure Requirements
-- Target length: 2,000-3,000 words of high-quality, comprehensive content
-- Clear hierarchy with H2 and H3 sections
-- Short paragraphs (2-4 sentences) for readability
-- Strategic use of lists, bold text, and visual breaks
-- Smooth transitions between sections
-
-## Quality Standards
-- Write in clear, conversational tone
-- Include specific examples and actionable tips
-- Support claims with data and research
-- Use varied sentence structure
-- Ensure proper grammar and spelling
-- NO escape characters or formatting errors
+## Content Quality Requirements
+- Scannable format: 79% of users scan content, not read word-for-word
+- Short paragraphs: 1-3 sentences max for mobile readability
+- Bullet points/lists: Break up text, highlight key information
+- Bold/italic: Emphasize important concepts (don't overuse)
+- White space: Prevent overwhelming visual density
 
 ## SEO Optimization
-- Natural keyword integration (1-2% density)
-- Include related keywords and variations
-- Add 3-5 internal links to /gpts, /documents, /blog
-- Include 2-3 external links to authoritative sources
-- Write compelling meta description (150-160 chars)
+- Primary keyword: Include naturally in headline, intro, headings
+- Heading structure: H2/H3 tags that tell complete story when scanned
+- Meta description: 150-160 characters, compelling and keyword-rich
+- Internal links: Link to related content for better site structure
+- External links: Include 2-3 authoritative sources for credibility
 
-## Required Formatting
-- Use proper markdown syntax
-- Include [IMAGE: description] placeholders for relevant visuals
-- Format lists with proper spacing
-- Use **bold** for emphasis
-- Include > blockquotes for key insights`
+## Writing Approach
+- Conversational tone: Use "you", contractions, rhetorical questions
+- Active voice: More engaging than passive voice
+- Concrete language: Specific words over vague generalities
+- Evidence-based: Support claims with data, research, examples
+- Actionable insights: Provide practical takeaways readers can implement`
 
           sendProgress({
             step: 'setup',
@@ -225,47 +222,38 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'content_generation', status: 'starting' })
           const contentStart = Date.now()
 
-          const systemMessage = `You are an expert blog writer for thehackai.com, a premium AI tools platform.
+          const systemMessage = `You are a professional blog writer. Write a high-quality blog post about: ${prompt}
 
-IMPORTANT INSTRUCTIONS:
-1. Write a comprehensive blog post (2,000-3,000 words) about: ${prompt}
-2. Use clear, conversational tone that engages professionals interested in AI productivity
-3. Include practical examples, actionable tips, and real-world applications
-4. ${includeWebSearch ? 'Research current trends, statistics, and tools for 2025' : 'Focus on proven strategies and timeless principles'}
+${includeWebSearch ? 'Use web search to find current 2025 trends, statistics, and relevant information.' : ''}
 
-CONTENT STRUCTURE:
-- Compelling title (60-70 chars) with main keyword near the beginning
-- Introduction that hooks readers and outlines value (150-200 words)
-- 5-8 main sections with descriptive H2 headings
-- Subsections (H3) for detailed topics within each section
-- Lists, bullet points, and tables where appropriate
-- Conclusion with clear call-to-action (150-200 words)
+Follow these SEO guidelines:
+${seoKnowledge}
 
-FORMATTING REQUIREMENTS:
-- Use proper Markdown syntax (# for H1, ## for H2, ### for H3)
-- Bold text with **text** for emphasis
-- Lists with proper - or 1. syntax
-- Include [IMAGE: specific description] placeholders where visuals would help
-- IMPORTANT: Add internal links using markdown syntax: [link text](/gpts), [link text](/documents), [link text](/blog)
-- IMPORTANT: Include 2-3 external links using markdown syntax: [link text](https://example.com)
-- Ensure all links are properly formatted with square brackets for text and parentheses for URLs
+SPECIFIC REQUIREMENTS:
+- Write 2,000-3,000 words of engaging, valuable content
+- Use conversational tone with "you", contractions, and active voice
+- Include practical examples and actionable tips
+- Add 3-5 internal links: [relevant text](/gpts), [relevant text](/documents), [relevant text](/blog)
+- Add 2-3 external links to authoritative sources
+- Include [IMAGE: description] placeholders for visuals
 
-SEO OPTIMIZATION:
-- Natural keyword usage (1-2% density)
-- Meta description (150-160 chars) that summarizes value
-- Use one category: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy
+STRUCTURE YOUR BLOG POST:
+1. Title (60-70 chars, keyword near start)
+2. Introduction (150-200 words, hook + value proposition)
+3. 5-8 main sections with H2 headings
+4. Subsections with H3 headings as needed
+5. Conclusion with call-to-action
 
-OUTPUT FORMAT:
-Return a JSON object with this EXACT structure:
+FORMAT YOUR RESPONSE AS JSON:
 {
-  "title": "Your SEO-optimized title here",
-  "content": "Your full markdown content here with proper formatting",
-  "meta_description": "Your 150-160 character meta description",
-  "category": "One category from the list above",
-  "read_time": calculated based on word count (words/200)
+  "title": "SEO-optimized title here",
+  "content": "# Title\\n\\n## Introduction\\n\\nYour intro text...\\n\\n## Section 1\\n\\nContent...\\n\\n[Continue with all sections]",
+  "meta_description": "150-160 character description with keyword",
+  "category": "Choose one: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy",
+  "read_time": number (calculate: total words / 200)
 }
 
-Write naturally without escape sequences. The content field should contain clean markdown text.`
+Write clean markdown without escape characters. Focus on providing genuine value to readers.`
 
           // Choose model and API endpoint
           let modelToUse, apiEndpoint, apiKey
@@ -293,7 +281,7 @@ Write naturally without escape sequences. The content field should contain clean
               { role: 'user', content: prompt }
             ],
             max_tokens: MAX_TOKENS,
-            stream: true,
+            stream: !includeWebSearch, // Perplexity doesn't support streaming
             temperature: 0.7
           }
 
@@ -328,26 +316,40 @@ Write naturally without escape sequences. The content field should contain clean
             message: `API connected (${apiResponseTime}ms), generating long-form content...`
           })
 
-          // Handle streaming response
-          const reader = response.body?.getReader()
-          const decoder = new TextDecoder()
           let accumulatedContent = ''
           let blogPost: any = {}
-          let chunkCount = 0
-          let lastChunkTime = Date.now()
 
-          if (!reader) {
-            throw new Error('No response body reader available')
-          }
+          // Handle non-streaming response from Perplexity
+          if (includeWebSearch && PERPLEXITY_API_KEY) {
+            console.log('📥 Processing Perplexity non-streaming response...')
+            const responseData = await response.json()
+            
+            if (responseData.choices?.[0]?.message?.content) {
+              accumulatedContent = responseData.choices[0].message.content
+              console.log(`✅ Received complete response: ${accumulatedContent.length} characters`)
+            } else {
+              throw new Error('Unexpected Perplexity response format')
+            }
+          } 
+          // Handle streaming response from OpenAI
+          else {
+            const reader = response.body?.getReader()
+            const decoder = new TextDecoder()
+            let chunkCount = 0
+            let lastChunkTime = Date.now()
 
-          // Send real-time content updates
-          sendProgress({
-            step: 'content_generation',
-            status: 'running',
-            message: 'Generating comprehensive content...'
-          })
+            if (!reader) {
+              throw new Error('No response body reader available')
+            }
 
-          console.log('🚀 Starting streaming response processing...')
+            // Send real-time content updates
+            sendProgress({
+              step: 'content_generation',
+              status: 'running',
+              message: 'Generating comprehensive content...'
+            })
+
+            console.log('🚀 Starting streaming response processing...')
 
           while (true) {
             try {
@@ -386,7 +388,20 @@ Write naturally without escape sequences. The content field should contain clean
                   
                   try {
                     const parsed = JSON.parse(data)
-                    const content = parsed.choices?.[0]?.delta?.content || ''
+                    
+                    // Handle both OpenAI and Perplexity response formats
+                    let content = ''
+                    
+                    // OpenAI format
+                    if (parsed.choices?.[0]?.delta?.content) {
+                      content = parsed.choices[0].delta.content
+                    }
+                    // Perplexity format (non-streaming)
+                    else if (parsed.choices?.[0]?.message?.content) {
+                      content = parsed.choices[0].message.content
+                      accumulatedContent = content // For non-streaming, use full content
+                      break // Exit loop as we have the full response
+                    }
                     
                     if (content) {
                       accumulatedContent += content
@@ -401,7 +416,10 @@ Write naturally without escape sequences. The content field should contain clean
                       }
                     }
                   } catch (parseError) {
-                    console.log('Failed to parse SSE data:', data.slice(0, 100))
+                    // Skip logging for incomplete JSON chunks
+                    if (!data.includes('"usage"')) {
+                      console.log('Failed to parse SSE data:', data.slice(0, 100))
+                    }
                   }
                 }
               }
@@ -425,6 +443,7 @@ Write naturally without escape sequences. The content field should contain clean
               }
             }
           }
+          } // Close the else block for OpenAI streaming
 
           // Try to parse the final content as JSON blog post
           try {
