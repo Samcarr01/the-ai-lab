@@ -953,7 +953,10 @@ export default function AdminPage() {
                   {/* Info Box */}
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-sm text-blue-800">
-                      <strong>💡 Tips:</strong> The AI will generate a comprehensive 2000-3000 word blog post with proper SEO optimization, headings, sections, and formatting. Web search helps include current information and trends.
+                      <strong>💡 Tips:</strong> The AI will generate a comprehensive 2000-3000 word blog post with proper SEO optimization. 
+                      <br/>• Web search requires Perplexity API key
+                      <br/>• Image generation takes ~20-30 seconds per image
+                      <br/>• Disable images for faster generation (under 30 seconds)
                     </p>
                   </div>
 

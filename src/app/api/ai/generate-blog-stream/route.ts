@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
 // Configure for Node.js runtime with extended timeout
-export const maxDuration = 300 // 5 minutes max for blog generation
+export const maxDuration = 60 // 60 seconds max for Vercel Hobby plan
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY
@@ -488,12 +488,10 @@ CRITICAL: Return ONLY the JSON object, no other text or markdown. The content mu
                 placeholder.replace(/\[IMAGE: ([^\]]+)\]/, '$1')
               )
 
-              // Generate 3-4 relevant images
-              const imagePrompts = imageDescriptions.length > 0 ? imageDescriptions : [
-                `Hero image for blog post: ${blogPost.title}`,
-                `Infographic showing key concepts from: ${blogPost.category}`,
-                `Professional illustration for: ${blogPost.meta_description}`
-              ]
+              // Generate 1-2 relevant images to stay within timeout
+              const imagePrompts = imageDescriptions.length > 0 
+                ? imageDescriptions.slice(0, 2) // Limit to 2 images max
+                : [`Hero image for blog post: ${blogPost.title}`] // Just hero image
 
               sendProgress({
                 step: 'image_generation',
@@ -501,8 +499,8 @@ CRITICAL: Return ONLY the JSON object, no other text or markdown. The content mu
                 message: `Generating ${imagePrompts.length} images...`
               })
 
-              // Generate images using DALL-E 3
-              const imagePromises = imagePrompts.slice(0, 4).map(async (prompt: string, index: number) => {
+              // Generate images using DALL-E 3 (limit to 1 for speed)
+              const imagePromises = imagePrompts.slice(0, 1).map(async (prompt: string, index: number) => {
                 try {
                   const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
                     method: 'POST',
