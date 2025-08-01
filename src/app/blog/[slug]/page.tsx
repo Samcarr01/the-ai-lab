@@ -1,25 +1,21 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { blogService } from '@/lib/blog'
+import { blogServiceServer } from '@/lib/blog-server'
 import BlogPostClient from './BlogPostClient'
 import { createClient } from '@/lib/supabase/server'
 import { userService } from '@/lib/user'
+
+export const dynamic = 'force-dynamic'
 
 interface Props {
   params: { slug: string }
 }
 
-// Generate static params for all blog posts
-export async function generateStaticParams() {
-  const posts = await blogService.getAllPosts()
-  return posts.map((post) => ({
-    slug: post.slug,
-  }))
-}
+// Removed static generation - using dynamic rendering
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await blogService.getPostBySlug(params.slug)
+  const post = await blogServiceServer.getPostBySlug(params.slug)
   
   if (!post) {
     return {
@@ -65,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = await blogService.getPostBySlug(params.slug)
+  const post = await blogServiceServer.getPostBySlug(params.slug)
 
   if (!post) {
     notFound()
