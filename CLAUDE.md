@@ -299,8 +299,12 @@ git push origin main  # Auto-deploys to Vercel
 - Check Stripe webhook logs for payment processing
 - Update content via admin panel as needed
 
+### **Known Issues:**
+- **DALL-E Image URLs**: Generated images from OpenAI are temporary and may flicker/expire. Consider downloading and re-uploading to Supabase Storage for permanent hosting.
+- **Perplexity API Key**: Must be added to Vercel environment variables for web search functionality
+
 ### **Future Enhancements (Optional):**
-- Individual blog post pages with SEO optimization
+- Implement permanent image storage for blog posts
 - Privacy policy page completion
 - Google OAuth configuration in Supabase
 - Account deletion functionality
