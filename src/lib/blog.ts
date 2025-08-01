@@ -83,23 +83,34 @@ export const blogService = {
       title: post.title,
       slug: post.slug,
       category: post.category,
-      fieldsPresent: Object.keys(post)
+      fieldsPresent: Object.keys(post),
+      contentLength: post.content?.length || 0
     })
     
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .insert([post])
-      .select()
-      .single()
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .insert([post]) // Don't add status field since it might not exist
+        .select()
+        .single()
 
-    if (error) {
-      console.error('Error creating blog post:', error)
-      console.error('Post data that failed:', post)
-      return null
+      if (error) {
+        console.error('Supabase error creating blog post:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
+        console.error('Post data that failed:', post)
+        throw error // Re-throw to catch in UI
+      }
+
+      console.log('Blog post created successfully:', data?.id)
+      return data
+    } catch (err) {
+      console.error('Exception creating blog post:', err)
+      throw err // Re-throw to catch in UI
     }
-
-    console.log('Blog post created successfully:', data?.id)
-    return data
   },
 
   async updatePost(id: string, updates: Partial<BlogPost>): Promise<BlogPost | null> {
