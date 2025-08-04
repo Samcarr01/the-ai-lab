@@ -560,14 +560,16 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                   const titleLower = blogPost.title.toLowerCase()
                   const contentLower = accumulatedContent.toLowerCase()
                   
-                  // Extract specific tools mentioned in the content
-                  const aiTools = ['chatgpt', 'claude', 'claude code', 'midjourney', 'dall-e', 'runway', 'perplexity', 'notion ai', 'jasper', 'copy.ai', 'writesonic', 'grammarly', 'github copilot', 'cursor', 'replit', 'anthropic']
-                  const mentionedTools = aiTools.filter(tool => contentLower.includes(tool))
+                  // Extract specific tools mentioned in the content AND title (prioritize more specific matches first)
+                  const aiTools = ['claude code', 'github copilot', 'notion ai', 'chatgpt', 'claude', 'midjourney', 'dall-e', 'runway', 'perplexity', 'jasper', 'copy.ai', 'writesonic', 'grammarly', 'cursor', 'replit', 'anthropic', 'openai']
+                  const mentionedTools = aiTools.filter(tool => 
+                    contentLower.includes(tool) || titleLower.includes(tool)
+                  )
                   
                   // Brand-specific logo and visual elements mapping
                   const brandElements: Record<string, string> = {
+                    'claude code': 'Claude Code interface with terminal/code editor, Claude logo (orange geometric design) prominently visible',
                     'claude': 'Claude AI logo (orange/coral geometric design), Anthropic branding',
-                    'claude code': 'Claude Code interface with terminal/code editor, Claude logo visible',
                     'chatgpt': 'ChatGPT logo (circular green/teal design), OpenAI branding',
                     'openai': 'OpenAI logo and branding elements',
                     'midjourney': 'Midjourney logo and distinctive art generation interface',
@@ -575,20 +577,37 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     'cursor': 'Cursor AI editor interface with distinctive branding',
                     'anthropic': 'Anthropic company logo and branding',
                     'perplexity': 'Perplexity AI logo and search interface',
+                    'notion ai': 'Notion AI logo and workspace interface',
                     'notion': 'Notion logo and workspace interface',
                     'grammarly': 'Grammarly logo and writing assistant interface'
                   }
                   
-                  // Detect primary brand for logo inclusion
+                  // Detect primary brand for logo inclusion (now with improved priority)
                   let primaryBrand = ''
                   let brandVisuals = ''
                   for (const tool of mentionedTools) {
                     if (brandElements[tool]) {
                       primaryBrand = tool
                       brandVisuals = brandElements[tool]
-                      break
+                      break // Takes first match, which is now prioritized by specificity
                     }
                   }
+                  
+                  // Special priority for Claude Code in title (most common case)
+                  if (titleLower.includes('claude code') && !primaryBrand) {
+                    primaryBrand = 'claude code'
+                    brandVisuals = brandElements['claude code']
+                  }
+                  
+                  // Debug logging to see what's being detected
+                  console.log('🔍 Brand detection debug:', {
+                    blogTitle: blogPost.title,
+                    titleLower,
+                    contentPreview: contentLower.substring(0, 100) + '...',
+                    mentionedTools,
+                    primaryBrand,
+                    brandVisuals: brandVisuals ? brandVisuals.substring(0, 50) + '...' : 'none'
+                  })
                   
                   if (index === 0) {
                     // Hero image - main topic visualization with enhanced prompts and brand logos
