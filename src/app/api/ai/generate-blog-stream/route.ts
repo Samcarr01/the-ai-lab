@@ -653,26 +653,40 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     }
                   }
                   
-                  const imageResponse = await fetch('https://api.openai.com/v1/images/generations', {
-                    method: 'POST',
-                    headers: {
-                      'Authorization': `Bearer ${OPENAI_API_KEY}`,
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      model: 'dall-e-3',
-                      prompt: enhancedImagePrompt,
-                      size: '1792x1024', // 16:9 widescreen aspect ratio perfect for blog hero images
-                      quality: 'hd', // Maximum quality for crisp, detailed images
-                      style: 'natural', // Photorealistic style for professional appearance
-                      n: 1
-                    })
-                  })
+                  // Add timeout and performance optimizations
+                  console.log(`🎨 Generating image ${index + 1} with DALL-E 3...`)
+                  const imageStartTime = Date.now()
+                  
+                  const imageResponse = await Promise.race([
+                    fetch('https://api.openai.com/v1/images/generations', {
+                      method: 'POST',
+                      headers: {
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        model: 'dall-e-3',
+                        prompt: enhancedImagePrompt,
+                        size: '1792x1024', // 16:9 widescreen aspect ratio perfect for blog hero images
+                        quality: 'hd', // Maximum quality for crisp, detailed images
+                        style: 'natural', // Photorealistic style for professional appearance
+                        n: 1
+                      })
+                    }),
+                    // 90-second timeout for image generation
+                    new Promise((_, reject) => 
+                      setTimeout(() => reject(new Error('Image generation timeout')), 90000)
+                    )
+                  ]) as Response
+
+                  const imageGenerationTime = Date.now() - imageStartTime
+                  console.log(`⚡ Image ${index + 1} generated in ${imageGenerationTime}ms`)
 
                   if (imageResponse.ok) {
                     const responseData = await imageResponse.json()
                     
                     if (responseData.data && responseData.data[0]?.url) {
+                      console.log(`✅ Image ${index + 1} URL received successfully`)
                       return {
                         url: responseData.data[0].url,
                         prompt: enhancedImagePrompt,
@@ -681,7 +695,8 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                       }
                     }
                   } else {
-                    console.error(`Image generation failed: ${imageResponse.status}`, await imageResponse.text())
+                    const errorText = await imageResponse.text()
+                    console.error(`❌ Image generation failed: ${imageResponse.status} - ${errorText}`)
                   }
                   return null
                 } catch (err) {
@@ -693,19 +708,31 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               const generatedImages = await Promise.all(imagePromises)
               const filteredImages = generatedImages.filter(img => img !== null)
               
-              // Store images permanently to prevent expiration
+              // Store images permanently to prevent expiration (optimized)
               if (filteredImages.length > 0) {
                 sendProgress({
                   step: 'image_generation',
                   status: 'running',
-                  message: 'Storing images permanently...'
+                  message: `Storing ${filteredImages.length} image(s) permanently...`
                 })
                 
+                const storageStartTime = Date.now()
+                console.log(`💾 Starting permanent storage for ${filteredImages.length} images...`)
+                
                 try {
-                  blogPost.generated_images = await imageStorageService.storeMultipleImages(filteredImages, blogPost.title)
-                  console.log(`✅ Stored ${blogPost.generated_images.length} images permanently`)
+                  // Store images with timeout and better error handling
+                  blogPost.generated_images = await Promise.race([
+                    imageStorageService.storeMultipleImages(filteredImages, blogPost.title),
+                    new Promise((_, reject) => 
+                      setTimeout(() => reject(new Error('Storage timeout')), 30000)
+                    )
+                  ]) as any
+                  
+                  const storageTime = Date.now() - storageStartTime
+                  console.log(`✅ Stored ${blogPost.generated_images.length} images permanently in ${storageTime}ms`)
                 } catch (storageError) {
-                  console.error('Image storage failed, using temporary URLs:', storageError)
+                  const storageTime = Date.now() - storageStartTime
+                  console.error(`⚠️ Image storage failed after ${storageTime}ms, using temporary URLs:`, storageError)
                   blogPost.generated_images = filteredImages // Fallback to temporary URLs
                 }
               } else {

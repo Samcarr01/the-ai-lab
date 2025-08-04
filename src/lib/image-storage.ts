@@ -2,28 +2,41 @@
 import { createClient } from './supabase/server'
 
 export const imageStorageService = {
-  // Download and store DALL-E image to Supabase Storage
+  // Download and store DALL-E image to Supabase Storage (optimized)
   async storeDalleImage(dalleUrl: string, fileName: string): Promise<string | null> {
     try {
+      const startTime = Date.now()
       console.log('📥 Downloading DALL-E image:', fileName)
       
-      // Download the image from DALL-E URL
-      const imageResponse = await fetch(dalleUrl)
+      // Download the image from DALL-E URL with timeout
+      const imageResponse = await Promise.race([
+        fetch(dalleUrl),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Download timeout')), 15000)
+        )
+      ]) as Response
+      
       if (!imageResponse.ok) {
         console.error('Failed to download DALL-E image:', imageResponse.status)
         return null
       }
 
+      const downloadTime = Date.now() - startTime
+      console.log(`⚡ Image downloaded in ${downloadTime}ms`)
+
       const imageBuffer = await imageResponse.arrayBuffer()
       const imageFile = new File([imageBuffer], fileName, { type: 'image/png' })
       
-      // Upload to Supabase Storage
+      // Upload to Supabase Storage with optimized settings
       const supabase = createClient()
+      const uploadStartTime = Date.now()
+      
       const { data, error } = await supabase.storage
         .from('blog-images')
         .upload(`images/${fileName}`, imageFile, {
           cacheControl: '31536000', // Cache for 1 year
-          upsert: true
+          upsert: true,
+          duplex: 'half' // Optimize for faster uploads
         })
 
       if (error) {
@@ -31,12 +44,16 @@ export const imageStorageService = {
         return null
       }
 
-      // Get public URL
+      const uploadTime = Date.now() - uploadStartTime
+      console.log(`⚡ Image uploaded in ${uploadTime}ms`)
+
+      // Get public URL (cached operation)
       const { data: publicUrlData } = supabase.storage
         .from('blog-images')
         .getPublicUrl(`images/${fileName}`)
 
-      console.log('✅ Image stored successfully:', publicUrlData.publicUrl)
+      const totalTime = Date.now() - startTime
+      console.log(`✅ Image stored successfully in ${totalTime}ms:`, publicUrlData.publicUrl)
       return publicUrlData.publicUrl
 
     } catch (error) {
