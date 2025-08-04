@@ -547,17 +547,17 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                 placeholder.replace(/\[IMAGE: ([^\]]+)\]/, '$1')
               )
 
-              // Generate only 1 hero image to stay within timeout and ensure quality
+              // Generate only 1 hero image for optimal speed and quality
               const imagePrompts = [`${blogPost.title}`] // Just generate hero image with blog title
 
               sendProgress({
                 step: 'image_generation',
                 status: 'running',
-                message: `Generating 2 HD images with DALL-E 3...`
+                message: `Generating 1 HD hero image with DALL-E 3...`
               })
 
               // Generate high-quality, topic-specific images using DALL-E 3
-              const imagePromises = imagePrompts.slice(0, 2).map(async (prompt: string, index: number) => {
+              const imagePromises = imagePrompts.slice(0, 1).map(async (prompt: string, index: number) => {
                 try {
                   // Create highly specific image prompts based on the actual blog content
                   let enhancedImagePrompt = ''
