@@ -79,11 +79,11 @@ export default function BlogPostClient({ post, user }: Props) {
   const toc = generateTOC()
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900">
       <SmartNavigation user={user} currentPage="blog" />
       
       {/* Reading Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-gray-200 z-50">
+      <div className="fixed top-0 left-0 w-full h-1 bg-gray-800 z-50">
         <div 
           className="h-full bg-gradient-to-r from-purple-600 to-purple-400 transition-all duration-300"
           style={{ width: `${readingProgress}%` }}
@@ -93,36 +93,36 @@ export default function BlogPostClient({ post, user }: Props) {
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Breadcrumbs */}
         <nav className="mb-8">
-          <ol className="flex items-center space-x-2 text-sm text-gray-600">
+          <ol className="flex items-center space-x-2 text-sm text-gray-400">
             <li>
-              <Link href="/" className="hover:text-purple-600 transition-colors">
+              <Link href="/" className="hover:text-purple-400 transition-colors">
                 Home
               </Link>
             </li>
             <li>/</li>
             <li>
-              <Link href="/blog" className="hover:text-purple-600 transition-colors">
+              <Link href="/blog" className="hover:text-purple-400 transition-colors">
                 Blog
               </Link>
             </li>
             <li>/</li>
-            <li className="text-gray-900 font-medium truncate">{post.title}</li>
+            <li className="text-white font-medium truncate">{post.title}</li>
           </ol>
         </nav>
 
         {/* Article Header */}
         <header className="mb-12">
           <div className="mb-6">
-            <span className="inline-block px-3 py-1 text-sm font-medium text-purple-600 bg-purple-100 rounded-full">
+            <span className="inline-block px-3 py-1 text-sm font-medium text-purple-200 bg-purple-900/30 rounded-full">
               {post.category}
             </span>
           </div>
           
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-6 leading-tight">
             {post.title}
           </h1>
           
-          <div className="flex flex-wrap items-center gap-4 text-gray-600">
+          <div className="flex flex-wrap items-center gap-4 text-gray-300">
             <time className="flex items-center gap-2">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -144,15 +144,15 @@ export default function BlogPostClient({ post, user }: Props) {
 
         {/* Table of Contents (for long posts) */}
         {toc.length > 3 && (
-          <div className="mb-12 p-6 bg-gray-100 rounded-xl">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Table of Contents</h2>
+          <div className="mb-12 p-6 bg-gray-800/50 rounded-xl border border-gray-700">
+            <h2 className="text-lg font-semibold text-white mb-4">Table of Contents</h2>
             <nav>
               <ul className="space-y-2">
                 {toc.map((item, index) => (
                   <li key={index}>
                     <a 
                       href={`#${item.id}`}
-                      className="text-gray-600 hover:text-purple-600 transition-colors"
+                      className="text-gray-300 hover:text-purple-400 transition-colors"
                     >
                       {item.title}
                     </a>
@@ -168,12 +168,6 @@ export default function BlogPostClient({ post, user }: Props) {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              // Custom heading renderer to add IDs for anchor links
-              h2: ({ children, ...props }) => {
-                const text = Array.isArray(children) ? children.join('') : children?.toString() || ''
-                const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-')
-                return <h2 id={id} className="scroll-mt-20" {...props}>{children}</h2>
-              },
               // Custom link renderer to handle internal/external links
               a: ({ href, children }) => {
                 const isInternal = href?.startsWith('/') || href?.startsWith('#')
@@ -181,7 +175,7 @@ export default function BlogPostClient({ post, user }: Props) {
                   return (
                     <Link 
                       href={href || '#'}
-                      className="text-purple-600 hover:text-purple-700 underline transition-colors"
+                      className="text-purple-400 hover:text-purple-300 underline transition-colors"
                     >
                       {children}
                     </Link>
@@ -190,7 +184,7 @@ export default function BlogPostClient({ post, user }: Props) {
                 return (
                   <a 
                     href={href}
-                    className="text-purple-600 hover:text-purple-700 underline transition-colors"
+                    className="text-purple-400 hover:text-purple-300 underline transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -210,71 +204,85 @@ export default function BlogPostClient({ post, user }: Props) {
                       console.warn('Image failed to load:', src);
                     }}
                   />
-                  {alt && <figcaption className="text-center text-sm text-gray-600 mt-2">{alt}</figcaption>}
+                  {alt && <figcaption className="text-center text-sm text-gray-400 mt-2">{alt}</figcaption>}
                 </figure>
               ),
               // Custom code block renderer
               code: ({ children, ...props }) => {
                 const isInline = !('className' in props && typeof props.className === 'string' && props.className.includes('language-'))
                 if (isInline) {
-                  return <code className="px-1 py-0.5 bg-gray-100 text-purple-600 rounded text-sm">{children}</code>
+                  return <code className="px-1 py-0.5 bg-gray-800 text-purple-300 rounded text-sm">{children}</code>
                 }
                 return (
-                  <pre className="block p-4 bg-gray-900 text-gray-100 rounded-lg overflow-x-auto">
+                  <pre className="block p-4 bg-gray-900 text-gray-100 rounded-lg overflow-x-auto border border-gray-700">
                     <code>{children}</code>
                   </pre>
                 )
               },
               // Custom blockquote renderer
               blockquote: ({ children }) => (
-                <blockquote className="border-l-4 border-purple-500 pl-4 my-6 italic text-gray-700">
+                <blockquote className="border-l-4 border-purple-500 pl-4 my-6 italic text-gray-300 bg-gray-800/30 py-2 rounded-r">
                   {children}
                 </blockquote>
               ),
               // Custom table renderer
               table: ({ children }) => (
                 <div className="overflow-x-auto my-8">
-                  <table className="min-w-full divide-y divide-gray-200">
+                  <table className="min-w-full divide-y divide-gray-700 bg-gray-800 rounded-lg">
                     {children}
                   </table>
                 </div>
               ),
               thead: ({ children }) => (
-                <thead className="bg-gray-50">{children}</thead>
+                <thead className="bg-gray-700">{children}</thead>
               ),
               tbody: ({ children }) => (
-                <tbody className="bg-white divide-y divide-gray-200">{children}</tbody>
+                <tbody className="bg-gray-800 divide-y divide-gray-700">{children}</tbody>
               ),
               tr: ({ children }) => (
                 <tr>{children}</tr>
               ),
               th: ({ children }) => (
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                   {children}
                 </th>
               ),
               td: ({ children }) => (
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-200">
                   {children}
                 </td>
               ),
               ul: ({ children }) => (
-                <ul className="list-disc pl-6 my-4 space-y-2">{children}</ul>
+                <ul className="list-disc pl-6 my-4 space-y-2 text-gray-300">{children}</ul>
               ),
               ol: ({ children }) => (
-                <ol className="list-decimal pl-6 my-4 space-y-2">{children}</ol>
+                <ol className="list-decimal pl-6 my-4 space-y-2 text-gray-300">{children}</ol>
               ),
               li: ({ children }) => (
-                <li className="text-gray-700">{children}</li>
+                <li className="text-gray-300">{children}</li>
               ),
               p: ({ children }) => (
-                <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>
+                <p className="mb-4 text-gray-300 leading-relaxed">{children}</p>
               ),
               strong: ({ children }) => (
-                <strong className="font-semibold text-gray-900">{children}</strong>
+                <strong className="font-semibold text-white">{children}</strong>
               ),
               em: ({ children }) => (
-                <em className="italic">{children}</em>
+                <em className="italic text-gray-200">{children}</em>
+              ),
+              h1: ({ children }) => (
+                <h1 className="text-3xl font-bold text-white mb-6">{children}</h1>
+              ),
+              h2: ({ children, ...props }) => {
+                const text = Array.isArray(children) ? children.join('') : children?.toString() || ''
+                const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+                return <h2 id={id} className="text-2xl font-semibold text-white mb-4 mt-8 scroll-mt-20" {...props}>{children}</h2>
+              },
+              h3: ({ children }) => (
+                <h3 className="text-xl font-semibold text-white mb-3 mt-6">{children}</h3>
+              ),
+              h4: ({ children }) => (
+                <h4 className="text-lg font-semibold text-white mb-2 mt-4">{children}</h4>
               ),
             }}
           >
@@ -283,37 +291,37 @@ export default function BlogPostClient({ post, user }: Props) {
         </div>
 
         {/* Share Section */}
-        <div className="mt-12 pt-8 border-t border-gray-200">
+        <div className="mt-12 pt-8 border-t border-gray-700">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">Share this article</h3>
+            <h3 className="text-lg font-semibold text-white">Share this article</h3>
             <div className="relative">
               <button
                 onClick={() => setShowShareMenu(!showShareMenu)}
-                className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-purple-600 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-purple-400 transition-colors"
               >
                 <ShareIcon />
                 <span>Share</span>
               </button>
               
               {showShareMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
+                <div className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg border border-gray-700 z-10">
                   <button
                     onClick={shareOnTwitter}
-                    className="flex items-center gap-3 w-full px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 w-full px-4 py-3 text-gray-200 hover:bg-gray-700 transition-colors"
                   >
                     <TwitterIcon />
                     <span>Share on Twitter</span>
                   </button>
                   <button
                     onClick={shareOnLinkedIn}
-                    className="flex items-center gap-3 w-full px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 w-full px-4 py-3 text-gray-200 hover:bg-gray-700 transition-colors"
                   >
                     <LinkedInIcon />
                     <span>Share on LinkedIn</span>
                   </button>
                   <button
                     onClick={copyToClipboard}
-                    className="flex items-center gap-3 w-full px-4 py-3 text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="flex items-center gap-3 w-full px-4 py-3 text-gray-200 hover:bg-gray-700 transition-colors"
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -344,11 +352,11 @@ export default function BlogPostClient({ post, user }: Props) {
         </div>
 
         {/* Navigation to other posts */}
-        <nav className="mt-12 pt-8 border-t border-gray-200">
+        <nav className="mt-12 pt-8 border-t border-gray-700">
           <div className="flex items-center justify-between">
             <Link 
               href="/blog"
-              className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors"
+              className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -358,7 +366,7 @@ export default function BlogPostClient({ post, user }: Props) {
             
             <Link 
               href="/gpts"
-              className="flex items-center gap-2 text-purple-600 hover:text-purple-700 transition-colors"
+              className="flex items-center gap-2 text-purple-400 hover:text-purple-300 transition-colors"
             >
               <span>Explore AI Tools</span>
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -370,18 +378,18 @@ export default function BlogPostClient({ post, user }: Props) {
       </article>
 
       {/* Footer */}
-      <footer className="mt-20 py-12 border-t border-gray-200">
+      <footer className="mt-20 py-12 border-t border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-gray-600">
+          <div className="text-center text-gray-400">
             <p>&copy; 2025 thehackai. All rights reserved.</p>
             <div className="mt-4 flex items-center justify-center space-x-6">
-              <Link href="/terms" className="hover:text-purple-600 transition-colors">
+              <Link href="/terms" className="hover:text-purple-400 transition-colors">
                 Terms of Service
               </Link>
-              <Link href="/privacy" className="hover:text-purple-600 transition-colors">
+              <Link href="/privacy" className="hover:text-purple-400 transition-colors">
                 Privacy Policy
               </Link>
-              <Link href="/contact" className="hover:text-purple-600 transition-colors">
+              <Link href="/contact" className="hover:text-purple-400 transition-colors">
                 Contact
               </Link>
             </div>

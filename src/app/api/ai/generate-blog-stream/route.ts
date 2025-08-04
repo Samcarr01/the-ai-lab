@@ -251,11 +251,17 @@ IMAGE PLACEHOLDERS:
 - Be specific about what should be shown (e.g., "[IMAGE: Screenshot of ChatGPT-4 interface with code generation example]")
 
 STRUCTURE YOUR BLOG POST:
-1. Title (60-70 chars, keyword near start, specific and compelling)
+1. Title (45-60 chars, professional, clear, avoid slang like "good vibe" or "ultimate")
 2. Introduction (150-200 words, hook + clear value proposition)
 3. 5-8 main sections with descriptive H2 headings
 4. Include lists, comparisons, step-by-step guides
 5. Strong conclusion with clear call-to-action
+
+TITLE REQUIREMENTS:
+- Professional tone, avoid casual slang or buzzwords
+- Clear and specific about the topic
+- Examples: "Getting Started with Claude Code", "Claude Code vs GitHub Copilot", "5 Claude Code Features for Developers"
+- AVOID: "Ultimate", "Good Vibe", overly promotional language
 
 TABLE FORMATTING (if using tables):
 - Use proper markdown table syntax with pipes and hyphens
