@@ -503,6 +503,11 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                   .replace(/\\\)/g, ')')
                   // Remove citation-style references like [1], [2], etc.
                   .replace(/\[\d+\]/g, '');
+                
+                // Remove duplicate title if it exists at the beginning of content
+                if (blogPost.title && blogPost.content.startsWith(`# ${blogPost.title}`)) {
+                  blogPost.content = blogPost.content.replace(`# ${blogPost.title}\n\n`, '');
+                }
               }
               
               // Ensure we have long-form content
@@ -830,17 +835,30 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                       rebuiltContent += `\n\n![${blogPost.generated_images[0].description || 'Blog hero image'}](${blogPost.generated_images[0].url})\n\n`
                     }
                     
-                    // Add remaining sections with images distributed
-                    sections.slice(1).forEach((section: string, index: number) => {
-                      rebuiltContent += '##' + section
+                    // Add remaining sections with images evenly distributed
+                    const remainingSections = sections.slice(1)
+                    const remainingImages = blogPost.generated_images.slice(1)
+                    
+                    if (remainingSections.length > 0 && remainingImages.length > 0) {
+                      // Calculate optimal spacing between images
+                      const sectionsPerImage = Math.max(1, Math.floor(remainingSections.length / remainingImages.length))
                       
-                      // Insert additional images after every 2nd section
-                      const imageIndex = Math.floor(index / 2) + 1
-                      if (imageIndex < blogPost.generated_images.length && index % 2 === 1) {
-                        const image = blogPost.generated_images[imageIndex]
-                        rebuiltContent += `\n\n![${image.description || 'Supporting visual'}](${image.url})\n\n`
-                      }
-                    })
+                      remainingSections.forEach((section: string, index: number) => {
+                        rebuiltContent += '##' + section
+                        
+                        // Insert image at calculated intervals for better distribution
+                        const imageIndex = Math.floor(index / sectionsPerImage)
+                        if (imageIndex < remainingImages.length && (index + 1) % sectionsPerImage === 0) {
+                          const image = remainingImages[imageIndex]
+                          rebuiltContent += `\n\n![${image.description || 'Supporting visual'}](${image.url})\n\n`
+                        }
+                      })
+                    } else {
+                      // No additional images, just add sections
+                      remainingSections.forEach((section: string) => {
+                        rebuiltContent += '##' + section
+                      })
+                    }
                     
                     contentWithImages = rebuiltContent
                   }
