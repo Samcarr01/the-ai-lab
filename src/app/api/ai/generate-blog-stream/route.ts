@@ -547,17 +547,38 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                 placeholder.replace(/\[IMAGE: ([^\]]+)\]/, '$1')
               )
 
-              // Generate only 1 hero image for optimal speed and quality
-              const imagePrompts = [`${blogPost.title}`] // Just generate hero image with blog title
+              // Intelligently determine number of images based on content length and placeholders
+              const contentWordCount = blogPost.content.split(' ').length
+              const maxImages = Math.min(
+                imagePlaceholders.length > 0 ? imagePlaceholders.length : 3, // Use placeholders if available
+                contentWordCount > 1500 ? 3 : contentWordCount > 800 ? 2 : 1 // Or base on length
+              )
+              
+              console.log(`📊 Blog analysis: ${contentWordCount} words, ${imagePlaceholders.length} placeholders → generating ${maxImages} images`)
+              
+              // Create image prompts for different sections
+              const imagePrompts = []
+              imagePrompts.push(`${blogPost.title}`) // Hero image
+              
+              if (maxImages > 1) {
+                // Extract key sections for additional images
+                const sections = blogPost.content.split(/##/).filter(section => section.trim().length > 100)
+                if (sections.length > 1 && maxImages > 1) {
+                  imagePrompts.push(`supporting content for ${sections[1].split('\n')[0].trim()}`)
+                }
+                if (sections.length > 2 && maxImages > 2) {
+                  imagePrompts.push(`visual guide for ${sections[2].split('\n')[0].trim()}`)
+                }
+              }
 
               sendProgress({
                 step: 'image_generation',
                 status: 'running',
-                message: `Generating 1 HD hero image with DALL-E 3...`
+                message: `Generating ${maxImages} HD image${maxImages > 1 ? 's' : ''} with DALL-E 3...`
               })
 
               // Generate high-quality, topic-specific images using DALL-E 3
-              const imagePromises = imagePrompts.slice(0, 1).map(async (prompt: string, index: number) => {
+              const imagePromises = imagePrompts.slice(0, maxImages).map(async (prompt: string, index: number) => {
                 try {
                   // Create highly specific image prompts based on the actual blog content
                   let enhancedImagePrompt = ''
@@ -778,23 +799,55 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                 blogPost.generated_images = []
               }
 
-              // Replace ALL image placeholders with actual images or remove them
+              // Intelligently distribute images throughout the content
               if (blogPost.generated_images.length > 0) {
                 let contentWithImages = blogPost.content
                 
-                // Replace the first placeholder with the generated image
-                const firstImage = blogPost.generated_images[0]
                 if (imagePlaceholders.length > 0) {
-                  contentWithImages = contentWithImages.replace(
-                    imagePlaceholders[0],
-                    `![${firstImage.description || 'Blog hero image'}](${firstImage.url})`
-                  )
+                  // Replace existing placeholders with generated images
+                  blogPost.generated_images.forEach((image, index) => {
+                    if (imagePlaceholders[index]) {
+                      const imageAlt = index === 0 ? 'Blog hero image' : 
+                                     index === 1 ? 'Supporting visual' : 
+                                     'Additional illustration'
+                      contentWithImages = contentWithImages.replace(
+                        imagePlaceholders[index],
+                        `![${image.description || imageAlt}](${image.url})`
+                      )
+                    }
+                  })
+                  
+                  // Remove any remaining unused placeholders
+                  imagePlaceholders.slice(blogPost.generated_images.length).forEach((placeholder: string) => {
+                    contentWithImages = contentWithImages.replace(placeholder, '')
+                  })
+                } else {
+                  // No placeholders - strategically insert images into content sections
+                  const sections = contentWithImages.split('##').filter(section => section.trim().length > 0)
+                  
+                  if (sections.length > 0) {
+                    let rebuiltContent = sections[0] // Introduction
+                    
+                    // Insert hero image after introduction
+                    if (blogPost.generated_images[0]) {
+                      rebuiltContent += `\n\n![${blogPost.generated_images[0].description || 'Blog hero image'}](${blogPost.generated_images[0].url})\n\n`
+                    }
+                    
+                    // Add remaining sections with images distributed
+                    sections.slice(1).forEach((section, index) => {
+                      rebuiltContent += '##' + section
+                      
+                      // Insert additional images after every 2nd section
+                      const imageIndex = Math.floor(index / 2) + 1
+                      if (imageIndex < blogPost.generated_images.length && index % 2 === 1) {
+                        const image = blogPost.generated_images[imageIndex]
+                        rebuiltContent += `\n\n![${image.description || 'Supporting visual'}](${image.url})\n\n`
+                      }
+                    })
+                    
+                    contentWithImages = rebuiltContent
+                  }
                 }
-                
-                // Remove any remaining image placeholders
-                imagePlaceholders.slice(1).forEach((placeholder: string) => {
-                  contentWithImages = contentWithImages.replace(placeholder, '')
-                })
                 
                 blogPost.content = contentWithImages
               } else {
