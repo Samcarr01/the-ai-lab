@@ -9,7 +9,7 @@ export const imageStorageService = {
       console.log('📥 Downloading DALL-E image:', fileName)
       
       // Download the image from DALL-E URL with extended timeout and retry logic
-      let imageResponse: Response
+      let imageResponse: Response | null = null
       let downloadAttempts = 0
       const maxRetries = 3
       
@@ -45,7 +45,11 @@ export const imageStorageService = {
         }
       }
       
-      // imageResponse is guaranteed to be ok here due to retry logic above
+      // Check if we have a valid response
+      if (!imageResponse || !imageResponse.ok) {
+        console.error('❌ No valid response after retry attempts')
+        return null
+      }
 
       const downloadTime = Date.now() - startTime
       console.log(`⚡ Image downloaded in ${downloadTime}ms`)
