@@ -565,7 +565,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                   const mentionedTools = aiTools.filter(tool => contentLower.includes(tool))
                   
                   // Brand-specific logo and visual elements mapping
-                  const brandElements = {
+                  const brandElements: Record<string, string> = {
                     'claude': 'Claude AI logo (orange/coral geometric design), Anthropic branding',
                     'claude code': 'Claude Code interface with terminal/code editor, Claude logo visible',
                     'chatgpt': 'ChatGPT logo (circular green/teal design), OpenAI branding',
