@@ -731,7 +731,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                   console.log(`✅ Stored ${blogPost.generated_images.length} images permanently in ${storageTime}ms`)
                   
                   // Validate that all images were stored successfully and URLs are accessible
-                  const failedStorageCount = blogPost.generated_images.filter(img => 
+                  const failedStorageCount = blogPost.generated_images.filter((img: any) => 
                     img.url.includes('oaidalleapiprodscus.blob.core.windows.net')
                   ).length
                   
