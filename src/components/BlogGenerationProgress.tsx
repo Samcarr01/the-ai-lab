@@ -14,6 +14,7 @@ interface BlogGenerationProgressProps {
   knowledgeBase: string
   includeWebSearch: boolean
   includeImages: boolean
+  imageCount?: number // Number of images to generate (1-3)
   searchProvider?: 'perplexity'
   searchContextSize?: 'low' | 'medium' | 'high'
   onComplete: (blogPost: any) => void
@@ -54,6 +55,7 @@ export default function BlogGenerationProgress({
   knowledgeBase,
   includeWebSearch,
   includeImages,
+  imageCount = 2,
   searchProvider = 'perplexity',
   searchContextSize = 'medium',
   onComplete,
@@ -90,6 +92,7 @@ export default function BlogGenerationProgress({
             knowledgeBase,
             includeWebSearch,
             includeImages,
+            imageCount,
             searchContextSize
           })
         })

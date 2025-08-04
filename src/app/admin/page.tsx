@@ -54,6 +54,7 @@ export default function AdminPage() {
   const [blogKnowledge, setBlogKnowledge] = useState('')
   const [includeWebSearch, setIncludeWebSearch] = useState(true)
   const [includeImages, setIncludeImages] = useState(true)
+  const [imageCount, setImageCount] = useState(2) // Default to 2 images
   const [generatingBlog, setGeneratingBlog] = useState(false)
   
   // Blog preview state
@@ -1114,6 +1115,28 @@ export default function AdminPage() {
                         🎨 Generate Images (uses DALL-E 3)
                       </span>
                     </label>
+                    
+                    {/* Image Count Selection */}
+                    {includeImages && (
+                      <div className="ml-6 flex items-center space-x-3">
+                        <span className="text-sm text-gray-600">Number of images:</span>
+                        <div className="flex space-x-2">
+                          {[1, 2, 3].map((count) => (
+                            <label key={count} className="flex items-center">
+                              <input
+                                type="radio"
+                                name="imageCount"
+                                value={count}
+                                checked={imageCount === count}
+                                onChange={(e) => setImageCount(parseInt(e.target.value))}
+                                className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500"
+                              />
+                              <span className="ml-1 text-sm text-gray-700">{count}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Info Box */}
@@ -1157,6 +1180,7 @@ export default function AdminPage() {
                   knowledgeBase={blogKnowledge}
                   includeWebSearch={includeWebSearch}
                   includeImages={includeImages}
+                  imageCount={imageCount}
                   onComplete={async (blogPost) => {
                     try {
                       // Generate slug from title

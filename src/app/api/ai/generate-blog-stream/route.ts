@@ -66,7 +66,7 @@ function estimateTokenCount(text: string): number {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true } = body
+    let { prompt, knowledgeBase, includeWebSearch = true, includeImages = true, imageCount = 2 } = body
     const searchProvider = 'perplexity' // Only Perplexity supported now
     
     // Validate and sanitize inputs
@@ -547,14 +547,11 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                 placeholder.replace(/\[IMAGE: ([^\]]+)\]/, '$1')
               )
 
-              // Intelligently determine number of images based on content length and placeholders
+              // Use user-selected image count (1-3)
               const contentWordCount = blogPost.content.split(' ').length
-              const maxImages = Math.min(
-                imagePlaceholders.length > 0 ? imagePlaceholders.length : 3, // Use placeholders if available
-                contentWordCount > 1500 ? 3 : contentWordCount > 800 ? 2 : 1 // Or base on length
-              )
+              const maxImages = Math.min(Math.max(1, imageCount), 3) // Ensure 1-3 range
               
-              console.log(`📊 Blog analysis: ${contentWordCount} words, ${imagePlaceholders.length} placeholders → generating ${maxImages} images`)
+              console.log(`📊 Blog analysis: ${contentWordCount} words, ${imagePlaceholders.length} placeholders → generating ${maxImages} images (user selected: ${imageCount})`)
               
               // Create image prompts for different sections
               const imagePrompts = []
