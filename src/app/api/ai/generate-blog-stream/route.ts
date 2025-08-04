@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { imageStorageService } from '@/lib/image-storage'
 
 // Configure for Node.js runtime with extended timeout
 export const maxDuration = 60 // 60 seconds max for Vercel Hobby plan
@@ -627,7 +628,26 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               })
 
               const generatedImages = await Promise.all(imagePromises)
-              blogPost.generated_images = generatedImages.filter(img => img !== null)
+              const filteredImages = generatedImages.filter(img => img !== null)
+              
+              // Store images permanently to prevent expiration
+              if (filteredImages.length > 0) {
+                sendProgress({
+                  step: 'image_generation',
+                  status: 'running',
+                  message: 'Storing images permanently...'
+                })
+                
+                try {
+                  blogPost.generated_images = await imageStorageService.storeMultipleImages(filteredImages, blogPost.title)
+                  console.log(`✅ Stored ${blogPost.generated_images.length} images permanently`)
+                } catch (storageError) {
+                  console.error('Image storage failed, using temporary URLs:', storageError)
+                  blogPost.generated_images = filteredImages // Fallback to temporary URLs
+                }
+              } else {
+                blogPost.generated_images = []
+              }
 
               // Replace ALL image placeholders with actual images or remove them
               if (blogPost.generated_images.length > 0) {
