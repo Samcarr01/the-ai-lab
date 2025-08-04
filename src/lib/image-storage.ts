@@ -8,18 +8,44 @@ export const imageStorageService = {
       const startTime = Date.now()
       console.log('📥 Downloading DALL-E image:', fileName)
       
-      // Download the image from DALL-E URL with timeout
-      const imageResponse = await Promise.race([
-        fetch(dalleUrl),
-        new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Download timeout')), 15000)
-        )
-      ]) as Response
+      // Download the image from DALL-E URL with extended timeout and retry logic
+      let imageResponse: Response
+      let downloadAttempts = 0
+      const maxRetries = 3
       
-      if (!imageResponse.ok) {
-        console.error('Failed to download DALL-E image:', imageResponse.status)
-        return null
+      while (downloadAttempts < maxRetries) {
+        try {
+          imageResponse = await Promise.race([
+            fetch(dalleUrl, {
+              headers: {
+                'User-Agent': 'Mozilla/5.0 (compatible; thehackai-bot/1.0)'
+              }
+            }),
+            new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('Download timeout')), 30000) // Extended to 30 seconds
+            )
+          ]) as Response
+          
+          if (imageResponse.ok) {
+            break // Success, exit retry loop
+          } else {
+            throw new Error(`HTTP ${imageResponse.status}: ${imageResponse.statusText}`)
+          }
+        } catch (error) {
+          downloadAttempts++
+          console.warn(`⚠️ Download attempt ${downloadAttempts} failed for ${fileName}:`, error)
+          
+          if (downloadAttempts >= maxRetries) {
+            console.error(`❌ Failed to download after ${maxRetries} attempts:`, error)
+            return null
+          }
+          
+          // Wait before retry (exponential backoff)
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, downloadAttempts) * 1000))
+        }
       }
+      
+      // imageResponse is guaranteed to be ok here due to retry logic above
 
       const downloadTime = Date.now() - startTime
       console.log(`⚡ Image downloaded in ${downloadTime}ms`)

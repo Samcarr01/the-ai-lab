@@ -720,20 +720,60 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                 console.log(`💾 Starting permanent storage for ${filteredImages.length} images...`)
                 
                 try {
-                  // Store images with timeout and better error handling
+                  // Store images with extended timeout and better error handling
                   blogPost.generated_images = await Promise.race([
                     imageStorageService.storeMultipleImages(filteredImages, blogPost.title),
                     new Promise((_, reject) => 
-                      setTimeout(() => reject(new Error('Storage timeout')), 30000)
+                      setTimeout(() => reject(new Error('Storage timeout')), 90000) // Extended to 90 seconds
                     )
                   ]) as any
                   
                   const storageTime = Date.now() - storageStartTime
                   console.log(`✅ Stored ${blogPost.generated_images.length} images permanently in ${storageTime}ms`)
+                  
+                  // Validate that all images were stored successfully and URLs are accessible
+                  const failedStorageCount = blogPost.generated_images.filter(img => 
+                    img.url.includes('oaidalleapiprodscus.blob.core.windows.net')
+                  ).length
+                  
+                  if (failedStorageCount > 0) {
+                    console.warn(`⚠️ ${failedStorageCount} images still using temporary URLs - storage may have failed`)
+                    
+                    // Test if temporary URLs are still accessible
+                    for (const img of blogPost.generated_images) {
+                      if (img.url.includes('oaidalleapiprodscus.blob.core.windows.net')) {
+                        try {
+                          const testResponse = await fetch(img.url, { method: 'HEAD', timeout: 5000 } as any)
+                          if (!testResponse.ok) {
+                            console.error(`❌ Temporary image URL already expired: ${img.url}`)
+                          }
+                        } catch (error) {
+                          console.error(`❌ Cannot access temporary image URL: ${img.url}`)
+                        }
+                      }
+                    }
+                    
+                    // If more than half the images failed storage, better to have no images
+                    if (failedStorageCount > blogPost.generated_images.length / 2) {
+                      console.error(`❌ Too many storage failures (${failedStorageCount}/${blogPost.generated_images.length}) - removing all images`)
+                      blogPost.generated_images = []
+                    }
+                  } else {
+                    console.log(`✅ All ${blogPost.generated_images.length} images successfully stored with permanent URLs`)
+                  }
+                  
                 } catch (storageError) {
                   const storageTime = Date.now() - storageStartTime
-                  console.error(`⚠️ Image storage failed after ${storageTime}ms, using temporary URLs:`, storageError)
-                  blogPost.generated_images = filteredImages // Fallback to temporary URLs
+                  console.error(`❌ Image storage completely failed after ${storageTime}ms:`, storageError)
+                  
+                  // Instead of using temporary URLs, try to generate new images or fail gracefully
+                  sendProgress({
+                    step: 'image_generation',
+                    status: 'error',
+                    message: 'Image storage failed - blog will be created without images'
+                  })
+                  
+                  blogPost.generated_images = [] // Better to have no images than broken ones
                 }
               } else {
                 blogPost.generated_images = []
