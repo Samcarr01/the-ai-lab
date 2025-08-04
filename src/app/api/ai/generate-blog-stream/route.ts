@@ -620,36 +620,35 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     const brandLogoText = primaryBrand ? ` Screen prominently displays ${brandVisuals} in clean, professional presentation.` : ''
                     
                     if (titleLower.includes('ai tools') || titleLower.includes('artificial intelligence')) {
-                      enhancedImagePrompt = `Professional hero image: Premium modern workspace with curved 5K monitor displaying multiple AI tool interfaces.${brandLogoText} Screen shows sleek ChatGPT conversation panel, Claude assistant interface, and Midjourney gallery with clean, recognizable logos. Premium tech setup: mechanical keyboard with RGB backlighting, ergonomic mouse, coffee in ceramic mug, succulent plants. Studio lighting with purple/blue gradient accent lights, depth of field blur, cinematic composition. Ultra-high resolution, photorealistic quality, award-winning photography style.`
+                      enhancedImagePrompt = `Modern workspace with monitor showing AI tool interfaces.${brandLogoText} Purple accents, professional setup, photorealistic.`
                     } else if (titleLower.includes('productivity') || titleLower.includes('workflow')) {
-                      enhancedImagePrompt = `Premium productivity hero image: Executive workspace with ultrawide curved monitor displaying beautiful productivity dashboard.${brandLogoText} Screen features elegant Kanban boards, minimalist calendar interface, sleek analytics charts, and workflow automation panels. Luxury desk setup: premium mechanical keyboard, precision trackpad, architectural plants, premium coffee setup. Soft natural lighting from large windows, purple accent lighting, professional depth of field. Studio-quality photography, ultra-detailed, photorealistic finish.`
+                      enhancedImagePrompt = `Executive workspace with curved monitor showing productivity dashboard.${brandLogoText} Purple lighting, professional, photorealistic.`
                     } else if (titleLower.includes('marketing') || titleLower.includes('social media')) {
-                      enhancedImagePrompt = `Marketing workspace hero image: Premium creative studio with dual 4K monitors displaying social media management interfaces.${brandLogoText} Left screen shows elegant analytics dashboard with gradient charts, right screen displays content calendar with media previews. Professional setup: ring light, smartphone on stand, design notebooks, brand color swatches. Purple/blue studio lighting, cinematic composition, professional photography quality. High-end aesthetic, photorealistic detail, award-winning composition.`
+                      enhancedImagePrompt = `Creative studio with dual monitors showing social media interfaces.${brandLogoText} Purple studio lighting, photorealistic.`
                     } else if (titleLower.includes('writing') || titleLower.includes('content')) {
-                      enhancedImagePrompt = `Content creation hero image: Premium writer's sanctuary with large curved monitor displaying elegant writing interface.${brandLogoText} Screen shows clean document editor with AI writing assistant sidebar, grammar suggestions, and outline panel. Aesthetic workspace: vintage mechanical typewriter as decoration, leather-bound books, premium coffee setup, warm Edison bulb lighting. Purple accent lighting, shallow depth of field, cinematic quality. Professional photography, ultra-detailed, photorealistic.`
+                      enhancedImagePrompt = `Writer's workspace with monitor showing writing interface.${brandLogoText} Purple accent lighting, photorealistic.`
                     } else if (titleLower.includes('business') || titleLower.includes('strategy')) {
-                      enhancedImagePrompt = `Business strategy hero image: Executive boardroom with premium setup, curved monitor displaying business analytics dashboard.${brandLogoText} Screen shows elegant charts, strategy frameworks, and planning interfaces in purple/blue theme. Premium workspace: leather executive chair, crystal water glass, premium notebooks, architectural plants. Dramatic lighting with purple accents, professional depth of field, cinematic composition. Studio photography quality, photorealistic detail.`
+                      enhancedImagePrompt = `Business workspace with monitor showing analytics dashboard.${brandLogoText} Purple theme, professional, photorealistic.`
                     } else if (titleLower.includes('automation') || titleLower.includes('workflow')) {
-                      enhancedImagePrompt = `Automation hero image: High-tech workspace with multiple screens displaying workflow automation interfaces.${brandLogoText} Screens show elegant flowcharts, process diagrams, and automation dashboards with purple/blue color scheme. Premium tech setup: RGB mechanical keyboard, precision mouse, holographic elements, LED strip lighting. Futuristic lighting with purple neon accents, professional composition, cinematic quality. Ultra-detailed, photorealistic, award-winning photography.`
+                      enhancedImagePrompt = `Tech workspace with screens showing automation interfaces.${brandLogoText} Purple neon accents, photorealistic.`
                     } else {
-                      // Enhanced custom prompt based on specific topic with brand recognition
-                      enhancedImagePrompt = `Premium hero image for "${blogPost.title}": High-end modern workspace visualization showcasing relevant professional tools and elegant interfaces.${brandLogoText} Multiple premium monitors displaying sleek dashboards, analytics, and tool interfaces with purple/blue gradient theme. Luxury tech setup: premium peripherals, architectural lighting, sophisticated desk accessories. Studio-quality lighting with purple accent lights, cinematic depth of field, professional photography composition. Ultra-high resolution, photorealistic quality, award-winning aesthetic.`
+                      enhancedImagePrompt = `Professional workspace for "${blogPost.title}" with monitor showing relevant interface.${brandLogoText} Purple gradient theme, photorealistic.`
                     }
                   } else {
                     // Enhanced secondary content image - more specific visualization with brand logos
                     const secondaryBrandText = primaryBrand ? ` Interface prominently features ${brandVisuals} with professional presentation.` : ''
                     
                     if (mentionedTools.length > 0) {
-                      const toolsList = mentionedTools.slice(0, 3).join(', ')
-                      enhancedImagePrompt = `Premium content image showcasing ${toolsList} in professional workflow.${secondaryBrandText} Split-screen composition with elegant tool interfaces displayed on premium monitors. Each interface shows modern UI design with purple/blue gradient elements, clean layouts, sophisticated typography, recognizable brand logos. High-end workspace setting with studio lighting, professional depth of field, cinematic composition. Award-winning photography style, ultra-detailed, photorealistic quality.`
+                      const toolsList = mentionedTools.slice(0, 2).join(' and ')
+                      enhancedImagePrompt = `${toolsList} interface on modern monitor.${secondaryBrandText} Clean UI, purple accents, professional workspace, photorealistic.`
                     } else if (contentLower.includes('comparison') || contentLower.includes('vs')) {
-                      enhancedImagePrompt = `Professional comparison content image: Premium side-by-side visualization showing two sophisticated software interfaces or elegant dashboards.${secondaryBrandText} Clean, organized presentation with beautiful visual separation using purple/blue accent lines. Modern UI design elements with gradient overlays, professional studio lighting, high contrast composition. Cinematic depth of field, photorealistic style, award-winning photography quality.`
+                      enhancedImagePrompt = `Side-by-side software comparison on dual monitors.${secondaryBrandText} Clean interfaces, purple accents, professional setup, photorealistic.`
                     } else if (contentLower.includes('step') || contentLower.includes('guide') || contentLower.includes('tutorial')) {
-                      enhancedImagePrompt = `Step-by-step content image: Premium workspace showing elegant tutorial interface or guide layout on curved monitor.${secondaryBrandText} Screen displays clean numbered steps, progress indicators, and visual workflow elements in purple/blue theme. Professional setup with premium accessories, architectural lighting, sophisticated desk arrangement. Studio photography quality, cinematic composition, ultra-detailed photorealistic finish.`
+                      enhancedImagePrompt = `Tutorial interface with numbered steps on monitor.${secondaryBrandText} Clean layout, purple theme, professional workspace, photorealistic.`
                     } else if (contentLower.includes('analytics') || contentLower.includes('data') || contentLower.includes('metrics')) {
-                      enhancedImagePrompt = `Analytics content image: Premium data visualization workspace with elegant charts and metrics displayed on high-resolution monitors.${secondaryBrandText} Beautiful gradient charts, sophisticated dashboards, modern data visualization elements in purple/blue color scheme. Professional setup with premium tech accessories, studio lighting, cinematic depth of field. Award-winning photography style, ultra-detailed, photorealistic quality.`
+                      enhancedImagePrompt = `Analytics dashboard with charts on monitor.${secondaryBrandText} Purple gradient visuals, professional setup, photorealistic.`
                     } else {
-                      enhancedImagePrompt = `Premium supporting content image for "${blogPost.title}": Sophisticated visualization of key concepts with elegant interface elements displayed on luxury monitors.${secondaryBrandText} Modern tech aesthetic featuring purple/blue gradient themes, professional UI designs, and clean layouts. High-end workspace environment with studio lighting, architectural plants, premium accessories. Cinematic composition, professional depth of field, award-winning photography quality. Ultra-detailed, photorealistic finish.`
+                      enhancedImagePrompt = `Professional visualization of "${blogPost.title}" on monitor.${secondaryBrandText} Modern UI, purple gradients, clean workspace, photorealistic.`
                     }
                   }
                   
@@ -673,9 +672,9 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                         n: 1
                       })
                     }),
-                    // 90-second timeout for image generation
+                    // 60-second timeout for image generation (reduced due to simpler prompts)
                     new Promise((_, reject) => 
-                      setTimeout(() => reject(new Error('Image generation timeout')), 90000)
+                      setTimeout(() => reject(new Error('Image generation timeout')), 60000)
                     )
                   ]) as Response
 
@@ -724,7 +723,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                   blogPost.generated_images = await Promise.race([
                     imageStorageService.storeMultipleImages(filteredImages, blogPost.title),
                     new Promise((_, reject) => 
-                      setTimeout(() => reject(new Error('Storage timeout')), 90000) // Extended to 90 seconds
+                      setTimeout(() => reject(new Error('Storage timeout')), 60000) // Reduced to 60 seconds for faster feedback
                     )
                   ]) as any
                   
