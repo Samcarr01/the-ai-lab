@@ -562,7 +562,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               
               if (maxImages > 1) {
                 // Extract key sections for additional images
-                const sections = blogPost.content.split(/##/).filter(section => section.trim().length > 100)
+                const sections = blogPost.content.split(/##/).filter((section: string) => section.trim().length > 100)
                 if (sections.length > 1 && maxImages > 1) {
                   imagePrompts.push(`supporting content for ${sections[1].split('\n')[0].trim()}`)
                 }
@@ -805,7 +805,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                 
                 if (imagePlaceholders.length > 0) {
                   // Replace existing placeholders with generated images
-                  blogPost.generated_images.forEach((image, index) => {
+                  blogPost.generated_images.forEach((image: any, index: number) => {
                     if (imagePlaceholders[index]) {
                       const imageAlt = index === 0 ? 'Blog hero image' : 
                                      index === 1 ? 'Supporting visual' : 
@@ -823,7 +823,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                   })
                 } else {
                   // No placeholders - strategically insert images into content sections
-                  const sections = contentWithImages.split('##').filter(section => section.trim().length > 0)
+                  const sections = contentWithImages.split('##').filter((section: string) => section.trim().length > 0)
                   
                   if (sections.length > 0) {
                     let rebuiltContent = sections[0] // Introduction
@@ -834,7 +834,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     }
                     
                     // Add remaining sections with images distributed
-                    sections.slice(1).forEach((section, index) => {
+                    sections.slice(1).forEach((section: string, index: number) => {
                       rebuiltContent += '##' + section
                       
                       // Insert additional images after every 2nd section
