@@ -565,13 +565,21 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               if (maxImages > 1) {
                 // Extract key sections for additional images
                 const sections = blogPost.content.split(/##/).filter((section: string) => section.trim().length > 100)
-                if (sections.length > 1 && maxImages > 1) {
-                  imagePrompts.push(`supporting content for ${sections[1].split('\n')[0].trim()}`)
-                }
-                if (sections.length > 2 && maxImages > 2) {
-                  imagePrompts.push(`visual guide for ${sections[2].split('\n')[0].trim()}`)
+                console.log(`📝 Found ${sections.length} sections for additional images`)
+                
+                // Add additional image prompts based on user selection
+                for (let i = 1; i < maxImages; i++) {
+                  if (sections.length > i) {
+                    const sectionTitle = sections[i].split('\n')[0].trim()
+                    imagePrompts.push(`supporting content for ${sectionTitle}`)
+                  } else {
+                    // If not enough sections, create generic supporting images
+                    imagePrompts.push(`supporting visual ${i + 1} for ${blogPost.title}`)
+                  }
                 }
               }
+              
+              console.log(`🎨 Created ${imagePrompts.length} image prompts for ${maxImages} requested images:`, imagePrompts)
 
               sendProgress({
                 step: 'image_generation',
@@ -597,7 +605,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                   
                   // Brand-specific logo and visual elements mapping
                   const brandElements: Record<string, string> = {
-                    'claude code': 'Claude Code interface with terminal/code editor, Claude logo (orange geometric design) prominently visible',
+                    'claude code': 'Claude Code interface with terminal windows, code editor, orange Claude logo prominently displayed, Anthropic branding elements',
                     'claude': 'Claude AI logo (orange/coral geometric design), Anthropic branding',
                     'chatgpt': 'ChatGPT logo (circular green/teal design), OpenAI branding',
                     'openai': 'OpenAI logo and branding elements',
@@ -622,8 +630,14 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     }
                   }
                   
-                  // Special priority for Claude Code in title (most common case)
-                  if (titleLower.includes('claude code') && !primaryBrand) {
+                  // Special priority for Claude Code in title (most common case) - override any other detection
+                  if (titleLower.includes('claude code') || contentLower.includes('claude code')) {
+                    primaryBrand = 'claude code'
+                    brandVisuals = brandElements['claude code']
+                  }
+                  
+                  // Also check for coding/development context with Claude mention
+                  if (!primaryBrand && (titleLower.includes('claude') && (titleLower.includes('coding') || titleLower.includes('development') || titleLower.includes('programming')))) {
                     primaryBrand = 'claude code'
                     brandVisuals = brandElements['claude code']
                   }
@@ -648,6 +662,8 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                       enhancedImagePrompt = `Executive workspace with curved monitor showing productivity dashboard.${brandLogoText} Purple lighting, professional, photorealistic.`
                     } else if (titleLower.includes('marketing') || titleLower.includes('social media')) {
                       enhancedImagePrompt = `Creative studio with dual monitors showing social media interfaces.${brandLogoText} Purple studio lighting, photorealistic.`
+                    } else if (titleLower.includes('claude code') || titleLower.includes('coding') || titleLower.includes('development')) {
+                      enhancedImagePrompt = `Developer workspace with monitor showing Claude Code interface.${brandLogoText} Modern IDE, terminal windows, purple accent lighting, photorealistic.`
                     } else if (titleLower.includes('writing') || titleLower.includes('content')) {
                       enhancedImagePrompt = `Writer's workspace with monitor showing writing interface.${brandLogoText} Purple accent lighting, photorealistic.`
                     } else if (titleLower.includes('business') || titleLower.includes('strategy')) {
