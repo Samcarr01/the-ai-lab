@@ -546,26 +546,46 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               sendProgress({
                 step: 'image_generation',
                 status: 'running',
-                message: `Generating ${imagePrompts.length} images...`
+                message: `Generating 2 HD images with DALL-E 3...`
               })
 
-              // Generate images using DALL-E 3 (limit to 1 for speed)
-              const imagePromises = imagePrompts.slice(0, 1).map(async (prompt: string, index: number) => {
+              // Generate high-quality, topic-specific images using DALL-E 3
+              const imagePromises = imagePrompts.slice(0, 2).map(async (prompt: string, index: number) => {
                 try {
-                  // Create a more specific image prompt based on the blog content
-                  let imagePrompt = prompt
+                  // Create highly specific image prompts based on the actual blog content
+                  let enhancedImagePrompt = ''
                   
-                  // Extract the main topic from the blog title for more relevant images
-                  if (blogPost.title) {
-                    const titleLower = blogPost.title.toLowerCase()
+                  // Analyze the blog title and content for specific tools and topics
+                  const titleLower = blogPost.title.toLowerCase()
+                  const contentLower = accumulatedContent.toLowerCase()
+                  
+                  // Extract specific tools mentioned in the content
+                  const aiTools = ['chatgpt', 'claude', 'midjourney', 'dall-e', 'runway', 'perplexity', 'notion ai', 'jasper', 'copy.ai', 'writesonic', 'grammarly']
+                  const mentionedTools = aiTools.filter(tool => contentLower.includes(tool))
+                  
+                  if (index === 0) {
+                    // Hero image - main topic visualization
                     if (titleLower.includes('ai tools') || titleLower.includes('artificial intelligence')) {
-                      imagePrompt = `Create a detailed hero image showing specific AI tools interfaces. Include visual representations of ChatGPT, Claude, and Midjourney interfaces on computer screens. Show a modern workspace with multiple monitors displaying these AI applications. Use purple and blue accents, professional tech aesthetic. No text or words.`
-                    } else if (titleLower.includes('productivity')) {
-                      imagePrompt = `Design a hero image showing productivity dashboards and workflow automation tools. Include visual elements like task boards, analytics graphs, automation flows. Modern tech workspace setting. Purple and blue color scheme. No text.`
-                    } else if (titleLower.includes('marketing')) {
-                      imagePrompt = `Create an image showing digital marketing tools and analytics dashboards. Include social media interfaces, email campaign builders, and analytics charts. Modern, professional design with purple/blue accents. No text.`
+                      enhancedImagePrompt = `Professional hero image: Modern tech workspace with 3 large monitors displaying AI tool interfaces. Left monitor shows ChatGPT chat interface with visible conversation, center monitor displays Claude's interface, right monitor shows Midjourney image generation. Sleek desk setup with mechanical keyboard, mouse, coffee cup. Purple/blue neon lighting, cinematic lighting, highly detailed, photorealistic, 8K quality. Clean modern aesthetic, no visible text overlays.`
+                    } else if (titleLower.includes('productivity') || titleLower.includes('workflow')) {
+                      enhancedImagePrompt = `Hero image: Ultra-modern office setup with curved ultrawide monitor displaying productivity dashboard. Screen shows Kanban boards, calendar view, analytics charts, and automation flows. Minimalist desk with wireless keyboard, trackpad, plants. Purple accent lighting, soft natural light from window. Photorealistic, professional photography style, 8K detail. No text overlays.`
+                    } else if (titleLower.includes('marketing') || titleLower.includes('social media')) {
+                      enhancedImagePrompt = `Marketing hero image: Professional workspace with dual monitors showing social media management dashboards. Left screen displays analytics charts with engagement metrics, right screen shows content calendar and posting interface. Modern desk setup with ring light, phone on stand, notebook. Purple/blue gradient lighting, highly detailed, photorealistic. No text.`
+                    } else if (titleLower.includes('writing') || titleLower.includes('content')) {
+                      enhancedImagePrompt = `Content creation hero image: Writer's workspace with large monitor displaying writing application interface. Document with visible text formatting, sidebar with AI writing assistant, grammar checker active. Vintage desk with modern tech, books, coffee, plants. Warm lighting with purple accents, cinematic depth of field, 8K quality. No readable text.`
                     } else {
-                      imagePrompt = `Professional hero image for article: "${blogPost.title}". Show specific tools, interfaces, or visual representations related to the topic. Modern tech aesthetic with purple/blue gradient. Clean, detailed, relevant to the subject. No text.`
+                      // Custom prompt based on specific topic
+                      enhancedImagePrompt = `Professional hero image for "${blogPost.title}": Modern tech workspace visualization showing relevant tools and interfaces related to the topic. Include specific UI elements, dashboards, or tool interfaces that relate to the subject matter. Clean, detailed, photorealistic style with purple/blue accent lighting. High-end professional photography aesthetic, 8K quality. No text overlays or readable content.`
+                    }
+                  } else {
+                    // Secondary content image - more specific visualization
+                    if (mentionedTools.length > 0) {
+                      const toolsList = mentionedTools.slice(0, 3).join(', ')
+                      enhancedImagePrompt = `Detailed content image showing ${toolsList} interfaces in action. Split-screen layout with multiple tool interfaces visible. Show realistic UI elements, buttons, workflows. Professional tech photography style, sharp focus, proper lighting. Purple/blue color accents, modern aesthetic. Photorealistic, 8K quality. No readable text or specific content.`
+                    } else if (contentLower.includes('comparison') || contentLower.includes('vs')) {
+                      enhancedImagePrompt = `Professional comparison visualization: Side-by-side layout showing two different software interfaces or tool dashboards. Clean, organized presentation with clear visual separation. Modern UI design elements, professional lighting, high contrast. Purple/blue accent colors, photorealistic style, 8K quality. No text or readable content.`
+                    } else {
+                      enhancedImagePrompt = `Supporting content image for article about ${blogPost.title}: Detailed visualization of key concepts discussed in the article. Show relevant tools, processes, or workflows in a professional, clean style. Modern tech aesthetic with purple/blue accents, photorealistic quality, professional photography lighting. No text overlays.`
                     }
                   }
                   
@@ -577,9 +597,10 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     },
                     body: JSON.stringify({
                       model: 'dall-e-3',
-                      prompt: imagePrompt,
+                      prompt: enhancedImagePrompt,
                       size: '1792x1024', // 16:9 aspect ratio for blog hero images
-                      quality: 'standard',
+                      quality: 'hd', // Upgraded to HD quality
+                      style: 'natural', // More photorealistic style
                       n: 1
                     })
                   })
@@ -590,8 +611,8 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     if (responseData.data && responseData.data[0]?.url) {
                       return {
                         url: responseData.data[0].url,
-                        prompt: prompt,
-                        description: `Image ${index + 1}: ${prompt}`,
+                        prompt: enhancedImagePrompt,
+                        description: index === 0 ? `Hero image for ${blogPost.title}` : `Supporting image ${index + 1} for ${blogPost.title}`,
                         placement: index === 0 ? 'hero' : 'content'
                       }
                     }
