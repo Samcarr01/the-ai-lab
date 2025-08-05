@@ -929,7 +929,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                       const totalImages = remainingImages.length
                       
                       // Calculate optimal positions for images (avoid clustering)
-                      const imagePositions = []
+                      const imagePositions: number[] = []
                       if (totalImages === 1) {
                         // Single image goes in middle
                         imagePositions.push(Math.floor(totalSections / 2))
