@@ -657,21 +657,21 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     const brandLogoText = primaryBrand ? ` Screen prominently displays ${brandVisuals} in clean, professional presentation.` : ''
                     
                     if (titleLower.includes('ai tools') || titleLower.includes('artificial intelligence')) {
-                      enhancedImagePrompt = `Modern workspace with monitor showing AI tool interfaces.${brandLogoText} Purple accents, professional setup, photorealistic.`
+                      enhancedImagePrompt = `Modern minimalist workspace with ultra-wide monitor displaying AI tool interfaces.${brandLogoText} Soft purple ambient lighting, clean desk setup, professional studio photography quality, high detail, 8K resolution.`
                     } else if (titleLower.includes('productivity') || titleLower.includes('workflow')) {
-                      enhancedImagePrompt = `Executive workspace with curved monitor showing productivity dashboard.${brandLogoText} Purple lighting, professional, photorealistic.`
+                      enhancedImagePrompt = `Executive workspace with curved ultrawide monitor showing productivity dashboard with charts and metrics.${brandLogoText} Elegant purple LED backlighting, professional photography, high detail, 8K resolution.`
                     } else if (titleLower.includes('marketing') || titleLower.includes('social media')) {
-                      enhancedImagePrompt = `Creative studio with dual monitors showing social media interfaces.${brandLogoText} Purple studio lighting, photorealistic.`
+                      enhancedImagePrompt = `Creative studio setup with dual 4K monitors displaying social media analytics and content creation interfaces.${brandLogoText} Warm purple studio lighting, professional photography, high detail, 8K resolution.`
                     } else if (titleLower.includes('claude code') || titleLower.includes('coding') || titleLower.includes('development')) {
-                      enhancedImagePrompt = `Developer workspace with monitor showing Claude Code interface.${brandLogoText} Modern IDE, terminal windows, purple accent lighting, photorealistic.`
+                      enhancedImagePrompt = `Modern developer workspace with ultrawide monitor showing Claude Code interface with syntax highlighting and terminal.${brandLogoText} RGB purple keyboard backlighting, clean desk setup, professional photography, high detail, 8K resolution.`
                     } else if (titleLower.includes('writing') || titleLower.includes('content')) {
-                      enhancedImagePrompt = `Writer's workspace with monitor showing writing interface.${brandLogoText} Purple accent lighting, photorealistic.`
+                      enhancedImagePrompt = `Elegant writer's workspace with curved monitor displaying modern writing interface with clean typography.${brandLogoText} Soft purple ambient lighting, minimal desk setup, professional photography, high detail, 8K resolution.`
                     } else if (titleLower.includes('business') || titleLower.includes('strategy')) {
-                      enhancedImagePrompt = `Business workspace with monitor showing analytics dashboard.${brandLogoText} Purple theme, professional, photorealistic.`
+                      enhancedImagePrompt = `Executive business workspace with large monitor showing analytics dashboard with KPI charts and metrics.${brandLogoText} Sophisticated purple accent lighting, professional photography, high detail, 8K resolution.`
                     } else if (titleLower.includes('automation') || titleLower.includes('workflow')) {
-                      enhancedImagePrompt = `Tech workspace with screens showing automation interfaces.${brandLogoText} Purple neon accents, photorealistic.`
+                      enhancedImagePrompt = `High-tech workspace with multiple screens displaying automation workflow interfaces and process diagrams.${brandLogoText} Cyberpunk purple neon accents, professional photography, high detail, 8K resolution.`
                     } else {
-                      enhancedImagePrompt = `Professional workspace for "${blogPost.title}" with monitor showing relevant interface.${brandLogoText} Purple gradient theme, photorealistic.`
+                      enhancedImagePrompt = `Premium professional workspace focused on "${blogPost.title}" with large monitor displaying relevant modern interface.${brandLogoText} Sophisticated purple gradient ambient lighting, professional studio photography, high detail, 8K resolution.`
                     }
                   } else {
                     // Enhanced secondary content image - more specific visualization with brand logos
@@ -679,15 +679,15 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     
                     if (mentionedTools.length > 0) {
                       const toolsList = mentionedTools.slice(0, 2).join(' and ')
-                      enhancedImagePrompt = `${toolsList} interface on modern monitor.${secondaryBrandText} Clean UI, purple accents, professional workspace, photorealistic.`
+                      enhancedImagePrompt = `Close-up view of ${toolsList} interface on premium monitor with detailed UI elements visible.${secondaryBrandText} Clean modern design, subtle purple accents, professional studio lighting, high detail, 8K resolution.`
                     } else if (contentLower.includes('comparison') || contentLower.includes('vs')) {
-                      enhancedImagePrompt = `Side-by-side software comparison on dual monitors.${secondaryBrandText} Clean interfaces, purple accents, professional setup, photorealistic.`
+                      enhancedImagePrompt = `Professional side-by-side software comparison displayed on dual 4K monitors with clear interface details.${secondaryBrandText} Clean UI layouts, subtle purple accent lighting, professional setup, high detail, 8K resolution.`
                     } else if (contentLower.includes('step') || contentLower.includes('guide') || contentLower.includes('tutorial')) {
-                      enhancedImagePrompt = `Tutorial interface with numbered steps on monitor.${secondaryBrandText} Clean layout, purple theme, professional workspace, photorealistic.`
+                      enhancedImagePrompt = `Step-by-step tutorial interface displayed on large monitor with numbered workflow and clear instructions.${secondaryBrandText} Clean educational layout, soft purple theme, professional lighting, high detail, 8K resolution.`
                     } else if (contentLower.includes('analytics') || contentLower.includes('data') || contentLower.includes('metrics')) {
-                      enhancedImagePrompt = `Analytics dashboard with charts on monitor.${secondaryBrandText} Purple gradient visuals, professional setup, photorealistic.`
+                      enhancedImagePrompt = `Detailed analytics dashboard with colorful charts and KPI metrics displayed on curved monitor.${secondaryBrandText} Data visualization with purple gradient accents, professional setup, high detail, 8K resolution.`
                     } else {
-                      enhancedImagePrompt = `Professional visualization of "${blogPost.title}" on monitor.${secondaryBrandText} Modern UI, purple gradients, clean workspace, photorealistic.`
+                      enhancedImagePrompt = `Supporting visual for "${blogPost.title}" showing relevant interface or concept on premium monitor.${secondaryBrandText} Modern UI design, elegant purple gradients, professional workspace, high detail, 8K resolution.`
                     }
                   }
                   
@@ -708,6 +708,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                         size: '1792x1024', // 16:9 widescreen aspect ratio perfect for blog hero images
                         quality: 'hd', // Maximum quality for crisp, detailed images
                         style: 'natural', // Photorealistic style for professional appearance
+                        response_format: 'url', // Ensure we get direct URLs
                         n: 1
                       })
                     }),
@@ -840,33 +841,51 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     contentWithImages = contentWithImages.replace(placeholder, '')
                   })
                 } else {
-                  // No placeholders - strategically insert images into content sections
+                  // No placeholders - strategically insert images into content sections with improved distribution
                   const sections = contentWithImages.split('##').filter((section: string) => section.trim().length > 0)
                   
                   if (sections.length > 0) {
                     let rebuiltContent = sections[0] // Introduction
                     
-                    // Insert hero image after introduction
+                    // Insert hero image after introduction with better spacing
                     if (blogPost.generated_images[0]) {
-                      rebuiltContent += `\n\n![${blogPost.generated_images[0].description || 'Blog hero image'}](${blogPost.generated_images[0].url})\n\n`
+                      rebuiltContent += `\n\n<div style="text-align: center; margin: 2rem 0;">\n\n![${blogPost.generated_images[0].description || 'Blog hero image'}](${blogPost.generated_images[0].url})\n\n</div>\n\n`
                     }
                     
-                    // Add remaining sections with images evenly distributed
+                    // Add remaining sections with images strategically distributed
                     const remainingSections = sections.slice(1)
                     const remainingImages = blogPost.generated_images.slice(1)
                     
                     if (remainingSections.length > 0 && remainingImages.length > 0) {
-                      // Calculate optimal spacing between images
-                      const sectionsPerImage = Math.max(1, Math.floor(remainingSections.length / remainingImages.length))
+                      // Improved distribution algorithm for better visual flow
+                      const totalSections = remainingSections.length
+                      const totalImages = remainingImages.length
+                      
+                      // Calculate optimal positions for images (avoid clustering)
+                      const imagePositions = []
+                      if (totalImages === 1) {
+                        // Single image goes in middle
+                        imagePositions.push(Math.floor(totalSections / 2))
+                      } else if (totalImages === 2) {
+                        // Two images spread evenly
+                        imagePositions.push(Math.floor(totalSections / 3))
+                        imagePositions.push(Math.floor((totalSections * 2) / 3))
+                      } else {
+                        // Three or more images spread throughout
+                        for (let i = 0; i < totalImages; i++) {
+                          const position = Math.floor((totalSections * (i + 1)) / (totalImages + 1))
+                          imagePositions.push(position)
+                        }
+                      }
                       
                       remainingSections.forEach((section: string, index: number) => {
                         rebuiltContent += '##' + section
                         
-                        // Insert image at calculated intervals for better distribution
-                        const imageIndex = Math.floor(index / sectionsPerImage)
-                        if (imageIndex < remainingImages.length && (index + 1) % sectionsPerImage === 0) {
+                        // Insert image if this section index matches an image position
+                        const imageIndex = imagePositions.indexOf(index)
+                        if (imageIndex !== -1 && imageIndex < remainingImages.length) {
                           const image = remainingImages[imageIndex]
-                          rebuiltContent += `\n\n![${image.description || 'Supporting visual'}](${image.url})\n\n`
+                          rebuiltContent += `\n\n<div style="text-align: center; margin: 2rem 0;">\n\n![${image.description || `Supporting visual ${imageIndex + 2}`}](${image.url})\n\n</div>\n\n`
                         }
                       })
                     } else {

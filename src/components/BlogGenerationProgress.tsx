@@ -24,29 +24,34 @@ interface BlogGenerationProgressProps {
 
 const stepConfig = {
   setup: {
-    icon: '🔧',
+    icon: '⚙️',
     title: 'Setup & Knowledge Loading',
-    description: 'Loading instructions and knowledge base'
+    description: 'Initializing AI systems and loading knowledge base',
+    color: 'from-blue-500 to-cyan-500'
   },
   web_search: {
-    icon: '🔍',
-    title: 'Web Search',
-    description: 'Searching for latest information'
+    icon: '🌐',
+    title: 'Web Search (Perplexity)',
+    description: 'Gathering latest information from the web',
+    color: 'from-green-500 to-emerald-500'
   },
   content_generation: {
-    icon: '📝',
+    icon: '✍️',
     title: 'Content Generation',
-    description: 'AI writing your blog post'
+    description: 'AI crafting your professional blog post',
+    color: 'from-purple-500 to-pink-500'
   },
   image_generation: {
     icon: '🎨',
-    title: 'Image Generation',
-    description: 'Creating relevant images'
+    title: 'Image Generation (DALL-E 3)',
+    description: 'Creating high-quality images with AI',
+    color: 'from-orange-500 to-red-500'
   },
   finalization: {
-    icon: '💾',
+    icon: '✨',
     title: 'Finalization',
-    description: 'Preparing final output'
+    description: 'Optimizing and finalizing your blog post',
+    color: 'from-indigo-500 to-purple-500'
   }
 }
 
@@ -267,27 +272,27 @@ export default function BlogGenerationProgress({
           return (
             <div
               key={stepKey}
-              className={`flex items-center p-3 sm:p-4 rounded-lg transition-all duration-300 ${
+              className={`flex items-center p-4 sm:p-5 rounded-xl transition-all duration-500 transform hover:scale-[1.02] ${
                 status === 'completed'
-                  ? 'bg-green-100 border border-green-200'
+                  ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 shadow-md'
                   : status === 'starting' || status === 'running' || currentStep === stepKey
-                  ? 'bg-purple-100 border border-purple-200 shadow-sm'
+                  ? `bg-gradient-to-r ${config.color} bg-opacity-10 border border-purple-300 shadow-lg animate-pulse`
                   : status === 'error'
-                  ? 'bg-red-100 border border-red-200'
-                  : 'bg-gray-50 border border-gray-200'
+                  ? 'bg-gradient-to-r from-red-50 to-pink-50 border border-red-300 shadow-md'
+                  : 'bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200'
               }`}
             >
               {/* Step Icon and Info */}
               <div className="flex items-center flex-1 min-w-0">
                 <div className="flex-shrink-0 mr-3 sm:mr-4">
-                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-lg sm:text-xl ${
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-xl sm:text-2xl transition-all duration-300 ${
                     status === 'completed'
-                      ? 'bg-green-200 text-green-800'
+                      ? 'bg-gradient-to-br from-green-400 to-emerald-500 text-white shadow-lg'
                       : status === 'starting' || status === 'running' || currentStep === stepKey
-                      ? 'bg-purple-200 text-purple-800'
+                      ? `bg-gradient-to-br ${config.color} text-white shadow-lg animate-bounce`
                       : status === 'error'
-                      ? 'bg-red-200 text-red-800'
-                      : 'bg-gray-200 text-gray-600'
+                      ? 'bg-gradient-to-br from-red-400 to-pink-500 text-white shadow-lg'
+                      : 'bg-gradient-to-br from-gray-300 to-gray-400 text-gray-600'
                   }`}>
                     {status === 'completed' ? '✅' : status === 'error' ? '❌' : config.icon}
                   </div>
