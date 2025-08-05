@@ -177,6 +177,7 @@ export default function SmartNavigation({ user, currentPage, onFeatureClick, onP
                 <nav className="flex items-center space-x-1 mr-6">
                   {[
                     { href: "/", label: "Home", icon: "🏠" },
+                    { href: "/solutions", label: "Solutions", page: "solutions", icon: "🎯" },
                     { href: "/dashboard", label: "Dashboard", page: "dashboard", icon: "📊" },
                     { href: "/gpts", label: "GPTs", page: "gpts", icon: "🤖" },
                     { href: "/documents", label: "Playbooks", page: "documents", icon: "📚" },

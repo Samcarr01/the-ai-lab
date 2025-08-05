@@ -176,17 +176,13 @@ function HomePageContent() {
               <span>Create Free Account</span>
               <span className="text-xl">🚀</span>
             </Link>
-            <a 
-              href="#features"
-              className="bg-white text-purple-600 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 transition-all duration-300 flex items-center justify-center space-x-2 cursor-pointer w-full sm:w-auto mobile-touch-target touch-feedback"
-              onClick={(e) => {
-                e.preventDefault()
-                document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-              }}
+            <Link 
+              href="/solutions"
+              className="bg-white text-purple-600 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-base sm:text-lg font-semibold border-2 border-purple-200 hover:border-purple-300 hover:bg-purple-50 transition-all duration-300 flex items-center justify-center space-x-2 w-full sm:w-auto mobile-touch-target touch-feedback"
             >
-              <span>See What's Inside</span>
-              <span className="text-xl">👀</span>
-            </a>
+              <span>View Solutions</span>
+              <span className="text-xl">🎯</span>
+            </Link>
           </div>
           
           <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-xs sm:text-sm text-gray-500">
