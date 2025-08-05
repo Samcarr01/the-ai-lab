@@ -1,23 +1,13 @@
 import DarkThemeBackground from '@/components/DarkThemeBackground'
-import MobileNavigation from '@/components/MobileNavigation'
 import AnimatedCounter from '@/components/AnimatedCounter'
 import ScrollAnimation from '@/components/ScrollAnimation'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default function SolutionsPage() {
-  // Scroll handlers for mobile navigation
-  const handleFeatureClick = () => {
-    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
-  }
-
-  const handlePricingClick = () => {
-    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
     <DarkThemeBackground>
-      {/* Public Navigation Header */}
+      {/* Simplified Public Navigation Header */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -62,12 +52,14 @@ export default function SolutionsPage() {
               </div>
             </div>
 
-            {/* Mobile Navigation */}
+            {/* Mobile Menu Button - Simple */}
             <div className="md:hidden">
-              <MobileNavigation 
-                onFeatureClick={handleFeatureClick}
-                onPricingClick={handlePricingClick}
-              />
+              <Link 
+                href="/signup"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full font-semibold text-sm"
+              >
+                Get Started
+              </Link>
             </div>
           </div>
         </div>
