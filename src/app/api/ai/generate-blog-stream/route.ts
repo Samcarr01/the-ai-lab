@@ -2,6 +2,73 @@ import { NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { imageStorageService } from '@/lib/image-storage'
 
+// SEO scoring function for blog posts
+function calculateSEOScore(blogPost: any, wordCount: number): number {
+  let score = 0
+  let maxScore = 100
+  
+  // Title optimization (20 points)
+  if (blogPost.title) {
+    if (blogPost.title.length >= 30 && blogPost.title.length <= 60) score += 15
+    else if (blogPost.title.length >= 20 && blogPost.title.length <= 70) score += 10
+    else score += 5
+    
+    // Check for power words in title
+    const powerWords = ['ultimate', 'complete', 'guide', 'best', 'top', 'proven', 'essential', 'advanced']
+    if (powerWords.some(word => blogPost.title.toLowerCase().includes(word))) score += 5
+  }
+  
+  // Meta description optimization (15 points)
+  if (blogPost.meta_description) {
+    if (blogPost.meta_description.length >= 120 && blogPost.meta_description.length <= 160) score += 15
+    else if (blogPost.meta_description.length >= 100 && blogPost.meta_description.length <= 180) score += 10
+    else score += 5
+  }
+  
+  // Content length optimization (15 points)
+  if (wordCount >= 2000 && wordCount <= 3000) score += 15
+  else if (wordCount >= 1500 && wordCount <= 3500) score += 10
+  else if (wordCount >= 1000) score += 5
+  
+  // Heading structure (15 points)
+  if (blogPost.content) {
+    const h2Count = (blogPost.content.match(/^## /gm) || []).length
+    const h3Count = (blogPost.content.match(/^### /gm) || []).length
+    
+    if (h2Count >= 3 && h2Count <= 8) score += 10
+    else if (h2Count >= 2) score += 5
+    
+    if (h3Count >= 2) score += 5
+  }
+  
+  // Image optimization (10 points)
+  if (blogPost.generated_images && blogPost.generated_images.length > 0) {
+    score += Math.min(10, blogPost.generated_images.length * 3)
+  }
+  
+  // Slug optimization (10 points)
+  if (blogPost.slug) {
+    if (blogPost.slug.length >= 15 && blogPost.slug.length <= 60 && blogPost.slug.includes('-')) score += 10
+    else if (blogPost.slug.length >= 10 && blogPost.slug.includes('-')) score += 5
+  }
+  
+  // Content quality indicators (15 points)
+  if (blogPost.content) {
+    // Check for lists
+    const listCount = (blogPost.content.match(/^[-*+] /gm) || []).length
+    if (listCount >= 3) score += 5
+    
+    // Check for code blocks or technical content
+    if (blogPost.content.includes('```') || blogPost.content.includes('`')) score += 5
+    
+    // Check for proper paragraph structure
+    const paragraphs = blogPost.content.split('\n\n').filter(p => p.trim().length > 50)
+    if (paragraphs.length >= 8) score += 5
+  }
+  
+  return Math.round((score / maxScore) * 100)
+}
+
 // Configure for Node.js runtime with extended timeout
 export const maxDuration = 60 // 60 seconds max for Vercel Hobby plan
 
@@ -946,15 +1013,54 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               .replace(/\n\n\n+/g, '\n\n')
           }
 
-          // Calculate accurate read time
+          // Calculate accurate read time and enhanced SEO metrics
           const words = blogPost.content?.split(' ').length || 0
           blogPost.read_time = Math.ceil(words / 200) // Average reading speed
+          
+          // Enhanced SEO optimization
+          if (blogPost.meta_description && blogPost.meta_description.length > 160) {
+            // Trim meta description to optimal length
+            blogPost.meta_description = blogPost.meta_description.substring(0, 157) + '...'
+          }
+          
+          // Ensure slug is SEO-friendly
+          if (blogPost.slug) {
+            blogPost.slug = blogPost.slug
+              .toLowerCase()
+              .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+              .replace(/\s+/g, '-') // Replace spaces with hyphens
+              .replace(/-+/g, '-') // Remove duplicate hyphens
+              .replace(/^-|-$/g, '') // Remove leading/trailing hyphens
+          }
+          
+          // Add structured data for better SEO
+          const structuredData = {
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            'headline': blogPost.title,
+            'description': blogPost.meta_description,
+            'author': {
+              '@type': 'Person',
+              'name': 'thehackai'
+            },
+            'publisher': {
+              '@type': 'Organization',
+              'name': 'thehackai',
+              'url': 'https://thehackai.com'
+            },
+            'wordCount': words,
+            'timeRequired': `PT${blogPost.read_time}M`,
+            'articleSection': blogPost.category || 'AI Tools',
+            'image': blogPost.generated_images?.[0]?.url
+          }
 
-          // Send final blog post data
+          // Send final blog post data with enhanced SEO
           const finalData = {
             ...blogPost,
             word_count: words,
-            total_duration: Date.now() - startTime
+            total_duration: Date.now() - startTime,
+            structured_data: structuredData,
+            seo_score: calculateSEOScore(blogPost, words)
           }
 
           sendProgress({
