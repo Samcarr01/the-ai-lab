@@ -100,7 +100,7 @@ export default async function SolutionsPage() {
                   href="/documents"
                   className="px-6 sm:px-8 py-3 sm:py-4 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-all duration-300 text-center mobile-touch-target"
                 >
-                  View Playbooks
+                  View Knowledge Files
                 </Link>
               </div>
             </ScrollAnimation>
