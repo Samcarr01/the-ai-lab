@@ -323,18 +323,20 @@ export default function SolutionsPage() {
 
               <ScrollAnimation delay={0.2}>
                 <Link href="/documents" className="group">
-                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-pink-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/10 h-full">
-                    <div className="flex items-center mb-6">
-                      <div className="w-16 h-16 bg-gradient-to-r from-pink-600 to-cyan-600 rounded-xl flex items-center justify-center text-2xl">
-                        📚
+                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-pink-500/50 transition-all duration-500 hover:shadow-lg hover:shadow-pink-500/10 h-full transform hover:scale-105 hover:-translate-y-2 hover:-rotate-1 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center mb-6">
+                        <div className="w-16 h-16 bg-gradient-to-r from-pink-600 to-cyan-600 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 group-hover:-rotate-12 transition-all duration-300">
+                          📚
+                        </div>
+                        <div className="ml-4">
+                          <h3 className="text-2xl font-bold text-white group-hover:text-pink-300 transition-colors">
+                            AI Playbooks
+                          </h3>
+                          <p className="text-pink-400 font-medium group-hover:animate-pulse">Constantly Updated</p>
+                        </div>
                       </div>
-                      <div className="ml-4">
-                        <h3 className="text-2xl font-bold text-white group-hover:text-pink-300 transition-colors">
-                          AI Playbooks
-                        </h3>
-                        <p className="text-pink-400 font-medium">Constantly Updated</p>
-                      </div>
-                    </div>
                     <p className="text-gray-300 mb-6 leading-relaxed">
                       Upload these playbooks to any AI and watch it become an expert instantly. Each playbook contains months of research and proven strategies — giving AI knowledge it doesn't have to tackle complex tasks.
                     </p>
@@ -356,24 +358,27 @@ export default function SolutionsPage() {
                         Skip the learning curve completely
                       </div>
                     </div>
+                    </div>
                   </div>
                 </Link>
               </ScrollAnimation>
 
               <ScrollAnimation delay={0.3}>
                 <Link href="/blog" className="group">
-                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10 h-full">
-                    <div className="flex items-center mb-6">
-                      <div className="w-16 h-16 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl flex items-center justify-center text-2xl">
-                        📝
+                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/50 transition-all duration-500 hover:shadow-lg hover:shadow-cyan-500/10 h-full transform hover:scale-105 hover:-translate-y-2 hover:rotate-1 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div className="relative z-10">
+                      <div className="flex items-center mb-6">
+                        <div className="w-16 h-16 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                          📝
+                        </div>
+                        <div className="ml-4">
+                          <h3 className="text-2xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+                            AI Insights Blog
+                          </h3>
+                          <p className="text-cyan-400 font-medium group-hover:animate-pulse">Fresh Content</p>
+                        </div>
                       </div>
-                      <div className="ml-4">
-                        <h3 className="text-2xl font-bold text-white group-hover:text-cyan-300 transition-colors">
-                          AI Insights Blog
-                        </h3>
-                        <p className="text-cyan-400 font-medium">Fresh Content</p>
-                      </div>
-                    </div>
                     <p className="text-gray-300 mb-6 leading-relaxed">
                       Stay ahead with the latest AI trends, tool reviews, and practical insights. Free access to our growing knowledge base.
                     </p>
@@ -395,23 +400,26 @@ export default function SolutionsPage() {
                         SEO-optimized for discoverability
                       </div>
                     </div>
+                    </div>
                   </div>
                 </Link>
               </ScrollAnimation>
 
               <ScrollAnimation delay={0.4}>
-                <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8">
-                  <div className="flex items-center mb-6">
-                    <div className="w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl flex items-center justify-center text-2xl">
-                      🔄
+                <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-yellow-500/50 transition-all duration-500 hover:shadow-lg hover:shadow-yellow-500/10 transform hover:scale-105 hover:-translate-y-2 hover:-rotate-1 relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center mb-6">
+                      <div className="w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl flex items-center justify-center text-2xl group-hover:scale-110 group-hover:rotate-180 transition-all duration-500">
+                        🔄
+                      </div>
+                      <div className="ml-4">
+                        <h3 className="text-2xl font-bold text-white">
+                          Living Library
+                        </h3>
+                        <p className="text-yellow-400 font-medium group-hover:animate-pulse">Always Growing</p>
+                      </div>
                     </div>
-                    <div className="ml-4">
-                      <h3 className="text-2xl font-bold text-white">
-                        Living Library
-                      </h3>
-                      <p className="text-yellow-400 font-medium">Always Growing</p>
-                    </div>
-                  </div>
                   <p className="text-gray-300 mb-6 leading-relaxed">
                     Your subscription gets better over time. We continuously add new tools, update existing content, and expand the library.
                   </p>
@@ -432,6 +440,7 @@ export default function SolutionsPage() {
                       <span className="text-green-400 mr-2">✓</span>
                       No extra cost for new additions
                     </div>
+                  </div>
                   </div>
                 </div>
               </ScrollAnimation>
