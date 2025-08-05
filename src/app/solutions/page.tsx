@@ -6,6 +6,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export default function SolutionsPage() {
+  // Scroll handlers for mobile navigation
+  const handleFeatureClick = () => {
+    document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const handlePricingClick = () => {
+    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   return (
     <DarkThemeBackground>
@@ -56,7 +64,10 @@ export default function SolutionsPage() {
 
             {/* Mobile Navigation */}
             <div className="md:hidden">
-              <MobileNavigation />
+              <MobileNavigation 
+                onFeatureClick={handleFeatureClick}
+                onPricingClick={handlePricingClick}
+              />
             </div>
           </div>
         </div>
@@ -203,7 +214,7 @@ export default function SolutionsPage() {
         </section>
 
         {/* Our Solutions */}
-        <section className="py-20 px-4">
+        <section id="features" className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <ScrollAnimation>
               <div className="text-center mb-16">
@@ -376,7 +387,7 @@ export default function SolutionsPage() {
         </section>
 
         {/* Value Proposition */}
-        <section className="py-20 px-4 bg-gradient-to-b from-purple-900/20 to-transparent">
+        <section id="pricing" className="py-20 px-4 bg-gradient-to-b from-purple-900/20 to-transparent">
           <div className="max-w-4xl mx-auto text-center">
             <ScrollAnimation>
               <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
