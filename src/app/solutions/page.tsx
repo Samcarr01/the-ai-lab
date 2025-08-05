@@ -1,13 +1,28 @@
+'use client'
+
 import DarkThemeBackground from '@/components/DarkThemeBackground'
 import AnimatedCounter from '@/components/AnimatedCounter'
 import ScrollAnimation from '@/components/ScrollAnimation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import { contentStatsService, type ContentStats } from '@/lib/content-stats'
 
-export default async function SolutionsPage() {
-  // Load content stats for dynamic numbers
-  const contentStats = await contentStatsService.getContentStats('free')
+export default function SolutionsPage() {
+  const [contentStats, setContentStats] = useState<ContentStats | null>(null)
+  
+  // Load content stats on component mount
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const stats = await contentStatsService.getContentStats('free')
+        setContentStats(stats)
+      } catch (error) {
+        console.error('Failed to load content stats:', error)
+      }
+    }
+    loadStats()
+  }, [])
   return (
     <DarkThemeBackground>
       {/* Navigation matching homepage exactly */}
@@ -44,25 +59,25 @@ export default async function SolutionsPage() {
                   </div>
                 </Link>
                 
-                <button
-                  onClick={() => window.location.href = '/#features'}
+                <Link
+                  href="/#features"
                   className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
                 >
                   <div className="flex items-center space-x-2">
                     <span className="group-hover:scale-105 transition-transform duration-300">⚡</span>
                     <span>Features</span>
                   </div>
-                </button>
+                </Link>
                 
-                <button
-                  onClick={() => window.location.href = '/#pricing'}
+                <Link
+                  href="/#pricing"
                   className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
                 >
                   <div className="flex items-center space-x-2">
                     <span className="group-hover:scale-105 transition-transform duration-300">💰</span>
                     <span>Pricing</span>
                   </div>
-                </button>
+                </Link>
                 
                 <Link
                   href="/blog"
