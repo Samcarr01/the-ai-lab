@@ -62,7 +62,7 @@ function calculateSEOScore(blogPost: any, wordCount: number): number {
     if (blogPost.content.includes('```') || blogPost.content.includes('`')) score += 5
     
     // Check for proper paragraph structure
-    const paragraphs = blogPost.content.split('\n\n').filter(p => p.trim().length > 50)
+    const paragraphs = blogPost.content.split('\n\n').filter((p: string) => p.trim().length > 50)
     if (paragraphs.length >= 8) score += 5
   }
   
