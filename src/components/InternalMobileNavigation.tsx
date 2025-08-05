@@ -65,7 +65,6 @@ export default function InternalMobileNavigation({
 
   const menuItems = [
     { href: '/dashboard', icon: '📊', label: 'Dashboard' },
-    { href: '/solutions', icon: '🎯', label: 'Solutions' },
     { href: '/gpts', icon: '🤖', label: 'GPTs' },
     { href: '/documents', icon: '📚', label: 'Playbooks' },
     { href: '/blog', icon: '✍️', label: 'Blogs' },

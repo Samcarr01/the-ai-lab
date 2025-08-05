@@ -1,41 +1,66 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { userService, type UserProfile } from '@/lib/user'
-import SmartNavigation from '@/components/SmartNavigation'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
+import MobileNavigation from '@/components/MobileNavigation'
 import AnimatedCounter from '@/components/AnimatedCounter'
 import ScrollAnimation from '@/components/ScrollAnimation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function SolutionsPage() {
-  const [user, setUser] = useState<UserProfile | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const supabase = createClient()
-        const { data: { user: authUser } } = await supabase.auth.getUser()
-        
-        if (authUser) {
-          const userProfile = await userService.getProfile(authUser.id)
-          setUser(userProfile)
-        }
-      } catch (error) {
-        console.error('Error loading user:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadUser()
-  }, [])
 
   return (
     <DarkThemeBackground>
-      <SmartNavigation user={user} />
+      {/* Public Navigation Header */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-sm border-b border-white/10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="w-8 h-8 flex items-center justify-center">
+                <Image
+                  src="/logo.png"
+                  alt="thehackai logo"
+                  width={32}
+                  height={32}
+                  className="w-full h-full object-contain logo-dark-purple-blue-glow"
+                />
+              </div>
+              <span className="text-white font-bold text-xl">thehackai</span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-6">
+              <Link href="/" className="text-gray-300 hover:text-white transition-colors">
+                Home
+              </Link>
+              <Link href="/solutions" className="text-purple-400 font-medium">
+                Solutions
+              </Link>
+              <Link href="/blog" className="text-gray-300 hover:text-white transition-colors">
+                Blog
+              </Link>
+              <div className="flex items-center space-x-3 ml-6">
+                <Link 
+                  href="/login"
+                  className="text-gray-300 hover:text-white transition-colors px-4 py-2"
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  href="/signup"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+
+            {/* Mobile Navigation */}
+            <div className="md:hidden">
+              <MobileNavigation />
+            </div>
+          </div>
+        </div>
+      </nav>
       
       <div className="min-h-screen pt-20">
         {/* Hero Section */}
@@ -394,37 +419,18 @@ export default function SolutionsPage() {
                   Join professionals who've already made the switch to curated, tested AI workflows.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  {user ? (
-                    user.is_pro ? (
-                      <div className="text-center">
-                        <span className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg font-semibold">
-                          ✅ You're Pro - Enjoy Full Access!
-                        </span>
-                      </div>
-                    ) : (
-                      <Link 
-                        href="/upgrade"
-                        className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105"
-                      >
-                        Upgrade to Pro - £15/month
-                      </Link>
-                    )
-                  ) : (
-                    <>
-                      <Link 
-                        href="/signup"
-                        className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105"
-                      >
-                        Start Free Account
-                      </Link>
-                      <Link 
-                        href="/gpts"
-                        className="px-8 py-4 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-all duration-300"
-                      >
-                        Browse Tools
-                      </Link>
-                    </>
-                  )}
+                  <Link 
+                    href="/signup"
+                    className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105"
+                  >
+                    Start Free Account
+                  </Link>
+                  <Link 
+                    href="/blog"
+                    className="px-8 py-4 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-all duration-300"
+                  >
+                    Read Our Blog
+                  </Link>
                 </div>
               </div>
             </ScrollAnimation>
