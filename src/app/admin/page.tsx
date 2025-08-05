@@ -1192,7 +1192,6 @@ export default function AdminPage() {
                       </div>
                     </div>
                   </div>
-                  </div>
 
                   {/* Enhanced Info Box */}
                   <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-200 rounded-2xl p-6 shadow-lg">
