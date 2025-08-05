@@ -1,5 +1,6 @@
 'use client'
 
+// Force redeploy - Solutions page with animations
 import DarkThemeBackground from '@/components/DarkThemeBackground'
 import AnimatedCounter from '@/components/AnimatedCounter'
 import ScrollAnimation from '@/components/ScrollAnimation'
