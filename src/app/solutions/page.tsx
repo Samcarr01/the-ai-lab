@@ -10,67 +10,95 @@ export default async function SolutionsPage() {
   const contentStats = await contentStatsService.getContentStats('free')
   return (
     <DarkThemeBackground>
-      {/* Public Navigation matching homepage structure */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-sm border-b border-white/10">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+      {/* Navigation matching homepage exactly */}
+      <header className="fixed top-0 w-full z-50 bg-slate-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16 sm:h-20">
             {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="w-8 h-8 flex items-center justify-center">
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center group-hover:scale-105 transition-all duration-300">
                 <Image
                   src="/logo.png"
                   alt="thehackai logo"
-                  width={32}
-                  height={32}
-                  className="w-full h-full object-contain logo-dark-purple-blue-glow"
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain"
+                  priority
                 />
               </div>
-              <span className="text-white font-bold text-xl">thehackai</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent group-hover:from-purple-300 group-hover:to-pink-300 transition-all duration-300">
+                thehackai
+              </span>
             </Link>
-
-            {/* Desktop Navigation - matching SmartNavigation public nav */}
-            <div className="hidden md:flex items-center space-x-6">
-              <Link href="/" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2">
-                <span>🏠</span>
-                <span>Home</span>
-              </Link>
-              <button 
-                onClick={() => window.location.href = '/#features'}
-                className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2"
-              >
-                <span>⚡</span>
-                <span>Features</span>
-              </button>
-              <button 
-                onClick={() => window.location.href = '/#pricing'}
-                className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2"
-              >
-                <span>💰</span>
-                <span>Pricing</span>
-              </button>
-              <Link href="/blog" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2">
-                <span>✍️</span>
-                <span>Blogs</span>
-              </Link>
-              <div className="flex items-center space-x-3 ml-6">
-                <Link 
-                  href="/login"
-                  className="text-gray-300 hover:text-white transition-colors px-4 py-2 flex items-center space-x-2"
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center">
+              <nav className="flex items-center space-x-1 mr-6">
+                <Link
+                  href="/"
+                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
                 >
-                  <span>🔑</span>
-                  <span>Sign In</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="group-hover:scale-105 transition-transform duration-300">🏠</span>
+                    <span>Home</span>
+                  </div>
                 </Link>
-                <Link 
-                  href="/signup"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all flex items-center space-x-2"
+                
+                <button
+                  onClick={() => window.location.href = '/#features'}
+                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
                 >
-                  <span>🚀</span>
-                  <span>Get Started</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="group-hover:scale-105 transition-transform duration-300">⚡</span>
+                    <span>Features</span>
+                  </div>
+                </button>
+                
+                <button
+                  onClick={() => window.location.href = '/#pricing'}
+                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="group-hover:scale-105 transition-transform duration-300">💰</span>
+                    <span>Pricing</span>
+                  </div>
+                </button>
+                
+                <Link
+                  href="/blog"
+                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="group-hover:scale-105 transition-transform duration-300">✍️</span>
+                    <span>Blogs</span>
+                  </div>
+                </Link>
+              </nav>
+              
+              {/* Auth Actions */}
+              <div className="flex items-center space-x-3">
+                <Link
+                  href="/login"
+                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="group-hover:scale-105 transition-transform duration-300">🔑</span>
+                    <span>Sign In</span>
+                  </div>
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-6 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105 transition-all duration-300 group"
+                >
+                  <div className="flex items-center space-x-2">
+                    <span className="group-hover:scale-105 transition-transform duration-300">🚀</span>
+                    <span>Get Started</span>
+                  </div>
                 </Link>
               </div>
             </div>
 
-            {/* Mobile Menu Button - Simple */}
+            {/* Mobile Menu */}
             <div className="md:hidden">
               <Link 
                 href="/signup"
@@ -81,24 +109,24 @@ export default async function SolutionsPage() {
             </div>
           </div>
         </div>
-      </nav>
+      </header>
       
-      <div className="min-h-screen pt-20">
+      <div className="min-h-screen pt-16 sm:pt-20">
         {/* Hero Section */}
-        <section className="relative py-20 px-4">
+        <section className="relative py-12 sm:py-16 px-4">
           <div className="max-w-6xl mx-auto text-center">
             <ScrollAnimation>
               <div className="mb-8">
                 <span className="inline-block px-4 py-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-full text-purple-300 text-sm font-medium border border-purple-500/30 mb-6">
-                  🚀 Your Complete AI Toolkit
+                  🚀 Battle-tested AI Playbooks & GPTs
                 </span>
-                <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-                  Solutions That
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight">
+                  Make any AI smarter
                   <br />
-                  Actually Work
+                  instantly
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0">
-                  Skip the endless searching. Get <span className="text-purple-400 font-semibold">proven AI tools</span> and <span className="text-pink-400 font-semibold">knowledge files that teach AI what it doesn't already know</span>.
+                <p className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed px-2 sm:px-0">
+                  Skip months of trial and error. Our <span className="text-purple-400 font-semibold">proven GPTs</span> and <span className="text-pink-400 font-semibold">playbooks give AI knowledge it doesn't have</span> — so you get expert results immediately.
                 </p>
               </div>
             </ScrollAnimation>
@@ -115,7 +143,7 @@ export default async function SolutionsPage() {
                   href="/documents"
                   className="px-6 sm:px-8 py-3 sm:py-4 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-all duration-300 text-center mobile-touch-target"
                 >
-                  View Knowledge Files
+                  View Playbooks
                 </Link>
               </div>
             </ScrollAnimation>
@@ -287,30 +315,30 @@ export default async function SolutionsPage() {
                       </div>
                       <div className="ml-4">
                         <h3 className="text-2xl font-bold text-white group-hover:text-pink-300 transition-colors">
-                          Knowledge for AI
+                          AI Playbooks
                         </h3>
                         <p className="text-pink-400 font-medium">Constantly Updated</p>
                       </div>
                     </div>
                     <p className="text-gray-300 mb-6 leading-relaxed">
-                      Give AI knowledge it doesn't already have. Upload these files to teach ChatGPT, Claude, or any AI specialized skills and information that aren't in their training data.
+                      Upload these playbooks to any AI and watch it become an expert instantly. Each playbook contains months of research and proven strategies — giving AI knowledge it doesn't have to tackle complex tasks.
                     </p>
                     <div className="space-y-3 text-sm text-gray-400">
                       <div className="flex items-center">
                         <span className="text-green-400 mr-2">✓</span>
-                        Teach AI knowledge it doesn't already know
+                        Months of research condensed into one file
                       </div>
                       <div className="flex items-center">
                         <span className="text-green-400 mr-2">✓</span>
-                        Upload to any AI as custom knowledge
+                        Upload to ChatGPT, Claude, or any AI
                       </div>
                       <div className="flex items-center">
                         <span className="text-green-400 mr-2">✓</span>
-                        Fill gaps in AI's training data
+                        Turn AI into an instant expert
                       </div>
                       <div className="flex items-center">
                         <span className="text-green-400 mr-2">✓</span>
-                        Add specialized expertise AI lacks
+                        Skip the learning curve completely
                       </div>
                     </div>
                   </div>
