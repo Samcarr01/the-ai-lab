@@ -20,7 +20,7 @@ export default function SolutionsPage() {
         const { data: { user: authUser } } = await supabase.auth.getUser()
         
         if (authUser) {
-          const userProfile = await userService.getCurrentUser()
+          const userProfile = await userService.getProfile(authUser.id)
           setUser(userProfile)
         }
       } catch (error) {
