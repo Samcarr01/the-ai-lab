@@ -76,22 +76,27 @@ export default function BlogGenerationProgress({
   const [accumulatedLength, setAccumulatedLength] = useState(0)
 
   useEffect(() => {
-    const eventSource = new EventSource('/api/ai/generate-blog-stream', {
-      // Note: EventSource doesn't support POST with body directly
-      // We'll need to handle this differently
-    })
-
-    // Since EventSource doesn't support POST with body, we'll use fetch with ReadableStream
+    // Add abort controller for proper cleanup
+    const abortController = new AbortController()
+    let globalTimeout: NodeJS.Timeout
+    
     const generateBlog = async () => {
       try {
         console.log('🚀 Starting blog generation request...')
         const requestStart = Date.now()
+        
+        // Set global timeout for the entire generation process
+        globalTimeout = setTimeout(() => {
+          abortController.abort()
+          onError('Blog generation timed out after 5 minutes. Please try again with shorter content or fewer images.')
+        }, 300000) // 5 minutes total timeout
         
         const response = await fetch('/api/ai/generate-blog-stream', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
+          signal: abortController.signal, // Add abort signal
           body: JSON.stringify({
             prompt,
             knowledgeBase,
@@ -205,7 +210,16 @@ export default function BlogGenerationProgress({
         }
       } catch (error) {
         console.error('Blog generation failed:', error)
-        onError(error instanceof Error ? error.message : 'Unknown error occurred')
+        if (error instanceof Error && error.name === 'AbortError') {
+          onError('Blog generation was cancelled or timed out')
+        } else {
+          onError(error instanceof Error ? error.message : 'Unknown error occurred')
+        }
+      } finally {
+        // Clean up timeout
+        if (globalTimeout) {
+          clearTimeout(globalTimeout)
+        }
       }
     }
 
@@ -217,7 +231,12 @@ export default function BlogGenerationProgress({
     }, 100)
 
     return () => {
+      // Proper cleanup to prevent memory leaks
+      abortController.abort()
       clearInterval(timer)
+      if (globalTimeout) {
+        clearTimeout(globalTimeout)
+      }
     }
   }, [prompt, knowledgeBase, includeWebSearch, includeImages, onComplete, onError, startTime])
 

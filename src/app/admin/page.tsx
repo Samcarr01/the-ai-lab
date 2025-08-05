@@ -1054,108 +1054,188 @@ export default function AdminPage() {
       {showBlogModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => !generatingBlog && setShowBlogModal(false)} />
-          <div className="relative bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+          <div className="relative bg-gradient-to-br from-white via-purple-50/30 to-blue-50/50 rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-purple-100">
             {!generatingBlog ? (
-              <div className="p-6 sm:p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  🤖 Generate AI Blog Post
-                </h2>
+              <div className="p-8 sm:p-10">
+                {/* Enhanced Header */}
+                <div className="text-center mb-10">
+                  <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl transform hover:scale-105 transition-all duration-300">
+                    <span className="text-3xl text-white">🤖</span>
+                  </div>
+                  <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-purple-700 to-pink-600 bg-clip-text text-transparent mb-3">
+                    AI Blog Generator
+                  </h2>
+                  <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Create professional, SEO-optimized blog posts with AI-powered content generation and custom images
+                  </p>
+                </div>
                 
-                <div className="space-y-6">
-                  {/* Blog Topic/Prompt */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Blog Topic / Prompt <span className="text-red-500">*</span>
+                <div className="space-y-8">
+                  {/* Blog Topic/Prompt - Enhanced */}
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300">
+                    <label className="flex items-center text-lg font-semibold text-gray-800 mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                        <span className="text-white text-lg">💡</span>
+                      </div>
+                      <span>Blog Topic / Prompt</span>
+                      <span className="text-red-500 ml-2 text-xl">*</span>
                     </label>
                     <textarea
                       value={blogPrompt}
                       onChange={(e) => setBlogPrompt(e.target.value)}
-                      placeholder="e.g., How to use AI tools for productivity in 2025"
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      rows={3}
+                      placeholder="e.g., Complete guide to Claude Code for developers - advanced features, tips, and real-world applications"
+                      className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-400 transition-all duration-200 text-lg placeholder-gray-400 hover:border-purple-300"
+                      rows={4}
                     />
+                    <p className="text-sm text-gray-500 mt-2 flex items-center">
+                      <span className="mr-2">💡</span>
+                      Be specific and detailed for better AI understanding and SEO optimization
+                    </p>
                   </div>
 
-                  {/* Additional Knowledge */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Additional Context (Optional)
+                  {/* Additional Context - Enhanced */}
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100 hover:shadow-xl transition-all duration-300">
+                    <label className="flex items-center text-lg font-semibold text-gray-800 mb-4">
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                        <span className="text-white text-lg">📝</span>
+                      </div>
+                      <span>Additional Context</span>
+                      <span className="text-gray-400 ml-2 font-normal">(Optional)</span>
                     </label>
                     <textarea
                       value={blogKnowledge}
                       onChange={(e) => setBlogKnowledge(e.target.value)}
-                      placeholder="Any specific points, data, or context you want to include..."
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      rows={2}
+                      placeholder="Specific features, comparisons, case studies, or expert insights to include in the blog post..."
+                      className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-400 transition-all duration-200 placeholder-gray-400 hover:border-purple-300"
+                      rows={3}
                     />
-                  </div>
-
-                  {/* Options */}
-                  <div className="space-y-3">
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={includeWebSearch}
-                        onChange={(e) => setIncludeWebSearch(e.target.checked)}
-                        className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500"
-                      />
-                      <span className="ml-2 text-sm text-gray-700">
-                        🔍 Include Web Search (uses Perplexity for current data)
-                      </span>
-                    </label>
-                    
-                    <label className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={includeImages}
-                        onChange={(e) => setIncludeImages(e.target.checked)}
-                        className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded focus:ring-purple-500"
-                      />
-                      <span className="ml-2 text-sm text-gray-700">
-                        🎨 Generate Images (uses DALL-E 3)
-                      </span>
-                    </label>
-                    
-                    {/* Image Count Selection */}
-                    {includeImages && (
-                      <div className="ml-6 flex items-center space-x-3">
-                        <span className="text-sm text-gray-600">Number of images:</span>
-                        <div className="flex space-x-2">
-                          {[1, 2, 3].map((count) => (
-                            <label key={count} className="flex items-center">
-                              <input
-                                type="radio"
-                                name="imageCount"
-                                value={count}
-                                checked={imageCount === count}
-                                onChange={(e) => setImageCount(parseInt(e.target.value))}
-                                className="w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 focus:ring-purple-500"
-                              />
-                              <span className="ml-1 text-sm text-gray-700">{count}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Info Box */}
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <p className="text-sm text-blue-800">
-                      <strong>💡 Tips:</strong> The AI will generate a comprehensive 2000-3000 word blog post with proper SEO optimization. 
-                      <br/>• Web search requires Perplexity API key
-                      <br/>• Image generation takes ~20-30 seconds per image
-                      <br/>• Disable images for faster generation (under 30 seconds)
+                    <p className="text-sm text-gray-500 mt-2 flex items-center">
+                      <span className="mr-2">🎯</span>
+                      Add specific points, data, or unique angles to make your content stand out
                     </p>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex justify-end space-x-3">
+                  {/* Enhanced Options Section */}
+                  <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+                      <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mr-4 shadow-lg">
+                        <span className="text-white text-lg">⚙️</span>
+                      </div>
+                      Generation Options
+                    </h3>
+                    
+                    <div className="space-y-5">
+                      {/* Web Search Option */}
+                      <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200">
+                        <label className="flex items-start cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={includeWebSearch}
+                            onChange={(e) => setIncludeWebSearch(e.target.checked)}
+                            className="w-5 h-5 text-green-600 bg-white border-2 border-green-300 rounded focus:ring-green-500 mt-1 mr-4"
+                          />
+                          <div className="flex-1">
+                            <div className="flex items-center mb-1">
+                              <span className="text-2xl mr-2">🌐</span>
+                              <span className="text-lg font-semibold text-gray-800">Web Search Integration</span>
+                              <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">Perplexity AI</span>
+                            </div>
+                            <p className="text-sm text-gray-600">Gather latest information and current data from the web for more accurate, up-to-date content</p>
+                          </div>
+                        </label>
+                      </div>
+                      
+                      {/* Image Generation Option */}
+                      <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+                        <label className="flex items-start cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={includeImages}
+                            onChange={(e) => setIncludeImages(e.target.checked)}
+                            className="w-5 h-5 text-purple-600 bg-white border-2 border-purple-300 rounded focus:ring-purple-500 mt-1 mr-4"
+                          />
+                          <div className="flex-1">
+                            <div className="flex items-center mb-1">
+                              <span className="text-2xl mr-2">🎨</span>
+                              <span className="text-lg font-semibold text-gray-800">AI Image Generation</span>
+                              <span className="ml-2 px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">DALL-E 3</span>
+                            </div>
+                            <p className="text-sm text-gray-600">Create high-quality, contextual images that enhance your blog post and improve engagement</p>
+                          </div>
+                        </label>
+                    
+                        
+                        {/* Image Count Selection */}
+                        {includeImages && (
+                          <div className="mt-4 pt-4 border-t border-purple-200">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium text-gray-700">Number of images:</span>
+                              <div className="flex space-x-3">
+                                {[1, 2, 3].map((count) => (
+                                  <label key={count} className="flex items-center cursor-pointer">
+                                    <input
+                                      type="radio"
+                                      name="imageCount"
+                                      value={count}
+                                      checked={imageCount === count}
+                                      onChange={(e) => setImageCount(parseInt(e.target.value))}
+                                      className="w-4 h-4 text-purple-600 bg-white border-2 border-purple-300 focus:ring-purple-500"
+                                    />
+                                    <span className="ml-2 px-3 py-1 bg-white border border-purple-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-purple-50 transition-colors">{count} image{count > 1 ? 's' : ''}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            </div>
+                            <p className="text-xs text-gray-500 mt-2">⌚ Images are strategically distributed throughout the blog for optimal engagement</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+
+                  {/* Enhanced Info Box */}
+                  <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border border-blue-200 rounded-2xl p-6 shadow-lg">
+                    <div className="flex items-start">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mr-4 shadow-lg flex-shrink-0">
+                        <span className="text-white text-2xl">💡</span>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-lg font-semibold text-gray-800 mb-3">Generation Details</h4>
+                        <div className="grid md:grid-cols-2 gap-4 text-sm">
+                          <div className="space-y-2">
+                            <div className="flex items-center text-blue-800">
+                              <span className="mr-2">📝</span>
+                              <span><strong>Content:</strong> 2000-3000 words with SEO optimization</span>
+                            </div>
+                            <div className="flex items-center text-green-800">
+                              <span className="mr-2">⚡</span>
+                              <span><strong>Speed:</strong> ~30-60 seconds (without images)</span>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <div className="flex items-center text-purple-800">
+                              <span className="mr-2">🎨</span>
+                              <span><strong>Images:</strong> ~45 seconds per image (DALL-E 3)</span>
+                            </div>
+                            <div className="flex items-center text-indigo-800">
+                              <span className="mr-2">🌐</span>
+                              <span><strong>Web Search:</strong> Latest data via Perplexity</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Enhanced Action Buttons */}
+                  <div className="flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6 border-t border-gray-200">
                     <button
                       onClick={() => setShowBlogModal(false)}
-                      className="px-4 py-2 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                      className="px-6 py-3 text-gray-600 hover:text-gray-800 border-2 border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-medium flex items-center justify-center space-x-2"
                     >
-                      Cancel
+                      <span>❌</span>
+                      <span>Cancel</span>
                     </button>
                     <button
                       onClick={() => {
@@ -1166,16 +1246,18 @@ export default function AdminPage() {
                         setGeneratingBlog(true)
                       }}
                       disabled={!blogPrompt.trim()}
-                      className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-8 py-3 bg-gradient-to-r from-purple-600 via-purple-700 to-pink-600 text-white rounded-xl font-semibold hover:shadow-2xl hover:shadow-purple-500/30 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none flex items-center justify-center space-x-2"
                     >
-                      Generate Blog
+                      <span>🤖</span>
+                      <span>Generate Blog Post</span>
                     </button>
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="p-6 sm:p-8">
-                <BlogGenerationProgress
+              <div className="p-8 sm:p-10 bg-gradient-to-br from-slate-50 via-purple-50/50 to-blue-50/50">
+                <div className="max-w-4xl mx-auto">
+                  <BlogGenerationProgress
                   prompt={blogPrompt}
                   knowledgeBase={blogKnowledge}
                   includeWebSearch={includeWebSearch}
@@ -1215,6 +1297,7 @@ export default function AdminPage() {
                     setGeneratingBlog(false)
                   }}
                 />
+                </div>
               </div>
             )}
           </div>

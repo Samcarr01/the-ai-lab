@@ -69,8 +69,8 @@ function calculateSEOScore(blogPost: any, wordCount: number): number {
   return Math.round((score / maxScore) * 100)
 }
 
-// Configure for Node.js runtime with extended timeout
-export const maxDuration = 60 // 60 seconds max for Vercel Hobby plan
+// Configure for Node.js runtime with extended timeout for image generation
+export const maxDuration = 300 // 5 minutes max for complex workflows with multiple images
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY
@@ -779,9 +779,9 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                         n: 1
                       })
                     }),
-                    // 60-second timeout for image generation (reduced due to simpler prompts)
+                    // 45-second timeout per image (more reasonable for DALL-E 3)
                     new Promise((_, reject) => 
-                      setTimeout(() => reject(new Error('Image generation timeout')), 60000)
+                      setTimeout(() => reject(new Error('Image generation timeout')), 45000)
                     )
                   ]) as Response
 
