@@ -10,7 +10,7 @@ export default async function SolutionsPage() {
   const contentStats = await contentStatsService.getContentStats('free')
   return (
     <DarkThemeBackground>
-      {/* Simplified Public Navigation Header */}
+      {/* Public Navigation matching homepage structure */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -38,6 +38,9 @@ export default async function SolutionsPage() {
               </Link>
               <Link href="/blog" className="text-gray-300 hover:text-white transition-colors">
                 Blog
+              </Link>
+              <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors">
+                Pricing
               </Link>
               <div className="flex items-center space-x-3 ml-6">
                 <Link 
@@ -179,7 +182,7 @@ export default async function SolutionsPage() {
               <ScrollAnimation delay={0.2}>
                 <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-6 sm:p-8">
                   <div className="text-green-400 text-4xl mb-4">✅</div>
-                  <h3 className="text-2xl font-bold text-white mb-4">The AI Lab Way</h3>
+                  <h3 className="text-2xl font-bold text-white mb-4">The thehackai Way</h3>
                   <ul className="space-y-3 text-gray-300">
                     <li className="flex items-start">
                       <span className="text-green-400 mr-2">•</span>
