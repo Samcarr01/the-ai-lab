@@ -3,8 +3,11 @@ import AnimatedCounter from '@/components/AnimatedCounter'
 import ScrollAnimation from '@/components/ScrollAnimation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { contentStatsService, type ContentStats } from '@/lib/content-stats'
 
-export default function SolutionsPage() {
+export default async function SolutionsPage() {
+  // Load content stats for dynamic numbers
+  const contentStats = await contentStatsService.getContentStats('free')
   return (
     <DarkThemeBackground>
       {/* Simplified Public Navigation Header */}
@@ -79,23 +82,23 @@ export default function SolutionsPage() {
                   <br />
                   Actually Work
                 </h1>
-                <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                <p className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0">
                   Skip the endless searching. Get <span className="text-purple-400 font-semibold">battle-tested AI workflows</span> that are constantly updated, personally tested, and guaranteed to save you time.
                 </p>
               </div>
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.2}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 px-4 sm:px-0">
                 <Link 
                   href="/gpts"
-                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105"
+                  className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 text-center mobile-touch-target"
                 >
                   Explore GPTs
                 </Link>
                 <Link 
                   href="/documents"
-                  className="px-8 py-4 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-all duration-300"
+                  className="px-6 sm:px-8 py-3 sm:py-4 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-all duration-300 text-center mobile-touch-target"
                 >
                   View Playbooks
                 </Link>
@@ -104,10 +107,10 @@ export default function SolutionsPage() {
 
             {/* Stats */}
             <ScrollAnimation delay={0.3}>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto px-4 sm:px-0">
                 <div className="text-center">
                   <div className="text-4xl font-bold text-purple-400 mb-2">
-                    <AnimatedCounter end={50} duration={2000} />+
+                    <AnimatedCounter end={(contentStats?.totalGPTs || 7) + (contentStats?.totalPlaybooks || 10)} duration={2000} />+
                   </div>
                   <p className="text-gray-400">Premium AI Tools</p>
                 </div>
@@ -137,15 +140,15 @@ export default function SolutionsPage() {
                   Stop Wasting Time on
                   <span className="text-red-400"> Broken AI Tools</span>
                 </h2>
-                <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4 sm:px-0">
                   We've all been there - spending hours trying AI tools that don't work, following outdated guides, or getting mediocre results. We solve that.
                 </p>
               </div>
             </ScrollAnimation>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16 px-4 sm:px-0">
               <ScrollAnimation delay={0.1}>
-                <div className="bg-red-900/20 border border-red-500/30 rounded-xl p-8">
+                <div className="bg-red-900/20 border border-red-500/30 rounded-xl p-6 sm:p-8">
                   <div className="text-red-400 text-4xl mb-4">❌</div>
                   <h3 className="text-2xl font-bold text-white mb-4">The Old Way</h3>
                   <ul className="space-y-3 text-gray-300">
@@ -174,7 +177,7 @@ export default function SolutionsPage() {
               </ScrollAnimation>
 
               <ScrollAnimation delay={0.2}>
-                <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-8">
+                <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-6 sm:p-8">
                   <div className="text-green-400 text-4xl mb-4">✅</div>
                   <h3 className="text-2xl font-bold text-white mb-4">The AI Lab Way</h3>
                   <ul className="space-y-3 text-gray-300">
@@ -214,16 +217,16 @@ export default function SolutionsPage() {
                   How We Keep You
                   <span className="text-purple-400"> Ahead of the Curve</span>
                 </h2>
-                <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4 sm:px-0">
                   Our solutions are designed to save you time, money, and frustration while delivering professional results.
                 </p>
               </div>
             </ScrollAnimation>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 px-4 sm:px-0">
               <ScrollAnimation delay={0.1}>
                 <Link href="/gpts" className="group">
-                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-8 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 h-full">
+                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-purple-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/10 h-full">
                     <div className="flex items-center mb-6">
                       <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center text-2xl">
                         🤖
@@ -262,7 +265,7 @@ export default function SolutionsPage() {
 
               <ScrollAnimation delay={0.2}>
                 <Link href="/documents" className="group">
-                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-8 hover:border-pink-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/10 h-full">
+                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-pink-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-pink-500/10 h-full">
                     <div className="flex items-center mb-6">
                       <div className="w-16 h-16 bg-gradient-to-r from-pink-600 to-cyan-600 rounded-xl flex items-center justify-center text-2xl">
                         📚
@@ -301,7 +304,7 @@ export default function SolutionsPage() {
 
               <ScrollAnimation delay={0.3}>
                 <Link href="/blog" className="group">
-                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-8 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10 h-full">
+                  <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10 h-full">
                     <div className="flex items-center mb-6">
                       <div className="w-16 h-16 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl flex items-center justify-center text-2xl">
                         📝
@@ -339,7 +342,7 @@ export default function SolutionsPage() {
               </ScrollAnimation>
 
               <ScrollAnimation delay={0.4}>
-                <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-8">
+                <div className="bg-slate-800/60 border border-white/10 rounded-2xl p-6 sm:p-8">
                   <div className="flex items-center mb-6">
                     <div className="w-16 h-16 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-xl flex items-center justify-center text-2xl">
                       🔄
@@ -383,7 +386,7 @@ export default function SolutionsPage() {
           <div className="max-w-4xl mx-auto text-center">
             <ScrollAnimation>
               <h2 className="text-4xl md:text-5xl font-bold mb-8 text-white">
-                Why Choose The AI Lab?
+                Why Choose thehackai?
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div className="text-left">
@@ -401,7 +404,7 @@ export default function SolutionsPage() {
                 <div className="text-left">
                   <h3 className="text-2xl font-bold text-cyan-400 mb-4">💰 Cost Effective</h3>
                   <p className="text-gray-300">
-                    One subscription replaces multiple tool subscriptions. Get access to 50+ premium resources for less than one competing tool.
+                    One subscription replaces multiple tool subscriptions. Get access to {(contentStats?.totalGPTs || 7) + (contentStats?.totalPlaybooks || 10)}+ premium resources starting from just £7/month.
                   </p>
                 </div>
                 <div className="text-left">
@@ -414,23 +417,23 @@ export default function SolutionsPage() {
             </ScrollAnimation>
 
             <ScrollAnimation delay={0.2}>
-              <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 border border-purple-500/30 rounded-2xl p-8 mb-12">
+              <div className="bg-gradient-to-r from-purple-900/40 to-pink-900/40 border border-purple-500/30 rounded-2xl p-6 sm:p-8 mb-8 sm:mb-12 mx-4 sm:mx-0">
                 <h3 className="text-3xl font-bold text-white mb-4">
                   Ready to Stop Wasting Time?
                 </h3>
-                <p className="text-xl text-purple-200 mb-6">
+                <p className="text-lg sm:text-xl text-purple-200 mb-6">
                   Join professionals who've already made the switch to curated, tested AI workflows.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link 
                     href="/signup"
-                    className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105"
+                    className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 text-center mobile-touch-target"
                   >
                     Start Free Account
                   </Link>
                   <Link 
                     href="/blog"
-                    className="px-8 py-4 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-all duration-300"
+                    className="px-6 sm:px-8 py-3 sm:py-4 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-all duration-300 text-center mobile-touch-target"
                   >
                     Read Our Blog
                   </Link>
