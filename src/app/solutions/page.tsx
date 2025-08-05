@@ -28,32 +28,44 @@ export default async function SolutionsPage() {
               <span className="text-white font-bold text-xl">thehackai</span>
             </Link>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - matching SmartNavigation public nav */}
             <div className="hidden md:flex items-center space-x-6">
-              <Link href="/" className="text-gray-300 hover:text-white transition-colors">
-                Home
+              <Link href="/" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2">
+                <span>🏠</span>
+                <span>Home</span>
               </Link>
-              <Link href="/solutions" className="text-purple-400 font-medium">
-                Solutions
-              </Link>
-              <Link href="/blog" className="text-gray-300 hover:text-white transition-colors">
-                Blog
-              </Link>
-              <Link href="/pricing" className="text-gray-300 hover:text-white transition-colors">
-                Pricing
+              <button 
+                onClick={() => window.location.href = '/#features'}
+                className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2"
+              >
+                <span>⚡</span>
+                <span>Features</span>
+              </button>
+              <button 
+                onClick={() => window.location.href = '/#pricing'}
+                className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2"
+              >
+                <span>💰</span>
+                <span>Pricing</span>
+              </button>
+              <Link href="/blog" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-2">
+                <span>✍️</span>
+                <span>Blogs</span>
               </Link>
               <div className="flex items-center space-x-3 ml-6">
                 <Link 
                   href="/login"
-                  className="text-gray-300 hover:text-white transition-colors px-4 py-2"
+                  className="text-gray-300 hover:text-white transition-colors px-4 py-2 flex items-center space-x-2"
                 >
-                  Sign In
+                  <span>🔑</span>
+                  <span>Sign In</span>
                 </Link>
                 <Link 
                   href="/signup"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:shadow-lg transition-all flex items-center space-x-2"
                 >
-                  Get Started
+                  <span>🚀</span>
+                  <span>Get Started</span>
                 </Link>
               </div>
             </div>
@@ -86,7 +98,7 @@ export default async function SolutionsPage() {
                   Actually Work
                 </h1>
                 <p className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed px-2 sm:px-0">
-                  Skip the endless searching. Get <span className="text-purple-400 font-semibold">battle-tested AI workflows</span> that are constantly updated, personally tested, and guaranteed to save you time.
+                  Skip the endless searching. Get <span className="text-purple-400 font-semibold">proven AI tools</span> and <span className="text-pink-400 font-semibold">knowledge files that teach AI what it doesn't already know</span>.
                 </p>
               </div>
             </ScrollAnimation>
@@ -275,30 +287,30 @@ export default async function SolutionsPage() {
                       </div>
                       <div className="ml-4">
                         <h3 className="text-2xl font-bold text-white group-hover:text-pink-300 transition-colors">
-                          Expert Playbooks
+                          Knowledge for AI
                         </h3>
                         <p className="text-pink-400 font-medium">Constantly Updated</p>
                       </div>
                     </div>
                     <p className="text-gray-300 mb-6 leading-relaxed">
-                      Step-by-step guides and workflows that deliver results. Each playbook is tested, refined, and updated as AI tools evolve.
+                      Give AI knowledge it doesn't already have. Upload these files to teach ChatGPT, Claude, or any AI specialized skills and information that aren't in their training data.
                     </p>
                     <div className="space-y-3 text-sm text-gray-400">
                       <div className="flex items-center">
                         <span className="text-green-400 mr-2">✓</span>
-                        Detailed step-by-step instructions
+                        Teach AI knowledge it doesn't already know
                       </div>
                       <div className="flex items-center">
                         <span className="text-green-400 mr-2">✓</span>
-                        Updated when tools change
+                        Upload to any AI as custom knowledge
                       </div>
                       <div className="flex items-center">
                         <span className="text-green-400 mr-2">✓</span>
-                        Real examples and case studies
+                        Fill gaps in AI's training data
                       </div>
                       <div className="flex items-center">
                         <span className="text-green-400 mr-2">✓</span>
-                        Downloadable PDF formats
+                        Add specialized expertise AI lacks
                       </div>
                     </div>
                   </div>
