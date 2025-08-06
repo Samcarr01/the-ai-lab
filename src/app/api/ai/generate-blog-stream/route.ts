@@ -301,10 +301,23 @@ ${includeWebSearch ? `RESEARCH REQUIREMENTS:
 Follow these SEO guidelines:
 ${seoKnowledge}
 
-CRITICAL REQUIREMENTS:
-1. Write 2,000-3,000 words of in-depth, valuable content
-2. Use conversational tone with "you", contractions, and active voice
-3. Include specific examples, real tools, actual features, and practical use cases
+🚨 CRITICAL LENGTH REQUIREMENTS - CONTENT WILL BE REJECTED IF TOO SHORT:
+1. MINIMUM 2,500 words - ANYTHING SHORTER WILL BE AUTOMATICALLY REJECTED
+2. OPTIMAL RANGE: 2,800-3,200 words for maximum SEO impact
+3. Count your words as you write - use word counting while drafting
+4. If you write less than 2,500 words, the system will throw an error and reject the content
+5. Use multiple detailed examples, case studies, step-by-step guides to reach word count
+6. Include extensive explanations and thorough coverage of ALL aspects of the topic
+
+CONTENT DEPTH REQUIREMENTS - ESSENTIAL FOR MEETING WORD COUNT:
+- Write 8-10 major sections (H2 headings) of 300-400 words EACH
+- Add 2-3 detailed subsections (H3) under each H2 section
+- Introduction: 250-300 words (hook + value prop + detailed outline)
+- Conclusion: 200-250 words (summary + actionable takeaways + CTA)
+- Each section must provide detailed explanations, not superficial overviews
+- Include specific examples, code snippets, tool screenshots descriptions
+- Add comparison tables, detailed pro/con lists, comprehensive feature breakdowns
+- Use conversational tone with "you", contractions, and active voice throughout
 
 LINKING REQUIREMENTS (MUST FOLLOW):
 - Internal links (3-5): Use format [descriptive text](/gpts) or [descriptive text](/documents) or [descriptive text](/blog)
@@ -317,12 +330,22 @@ IMAGE PLACEHOLDERS:
 - Add [IMAGE: specific description] where visuals would help
 - Be specific about what should be shown (e.g., "[IMAGE: Screenshot of ChatGPT-4 interface with code generation example]")
 
-STRUCTURE YOUR BLOG POST:
+STRUCTURE YOUR BLOG POST TO ENSURE 2,500+ WORDS:
 1. Title (45-60 chars, professional, clear, avoid slang like "good vibe" or "ultimate")
-2. Introduction (150-200 words, hook + clear value proposition)
-3. 5-8 main sections with descriptive H2 headings
-4. Include lists, comparisons, step-by-step guides
-5. Strong conclusion with clear call-to-action
+2. Introduction (250-300 words minimum, compelling hook + clear value proposition + detailed outline)
+3. 8-10 major sections with descriptive H2 headings (300-400 words EACH):
+   - What is [Topic]? (400+ words: comprehensive definitions, background, historical context, importance)
+   - Why [Topic] Matters Now (350+ words: current market trends, benefits, problems it solves, statistics)
+   - Key Features and Components (400+ words: detailed feature breakdowns, technical specifications)
+   - Complete Step-by-Step Implementation Guide (500+ words: actionable steps with detailed explanations)
+   - Advanced Best Practices and Pro Tips (400+ words: expert strategies, optimization techniques)
+   - Detailed Comparison with Alternatives (450+ words: comparison tables, pros/cons analysis)
+   - Common Mistakes and How to Avoid Them (350+ words: real-world challenges with solutions)
+   - Tools and Resources You Need (300+ words: specific tool recommendations, setup guides)
+   - Real-World Case Studies and Examples (400+ words: detailed success stories, metrics)
+   - Future Trends and What's Next (300+ words: predictions, upcoming developments)
+4. Must include: detailed numbered lists, comparison tables, code examples, screenshot descriptions
+5. Strong conclusion (250+ words) with comprehensive summary + clear call-to-action + next steps
 
 TITLE REQUIREMENTS:
 - Professional tone, avoid casual slang or buzzwords
@@ -340,15 +363,32 @@ TABLE FORMATTING (if using tables):
 - Ensure columns align and all rows have same number of cells
 - Keep cell content concise
 
+⚠️ MATHEMATICAL WORD COUNT CHECK - DO THIS CALCULATION BEFORE SUBMITTING:
+Introduction (250 words) + 8 sections (350 words each = 2,800 words) + Conclusion (250 words) = 3,300 total words
+This ensures you meet the 2,500 minimum and achieve optimal SEO length.
+
+🚨 FINAL VALIDATION: COUNT YOUR ACTUAL WORDS - CONTENT UNDER 2,500 WORDS WILL BE AUTOMATICALLY REJECTED BY THE SYSTEM
+
+COMMON REASONS FOR SHORT CONTENT REJECTION (AVOID THESE):
+- Too superficial coverage of topics (need deep, comprehensive explanations)
+- Missing detailed examples and case studies (include specific, real-world examples)
+- Not enough sections (need 8-10 major H2 sections, not 6)
+- Shallow explanations instead of deep dives (explain WHY and HOW, not just WHAT)
+- Missing comparison tables, code examples, step-by-step guides (these add substantial word count)
+- Short introduction and conclusion (need 250+ words each, not 200)
+- Not including subsections (H3 headings add depth and word count)
+- Summarizing instead of thoroughly explaining concepts
+
 FORMAT YOUR RESPONSE AS JSON:
 {
   "title": "Specific, SEO-optimized title",
-  "content": "# Title\\n\\n## Introduction\\n\\nEngaging intro...\\n\\n[Your full blog with proper markdown, real links, specific examples]",
-  "meta_description": "150-160 character description with main keyword",
+  "content": "# Title\\n\\n## Introduction\\n\\nEngaging 200+ word intro...\\n\\n## Section 1 (400+ words)\\n\\n### Subsection 1.1\\n\\nDetailed content...\\n\\n### Subsection 1.2\\n\\nMore details...\\n\\n## Section 2 (400+ words)\\n\\n[Continue with 6-8 major sections, each 300-500 words]",
+  "meta_description": "150-160 character description with main keyword", 
   "category": "Choose one: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy",
   "read_time": calculated number (total words / 200)
 }
 
+🚨 FINAL REMINDER: Your content MUST be 2,500-3,000 words minimum. Count carefully before submitting!
 IMPORTANT: Include ACTUAL external links to real websites and proper internal links in the markdown format shown above.`
 
           // Choose model and API endpoint
@@ -577,10 +617,15 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                 }
               }
               
-              // Ensure we have long-form content
+              // ENFORCE CRITICAL WORD COUNT REQUIREMENTS
               const wordCount = blogPost.content?.split(' ').length || 0
-              if (wordCount < 1500) {
-                console.warn(`Content too short: ${wordCount} words. Expected 2000-3000 words.`)
+              if (wordCount < 2500) {
+                console.error(`🚨 CONTENT REJECTED: Only ${wordCount} words generated. Minimum requirement: 2,500 words.`)
+                throw new Error(`Content too short: ${wordCount} words. Expected 2000-3000 words.`)
+              }
+              
+              if (wordCount >= 2500) {
+                console.log(`✅ Content meets requirements: ${wordCount} words (target: 2,500-3,000)`)
               }
             } else {
               throw new Error('No JSON found in response');
@@ -625,25 +670,37 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               
               console.log(`📊 Blog analysis: ${contentWordCount} words, ${imagePlaceholders.length} placeholders → generating ${maxImages} images (user selected: ${imageCount})`)
               
-              // Create image prompts for different sections
+              // Create image prompts for different sections - ALWAYS generate requested number
               const imagePrompts = []
               imagePrompts.push(`${blogPost.title}`) // Hero image
               
               if (maxImages > 1) {
                 // Extract key sections for additional images
-                const sections = blogPost.content.split(/##/).filter((section: string) => section.trim().length > 100)
+                const sections = blogPost.content.split(/##/).filter((section: string) => section.trim().length > 50)
                 console.log(`📝 Found ${sections.length} sections for additional images`)
                 
                 // Add additional image prompts based on user selection
                 for (let i = 1; i < maxImages; i++) {
-                  if (sections.length > i) {
+                  if (sections.length > i && sections[i]) {
                     const sectionTitle = sections[i].split('\n')[0].trim()
                     imagePrompts.push(`supporting content for ${sectionTitle}`)
                   } else {
-                    // If not enough sections, create generic supporting images
-                    imagePrompts.push(`supporting visual ${i + 1} for ${blogPost.title}`)
+                    // ALWAYS create additional images even if not enough sections
+                    const supportingPrompts = [
+                      `key features and benefits of ${blogPost.title}`,
+                      `practical applications and use cases for ${blogPost.title}`,
+                      `comparison and analysis related to ${blogPost.title}`,
+                      `step-by-step process for ${blogPost.title}`,
+                      `advanced tips and best practices for ${blogPost.title}`
+                    ]
+                    imagePrompts.push(supportingPrompts[(i - 1) % supportingPrompts.length])
                   }
                 }
+              }
+              
+              // Ensure we ALWAYS have the requested number of image prompts
+              while (imagePrompts.length < maxImages) {
+                imagePrompts.push(`additional supporting visual for ${blogPost.title}`)
               }
               
               console.log(`🎨 Created ${imagePrompts.length} image prompts for ${maxImages} requested images:`, imagePrompts)
