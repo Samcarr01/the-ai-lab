@@ -17,15 +17,19 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Load admin view mode preference from localStorage
-    const savedMode = localStorage.getItem('adminViewMode') as AdminViewMode
-    if (savedMode && ['admin', 'free', 'pro', 'ultra'].includes(savedMode)) {
-      setAdminViewModeState(savedMode)
+    if (typeof window !== 'undefined') {
+      const savedMode = localStorage.getItem('adminViewMode') as AdminViewMode
+      if (savedMode && ['admin', 'free', 'pro', 'ultra'].includes(savedMode)) {
+        setAdminViewModeState(savedMode)
+      }
     }
   }, [])
 
   const setAdminViewMode = (mode: AdminViewMode) => {
     setAdminViewModeState(mode)
-    localStorage.setItem('adminViewMode', mode)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('adminViewMode', mode)
+    }
   }
 
   const getEffectiveUser = (user: any) => {

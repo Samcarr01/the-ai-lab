@@ -22,6 +22,8 @@ export default function DashboardPage() {
   const [rateLimitError, setRateLimitError] = useState(false)
   const [stats, setStats] = useState({ gpts: 0, documents: 0, blogPosts: 0 })
   const [contentStats, setContentStats] = useState<ContentStats | null>(null)
+  const [debugMode, setDebugMode] = useState(false)
+  const [authDebugInfo, setAuthDebugInfo] = useState<any>(null)
   const { getEffectiveUser } = useAdmin()
   const router = useRouter()
   
@@ -31,92 +33,86 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let isMounted = true
+    let timeoutId: NodeJS.Timeout | null = null
     
     const getUser = async () => {
       if (!isMounted) return // Prevent execution if component unmounted
       
-      const timeoutId = setTimeout(() => {
+      console.log('🔄 Dashboard: Starting auth check...')
+      
+      // Set a shorter timeout for better UX
+      timeoutId = setTimeout(() => {
         if (!isMounted) return
-        console.error('🚨 Dashboard: Auth loading timeout after 45 seconds - forcing stop')
+        console.error('🚨 Dashboard: Auth loading timeout after 20 seconds - forcing error state')
         setLoading(false)
-        // Show error state instead of infinite loading
         setUser(null)
-      }, 45000) // 45 second timeout (increased from 20s)
+      }, 20000) // 20 second timeout
       
       try {
-        console.log('🔄 Dashboard: Starting auth check...')
         const { user: authUser, error } = await auth.getUser()
-        clearTimeout(timeoutId)
+        
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+          timeoutId = null
+        }
         
         console.log('✅ Dashboard: Auth check result:', { 
           hasUser: !!authUser, 
           userId: authUser?.id,
           email: authUser?.email,
-          metadata: authUser?.user_metadata,
           error: error?.message 
         })
         
-        // Handle refresh token errors specifically
-        if (error) {
-          if (error.message?.includes('Refresh Token') || error.message?.includes('Invalid Refresh')) {
-            console.log('🔄 Dashboard: Invalid refresh token, clearing all auth data and redirecting...')
-            // Clear all invalid auth data
-            await auth.clearAuthData()
-            setLoading(false)
-            setTimeout(() => router.push('/login?message=session_expired'), 100)
-            return
-          }
-        }
+        // Update debug info
+        setAuthDebugInfo({
+          timestamp: new Date().toISOString(),
+          authUser: authUser ? {
+            id: authUser.id,
+            email: authUser.email,
+            metadata: authUser.user_metadata
+          } : null,
+          error: error?.message || null,
+          step: 'auth_check_complete'
+        })
         
+        // Handle auth errors
         if (error || !authUser) {
-          console.log('❌ Dashboard: No user found, redirecting to login', { error: error?.message })
+          console.log('❌ Dashboard: No valid user, redirecting to login', { error: error?.message })
           
-          // If it's a session/auth error, clear auth data first
-          if (error?.message?.includes('session') || error?.message?.includes('Invalid') || error?.message?.includes('expired')) {
-            console.log('🧹 Dashboard: Clearing invalid auth data before redirect...')
+          // Clear invalid auth data
+          if (error?.message?.includes('Refresh Token') || error?.message?.includes('Invalid') || error?.message?.includes('expired')) {
+            console.log('🧹 Dashboard: Clearing invalid auth data...')
             await auth.clearAuthData()
           }
           
+          if (!isMounted) return
           setLoading(false)
           setTimeout(() => router.push('/login?error=auth_failed'), 100)
           return
         }
 
-        // Fetch user profile from our database
+        // Fetch user profile
         console.log('🔍 Dashboard: Fetching user profile from database...')
         
         try {
           let userProfile = await userService.getProfile(authUser.id)
-          console.log('📋 Dashboard: Profile fetch result:', { hasProfile: !!userProfile })
+          console.log('📋 Dashboard: Profile result:', { hasProfile: !!userProfile })
           
-          // If no profile exists, create one (for existing auth users)
+          // Create profile if missing
           if (!userProfile) {
-            console.log('🔧 Dashboard: No profile found, creating new profile for user:', authUser.email)
+            console.log('🔧 Dashboard: Creating new profile...')
             const firstName = authUser.user_metadata?.first_name || ''
             const lastName = authUser.user_metadata?.last_name || ''
-            console.log('📝 Dashboard: User metadata names:', { firstName, lastName, fullMetadata: authUser.user_metadata })
             
-            try {
-              userProfile = await userService.createProfile(authUser.id, authUser.email || '', firstName, lastName)
-              console.log('✅ Dashboard: Profile creation result:', { success: !!userProfile, profile: userProfile })
-            } catch (createError: any) {
-              console.error('❌ Dashboard: Profile creation failed:', createError)
-              
-              // Check if it's a rate limit error
-              if (createError?.message?.includes('rate limit')) {
-                setRateLimitError(true)
-                setLoading(false)
-                return // Stop processing and wait for user to refresh
-              }
-            }
+            userProfile = await userService.createProfile(authUser.id, authUser.email || '', firstName, lastName)
+            console.log('✅ Dashboard: Profile created:', { success: !!userProfile })
           }
           
-          if (userProfile) {
-            if (!isMounted) return // Check again before setting state
+          if (userProfile && isMounted) {
             setUser(userProfile)
-            setLoading(false) // Stop loading immediately when user is set
+            setLoading(false)
             
-            // Load live stats with user tier in background (non-blocking)
+            // Load stats in background
             loadStats(userProfile.user_tier || 'free').catch(error => {
               console.error('Background stats loading failed:', error)
             })
@@ -127,14 +123,15 @@ export default function DashboardPage() {
             setTimeout(() => router.push('/login'), 100)
           }
         } catch (profileError: any) {
-          console.error('❌ Dashboard: Error handling user profile:', profileError)
+          console.error('❌ Dashboard: Profile error:', profileError)
           
-          // Check if it's a rate limit error
+          // Handle rate limits
           if (profileError?.message?.includes('rate limit') || profileError?.message?.includes('429')) {
-            console.log('🚨 Dashboard: Rate limit detected, stopping auth process')
-            if (!isMounted) return
-            setRateLimitError(true)
-            setLoading(false)
+            console.log('🚨 Dashboard: Rate limit detected')
+            if (isMounted) {
+              setRateLimitError(true)
+              setLoading(false)
+            }
             return
           }
           
@@ -143,8 +140,11 @@ export default function DashboardPage() {
           setTimeout(() => router.push('/login'), 100)
         }
       } catch (err) {
-        console.error('Error fetching user:', err)
-        clearTimeout(timeoutId)
+        console.error('❌ Dashboard: Auth error:', err)
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+        }
+        if (!isMounted) return
         setLoading(false)
         setTimeout(() => router.push('/login'), 100)
       }
@@ -222,6 +222,9 @@ export default function DashboardPage() {
     
     return () => {
       isMounted = false // Cleanup flag
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
       subscription.unsubscribe()
     }
   }, [router])
@@ -242,14 +245,6 @@ export default function DashboardPage() {
     }
   }, [])
 
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-white flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
-      </div>
-    )
-  }
 
   if (loading) {
     return (
@@ -298,6 +293,43 @@ export default function DashboardPage() {
       <SmartNavigation user={user} currentPage="dashboard" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-8">
+        {/* Debug Panel Toggle */}
+        <div className="fixed bottom-4 right-4 z-50">
+          <button
+            onClick={() => setDebugMode(!debugMode)}
+            className="bg-gray-800 text-gray-300 px-3 py-2 rounded-lg text-xs border border-gray-600 hover:bg-gray-700"
+          >
+            🐛 Debug
+          </button>
+        </div>
+
+        {/* Debug Panel */}
+        {debugMode && (
+          <div className="mb-8 p-4 bg-gray-900/90 border border-gray-600 rounded-lg text-xs font-mono">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-yellow-400 font-semibold">Dashboard Debug Info</h3>
+              <button
+                onClick={() => setDebugMode(false)}
+                className="text-gray-400 hover:text-gray-200"
+              >
+                ×
+              </button>
+            </div>
+            <div className="space-y-2">
+              <div><span className="text-blue-300">Loading:</span> <span className="text-white">{loading.toString()}</span></div>
+              <div><span className="text-blue-300">User:</span> <span className="text-white">{user ? `${user.email} (${user.user_tier})` : 'null'}</span></div>
+              <div><span className="text-blue-300">Rate Limit Error:</span> <span className="text-white">{rateLimitError.toString()}</span></div>
+              {authDebugInfo && (
+                <div className="mt-3 pt-3 border-t border-gray-700">
+                  <div className="text-green-300 mb-2">Auth Debug:</div>
+                  <pre className="text-gray-300 whitespace-pre-wrap text-xs">
+                    {JSON.stringify(authDebugInfo, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
         {/* Upgrade Success Message */}
         {showUpgradeSuccess && (
           <div className="mb-8 p-4 bg-green-900/20 border border-green-500/30 rounded-lg">
