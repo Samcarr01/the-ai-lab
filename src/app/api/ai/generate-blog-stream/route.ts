@@ -809,7 +809,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                 } catch (err: any) {
                   console.error(`❌ Image generation failed for image ${index + 1}:`, {
                     error: err.message,
-                    prompt: enhancedImagePrompt.substring(0, 100) + '...',
+                    prompt: `Image ${index + 1} for "${blogPost.title}"`,
                     index
                   })
                   
