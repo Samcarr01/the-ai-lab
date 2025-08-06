@@ -931,7 +931,19 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
               const filteredImages = generatedImages.filter(img => img !== null)
               
               console.log(`📊 Image generation results: ${generatedImages.length} promises → ${filteredImages.length} successful images`)
-              console.log(`🔍 Expected ${maxImages} images, got ${filteredImages.length} successful images`)
+              console.log(`🔍 User requested ${imageCount} images → maxImages ${maxImages} → got ${filteredImages.length} successful images`)
+              
+              // Validate we got the expected number of images
+              if (filteredImages.length !== maxImages) {
+                console.warn(`⚠️ Image count mismatch: Expected ${maxImages}, got ${filteredImages.length}`)
+                sendProgress({
+                  step: 'image_generation',
+                  status: 'running',
+                  message: `Generated ${filteredImages.length} of ${maxImages} requested images. Some may have failed.`
+                })
+              } else {
+                console.log(`✅ Perfect match: Generated exactly ${maxImages} images as requested`)
+              }
               
               // Store images permanently to prevent expiration (optimized)
               if (filteredImages.length > 0) {
@@ -1095,11 +1107,16 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
                 blogPost.content = contentWithoutPlaceholders
               }
 
+              const actualCount = blogPost.generated_images?.length || 0
+              const successMessage = actualCount === maxImages 
+                ? `✅ Generated exactly ${actualCount} of ${maxImages} requested images`
+                : `⚠️ Generated ${actualCount} of ${maxImages} requested images (${maxImages - actualCount} failed)`
+              
               sendProgress({
                 step: 'image_generation',
                 status: 'completed',
                 duration: Date.now() - imageStart,
-                message: `Generated ${blogPost.generated_images.length} images with proper placement`
+                message: `${successMessage} with proper placement`
               })
             } catch (err) {
               sendProgress({
