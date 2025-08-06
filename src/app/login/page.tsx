@@ -53,6 +53,14 @@ export default function LoginPage() {
         // Clear the URL parameter
         window.history.replaceState({}, '', '/login')
       }
+      
+      // Check for error parameter
+      const errorParam = urlParams.get('error')
+      if (errorParam === 'auth_failed') {
+        setError('❌ Failed to load dashboard. Please try signing in again.')
+        // Clear the URL parameter
+        window.history.replaceState({}, '', '/login')
+      }
     }
   }, [router])
 

@@ -37,11 +37,11 @@ export default function DashboardPage() {
       
       const timeoutId = setTimeout(() => {
         if (!isMounted) return
-        console.error('🚨 Dashboard: Auth loading timeout after 20 seconds - forcing stop')
+        console.error('🚨 Dashboard: Auth loading timeout after 45 seconds - forcing stop')
         setLoading(false)
         // Show error state instead of infinite loading
         setUser(null)
-      }, 20000) // 20 second timeout
+      }, 45000) // 45 second timeout (increased from 20s)
       
       try {
         console.log('🔄 Dashboard: Starting auth check...')
@@ -69,9 +69,16 @@ export default function DashboardPage() {
         }
         
         if (error || !authUser) {
-          console.log('❌ Dashboard: No user found, redirecting to login')
+          console.log('❌ Dashboard: No user found, redirecting to login', { error: error?.message })
+          
+          // If it's a session/auth error, clear auth data first
+          if (error?.message?.includes('session') || error?.message?.includes('Invalid') || error?.message?.includes('expired')) {
+            console.log('🧹 Dashboard: Clearing invalid auth data before redirect...')
+            await auth.clearAuthData()
+          }
+          
           setLoading(false)
-          setTimeout(() => router.push('/login'), 100) // Small delay to prevent immediate redirect
+          setTimeout(() => router.push('/login?error=auth_failed'), 100)
           return
         }
 
