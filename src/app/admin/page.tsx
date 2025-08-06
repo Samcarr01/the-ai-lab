@@ -60,6 +60,7 @@ export default function AdminPage() {
   // Blog preview state
   const [showPreviewModal, setShowPreviewModal] = useState(false)
   const [previewBlog, setPreviewBlog] = useState<any>(null)
+  const [savingBlog, setSavingBlog] = useState(false)
 
   // Tier testing state
   const [switchingTier, setSwitchingTier] = useState(false)
@@ -1006,51 +1007,78 @@ export default function AdminPage() {
                   </button>
                   <button
                     onClick={async () => {
+                      console.log('🔄 Save button clicked - starting save process...')
+                      setSavingBlog(true)
+                      
                       try {
-                        console.log('🔄 Saving blog post...', {
+                        // Enhanced debug logging
+                        console.log('🔍 Debug: previewBlog state:', {
+                          exists: !!previewBlog,
+                          type: typeof previewBlog,
                           title: previewBlog?.title,
                           slug: previewBlog?.slug,
                           category: previewBlog?.category,
                           hasContent: !!previewBlog?.content,
-                          contentLength: previewBlog?.content?.length || 0
+                          contentLength: previewBlog?.content?.length || 0,
+                          metaDescription: previewBlog?.meta_description,
+                          readTime: previewBlog?.read_time,
+                          publishedAt: previewBlog?.published_at,
+                          fullObject: previewBlog
                         })
                         
                         if (!previewBlog) {
-                          throw new Error('No blog post data to save')
+                          throw new Error('❌ No blog post data to save - previewBlog is null/undefined')
                         }
                         
-                        // Validate required fields
-                        if (!previewBlog.title || !previewBlog.content || !previewBlog.slug) {
-                          throw new Error('Missing required fields: title, content, or slug')
+                        // More detailed validation
+                        const missingFields = []
+                        if (!previewBlog.title) missingFields.push('title')
+                        if (!previewBlog.content) missingFields.push('content')
+                        if (!previewBlog.slug) missingFields.push('slug')
+                        
+                        if (missingFields.length > 0) {
+                          throw new Error(`❌ Missing required fields: ${missingFields.join(', ')}`)
                         }
                         
-                        // Clean the blog post data to only include required fields
+                        // Clean the blog post data with better error handling
                         const cleanPost = {
-                          title: previewBlog.title.trim(),
-                          content: previewBlog.content.trim(),
-                          slug: previewBlog.slug.trim(),
+                          title: (previewBlog.title || '').trim(),
+                          content: (previewBlog.content || '').trim(),
+                          slug: (previewBlog.slug || '').trim(),
                           published_at: previewBlog.published_at || new Date().toISOString(),
-                          meta_description: previewBlog.meta_description?.trim() || previewBlog.title.substring(0, 150),
-                          category: previewBlog.category?.trim() || 'AI Tools',
-                          read_time: previewBlog.read_time || Math.ceil(previewBlog.content.split(' ').length / 200)
+                          meta_description: (previewBlog.meta_description || '').trim() || previewBlog.title.substring(0, 150),
+                          category: (previewBlog.category || 'AI Tools').trim(),
+                          read_time: previewBlog.read_time || Math.ceil((previewBlog.content || '').split(' ').length / 200)
                         }
                         
-                        console.log('📝 Cleaned post data:', cleanPost)
+                        console.log('📝 Cleaned post data for saving:', cleanPost)
+                        console.log('🔍 Field validation:', {
+                          titleLength: cleanPost.title.length,
+                          contentLength: cleanPost.content.length,
+                          slugLength: cleanPost.slug.length,
+                          metaDescriptionLength: cleanPost.meta_description.length,
+                          category: cleanPost.category,
+                          readTime: cleanPost.read_time
+                        })
                         
-                        // Show loading state
+                        // Show loading notification
                         showNotification('Info', 'Saving blog post...', 'info')
+                        console.log('💾 Calling blogService.createPost...')
                         
                         const result = await blogService.createPost(cleanPost)
+                        console.log('📤 BlogService response:', result)
                         
                         if (!result) {
-                          throw new Error('Blog service returned null - check Supabase connection')
+                          throw new Error('❌ Blog service returned null - check Supabase connection and database schema')
                         }
                         
-                        console.log('✅ Blog saved successfully:', result)
+                        console.log('✅ Blog saved successfully with ID:', result.id)
                         
                         // Refresh the posts list
+                        console.log('🔄 Refreshing blog posts list...')
                         const posts = await blogService.getAllPosts(true)
                         setBlogPosts(posts)
+                        console.log('📋 Blog posts list updated, total posts:', posts.length)
                         
                         // Close modal and reset state
                         setShowPreviewModal(false)
@@ -1059,14 +1087,30 @@ export default function AdminPage() {
                         setBlogKnowledge('')
                         
                         showNotification('Success', `Blog post "${result.title}" saved successfully!`, 'success')
+                        console.log('🎉 Save process completed successfully!')
                       } catch (error: any) {
-                        console.error('❌ Save error:', error)
+                        console.error('❌ Save error details:', {
+                          message: error.message,
+                          stack: error.stack,
+                          name: error.name,
+                          cause: error.cause
+                        })
                         showNotification('Error', `Save failed: ${error.message}`, 'error')
+                      } finally {
+                        setSavingBlog(false)
                       }
                     }}
-                    className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
+                    disabled={savingBlog}
+                    className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
                   >
-                    Save Blog Post
+                    {savingBlog ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      <span>Save Blog Post</span>
+                    )}
                   </button>
                 </div>
               </div>
@@ -1311,26 +1355,44 @@ export default function AdminPage() {
                   imageCount={imageCount}
                   onComplete={async (blogPost) => {
                     try {
+                      console.log('🎯 Blog generation completed, processing data...')
+                      console.log('📝 Raw blog post data from generation:', {
+                        type: typeof blogPost,
+                        title: blogPost?.title,
+                        hasContent: !!blogPost?.content,
+                        contentLength: blogPost?.content?.length,
+                        category: blogPost?.category,
+                        metaDescription: blogPost?.meta_description,
+                        readTime: blogPost?.read_time,
+                        fullObject: blogPost
+                      })
+                      
                       // Generate slug from title
                       const slug = blogPost.title
                         .toLowerCase()
                         .replace(/[^a-z0-9]+/g, '-')
                         .replace(/^-+|-+$/g, '')
                       
+                      console.log('🔗 Generated slug:', slug)
+                      
                       // Store the blog post for preview
-                      setPreviewBlog({
+                      const previewData = {
                         ...blogPost,
                         slug,
                         published_at: new Date().toISOString()
-                      })
+                      }
+                      
+                      console.log('💾 Setting preview blog data:', previewData)
+                      setPreviewBlog(previewData)
                       
                       // Close generation modal and show preview
+                      console.log('🎨 Switching to preview modal...')
                       setGeneratingBlog(false)
                       setShowBlogModal(false)
                       setShowPreviewModal(true)
                       
                     } catch (error) {
-                      console.error('Error processing blog post:', error)
+                      console.error('❌ Error processing blog post:', error)
                       showNotification('Error', 'Failed to process blog post', 'error')
                       setGeneratingBlog(false)
                     }
