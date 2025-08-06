@@ -78,7 +78,7 @@ const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY
 // Security and cost limits
 const MAX_PROMPT_LENGTH = 500
 const MAX_KNOWLEDGE_BASE_LENGTH = 3000
-const MAX_TOKENS = 4000 // Increased for longer content
+const MAX_TOKENS = 12000 // Required for 2,500-3,000 word blog posts (≈10,000-12,000 tokens)
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 3
 
@@ -379,17 +379,31 @@ COMMON REASONS FOR SHORT CONTENT REJECTION (AVOID THESE):
 - Not including subsections (H3 headings add depth and word count)
 - Summarizing instead of thoroughly explaining concepts
 
-FORMAT YOUR RESPONSE AS JSON:
+🚨 CRITICAL: YOU MUST FORMAT YOUR RESPONSE AS VALID JSON - THE SYSTEM WILL REJECT NON-JSON RESPONSES
+
+FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text before or after):
 {
-  "title": "Specific, SEO-optimized title",
-  "content": "# Title\\n\\n## Introduction\\n\\nEngaging 200+ word intro...\\n\\n## Section 1 (400+ words)\\n\\n### Subsection 1.1\\n\\nDetailed content...\\n\\n### Subsection 1.2\\n\\nMore details...\\n\\n## Section 2 (400+ words)\\n\\n[Continue with 6-8 major sections, each 300-500 words]",
-  "meta_description": "150-160 character description with main keyword", 
-  "category": "Choose one: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, AI Tools, Strategy",
-  "read_time": calculated number (total words / 200)
+  "title": "Professional, SEO-optimized title (45-60 characters)",
+  "content": "## Introduction\\n\\nComprehensive 250+ word introduction with hook, value proposition, and detailed outline of what readers will learn...\\n\\n## What is [Topic]? (400+ words)\\n\\nDetailed definition, background, context, and importance...\\n\\n### Key Components\\n\\nSpecific subsection content...\\n\\n## Why [Topic] Matters Now (350+ words)\\n\\nCurrent trends, benefits, problems solved...\\n\\n## Complete Step-by-Step Guide (500+ words)\\n\\nActionable implementation steps...\\n\\n## [Continue with 6 more major sections]\\n\\n## Conclusion\\n\\nComprehensive 250+ word summary with clear call-to-action...",
+  "meta_description": "Compelling 150-160 character description with primary keyword", 
+  "category": "Business Planning",
+  "read_time": 15
 }
 
-🚨 FINAL REMINDER: Your content MUST be 2,500-3,000 words minimum. Count carefully before submitting!
-IMPORTANT: Include ACTUAL external links to real websites and proper internal links in the markdown format shown above.`
+⚠️ JSON FORMATTING REQUIREMENTS:
+- Start response with { and end with }
+- Escape all quotes in content with \\"
+- Escape all newlines in content with \\n  
+- No text before the opening { or after the closing }
+- Ensure content field contains 2,500+ words
+- Double-check JSON syntax is valid before submitting
+
+🚨 FINAL VALIDATION CHECKLIST:
+✓ Response starts with { and ends with }
+✓ All quotes properly escaped with \\"
+✓ Content field contains 2,500+ words
+✓ Valid JSON syntax (test parse before submitting)
+✓ Include ACTUAL external links and internal links`
 
           // Choose model and API endpoint
           let modelToUse, apiEndpoint, apiKey
@@ -443,6 +457,13 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
 
           if (!response.ok) {
             const errorData = await response.text()
+            console.error(`❌ API Error ${response.status}:`, errorData)
+            console.error('🔍 Request details:', {
+              endpoint: apiEndpoint,
+              model: modelToUse,
+              maxTokens: MAX_TOKENS,
+              promptLength: systemMessage.length + prompt.length
+            })
             throw new Error(`API error: ${response.status} - ${errorData}`)
           }
 
@@ -611,9 +632,17 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                   // Remove citation-style references like [1], [2], etc.
                   .replace(/\[\d+\]/g, '');
                 
-                // Remove duplicate title if it exists at the beginning of content
+                // Remove duplicate title if it exists at the beginning of content (H1 format)
                 if (blogPost.title && blogPost.content.startsWith(`# ${blogPost.title}`)) {
                   blogPost.content = blogPost.content.replace(`# ${blogPost.title}\n\n`, '');
+                }
+                
+                // Also check for title appearing as first H2 heading
+                const titleWords = blogPost.title.split(' ')
+                const firstFewWords = titleWords.slice(0, 3).join(' ')
+                if (blogPost.content.startsWith(`## ${firstFewWords}`)) {
+                  const firstLine = blogPost.content.split('\n')[0]
+                  blogPost.content = blogPost.content.replace(`${firstLine}\n\n`, '');
                 }
               }
               
@@ -631,17 +660,34 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               throw new Error('No JSON found in response');
             }
           } catch (parseError) {
-            console.error('Failed to parse blog JSON:', parseError);
-            console.error('Raw content preview:', accumulatedContent.slice(0, 500));
+            console.error('❌ Failed to parse blog JSON:', parseError);
+            console.error('📋 Full raw content received:', accumulatedContent);
+            console.error('📊 Raw content length:', accumulatedContent.length);
+            console.error('🔍 Content starts with:', accumulatedContent.slice(0, 200));
+            console.error('🔍 Content ends with:', accumulatedContent.slice(-200));
             
-            // Create a fallback blog post
+            // Try to extract title from raw content as fallback
+            let fallbackTitle = `${prompt.slice(0, 60)}...`
+            const titleMatch = accumulatedContent.match(/title["\s]*:["\s]*([^"]+)/i)
+            if (titleMatch) {
+              fallbackTitle = titleMatch[1].slice(0, 80)
+            }
+            
+            // Create a fallback blog post with more informative error
             blogPost = {
-              title: `${prompt.slice(0, 60)}...`,
-              content: `# ${prompt}\n\nWe apologize, but there was an error generating this blog post. Please try again.`,
+              title: fallbackTitle,
+              content: `# ${fallbackTitle}\n\n**Note:** There was an issue with content generation. Raw response received but could not be parsed as JSON.\n\nContent length received: ${accumulatedContent.length} characters\n\nPlease try again with a different prompt or check the system logs for details.`,
               meta_description: `Learn about ${prompt}. Expert insights and strategies.`.slice(0, 160),
               category: 'AI Tools',
-              read_time: 5
+              read_time: 2
             };
+            
+            // Send additional debug info
+            sendProgress({
+              step: 'content_generation',
+              status: 'error',
+              message: `JSON parsing failed. Received ${accumulatedContent.length} chars but couldn't parse as JSON.`
+            })
           }
 
           const finalWordCount = blogPost.content?.split(' ').length || 0
