@@ -647,6 +647,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
               }
               
               console.log(`🎨 Created ${imagePrompts.length} image prompts for ${maxImages} requested images:`, imagePrompts)
+              console.log(`🔍 Debug imageCount flow: user selected ${imageCount} → maxImages ${maxImages} → prompts created ${imagePrompts.length}`)
 
               sendProgress({
                 step: 'image_generation',
@@ -774,7 +775,7 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                         prompt: enhancedImagePrompt,
                         size: '1792x1024', // 16:9 widescreen aspect ratio perfect for blog hero images
                         quality: 'hd', // Maximum quality for crisp, detailed images
-                        style: 'natural', // Photorealistic style for professional appearance
+                        style: 'vivid', // More detailed and creative style
                         response_format: 'url', // Ensure we get direct URLs
                         n: 1
                       })
@@ -805,14 +806,29 @@ IMPORTANT: Include ACTUAL external links to real websites and proper internal li
                     console.error(`❌ Image generation failed: ${imageResponse.status} - ${errorText}`)
                   }
                   return null
-                } catch (err) {
-                  console.log(`Image generation failed for image ${index + 1}:`, err)
+                } catch (err: any) {
+                  console.error(`❌ Image generation failed for image ${index + 1}:`, {
+                    error: err.message,
+                    prompt: enhancedImagePrompt.substring(0, 100) + '...',
+                    index
+                  })
+                  
+                  // Send progress update for failed image
+                  sendProgress({
+                    step: 'image_generation',
+                    status: 'running',
+                    message: `Image ${index + 1} failed: ${err.message}. Continuing with remaining images...`
+                  })
+                  
                   return null
                 }
               })
 
               const generatedImages = await Promise.all(imagePromises)
               const filteredImages = generatedImages.filter(img => img !== null)
+              
+              console.log(`📊 Image generation results: ${generatedImages.length} promises → ${filteredImages.length} successful images`)
+              console.log(`🔍 Expected ${maxImages} images, got ${filteredImages.length} successful images`)
               
               // Store images permanently to prevent expiration (optimized)
               if (filteredImages.length > 0) {

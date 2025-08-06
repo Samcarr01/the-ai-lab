@@ -1007,36 +1007,61 @@ export default function AdminPage() {
                   <button
                     onClick={async () => {
                       try {
-                        console.log('Saving blog post...', previewBlog)
+                        console.log('🔄 Saving blog post...', {
+                          title: previewBlog?.title,
+                          slug: previewBlog?.slug,
+                          category: previewBlog?.category,
+                          hasContent: !!previewBlog?.content,
+                          contentLength: previewBlog?.content?.length || 0
+                        })
+                        
+                        if (!previewBlog) {
+                          throw new Error('No blog post data to save')
+                        }
+                        
+                        // Validate required fields
+                        if (!previewBlog.title || !previewBlog.content || !previewBlog.slug) {
+                          throw new Error('Missing required fields: title, content, or slug')
+                        }
                         
                         // Clean the blog post data to only include required fields
                         const cleanPost = {
-                          title: previewBlog.title,
-                          content: previewBlog.content,
-                          slug: previewBlog.slug,
-                          published_at: previewBlog.published_at,
-                          meta_description: previewBlog.meta_description,
-                          category: previewBlog.category,
-                          read_time: previewBlog.read_time
+                          title: previewBlog.title.trim(),
+                          content: previewBlog.content.trim(),
+                          slug: previewBlog.slug.trim(),
+                          published_at: previewBlog.published_at || new Date().toISOString(),
+                          meta_description: previewBlog.meta_description?.trim() || previewBlog.title.substring(0, 150),
+                          category: previewBlog.category?.trim() || 'AI Tools',
+                          read_time: previewBlog.read_time || Math.ceil(previewBlog.content.split(' ').length / 200)
                         }
+                        
+                        console.log('📝 Cleaned post data:', cleanPost)
+                        
+                        // Show loading state
+                        showNotification('Info', 'Saving blog post...', 'info')
                         
                         const result = await blogService.createPost(cleanPost)
                         
                         if (!result) {
-                          throw new Error('Failed to save blog post - check console for details')
+                          throw new Error('Blog service returned null - check Supabase connection')
                         }
                         
-                        console.log('Blog saved, refreshing posts...')
+                        console.log('✅ Blog saved successfully:', result)
+                        
+                        // Refresh the posts list
                         const posts = await blogService.getAllPosts(true)
                         setBlogPosts(posts)
+                        
+                        // Close modal and reset state
                         setShowPreviewModal(false)
                         setPreviewBlog(null)
                         setBlogPrompt('')
                         setBlogKnowledge('')
-                        showNotification('Success', 'Blog post saved successfully!', 'success')
-                      } catch (error) {
-                        console.error('Save error:', error)
-                        showNotification('Error', error instanceof Error ? error.message : 'Failed to save blog post', 'error')
+                        
+                        showNotification('Success', `Blog post "${result.title}" saved successfully!`, 'success')
+                      } catch (error: any) {
+                        console.error('❌ Save error:', error)
+                        showNotification('Error', `Save failed: ${error.message}`, 'error')
                       }
                     }}
                     className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all"
