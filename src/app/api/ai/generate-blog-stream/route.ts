@@ -407,7 +407,7 @@ COMMON REASONS FOR SHORT CONTENT REJECTION (AVOID THESE):
 ⚠️ CRITICAL JSON FORMAT REQUIREMENTS:
 - Your response must be ONLY JSON - no explanatory text, markdown, or code blocks
 - Start immediately with { and end with } 
-- Do not wrap in ```json code blocks
+- Do not wrap in \`\`\`json code blocks
 - Do not add any text before or after the JSON object
 - This is a JSON-only API endpoint - non-JSON responses will be rejected
 
@@ -642,9 +642,9 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
             
             // Advanced content cleaning for various AI response formats
             cleanedContent = cleanedContent
-              .replace(/^```json\s*/i, '')     // Remove starting ```json
-              .replace(/\s*```\s*$/i, '')      // Remove ending ```
-              .replace(/^```\s*/i, '')         // Remove starting ```
+              .replace(/^\`\`\`json\s*/i, '')     // Remove starting ```json
+              .replace(/\s*\`\`\`\s*$/i, '')      // Remove ending ```
+              .replace(/^\`\`\`\s*/i, '')         // Remove starting ```
               .replace(/^json\s*/i, '')        // Remove starting "json"
               .replace(/^Here is.*?:\s*/i, '') // Remove "Here is the JSON:" type prefixes
               .replace(/^The JSON.*?:\s*/i, '') // Remove "The JSON response is:" type prefixes
@@ -673,7 +673,7 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
               console.log('✅ Method 1: Found JSON match')
             } else {
               // Method 2: Try to extract from markdown code blocks
-              const codeBlockMatch = cleanedContent.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/i);
+              const codeBlockMatch = cleanedContent.match(/\`\`\`(?:json)?\s*(\{[\s\S]*\})\s*\`\`\`/i);
               if (codeBlockMatch) {
                 jsonString = codeBlockMatch[1];
                 console.log('✅ Method 2: Found JSON in code block')
