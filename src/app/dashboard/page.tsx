@@ -77,10 +77,19 @@ export default function DashboardPage() {
         
         // Handle auth errors
         if (error || !authUser) {
-          console.log('❌ Dashboard: No valid user, redirecting to login', { error: error?.message })
+          console.log('❌ Dashboard: No valid user, handling error', { error: error?.message })
           
-          // Clear invalid auth data
-          if (error?.message?.includes('Refresh Token') || error?.message?.includes('Invalid') || error?.message?.includes('expired')) {
+          // Handle different error types
+          if (error?.message?.includes('Network error') || error?.message?.includes('timeout')) {
+            console.log('🌐 Dashboard: Network/timeout error - staying on dashboard with retry option')
+            if (!isMounted) return
+            setLoading(false)
+            setRateLimitError(true) // Use existing error state for network issues
+            return
+          }
+          
+          // Clear invalid auth data for auth-related errors
+          if (error?.message?.includes('Refresh Token') || error?.message?.includes('Invalid') || error?.message?.includes('expired') || error?.message?.includes('permission')) {
             console.log('🧹 Dashboard: Clearing invalid auth data...')
             await auth.clearAuthData()
           }
@@ -359,29 +368,29 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Rate Limit Error Message */}
+        {/* Network/Connection Error Message */}
         {rateLimitError && (
-          <div className="mb-8 p-4 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
+          <div className="mb-8 p-4 bg-orange-900/20 border border-orange-500/30 rounded-lg">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <span className="text-2xl">⚠️</span>
+                <span className="text-2xl">🌐</span>
                 <div>
-                  <h3 className="text-lg font-semibold text-yellow-300">System Busy</h3>
-                  <p className="text-sm text-yellow-200">
-                    We're experiencing high traffic. Please wait a moment and refresh the page.
+                  <h3 className="text-lg font-semibold text-orange-300">Connection Issues</h3>
+                  <p className="text-sm text-orange-200">
+                    There seems to be a connection issue. You can try refreshing or continue browsing offline features.
                   </p>
                 </div>
               </div>
               <div className="flex space-x-2">
                 <button
                   onClick={() => window.location.reload()}
-                  className="px-3 py-1 bg-yellow-600 text-white rounded text-sm hover:bg-yellow-700"
+                  className="px-3 py-1 bg-orange-600 text-white rounded text-sm hover:bg-orange-700"
                 >
                   Refresh
                 </button>
                 <button
                   onClick={() => setRateLimitError(false)}
-                  className="text-yellow-300 hover:text-yellow-100 text-xl"
+                  className="text-orange-300 hover:text-orange-100 text-xl"
                 >
                   ×
                 </button>

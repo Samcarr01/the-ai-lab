@@ -180,29 +180,56 @@ export const auth = {
     const supabase = createClient()
     
     try {
-      // Add timeout to prevent hanging requests
-      const authPromise = supabase.auth.getUser()
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Auth request timeout')), 8000)
-      )
+      // First try to get the session from local storage (faster)
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
       
-      const { data: { user }, error } = await Promise.race([authPromise, timeoutPromise]) as any
-      
-      // If we get a refresh token error, clear the session
-      if (error && (error.message?.includes('Refresh Token') || error.message?.includes('Invalid Refresh'))) {
-        console.log('🔄 Auth: Invalid refresh token detected, clearing session...')
-        await this.signOut()
-        return { user: null, error }
+      if (sessionError) {
+        console.log('🔄 Auth: Session error, clearing auth:', sessionError.message)
+        await this.clearAuthData()
+        return { user: null, error: sessionError }
       }
       
-      return { user, error }
+      // If no session, return null immediately (no need to make more calls)
+      if (!session || !session.user) {
+        console.log('🔄 Auth: No session found')
+        return { user: null, error: null }
+      }
+      
+      // Check if session is expired
+      if (session.expires_at && session.expires_at * 1000 < Date.now()) {
+        console.log('🔄 Auth: Session expired, clearing auth')
+        await this.clearAuthData()
+        return { user: null, error: { message: 'Session expired' } }
+      }
+      
+      // Session is valid, return the user
+      console.log('✅ Auth: Valid session found')
+      return { user: session.user, error: null }
+      
     } catch (err: any) {
       console.error('❌ Auth: Error getting user:', err)
       
-      // Check if it's a timeout
-      if (err.message?.includes('timeout')) {
-        console.error('🚨 Auth: Request timeout - returning null user')
-        return { user: null, error: { message: 'Authentication timeout' } }
+      // Check if it's a permission or network error
+      if (err.message?.includes('permission') || err.message?.includes('403') || err.message?.includes('401')) {
+        console.error('🚨 Auth: Permission error - clearing auth data')
+        await this.clearAuthData()
+        return { user: null, error: { message: 'Authentication expired. Please log in again.' } }
+      }
+      
+      // Check if it's a network/timeout error
+      if (err.message?.includes('timeout') || err.message?.includes('network') || err.message?.includes('fetch')) {
+        console.error('🚨 Auth: Network error - using cached auth if available')
+        // Try to use cached session data as fallback
+        try {
+          const { data: { session } } = await supabase.auth.getSession()
+          if (session?.user) {
+            console.log('✅ Auth: Using cached session as fallback')
+            return { user: session.user, error: null }
+          }
+        } catch {
+          // Ignore cache errors
+        }
+        return { user: null, error: { message: 'Network error. Please check your connection and try again.' } }
       }
       
       // Check if it's a 429 rate limit error
