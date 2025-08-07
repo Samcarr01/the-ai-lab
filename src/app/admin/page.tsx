@@ -1933,15 +1933,20 @@ export default function AdminPage() {
                   <div className="space-y-3">
                     {/* Current Image Preview */}
                     {editingTool.image_url && (
-                      <div className="flex items-center space-x-3">
-                        <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center overflow-hidden">
-                          <img 
-                            src={editingTool.image_url} 
-                            alt={editingTool.title}
-                            className="max-w-full max-h-full object-contain"
-                          />
+                      <div className="flex items-center space-x-4">
+                        <div className="relative">
+                          <div className="w-24 h-24 bg-gradient-to-br from-white to-gray-100 rounded-2xl p-2 flex items-center justify-center shadow-lg border-2 border-purple-200">
+                            <img 
+                              src={editingTool.image_url} 
+                              alt={editingTool.title}
+                              className="w-20 h-20 object-contain rounded-xl"
+                            />
+                          </div>
                         </div>
-                        <span className="text-sm text-gray-400">Current image</span>
+                        <div>
+                          <span className="text-sm font-medium text-gray-300">Current image</span>
+                          <p className="text-xs text-gray-500 mt-1">This image will be replaced if you upload a new one</p>
+                        </div>
                       </div>
                     )}
                     
@@ -1954,21 +1959,30 @@ export default function AdminPage() {
                         className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-purple-600 file:text-white hover:file:bg-purple-700"
                       />
                       <p className="text-xs text-gray-400 mt-1">
-                        Upload a new image to replace the current one (recommended: 200x200px)
+                        Upload a new image to replace the current one (recommended: 400x400px, PNG/JPG, max 5MB)
                       </p>
                     </div>
 
                     {/* New Image Preview */}
                     {editingImage && (
-                      <div className="flex items-center space-x-3">
-                        <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center overflow-hidden">
-                          <img 
-                            src={URL.createObjectURL(editingImage)} 
-                            alt="New preview"
-                            className="max-w-full max-h-full object-contain"
-                          />
+                      <div className="flex items-center space-x-4 p-3 bg-green-900/20 rounded-lg border border-green-500/30">
+                        <div className="relative">
+                          <div className="w-24 h-24 bg-gradient-to-br from-white to-gray-100 rounded-2xl p-2 flex items-center justify-center shadow-lg border-2 border-green-400">
+                            <img 
+                              src={URL.createObjectURL(editingImage)} 
+                              alt="New preview"
+                              className="w-20 h-20 object-contain rounded-xl"
+                            />
+                          </div>
+                          <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                            <span className="text-white text-xs font-bold">✓</span>
+                          </div>
                         </div>
-                        <span className="text-sm text-green-400">New image (will replace current)</span>
+                        <div>
+                          <span className="text-sm font-medium text-green-400">New image ready</span>
+                          <p className="text-xs text-gray-400 mt-1">This will replace the current image when you save</p>
+                          <p className="text-xs text-gray-500 mt-1">Size: {Math.round(editingImage.size / 1024)}KB</p>
+                        </div>
                       </div>
                     )}
                   </div>

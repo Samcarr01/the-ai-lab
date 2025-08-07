@@ -51,7 +51,7 @@ export default function ToolkitPage() {
             newSet.add(index)
             return newSet
           })
-        }, index * 150)
+        }, index * 200)
       })
       
     } catch (error) {
@@ -106,10 +106,10 @@ export default function ToolkitPage() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="flex flex-col items-center space-y-4">
             <div className="relative">
-              <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
-              <div className="w-16 h-16 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin absolute top-0 left-0" style={{animationDirection: 'reverse', animationDuration: '1s'}}></div>
+              <div className="w-20 h-20 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+              <div className="w-20 h-20 border-4 border-pink-200 border-t-pink-600 rounded-full animate-spin absolute top-0 left-0" style={{animationDirection: 'reverse', animationDuration: '1s'}}></div>
             </div>
-            <p className="text-white font-medium">Loading our amazing toolkit...</p>
+            <p className="text-white font-medium text-lg">Loading our amazing toolkit...</p>
           </div>
         </div>
       </DarkThemeBackground>
@@ -123,138 +123,146 @@ export default function ToolkitPage() {
 
     return (
       <div 
-        className={`relative transition-all duration-700 transform-gpu perspective-1000 ${
-          isAnimated ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+        className={`tool-card-container transition-all duration-1000 transform ${
+          isAnimated ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-12 opacity-0 scale-95'
         }`}
         style={{
+          perspective: '1200px',
           transformStyle: 'preserve-3d',
-          perspective: '1000px',
         }}
       >
         <div
-          className={`relative w-full h-80 transition-all duration-700 transform-gpu cursor-pointer group ${
-            isFlipped ? 'rotate-y-180' : ''
+          className={`tool-card w-full h-96 relative cursor-pointer transition-transform duration-700 ease-in-out ${
+            isFlipped ? 'flipped' : ''
           }`}
           style={{
             transformStyle: 'preserve-3d',
           }}
           onClick={() => toggleCard(tool.id)}
         >
-          {/* FRONT SIDE - Hero Display */}
-          <div 
-            className={`absolute inset-0 w-full h-full rounded-3xl backface-hidden ${
-              isFeatured 
-                ? 'bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-2 border-purple-400/30' 
-                : 'bg-slate-800/60 border border-slate-700/50'
-            } backdrop-blur-lg shadow-2xl group-hover:shadow-purple-500/20 transition-all duration-500 overflow-hidden`}
-            style={{
-              backfaceVisibility: 'hidden',
-            }}
-          >
-            {/* Floating particles effect */}
+          {/* FRONT SIDE */}
+          <div className={`card-face card-front absolute inset-0 w-full h-full rounded-3xl overflow-hidden ${
+            isFeatured 
+              ? 'bg-gradient-to-br from-purple-600/30 to-pink-600/30 border-2 border-yellow-400/50 shadow-2xl shadow-yellow-400/20' 
+              : 'bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-600/50 shadow-2xl'
+          } backdrop-blur-xl`}>
+            
+            {/* Floating background effects */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              {[...Array(6)].map((_, i) => (
+              {[...Array(8)].map((_, i) => (
                 <div
                   key={i}
-                  className={`absolute w-1 h-1 bg-purple-400/30 rounded-full animate-float-${i % 3 + 1}`}
+                  className={`absolute w-1 h-1 bg-purple-400/30 rounded-full animate-float`}
                   style={{
-                    left: `${20 + i * 15}%`,
-                    top: `${10 + i * 12}%`,
-                    animationDelay: `${i * 0.5}s`,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${i * 0.3}s`,
+                    animationDuration: `${3 + Math.random() * 2}s`,
                   }}
                 />
               ))}
             </div>
 
+            {/* Featured Badge */}
+            {isFeatured && (
+              <div className="absolute top-4 right-4 z-10">
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-xl animate-pulse">
+                  <span className="text-white text-lg font-bold">⭐</span>
+                </div>
+              </div>
+            )}
+
             <div className="relative p-8 h-full flex flex-col items-center justify-center text-center">
-              {/* Large Logo */}
+              {/* PERFECTLY SIZED Image (only if uploaded) */}
               {tool.image_url && (
-                <div className="mb-6 relative">
-                  <div className={`w-20 h-20 rounded-2xl flex items-center justify-center shadow-2xl transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-3 ${
-                    isFeatured ? 'bg-gradient-to-br from-white to-purple-50' : 'bg-white'
-                  }`}>
+                <div className="mb-8 relative group">
+                  {/* Glowing border effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-3xl blur-md opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative w-40 h-40 rounded-3xl bg-gradient-to-br from-white via-gray-50 to-gray-100 shadow-2xl p-4 flex items-center justify-center transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-3 border-4 border-white/20">
                     <img 
                       src={tool.image_url} 
                       alt={tool.title}
-                      className="w-14 h-14 object-contain"
+                      className="w-32 h-32 object-contain rounded-2xl drop-shadow-lg"
+                      style={{
+                        filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))'
+                      }}
                     />
                   </div>
-                  {isFeatured && (
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                      <span className="text-white text-xs">⭐</span>
-                    </div>
-                  )}
                 </div>
               )}
 
-              {/* Big Title */}
-              <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-pink-400 group-hover:bg-clip-text transition-all duration-300">
+              {/* BIG BOLD Title */}
+              <h3 className="text-3xl font-black text-white mb-4 leading-tight max-w-xs">
                 {tool.title}
               </h3>
 
               {/* Category Badge */}
-              <div className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium mb-4 bg-gradient-to-r ${categoryInfo.color} text-white shadow-lg`}>
-                <span className="mr-2 text-base">{categoryInfo.emoji}</span>
+              <div className={`inline-flex items-center px-6 py-3 rounded-full text-sm font-bold mb-6 bg-gradient-to-r ${categoryInfo.color} text-white shadow-xl transform hover:scale-105 transition-all duration-300`}>
+                <span className="mr-2 text-lg">{categoryInfo.emoji}</span>
                 {tool.category}
               </div>
 
-              {/* Hook Line */}
-              <p className="text-gray-300 text-lg mb-6 max-w-xs leading-relaxed">
-                {tool.description.slice(0, 80)}...
+              {/* Compelling Hook */}
+              <p className="text-gray-200 text-lg mb-8 max-w-sm leading-relaxed font-medium">
+                {tool.description.slice(0, 100)}...
               </p>
 
-              {/* Discover Button */}
-              <button className="group/btn relative px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-semibold shadow-xl hover:shadow-2xl hover:shadow-purple-500/25 transform hover:scale-105 transition-all duration-300 overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative flex items-center space-x-2">
-                  <span>✨ Discover Why</span>
-                  <div className="transform group-hover/btn:translate-x-1 transition-transform duration-300">→</div>
-                </div>
-              </button>
+              {/* Epic Discover Button */}
+              <div className="relative group">
+                <button className="relative px-10 py-5 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white rounded-2xl font-bold text-lg shadow-2xl transform transition-all duration-300 hover:scale-110 hover:shadow-purple-500/50 animate-gradient-x overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="relative flex items-center space-x-3">
+                    <span className="text-2xl">✨</span>
+                    <span>Discover Magic</span>
+                    <div className="transform group-hover:translate-x-2 transition-transform duration-300 text-xl">→</div>
+                  </div>
+                </button>
+              </div>
 
-              <p className="text-xs text-gray-400 mt-3 opacity-70">Click to reveal the details</p>
+              <p className="text-xs text-gray-400 mt-4 opacity-80 animate-pulse">Click to reveal the secrets</p>
             </div>
           </div>
 
-          {/* BACK SIDE - Detailed Information */}
-          <div 
-            className="absolute inset-0 w-full h-full rounded-3xl bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-lg border border-purple-400/30 shadow-2xl rotate-y-180 backface-hidden overflow-hidden"
-            style={{
-              backfaceVisibility: 'hidden',
-            }}
-          >
-            {/* Animated background pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 via-transparent to-pink-400/20"></div>
-              {[...Array(3)].map((_, i) => (
+          {/* BACK SIDE */}
+          <div className="card-face card-back absolute inset-0 w-full h-full rounded-3xl bg-gradient-to-br from-slate-800/95 to-slate-900/95 backdrop-blur-xl border border-purple-400/40 shadow-2xl overflow-hidden">
+            
+            {/* Animated background */}
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-transparent to-pink-400/30"></div>
+              {[...Array(4)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute w-32 h-32 border border-purple-400/20 rounded-full animate-pulse"
+                  className="absolute w-40 h-40 border border-purple-400/20 rounded-full animate-pulse"
                   style={{
-                    right: `${-10 + i * -15}%`,
-                    top: `${10 + i * 20}%`,
-                    animationDelay: `${i * 0.7}s`,
+                    right: `${-20 + i * -25}%`,
+                    top: `${20 + i * 15}%`,
+                    animationDelay: `${i * 0.8}s`,
                   }}
                 />
               ))}
             </div>
 
-            <div className="relative p-6 h-full flex flex-col">
+            <div className="relative p-8 h-full flex flex-col">
               {/* Back Header */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  {tool.image_url && (
-                    <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-4">
+                  {tool.image_url ? (
+                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-lg">
                       <img 
                         src={tool.image_url} 
                         alt={tool.title}
-                        className="w-8 h-8 object-contain"
+                        className="w-12 h-12 object-contain"
                       />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                      <span className="text-2xl">{categoryInfo.emoji}</span>
                     </div>
                   )}
                   <div>
-                    <h4 className="text-lg font-semibold text-white">{tool.title}</h4>
-                    <p className="text-sm text-purple-300">{tool.category}</p>
+                    <h4 className="text-xl font-bold text-white">{tool.title}</h4>
+                    <p className="text-purple-300 font-medium">{tool.category}</p>
                   </div>
                 </div>
                 <button 
@@ -262,63 +270,63 @@ export default function ToolkitPage() {
                     e.stopPropagation()
                     toggleCard(tool.id)
                   }}
-                  className="w-8 h-8 rounded-full bg-slate-700/50 text-gray-400 hover:text-white hover:bg-slate-600/50 transition-all duration-200 flex items-center justify-center"
+                  className="w-10 h-10 rounded-full bg-slate-700/50 text-gray-300 hover:text-white hover:bg-slate-600/80 transition-all duration-200 flex items-center justify-center text-lg font-bold"
                 >
                   ✕
                 </button>
               </div>
 
-              {/* Detailed Description */}
-              <div className="flex-1 space-y-4">
+              {/* Detailed Content */}
+              <div className="flex-1 space-y-6">
                 <div>
-                  <h5 className="text-sm font-semibold text-purple-300 mb-2 flex items-center">
-                    <span className="mr-2">🎯</span>
-                    Why This Tool Rocks
+                  <h5 className="text-lg font-bold text-purple-300 mb-3 flex items-center">
+                    <span className="mr-2 text-xl">🎯</span>
+                    Why This Tool is Pure Gold
                   </h5>
-                  <p className="text-gray-100 text-sm leading-relaxed">
+                  <p className="text-gray-100 leading-relaxed">
                     {tool.description}
                   </p>
                 </div>
 
                 <div>
-                  <h5 className="text-sm font-semibold text-pink-300 mb-2 flex items-center">
-                    <span className="mr-2">⚡</span>
-                    Perfect For
+                  <h5 className="text-lg font-bold text-pink-300 mb-3 flex items-center">
+                    <span className="mr-2 text-xl">⚡</span>
+                    Perfect For You If
                   </h5>
-                  <ul className="text-gray-200 text-sm space-y-1">
-                    <li className="flex items-center">
-                      <span className="mr-2 text-green-400">•</span>
-                      Teams looking to {tool.category.toLowerCase()} efficiently
+                  <ul className="text-gray-200 space-y-2">
+                    <li className="flex items-start">
+                      <span className="mr-3 text-green-400 text-lg mt-1">•</span>
+                      <span>You want to {tool.category.toLowerCase()} like a pro</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="mr-2 text-green-400">•</span>
-                      Professionals who value quality tools
+                    <li className="flex items-start">
+                      <span className="mr-3 text-green-400 text-lg mt-1">•</span>
+                      <span>You value tools that actually work</span>
                     </li>
-                    <li className="flex items-center">
-                      <span className="mr-2 text-green-400">•</span>
-                      Anyone wanting to level up their workflow
+                    <li className="flex items-start">
+                      <span className="mr-3 text-green-400 text-lg mt-1">•</span>
+                      <span>You want to level up your entire workflow</span>
                     </li>
                   </ul>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex space-x-3 pt-4 border-t border-slate-700">
+              <div className="flex space-x-4 pt-6 border-t border-slate-700">
                 <a
                   href={tool.affiliate_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
+                  className="flex-1 text-center bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  🚀 Get {tool.title.split(' ')[0]}
+                  🚀 Get {tool.title.split(' ')[0]} Now
                 </a>
                 <button 
                   onClick={(e) => {
                     e.stopPropagation()
                     toggleCard(tool.id)
                   }}
-                  className="px-4 py-3 bg-slate-700/50 text-gray-300 rounded-xl hover:bg-slate-600/50 hover:text-white transition-all duration-200 text-sm"
+                  className="px-6 py-4 bg-slate-700/50 text-gray-300 rounded-2xl hover:bg-slate-600/70 hover:text-white transition-all duration-300 font-medium"
                 >
                   ← Back
                 </button>
@@ -334,57 +342,56 @@ export default function ToolkitPage() {
     <DarkThemeBackground>
       <SmartNavigation user={user} currentPage="toolkit" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-4 sm:pb-8">
-        {/* Epic Header Section */}
-        <div className="text-center mb-12 sm:mb-16 relative overflow-hidden">
-          {/* Animated background elements */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 pb-8">
+        {/* EPIC Header */}
+        <div className="text-center mb-16 relative overflow-hidden">
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {[...Array(8)].map((_, i) => (
+            {[...Array(12)].map((_, i) => (
               <div
                 key={i}
-                className={`absolute w-2 h-2 bg-purple-400/20 rounded-full animate-float-${i % 3 + 1}`}
+                className={`absolute w-3 h-3 bg-purple-400/20 rounded-full animate-float`}
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
-                  animationDelay: `${i * 0.3}s`,
+                  animationDelay: `${i * 0.2}s`,
+                  animationDuration: `${4 + Math.random() * 3}s`,
                 }}
               />
             ))}
           </div>
 
           <div className="relative">
-            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-bold text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text mb-4 sm:mb-6 animate-gradient-x">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-transparent bg-gradient-to-r from-purple-400 via-pink-400 via-purple-400 to-pink-400 bg-clip-text mb-6 animate-gradient-x leading-tight">
               Our Toolkit ✨
             </h1>
-            <p className="text-lg sm:text-xl lg:text-2xl text-gray-100 max-w-4xl mx-auto px-2 sm:px-0 leading-relaxed">
-              The <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-semibold">battle-tested tools</span> that power our AI workflows. 
+            <p className="text-xl sm:text-2xl text-gray-100 max-w-4xl mx-auto leading-relaxed font-medium">
+              The <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-bold">battle-tested tools</span> that transformed our business.
               <br className="hidden sm:block" />
-              These aren't just recommendations—they're the exact tools we use daily.
+              These aren't recommendations—they're our <span className="text-yellow-400 font-bold">daily drivers</span>.
             </p>
           </div>
 
-          {/* Floating stats */}
-          <div className="flex justify-center space-x-8 mt-8 text-center">
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/20">
-              <div className="text-2xl font-bold text-white">{tools.length}</div>
-              <div className="text-sm text-gray-300">Curated Tools</div>
-            </div>
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/20">
-              <div className="text-2xl font-bold text-white">{categories.length - 1}</div>
-              <div className="text-sm text-gray-300">Categories</div>
-            </div>
-            <div className="bg-slate-800/60 backdrop-blur-sm rounded-2xl p-4 border border-purple-500/20">
-              <div className="text-2xl font-bold text-white">100%</div>
-              <div className="text-sm text-gray-300">Tested</div>
-            </div>
+          {/* Stats */}
+          <div className="flex justify-center space-x-6 mt-10">
+            {[
+              { number: tools.length, label: 'Curated Tools', icon: '🛠️' },
+              { number: categories.length - 1, label: 'Categories', icon: '📂' },
+              { number: '100%', label: 'Battle-Tested', icon: '⚡' }
+            ].map((stat, i) => (
+              <div key={i} className="bg-slate-800/60 backdrop-blur-xl rounded-3xl p-6 border border-purple-500/30 transform hover:scale-105 transition-all duration-300">
+                <div className="text-3xl mb-2">{stat.icon}</div>
+                <div className="text-2xl font-black text-white">{stat.number}</div>
+                <div className="text-sm text-gray-300 font-medium">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Category Filter */}
         {categories.length > 1 && (
-          <div className="mb-12 sm:mb-16">
-            <div className="bg-slate-800/40 backdrop-blur-lg rounded-3xl p-6 shadow-2xl border border-purple-100/20">
-              <div className="flex flex-wrap justify-center gap-3">
+          <div className="mb-16">
+            <div className="bg-slate-800/40 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-purple-100/30">
+              <div className="flex flex-wrap justify-center gap-4">
                 {categories.map((category) => {
                   const categoryInfo = category === 'All' 
                     ? { emoji: '🎯', color: 'from-purple-600 to-pink-600' }
@@ -394,21 +401,18 @@ export default function ToolkitPage() {
                     <button
                       key={category}
                       onClick={() => setSelectedCategory(category)}
-                      className={`group relative px-6 py-3 rounded-2xl text-sm font-medium transition-all duration-300 transform hover:scale-105 ${
+                      className={`group relative px-8 py-4 rounded-2xl font-bold transition-all duration-300 transform hover:scale-105 ${
                         selectedCategory === category
-                          ? `bg-gradient-to-r ${categoryInfo.color} text-white shadow-2xl scale-105 border-2 border-white/20`
+                          ? `bg-gradient-to-r ${categoryInfo.color} text-white shadow-2xl scale-105 border-2 border-white/30`
                           : 'bg-slate-700/50 text-gray-100 border border-gray-600/50 hover:border-purple-300/60 hover:text-white hover:bg-slate-600/70'
                       } backdrop-blur-sm`}
                     >
-                      <div className="flex items-center space-x-2">
-                        <span className="text-lg transform group-hover:scale-110 transition-transform duration-200">
+                      <div className="flex items-center space-x-3">
+                        <span className="text-xl transform group-hover:scale-125 transition-transform duration-300">
                           {categoryInfo.emoji}
                         </span>
                         <span>{category}</span>
                       </div>
-                      {selectedCategory === category && (
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-white/20 to-white/10 pointer-events-none"></div>
-                      )}
                     </button>
                   )
                 })}
@@ -419,16 +423,16 @@ export default function ToolkitPage() {
 
         {/* Featured Tools */}
         {featuredTools.length > 0 && selectedCategory === 'All' && (
-          <div className="mb-16">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-transparent bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text mb-3 flex items-center justify-center">
-                <span className="text-4xl mr-3 animate-pulse">⭐</span>
-                Essential Powerhouses
-                <span className="text-4xl ml-3 animate-pulse">⭐</span>
+          <div className="mb-20">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-black text-transparent bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text mb-4 flex items-center justify-center">
+                <span className="text-5xl mr-4 animate-pulse">⭐</span>
+                Game Changers
+                <span className="text-5xl ml-4 animate-pulse">⭐</span>
               </h2>
-              <p className="text-gray-300 text-lg">Our most impactful tools that transformed how we work</p>
+              <p className="text-xl text-gray-300 font-medium">The tools that completely transformed how we work</p>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredTools.map((tool, index) => (
                 <ToolCard key={tool.id} tool={tool} index={index} isFeatured={true} />
               ))}
@@ -439,21 +443,21 @@ export default function ToolkitPage() {
         {/* All Tools */}
         {(selectedCategory === 'All' ? regularTools : filteredTools).length > 0 && (
           <div>
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-white mb-3 flex items-center justify-center">
-                <span className="text-4xl mr-3">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-black text-white mb-4 flex items-center justify-center">
+                <span className="text-5xl mr-4">
                   {selectedCategory === 'All' ? '🛠️' : getCategoryInfo(selectedCategory).emoji}
                 </span>
-                {selectedCategory === 'All' ? 'Complete Arsenal' : `${selectedCategory} Collection`}
+                {selectedCategory === 'All' ? 'Complete Arsenal' : `${selectedCategory} Mastery`}
               </h2>
-              <p className="text-gray-300 text-lg">
+              <p className="text-xl text-gray-300 font-medium">
                 {selectedCategory === 'All' 
                   ? 'Every tool in our carefully curated collection'
-                  : `Specialized tools for ${selectedCategory.toLowerCase()}`
+                  : `Master ${selectedCategory.toLowerCase()} with these power tools`
                 }
               </p>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {(selectedCategory === 'All' ? regularTools : filteredTools).map((tool, index) => (
                 <ToolCard key={tool.id} tool={tool} index={featuredTools.length + index} />
               ))}
@@ -463,79 +467,83 @@ export default function ToolkitPage() {
 
         {/* Empty State */}
         {filteredTools.length === 0 && (
-          <div className="text-center py-16">
-            <div className="relative">
-              <div className="text-8xl mb-6 animate-bounce">🛠️</div>
-              <h3 className="text-2xl font-semibold text-white mb-3">No tools in this category yet</h3>
-              <p className="text-gray-300 text-lg mb-8">We're constantly adding new tools to our arsenal!</p>
-              <button
-                onClick={() => setSelectedCategory('All')}
-                className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
-              >
-                View All Tools
-              </button>
-            </div>
+          <div className="text-center py-20">
+            <div className="text-9xl mb-8 animate-bounce">🛠️</div>
+            <h3 className="text-3xl font-bold text-white mb-4">No tools in this category yet</h3>
+            <p className="text-xl text-gray-300 mb-8">We're constantly adding new weapons to our arsenal!</p>
+            <button
+              onClick={() => setSelectedCategory('All')}
+              className="px-10 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-bold text-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
+              View All Tools
+            </button>
           </div>
         )}
-
-        {/* Bottom CTA */}
-        <div className="mt-20 text-center">
-          <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm rounded-3xl p-8 border border-purple-100/20 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold text-white mb-4">Found the perfect tool? 🎯</h3>
-            <p className="text-gray-200 mb-6">
-              These tools have saved us hundreds of hours and thousands of dollars. 
-              Each one is hand-picked and battle-tested in real projects.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/contact"
-                className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
-              >
-                💬 Questions? Get in Touch
-              </Link>
-              <Link
-                href="/blog"
-                className="px-8 py-3 bg-slate-700/50 text-white border border-slate-600 rounded-2xl font-semibold hover:bg-slate-600/50 hover:scale-105 transition-all duration-300"
-              >
-                📖 Read Our Workflows
-              </Link>
-            </div>
-          </div>
-        </div>
       </div>
 
-      {/* Custom CSS for animations */}
+      {/* Custom CSS */}
       <style jsx>{`
-        @keyframes float-1 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          25% { transform: translateY(-10px) rotate(90deg); }
-          50% { transform: translateY(-5px) rotate(180deg); }
-          75% { transform: translateY(-15px) rotate(270deg); }
-        }
-        @keyframes float-2 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          33% { transform: translateY(-8px) rotate(120deg); }
-          66% { transform: translateY(-12px) rotate(240deg); }
-        }
-        @keyframes float-3 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        @keyframes gradient-x {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
+        .tool-card-container {
+          perspective: 1200px;
         }
         
-        .animate-float-1 { animation: float-1 6s ease-in-out infinite; }
-        .animate-float-2 { animation: float-2 4s ease-in-out infinite; }
-        .animate-float-3 { animation: float-3 5s ease-in-out infinite; }
+        .tool-card {
+          transform-style: preserve-3d;
+        }
+        
+        .tool-card.flipped {
+          transform: rotateY(180deg);
+        }
+        
+        .card-face {
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+        }
+        
+        .card-front {
+          transform: rotateY(0deg);
+        }
+        
+        .card-back {
+          transform: rotateY(180deg);
+        }
+        
+        @keyframes float {
+          0%, 100% { 
+            transform: translateY(0px) translateX(0px) rotate(0deg); 
+            opacity: 0.3;
+          }
+          25% { 
+            transform: translateY(-15px) translateX(10px) rotate(90deg); 
+            opacity: 0.8;
+          }
+          50% { 
+            transform: translateY(-8px) translateX(-5px) rotate(180deg); 
+            opacity: 0.5;
+          }
+          75% { 
+            transform: translateY(-20px) translateX(-10px) rotate(270deg); 
+            opacity: 0.9;
+          }
+        }
+        
+        @keyframes gradient-x {
+          0%, 100% { 
+            background-position: 0% 50%; 
+          }
+          50% { 
+            background-position: 100% 50%; 
+          }
+        }
+        
+        .animate-float { 
+          animation: float 4s ease-in-out infinite; 
+        }
+        
         .animate-gradient-x { 
           animation: gradient-x 3s ease infinite;
-          background-size: 200% 200%;
+          background-size: 400% 400%;
         }
-        .perspective-1000 { perspective: 1000px; }
-        .backface-hidden { backface-visibility: hidden; }
-        .rotate-y-180 { transform: rotateY(180deg); }
       `}</style>
     </DarkThemeBackground>
   )
