@@ -68,7 +68,7 @@ export default function SignupPage() {
           friendlyError = 'Too many signup attempts. Please wait 10 seconds and try again.'
         }
         setError(friendlyError)
-      } else if (data.user) {
+      } else if (data && data.user) {
         console.log('✅ Signup successful, user created:', {
           userId: data.user.id,
           email: data.user.email,
