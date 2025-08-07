@@ -164,10 +164,10 @@ export const userService = {
           .select('*')
           .eq('id', userId)
         
-        const timeoutPromise = new Promise<{ data: null; error: { message: string } }>((resolve) => {
+        const timeoutPromise = new Promise<{ data: null; error: { message: string; isTimeout: boolean } }>((resolve) => {
           setTimeout(() => {
             console.error('⏰ User: Database query timeout after 4 seconds')
-            resolve({ data: null, error: { message: 'Database query timeout' } })
+            resolve({ data: null, error: { message: 'Database query timeout', isTimeout: true } })
           }, 4000) // 4 second timeout for database queries
         })
         
@@ -185,7 +185,7 @@ export const userService = {
           console.error('❌ Error querying user profile:', queryError)
           
           // Check if it's a timeout error - try cached data
-          if (queryError.message?.includes('timeout')) {
+          if (queryError.message?.includes('timeout') || ('isTimeout' in queryError && queryError.isTimeout)) {
             console.log('⏰ User: Database timeout - checking for cached data...')
             try {
               const cachedData = localStorage.getItem('cached-user-profile')
@@ -203,7 +203,7 @@ export const userService = {
           }
           
           // Check if it's a rate limit error
-          if (queryError.message?.includes('429') || queryError.code === '429') {
+          if (queryError.message?.includes('429') || ('code' in queryError && queryError.code === '429')) {
             console.error('🚨 User: Database rate limit detected - backing off for 2 seconds')
             await new Promise(resolve => setTimeout(resolve, 2000))
             throw new Error('Database rate limit exceeded. Please wait a moment and try again.')
@@ -300,10 +300,10 @@ export const userService = {
         ])
         .select()
       
-      const insertTimeout = new Promise<{ data: null; error: { message: string } }>((resolve) => {
+      const insertTimeout = new Promise<{ data: null; error: { message: string; isTimeout: boolean } }>((resolve) => {
         setTimeout(() => {
           console.error('⏰ User: Profile creation timeout after 5 seconds')
-          resolve({ data: null, error: { message: 'Profile creation timeout' } })
+          resolve({ data: null, error: { message: 'Profile creation timeout', isTimeout: true } })
         }, 5000)
       })
       
@@ -313,7 +313,7 @@ export const userService = {
         console.error('❌ Error creating basic profile:', error)
         
         // Handle timeout errors
-        if (error.message?.includes('timeout')) {
+        if (error.message?.includes('timeout') || ('isTimeout' in error && error.isTimeout)) {
           console.log('⏰ User: Profile creation timed out - checking if profile exists')
           try {
             const { data: timeoutCheckData } = await supabase
@@ -333,7 +333,7 @@ export const userService = {
         }
         
         // Handle duplicate key error (profile already exists)
-        if (error.message?.includes('duplicate') || error.code === '23505') {
+        if (error.message?.includes('duplicate') || ('code' in error && error.code === '23505')) {
           console.log('🔄 Profile already exists due to duplicate, fetching existing profile...')
           try {
             const { data: existingData } = await supabase
