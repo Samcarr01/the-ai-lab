@@ -78,7 +78,7 @@ const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY
 // Security and cost limits
 const MAX_PROMPT_LENGTH = 500
 const MAX_KNOWLEDGE_BASE_LENGTH = 3000
-const MAX_TOKENS = 12000 // Required for 2,500-3,000 word blog posts (≈10,000-12,000 tokens)
+const MAX_TOKENS = 16000 // Increased for longer content generation (≈12,000-16,000 tokens)
 const RATE_LIMIT_WINDOW = 60 * 1000 // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 3
 
@@ -324,23 +324,22 @@ ${includeWebSearch ? `RESEARCH REQUIREMENTS:
 Follow these SEO guidelines:
 ${seoKnowledge}
 
-🚨 CRITICAL LENGTH REQUIREMENTS - CONTENT WILL BE REJECTED IF TOO SHORT:
-1. MINIMUM 2,500 words - ANYTHING SHORTER WILL BE AUTOMATICALLY REJECTED
-2. OPTIMAL RANGE: 2,800-3,200 words for maximum SEO impact
-3. Count your words as you write - use word counting while drafting
-4. If you write less than 2,500 words, the system will throw an error and reject the content
-5. Use multiple detailed examples, case studies, step-by-step guides to reach word count
-6. Include extensive explanations and thorough coverage of ALL aspects of the topic
+📝 CONTENT LENGTH GUIDELINES:
+1. Aim for comprehensive, detailed coverage of the topic
+2. Write as much as needed to thoroughly explain the subject
+3. Include multiple examples, case studies, and practical insights  
+4. Focus on providing value rather than hitting a specific word count
+5. Typical range: 1,200-2,500+ words depending on topic complexity
+6. Quality and usefulness are more important than strict word count
 
-CONTENT DEPTH REQUIREMENTS - ESSENTIAL FOR MEETING WORD COUNT:
-- Write 8-10 major sections (H2 headings) of 300-400 words EACH
-- Add 2-3 detailed subsections (H3) under each H2 section
-- Introduction: 250-300 words (hook + value prop + detailed outline)
-- Conclusion: 200-250 words (summary + actionable takeaways + CTA)
-- Each section must provide detailed explanations, not superficial overviews
-- Include specific examples, code snippets, tool screenshots descriptions
-- Add comparison tables, detailed pro/con lists, comprehensive feature breakdowns
-- Use conversational tone with "you", contractions, and active voice throughout
+CONTENT STRUCTURE GUIDELINES:
+- Write 5-8 well-structured sections (H2 headings) as needed for the topic
+- Add subsections (H3) where they enhance understanding
+- Strong introduction with clear value proposition and overview
+- Practical examples, screenshots, or code snippets where relevant  
+- Conclusion with key takeaways and actionable next steps
+- Use conversational tone with "you", contractions, and active voice
+- Focus on being helpful and informative rather than hitting word targets
 
 LINKING REQUIREMENTS (MUST FOLLOW):
 - Internal links (3-5): Use format [descriptive text](/gpts) or [descriptive text](/documents) or [descriptive text](/blog)
@@ -386,21 +385,10 @@ TABLE FORMATTING (if using tables):
 - Ensure columns align and all rows have same number of cells
 - Keep cell content concise
 
-⚠️ MATHEMATICAL WORD COUNT CHECK - DO THIS CALCULATION BEFORE SUBMITTING:
-Introduction (250 words) + 8 sections (350 words each = 2,800 words) + Conclusion (250 words) = 3,300 total words
-This ensures you meet the 2,500 minimum and achieve optimal SEO length.
-
-🚨 FINAL VALIDATION: COUNT YOUR ACTUAL WORDS - CONTENT UNDER 2,500 WORDS WILL BE AUTOMATICALLY REJECTED BY THE SYSTEM
-
-COMMON REASONS FOR SHORT CONTENT REJECTION (AVOID THESE):
-- Too superficial coverage of topics (need deep, comprehensive explanations)
-- Missing detailed examples and case studies (include specific, real-world examples)
-- Not enough sections (need 8-10 major H2 sections, not 6)
-- Shallow explanations instead of deep dives (explain WHY and HOW, not just WHAT)
-- Missing comparison tables, code examples, step-by-step guides (these add substantial word count)
-- Short introduction and conclusion (need 250+ words each, not 200)
-- Not including subsections (H3 headings add depth and word count)
-- Summarizing instead of thoroughly explaining concepts
+💡 CONTENT QUALITY FOCUS:
+Write comprehensive, valuable content that thoroughly covers the topic.
+Include practical examples, actionable insights, and helpful details.
+Quality and usefulness matter more than strict word count requirements.
 
 🚨 CRITICAL: YOU MUST FORMAT YOUR RESPONSE AS VALID JSON - THE SYSTEM WILL REJECT NON-JSON RESPONSES
 
@@ -462,7 +450,7 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
             ],
             max_tokens: MAX_TOKENS,
             stream: !includeWebSearch, // Perplexity doesn't support streaming
-            temperature: 0.7
+            temperature: 0.8
           }
 
           // Add response format for OpenAI to ensure JSON
@@ -733,15 +721,25 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
                 }
               }
               
-              // ENFORCE CRITICAL WORD COUNT REQUIREMENTS
+              // CHECK WORD COUNT (flexible acceptance)
               const wordCount = blogPost.content?.split(' ').length || 0
-              if (wordCount < 2500) {
-                console.error(`🚨 CONTENT REJECTED: Only ${wordCount} words generated. Minimum requirement: 2,500 words.`)
-                throw new Error(`Content too short: ${wordCount} words. Expected 2000-3000 words.`)
+              console.log(`📊 WORD COUNT ANALYSIS: Generated ${wordCount} words`)
+              console.log(`📝 Content preview (first 300 chars): ${blogPost.content?.slice(0, 300)}...`)
+              
+              if (wordCount < 300) {
+                console.error(`🚨 CONTENT TOO SHORT: Only ${wordCount} words generated. This seems incomplete.`)
+                console.log(`⚠️ This may indicate an AI generation issue rather than content length.`)
+              } else if (wordCount < 800) {
+                console.warn(`⚠️ Short content: ${wordCount} words - could be expanded for better coverage`)
+              } else if (wordCount < 1500) {
+                console.log(`✅ Moderate length: ${wordCount} words - good for focused topics`)
+              } else {
+                console.log(`✅ Comprehensive content: ${wordCount} words - excellent coverage`)
               }
               
-              if (wordCount >= 2500) {
-                console.log(`✅ Content meets requirements: ${wordCount} words (target: 2,500-3,000)`)
+              // Only reject if content is extremely short (likely an error)
+              if (wordCount < 200) {
+                throw new Error(`Content too minimal: ${wordCount} words. This may indicate a generation error.`)
               }
             
             // Validate the parsed JSON has required fields
