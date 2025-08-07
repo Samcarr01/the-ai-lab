@@ -172,34 +172,28 @@ export default function ToolkitPage() {
               </div>
             )}
 
-            <div className="relative p-8 h-full flex flex-col items-center justify-center text-center">
-              {/* PERFECTLY SIZED Image (only if uploaded) */}
+            <div className="relative p-6 h-full flex flex-col items-center justify-center text-center">
+              {/* Compact Image (only if uploaded) */}
               {tool.image_url && (
-                <div className="mb-8 relative group">
-                  {/* Glowing border effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 rounded-3xl blur-md opacity-75 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
-                  <div className="relative w-40 h-40 rounded-3xl bg-gradient-to-br from-white via-gray-50 to-gray-100 shadow-2xl p-4 flex items-center justify-center transform transition-all duration-500 group-hover:scale-105 group-hover:rotate-3 border-4 border-white/20">
+                <div className="mb-4 relative group">
+                  <div className="w-20 h-20 rounded-xl bg-white/90 shadow-lg p-2 flex items-center justify-center border border-purple-200/50">
                     <img 
                       src={tool.image_url} 
                       alt={tool.title}
-                      className="w-32 h-32 object-contain rounded-2xl drop-shadow-lg"
-                      style={{
-                        filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.15))'
-                      }}
+                      className="w-16 h-16 object-contain rounded-lg"
                     />
                   </div>
                 </div>
               )}
 
-              {/* BIG BOLD Title */}
-              <h3 className="text-3xl font-black text-white mb-4 leading-tight max-w-xs">
+              {/* Properly Sized Title */}
+              <h3 className="text-xl font-bold text-white mb-3 leading-tight px-2">
                 {tool.title}
               </h3>
 
-              {/* Category Badge */}
-              <div className={`inline-flex items-center px-6 py-3 rounded-full text-sm font-bold mb-6 bg-gradient-to-r ${categoryInfo.color} text-white shadow-xl transform hover:scale-105 transition-all duration-300`}>
-                <span className="mr-2 text-lg">{categoryInfo.emoji}</span>
+              {/* Compact Category Badge */}
+              <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold mb-4 bg-gradient-to-r ${categoryInfo.color} text-white shadow-lg`}>
+                <span className="mr-1 text-sm">{categoryInfo.emoji}</span>
                 {tool.category}
               </div>
 
