@@ -129,33 +129,22 @@ export default function ToolkitPage() {
     const isFlipped = flippedCards.has(tool.id)
     const categoryInfo = getCategoryInfo(tool.category)
 
-    // Debug logging
-    console.log('ToolCard data:', { tool, isFeatured, isFlipped })
-
     return (
-      <div className="group relative h-[420px]" style={{ perspective: '1000px' }}>
+      <div className="card-flip-container group relative h-[420px]">
         <div 
-          className="tool-card relative w-full h-full cursor-pointer transition-all duration-500 ease-out"
-          style={{ 
-            transformStyle: 'preserve-3d',
-            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
-          }}
+          className={`card-flip-inner ${isFlipped ? 'flipped' : ''}`}
           onClick={() => toggleCard(tool.id)}
         >
           {/* FRONT CARD */}
-          <div className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 group-hover:shadow-2xl ${
+          <div className={`card-face card-face-front shadow-xl transition-all duration-300 group-hover:shadow-2xl ${
             isFeatured 
               ? 'bg-gradient-to-br from-yellow-400/10 via-purple-900 to-slate-900 border-2 border-yellow-400/30' 
               : 'bg-gradient-to-br from-purple-900/50 via-slate-800 to-slate-900 border border-slate-600/50'
-          }`}
-          style={{ 
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden'
-          }}>
+          }`}>
             
-            {/* Featured Badge */}
+            {/* Featured Badge - Only on front card */}
             {isFeatured && (
-              <div className="absolute top-3 right-3 z-10">
+              <div className="absolute top-3 right-3 z-20">
                 <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-white text-sm font-bold">⭐</span>
                 </div>
@@ -228,12 +217,7 @@ export default function ToolkitPage() {
           </div>
 
           {/* BACK CARD */}
-          <div className="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 border border-purple-500/50 shadow-xl overflow-hidden"
-          style={{ 
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)'
-          }}>
+          <div className="card-face card-face-back bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 border border-purple-500/50 shadow-xl">
             <div className="p-6 h-full flex flex-col">
               {/* Header with only X button */}
               <div className="flex items-center justify-between mb-4">
