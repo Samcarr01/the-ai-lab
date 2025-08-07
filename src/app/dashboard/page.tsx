@@ -40,16 +40,26 @@ export default function DashboardPage() {
       
       console.log('🔄 Dashboard: Starting auth check...')
       
-      // Set a reasonable timeout for better UX
+      // Set a faster timeout since auth should be session-based
       timeoutId = setTimeout(() => {
         if (!isMounted) return
-        console.error('🚨 Dashboard: Auth loading timeout after 10 seconds - forcing error state')
+        console.error('🚨 Dashboard: Auth loading timeout after 5 seconds - trying alternative approach')
+        
+        // Instead of failing, try to continue without auth (fallback mode)
         setLoading(false)
-        setUser(null)
-      }, 10000) // 10 second timeout to handle rate limiting
+        setRateLimitError(true) // Show connection error instead of complete failure
+      }, 5000) // 5 second timeout for faster UX
       
       try {
-        const { user: authUser, error } = await auth.getUser()
+        // Race the auth call against a timeout to prevent hanging
+        const authPromise = auth.getUser()
+        const timeoutPromise = new Promise<{ user: null, error: { message: string } }>((resolve) => {
+          setTimeout(() => {
+            resolve({ user: null, error: { message: 'Auth request timeout' } })
+          }, 8000) // 8 second auth-specific timeout
+        })
+        
+        const { user: authUser, error } = await Promise.race([authPromise, timeoutPromise])
         
         if (timeoutId) {
           clearTimeout(timeoutId)
@@ -80,11 +90,24 @@ export default function DashboardPage() {
           console.log('❌ Dashboard: No valid user, handling error', { error: error?.message })
           
           // Handle different error types
-          if (error?.message?.includes('Network error') || error?.message?.includes('timeout')) {
-            console.log('🌐 Dashboard: Network/timeout error - staying on dashboard with retry option')
+          if (error?.message?.includes('Network error') || error?.message?.includes('timeout') || error?.message?.includes('Auth request timeout')) {
+            console.log('🌐 Dashboard: Network/timeout error - trying to continue with limited functionality')
             if (!isMounted) return
             setLoading(false)
             setRateLimitError(true) // Use existing error state for network issues
+            
+            // Try to show dashboard with offline/limited functionality
+            try {
+              // Check if we have cached user data in localStorage  
+              const cachedUserData = localStorage.getItem('cached-user-profile')
+              if (cachedUserData) {
+                const cachedUser = JSON.parse(cachedUserData)
+                console.log('📱 Dashboard: Using cached user data for offline experience')
+                setUser(cachedUser)
+              }
+            } catch {
+              console.log('📱 Dashboard: No cached data available, showing guest mode')
+            }
             return
           }
           
@@ -120,6 +143,14 @@ export default function DashboardPage() {
           if (userProfile && isMounted) {
             setUser(userProfile)
             setLoading(false)
+            
+            // Cache user data for offline fallback
+            try {
+              localStorage.setItem('cached-user-profile', JSON.stringify(userProfile))
+              console.log('💾 Dashboard: User profile cached for offline use')
+            } catch (e) {
+              console.log('⚠️ Dashboard: Could not cache user profile:', e)
+            }
             
             // Load stats in background
             loadStats(userProfile.user_tier || 'free').catch(error => {
@@ -375,18 +406,23 @@ export default function DashboardPage() {
               <div className="flex items-center space-x-3">
                 <span className="text-2xl">🌐</span>
                 <div>
-                  <h3 className="text-lg font-semibold text-orange-300">Connection Issues</h3>
+                  <h3 className="text-lg font-semibold text-orange-300">Limited Connectivity</h3>
                   <p className="text-sm text-orange-200">
-                    There seems to be a connection issue. You can try refreshing or continue browsing offline features.
+                    {user ? 'Using cached data. Some features may be limited until connection is restored.' 
+                         : 'Connection timeout. Please try refreshing or check your internet connection.'}
                   </p>
                 </div>
               </div>
               <div className="flex space-x-2">
                 <button
-                  onClick={() => window.location.reload()}
+                  onClick={() => {
+                    setLoading(true)
+                    setRateLimitError(false)
+                    window.location.reload()
+                  }}
                   className="px-3 py-1 bg-orange-600 text-white rounded text-sm hover:bg-orange-700"
                 >
-                  Refresh
+                  Retry
                 </button>
                 <button
                   onClick={() => setRateLimitError(false)}
