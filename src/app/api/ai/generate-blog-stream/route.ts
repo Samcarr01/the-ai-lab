@@ -381,6 +381,8 @@ COMMON REASONS FOR SHORT CONTENT REJECTION (AVOID THESE):
 
 🚨 CRITICAL: YOU MUST FORMAT YOUR RESPONSE AS VALID JSON - THE SYSTEM WILL REJECT NON-JSON RESPONSES
 
+⚠️ IMPORTANT: Your response must be ONLY JSON. Do not include any explanatory text, markdown formatting, or code blocks. Just the raw JSON object.
+
 FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text before or after):
 {
   "title": "Professional, SEO-optimized title (45-60 characters)",
@@ -607,11 +609,38 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
             // Clean the accumulated content to handle potential formatting issues
             let cleanedContent = accumulatedContent.trim();
             
-            // Extract JSON from the response
+            console.log('🔍 Content parsing - Length:', cleanedContent.length)
+            console.log('🔍 Content starts with:', cleanedContent.slice(0, 200))
+            console.log('🔍 Content ends with:', cleanedContent.slice(-200))
+            
+            // Try multiple JSON extraction methods
+            let jsonString = '';
+            
+            // Method 1: Look for complete JSON object
             const jsonMatch = cleanedContent.match(/\{[\s\S]*\}/);
             if (jsonMatch) {
-              const jsonString = jsonMatch[0];
-              blogPost = JSON.parse(jsonString);
+              jsonString = jsonMatch[0];
+              console.log('✅ Method 1: Found JSON match')
+            } else {
+              // Method 2: Try to extract from markdown code blocks
+              const codeBlockMatch = cleanedContent.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/i);
+              if (codeBlockMatch) {
+                jsonString = codeBlockMatch[1];
+                console.log('✅ Method 2: Found JSON in code block')
+              } else {
+                // Method 3: Look for JSON starting after any text
+                const jsonStartMatch = cleanedContent.match(/.*?(\{[\s\S]*\})/);
+                if (jsonStartMatch) {
+                  jsonString = jsonStartMatch[1];
+                  console.log('✅ Method 3: Found JSON after text')
+                } else {
+                  throw new Error('No JSON structure found in response')
+                }
+              }
+            }
+            
+            console.log('🔍 Attempting to parse JSON string length:', jsonString.length)
+            blogPost = JSON.parse(jsonString);
               
               // Clean the content field to remove any escape sequences and citation references
               if (blogPost.content) {
@@ -656,6 +685,13 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
               if (wordCount >= 2500) {
                 console.log(`✅ Content meets requirements: ${wordCount} words (target: 2,500-3,000)`)
               }
+            
+            // Validate the parsed JSON has required fields
+            if (!blogPost.title || !blogPost.content || !blogPost.meta_description) {
+              throw new Error('Parsed JSON missing required fields: title, content, or meta_description')
+            }
+            
+            console.log('✅ Successfully parsed blog post JSON with title:', blogPost.title?.slice(0, 50))
             } else {
               throw new Error('No JSON found in response');
             }
@@ -673,13 +709,14 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
               fallbackTitle = titleMatch[1].slice(0, 80)
             }
             
-            // Create a fallback blog post with more informative error
+            // Create a fallback blog post with debugging information
+            const contentPreview = accumulatedContent.slice(0, 500).replace(/['"]/g, '').replace(/\n/g, ' ')
             blogPost = {
               title: fallbackTitle,
-              content: `# ${fallbackTitle}\n\n**Note:** There was an issue with content generation. Raw response received but could not be parsed as JSON.\n\nContent length received: ${accumulatedContent.length} characters\n\nPlease try again with a different prompt or check the system logs for details.`,
+              content: `# ${fallbackTitle}\n\n**Note:** There was an issue with content generation. The AI generated ${accumulatedContent.length} characters but it couldn't be parsed as valid JSON.\n\n**Content Preview:**\n${contentPreview}${accumulatedContent.length > 500 ? '...' : ''}\n\n**Possible Issues:**\n- AI included text before or after the JSON\n- JSON syntax errors (missing quotes, commas)\n- Content too long causing truncation\n\nPlease try again with a simpler prompt or check the browser console for full details.`,
               meta_description: `Learn about ${prompt}. Expert insights and strategies.`.slice(0, 160),
               category: 'AI Tools',
-              read_time: 2
+              read_time: 3
             };
             
             // Send additional debug info
