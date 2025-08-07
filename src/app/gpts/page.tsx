@@ -320,7 +320,7 @@ export default function GPTsPage() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600-subtle rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <span className="text-2xl">{getCategoryIcon(gpt.category)}</span>
+                        <span className="text-2xl">{getCategoryInfo(gpt.category).emoji}</span>
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-white mb-1">
@@ -353,7 +353,7 @@ export default function GPTsPage() {
         {(selectedCategory === 'All' ? regularGpts : filteredGpts).length > 0 && (
           <div>
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-              <span className="text-3xl mr-3">{selectedCategory === 'All' ? '🤖' : getCategoryIcon(selectedCategory)}</span>
+              <span className="text-3xl mr-3">{selectedCategory === 'All' ? '🤖' : getCategoryInfo(selectedCategory).emoji}</span>
               {selectedCategory === 'All' ? 'All GPTs' : `${selectedCategory} GPTs`}
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -373,7 +373,7 @@ export default function GPTsPage() {
                           ? 'bg-gradient-to-r from-purple-600 to-pink-600-subtle'
                           : 'bg-gray-700'
                       } rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <span className="text-2xl">{getCategoryIcon(gpt.category)}</span>
+                        <span className="text-2xl">{getCategoryInfo(gpt.category).emoji}</span>
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-white mb-1">
@@ -430,7 +430,7 @@ export default function GPTsPage() {
           title={selectedGpt?.title || ''}
           description={selectedGpt?.description || ''}
           category={selectedGpt?.category || ''}
-          categoryIcon={getCategoryIcon(selectedGpt?.category || '')}
+          categoryIcon={getCategoryInfo(selectedGpt?.category || '').emoji}
           type="gpt"
         />
       </div>
