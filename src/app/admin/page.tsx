@@ -10,6 +10,7 @@ import { userService, type UserProfile, type UserTier, TIER_FEATURES } from '@/l
 import { gptsService } from '@/lib/gpts'
 import { documentsService } from '@/lib/documents'
 import { blogService, type BlogPost } from '@/lib/blog'
+import { affiliateToolsService, type AffiliateTool } from '@/lib/affiliate-tools'
 import { aiService } from '@/lib/ai'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
 import SmartNavigation from '@/components/SmartNavigation'
@@ -26,16 +27,21 @@ interface AnalyzedContent {
 export default function AdminPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeSection, setActiveSection] = useState<'content' | 'blog' | 'tier'>('content')
+  const [activeSection, setActiveSection] = useState<'content' | 'blog' | 'affiliate' | 'tier'>('content')
   const [gpts, setGpts] = useState<any[]>([])
   const [documents, setDocuments] = useState<any[]>([])
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
+  const [affiliateTools, setAffiliateTools] = useState<AffiliateTool[]>([])
   const [uploadType, setUploadType] = useState<'gpt' | 'document'>('gpt')
   const [gptUrl, setGptUrl] = useState('')
   const [documentFile, setDocumentFile] = useState<File | null>(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [analyzedContent, setAnalyzedContent] = useState<AnalyzedContent | null>(null)
   const [uploading, setUploading] = useState(false)
+  // Affiliate tools state
+  const [affiliateUrl, setAffiliateUrl] = useState('')
+  const [analyzedAffiliateTool, setAnalyzedAffiliateTool] = useState<any>(null)
+  const [affiliateImage, setAffiliateImage] = useState<File | null>(null)
   const [notification, setNotification] = useState<{
     isOpen: boolean
     title: string
@@ -187,15 +193,17 @@ export default function AdminPage() {
 
   const loadContent = async () => {
     try {
-      const [gptsData, documentsData, blogData] = await Promise.all([
+      const [gptsData, documentsData, blogData, affiliateData] = await Promise.all([
         gptsService.getAllGPTs(),
         documentsService.getAllDocuments(),
-        blogService.getAllPosts(true) // Include drafts in admin panel
+        blogService.getAllPosts(true), // Include drafts in admin panel
+        affiliateToolsService.getAll()
       ])
       
       setGpts(gptsData)
       setDocuments(documentsData)
       setBlogPosts(blogData)
+      setAffiliateTools(affiliateData)
     } catch (err) {
       console.error('Error loading content:', err)
     }
