@@ -130,17 +130,28 @@ export default function ToolkitPage() {
     const categoryInfo = getCategoryInfo(tool.category)
 
     return (
-      <div className="card-flip-container group relative h-[420px]">
+      <div className="group relative h-[420px]" style={{ perspective: '1200px' }}>
         <div 
-          className={`card-flip-inner ${isFlipped ? 'flipped' : ''}`}
+          className="relative w-full h-full cursor-pointer hover:scale-105"
+          style={{
+            transformStyle: 'preserve-3d',
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            transition: 'all 0.8s cubic-bezier(0.23, 1, 0.320, 1)'
+          }}
           onClick={() => toggleCard(tool.id)}
         >
           {/* FRONT CARD */}
-          <div className={`card-face card-face-front shadow-xl transition-all duration-300 group-hover:shadow-2xl ${
-            isFeatured 
-              ? 'bg-gradient-to-br from-yellow-400/10 via-purple-900 to-slate-900 border-2 border-yellow-400/30' 
-              : 'bg-gradient-to-br from-purple-900/50 via-slate-800 to-slate-900 border border-slate-600/50'
-          }`}>
+          <div 
+            className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 group-hover:shadow-2xl ${
+              isFeatured 
+                ? 'bg-gradient-to-br from-yellow-400/10 via-purple-900 to-slate-900 border-2 border-yellow-400/30' 
+                : 'bg-gradient-to-br from-purple-900/50 via-slate-800 to-slate-900 border border-slate-600/50'
+            }`}
+            style={{
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden'
+            }}
+          >
             
             {/* Featured Badge - Only on front card */}
             {isFeatured && (
@@ -217,7 +228,14 @@ export default function ToolkitPage() {
           </div>
 
           {/* BACK CARD */}
-          <div className="card-face card-face-back bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 border border-purple-500/50 shadow-xl">
+          <div 
+            className="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 border border-purple-500/50 shadow-xl overflow-hidden"
+            style={{
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg)'
+            }}
+          >
             <div className="p-6 h-full flex flex-col">
               {/* Header with only X button */}
               <div className="flex items-center justify-between mb-4">
