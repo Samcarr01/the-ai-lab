@@ -130,6 +130,29 @@ function estimateTokenCount(text: string): number {
   return Math.ceil(text.length / 4) // Rough estimate: 1 token ≈ 4 characters
 }
 
+// Construct JSON from non-JSON AI response as fallback
+function constructJSONFromText(content: string, originalPrompt: string): any | null {
+  try {
+    // Try to extract key information from the text response
+    const titleMatch = content.match(/(?:title|heading)[:.]?\s*(.+)/i)
+    const title = titleMatch ? titleMatch[1].trim().replace(/["""]/g, '') : originalPrompt.slice(0, 60)
+    
+    // Use the content as-is if it looks like blog content
+    const blogContent = content.length > 500 ? content : `## ${title}\n\n${content}`
+    
+    return {
+      title: title.slice(0, 60),
+      content: blogContent,
+      meta_description: `Learn about ${originalPrompt}. Expert insights and practical guidance.`.slice(0, 160),
+      category: 'AI Tools',
+      read_time: Math.max(2, Math.ceil(content.split(' ').length / 200))
+    }
+  } catch (error) {
+    console.error('Failed to construct JSON from text:', error)
+    return null
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -381,7 +404,12 @@ COMMON REASONS FOR SHORT CONTENT REJECTION (AVOID THESE):
 
 🚨 CRITICAL: YOU MUST FORMAT YOUR RESPONSE AS VALID JSON - THE SYSTEM WILL REJECT NON-JSON RESPONSES
 
-⚠️ IMPORTANT: Your response must be ONLY JSON. Do not include any explanatory text, markdown formatting, or code blocks. Just the raw JSON object.
+⚠️ CRITICAL JSON FORMAT REQUIREMENTS:
+- Your response must be ONLY JSON - no explanatory text, markdown, or code blocks
+- Start immediately with { and end with } 
+- Do not wrap in ```json code blocks
+- Do not add any text before or after the JSON object
+- This is a JSON-only API endpoint - non-JSON responses will be rejected
 
 FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text before or after):
 {
@@ -443,6 +471,9 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
           }
 
           console.log(`📤 Sending request to ${includeWebSearch ? 'Perplexity' : 'OpenAI'} API...`)
+          console.log(`🔧 Model: ${modelToUse}, JSON Format Enforced: ${!includeWebSearch ? 'Yes (OpenAI)' : 'No (Perplexity)'}`)
+          console.log(`📊 Request body keys: ${Object.keys(requestBody).join(', ')}`)
+          
           const apiRequestStart = Date.now()
           
           const response = await fetch(apiEndpoint, {
@@ -607,11 +638,30 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
           // Try to parse the final content as JSON blog post
           try {
             // Clean the accumulated content to handle potential formatting issues
-            let cleanedContent = accumulatedContent.trim();
+            let cleanedContent = accumulatedContent.trim()
+            
+            // Advanced content cleaning for various AI response formats
+            cleanedContent = cleanedContent
+              .replace(/^```json\s*/i, '')     // Remove starting ```json
+              .replace(/\s*```\s*$/i, '')      // Remove ending ```
+              .replace(/^```\s*/i, '')         // Remove starting ```
+              .replace(/^json\s*/i, '')        // Remove starting "json"
+              .replace(/^Here is.*?:\s*/i, '') // Remove "Here is the JSON:" type prefixes
+              .replace(/^The JSON.*?:\s*/i, '') // Remove "The JSON response is:" type prefixes
+              .replace(/^\w+\s*:\s*/i, '')     // Remove other word prefixes
+              .trim()
             
             console.log('🔍 Content parsing - Length:', cleanedContent.length)
             console.log('🔍 Content starts with:', cleanedContent.slice(0, 200))
             console.log('🔍 Content ends with:', cleanedContent.slice(-200))
+            
+            // TEMPORARY: Log full content for debugging JSON parsing issues
+            if (cleanedContent.length < 20000) { // Only log if reasonable size
+              console.log('📋 FULL CONTENT FOR DEBUGGING:')
+              console.log('==========================================')
+              console.log(cleanedContent)
+              console.log('==========================================')
+            }
             
             // Try multiple JSON extraction methods
             let jsonString = '';
@@ -634,7 +684,15 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
                   jsonString = jsonStartMatch[1];
                   console.log('✅ Method 3: Found JSON after text')
                 } else {
-                  throw new Error('No JSON structure found in response')
+                  // Method 4: Try to construct JSON from non-JSON response
+                  console.log('⚠️ Method 4: Attempting to construct JSON from non-JSON response')
+                  const constructedJSON = constructJSONFromText(cleanedContent, prompt)
+                  if (constructedJSON) {
+                    jsonString = JSON.stringify(constructedJSON)
+                    console.log('✅ Method 4: Constructed JSON from text')
+                  } else {
+                    throw new Error('No JSON structure found and could not construct from response')
+                  }
                 }
               }
             }
