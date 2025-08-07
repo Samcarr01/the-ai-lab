@@ -131,14 +131,23 @@ export default function GPTsPage() {
   const featuredGpts = filteredGpts.filter(gpt => gpt.is_featured)
   const regularGpts = filteredGpts.filter(gpt => !gpt.is_featured)
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'Business Planning': return '💼'
-      case 'Productivity': return '⚡'
-      case 'Communication': return '📧'
-      case 'Automation': return '🤖'
-      default: return '🔧'
+  const getCategoryInfo = (category: string) => {
+    const categoryMap = {
+      'Business Planning': { emoji: '💼', color: 'from-blue-500 to-blue-600' },
+      'Productivity': { emoji: '⚡', color: 'from-yellow-500 to-orange-500' },
+      'Communication': { emoji: '💬', color: 'from-green-500 to-emerald-600' },
+      'Automation': { emoji: '🤖', color: 'from-purple-500 to-violet-600' },
+      'Marketing': { emoji: '📈', color: 'from-pink-500 to-rose-600' },
+      'Design': { emoji: '🎨', color: 'from-indigo-500 to-purple-600' },
+      'Development': { emoji: '💻', color: 'from-cyan-500 to-blue-600' },
+      'Education': { emoji: '📚', color: 'from-amber-500 to-yellow-600' },
+      'Writing': { emoji: '✍️', color: 'from-teal-500 to-cyan-600' },
+      'Analysis': { emoji: '📊', color: 'from-red-500 to-pink-600' },
+      'Research': { emoji: '🔍', color: 'from-slate-500 to-gray-600' },
+      'Customer Service': { emoji: '🎧', color: 'from-emerald-500 to-green-600' }
     }
+    
+    return categoryMap[category as keyof typeof categoryMap] || { emoji: '🔧', color: 'from-gray-500 to-slate-600' }
   }
 
   const renderDescription = (gpt: GPTWithAccess) => {
@@ -271,19 +280,26 @@ export default function GPTsPage() {
         <div className="mb-8 sm:mb-12">
           <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-2xl p-4 sm:p-6 shadow-lg border border-purple-100/50">
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 mobile-touch-target touch-feedback ${
-                    selectedCategory === category
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg transform scale-105'
-                      : 'bg-gray-800 text-gray-100 border border-gray-600 hover:border-purple-300 hover:text-purple-400 hover:scale-105'
-                  }`}
-                >
-                  {category === 'All' ? '🎯' : getCategoryIcon(category)} {category}
-                </button>
-              ))}
+              {categories.map((category) => {
+                const categoryInfo = category === 'All' 
+                  ? { emoji: '🎯', color: 'from-purple-600 to-pink-600' }
+                  : getCategoryInfo(category)
+                
+                return (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 mobile-touch-target touch-feedback shadow-md hover:shadow-lg ${
+                      selectedCategory === category
+                        ? `bg-gradient-to-r ${categoryInfo.color} text-white shadow-lg transform scale-105 border border-white/20`
+                        : 'bg-slate-800/90 text-gray-100 border border-gray-600 hover:border-purple-300/60 hover:text-white hover:scale-105 hover:bg-slate-700/90 backdrop-blur-sm'
+                    }`}
+                  >
+                    <span className="text-base mr-2">{categoryInfo.emoji}</span>
+                    {category}
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>

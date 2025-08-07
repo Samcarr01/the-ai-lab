@@ -119,7 +119,7 @@ Based on the URL and any extracted information, provide:
    - Key benefits and use cases
    - Who would find it most valuable
 
-3. The most appropriate category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development
+3. The most appropriate category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, Education, Writing, Analysis, Research, Customer Service
 
 Analyze the URL path and any extracted content to understand the GPT's actual purpose and functionality.
 
@@ -142,7 +142,23 @@ Respond in JSON format:
         messages: [
           {
             role: 'system',
-            content: 'You are an expert at analyzing and categorizing AI tools. Provide clean, professional titles and compelling descriptions for GPTs.'
+            content: `You are an expert at analyzing and categorizing AI tools. Provide clean, professional titles and compelling descriptions for GPTs.
+
+CATEGORY GUIDELINES:
+- Business Planning: Strategy, planning, market analysis, business models
+- Productivity: Task management, workflows, optimization, efficiency
+- Communication: Email writing, messaging, social media, presentations  
+- Automation: Process automation, workflow automation, task automation
+- Marketing: Content marketing, advertising, campaigns, growth strategies
+- Design: UI/UX design, graphics, visual content, creative work
+- Development: Coding, programming, software development, technical tasks
+- Education: Learning, teaching, training, educational content
+- Writing: Content creation, copywriting, editing, creative writing
+- Analysis: Data analysis, research analysis, report generation
+- Research: Information gathering, fact-checking, competitive research
+- Customer Service: Support, help desk, customer communication
+
+Choose the most specific category that accurately represents the GPT's primary function.`
           },
           {
             role: 'user',

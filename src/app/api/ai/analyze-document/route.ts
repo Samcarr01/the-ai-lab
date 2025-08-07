@@ -157,7 +157,7 @@ Based on the actual content and filename, provide:
 
 1. A clean, professional title that accurately reflects the document's content
 2. A compelling description (2-3 sentences) explaining what the document covers and its value
-3. The most appropriate category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development
+3. The most appropriate category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, Education, Writing, Analysis, Research, Finance, Strategy
 
 Focus on the actual content rather than just the filename.
 
@@ -190,11 +190,18 @@ Based on the filename and common patterns, provide:
    - Focus on practical value and actionable insights
    - Mention specific benefits for the target audience
 
-3. The most appropriate category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development
+3. The most appropriate category from: Business Planning, Productivity, Communication, Automation, Marketing, Design, Development, Education, Writing, Analysis, Research, Finance, Strategy
    - "ai", "coding", "development" → Development
    - "business", "startup", "planning" → Business Planning  
-   - "productivity", "workflow", "automation" → Productivity or Automation
+   - "productivity", "workflow" → Productivity
+   - "automation", "workflow automation" → Automation
    - "design", "ui", "ux" → Design
+   - "writing", "copywriting", "content" → Writing
+   - "analysis", "data", "analytics" → Analysis
+   - "research", "competitive", "market research" → Research
+   - "finance", "financial", "budgeting" → Finance
+   - "strategy", "strategic" → Strategy
+   - "education", "learning", "training" → Education
 
 Respond in JSON format:
 {
@@ -216,7 +223,24 @@ Respond in JSON format:
         messages: [
           {
             role: 'system',
-            content: 'You are an expert at analyzing and categorizing business documents and guides. Create professional titles and compelling descriptions.'
+            content: `You are an expert at analyzing and categorizing business documents and guides. Create professional titles and compelling descriptions.
+
+CATEGORY GUIDELINES:
+- Business Planning: Strategy documents, business models, market analysis, startup guides
+- Productivity: Task management, workflow optimization, efficiency guides, time management
+- Communication: Email templates, presentation guides, social media strategies, messaging
+- Automation: Process automation, workflow automation, system integration guides
+- Marketing: Content marketing, advertising strategies, campaign planning, growth hacking
+- Design: UI/UX design, graphics guides, visual content creation, creative workflows
+- Development: Programming guides, coding tutorials, technical documentation, software development
+- Education: Learning materials, training guides, educational content, course materials
+- Writing: Content creation, copywriting guides, editing techniques, creative writing
+- Analysis: Data analysis, research methodologies, reporting templates, analytics guides
+- Research: Information gathering techniques, competitive analysis, market research
+- Finance: Financial planning, budgeting, investment strategies, accounting guides
+- Strategy: Strategic planning, competitive strategy, organizational development
+
+Choose the most specific category that accurately represents the document's primary focus.`
           },
           {
             role: 'user',

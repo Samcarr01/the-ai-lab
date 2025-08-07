@@ -139,16 +139,24 @@ export default function DocumentsPage() {
   const featuredDocuments = filteredDocuments.filter(doc => doc.is_featured)
   const regularDocuments = filteredDocuments.filter(doc => !doc.is_featured)
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'Business Planning': return '💼'
-      case 'Productivity': return '⚡'
-      case 'Marketing': return '📈'
-      case 'Automation': return '🤖'
-      case 'Design': return '🎨'
-      case 'Development': return '💻'
-      default: return '📚'
+  const getCategoryInfo = (category: string) => {
+    const categoryMap = {
+      'Business Planning': { emoji: '💼', color: 'from-blue-500 to-blue-600' },
+      'Productivity': { emoji: '⚡', color: 'from-yellow-500 to-orange-500' },
+      'Communication': { emoji: '💬', color: 'from-green-500 to-emerald-600' },
+      'Automation': { emoji: '🤖', color: 'from-purple-500 to-violet-600' },
+      'Marketing': { emoji: '📈', color: 'from-pink-500 to-rose-600' },
+      'Design': { emoji: '🎨', color: 'from-indigo-500 to-purple-600' },
+      'Development': { emoji: '💻', color: 'from-cyan-500 to-blue-600' },
+      'Education': { emoji: '📚', color: 'from-amber-500 to-yellow-600' },
+      'Writing': { emoji: '✍️', color: 'from-teal-500 to-cyan-600' },
+      'Analysis': { emoji: '📊', color: 'from-red-500 to-pink-600' },
+      'Research': { emoji: '🔍', color: 'from-slate-500 to-gray-600' },
+      'Finance': { emoji: '💰', color: 'from-green-600 to-emerald-700' },
+      'Strategy': { emoji: '🎯', color: 'from-purple-600 to-pink-600' }
     }
+    
+    return categoryMap[category as keyof typeof categoryMap] || { emoji: '📚', color: 'from-gray-500 to-slate-600' }
   }
 
   const renderDescription = (document: DocumentWithAccess) => {
@@ -338,19 +346,26 @@ export default function DocumentsPage() {
           <div className="mb-12">
             <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-purple-100/50">
               <div className="flex flex-wrap justify-center gap-3">
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() => setSelectedCategory(category)}
-                    className={`px-6 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                      selectedCategory === category
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg transform scale-105'
-                        : 'bg-gray-800 text-gray-100 border border-gray-600 hover:border-purple-300 hover:text-purple-400 hover:scale-105'
-                    }`}
-                  >
-                    {category === 'All' ? '📋' : getCategoryIcon(category)} {category}
-                  </button>
-                ))}
+                {categories.map((category) => {
+                  const categoryInfo = category === 'All' 
+                    ? { emoji: '📋', color: 'from-purple-600 to-pink-600' }
+                    : getCategoryInfo(category)
+                  
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => setSelectedCategory(category)}
+                      className={`px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 mobile-touch-target touch-feedback shadow-md hover:shadow-lg ${
+                        selectedCategory === category
+                          ? `bg-gradient-to-r ${categoryInfo.color} text-white shadow-lg transform scale-105 border border-white/20`
+                          : 'bg-slate-800/90 text-gray-100 border border-gray-600 hover:border-purple-300/60 hover:text-white hover:scale-105 hover:bg-slate-700/90 backdrop-blur-sm'
+                      }`}
+                    >
+                      <span className="text-base mr-2">{categoryInfo.emoji}</span>
+                      {category}
+                    </button>
+                  )
+                })}
               </div>
             </div>
           </div>
@@ -372,7 +387,7 @@ export default function DocumentsPage() {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600-subtle rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <span className="text-2xl">{getCategoryIcon(document.category)}</span>
+                        <span className="text-2xl">{getCategoryInfo(document.category).emoji}</span>
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-white mb-1">
@@ -407,7 +422,7 @@ export default function DocumentsPage() {
         {(selectedCategory === 'All' ? regularDocuments : filteredDocuments).length > 0 && (
           <div>
             <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-              <span className="text-3xl mr-3">{selectedCategory === 'All' ? '📚' : getCategoryIcon(selectedCategory)}</span>
+              <span className="text-3xl mr-3">{selectedCategory === 'All' ? '📚' : getCategoryInfo(selectedCategory).emoji}</span>
               {selectedCategory === 'All' ? 'All Playbooks' : `${selectedCategory} Playbooks`}
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
@@ -427,7 +442,7 @@ export default function DocumentsPage() {
                           ? 'bg-gradient-to-r from-purple-600 to-pink-600-subtle'
                           : 'bg-gray-700'
                       } rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                        <span className="text-2xl">{getCategoryIcon(document.category)}</span>
+                        <span className="text-2xl">{getCategoryInfo(document.category).emoji}</span>
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-white mb-1">
@@ -501,7 +516,7 @@ export default function DocumentsPage() {
           title={selectedDocument?.title || ''}
           description={selectedDocument?.description || ''}
           category={selectedDocument?.category || ''}
-          categoryIcon={getCategoryIcon(selectedDocument?.category || '')}
+          categoryIcon={getCategoryInfo(selectedDocument?.category || '').emoji}
           type="playbook"
         />
       </div>
