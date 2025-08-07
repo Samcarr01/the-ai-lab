@@ -155,14 +155,24 @@ export const userService = {
     
     console.log('🔍 Fetching profile for userId:', userId)
     
-    // Create promise for queue management
+    // Create promise for queue management with timeout
     const profilePromise = (async () => {
       try {
-        // First, let's see what's in the database
-        const { data: allData, error: queryError } = await supabase
+        // Add timeout to prevent hanging database queries
+        const queryPromise = supabase
           .from('users')
           .select('*')
           .eq('id', userId)
+        
+        const timeoutPromise = new Promise<{ data: null; error: { message: string } }>((resolve) => {
+          setTimeout(() => {
+            console.error('⏰ User: Database query timeout after 4 seconds')
+            resolve({ data: null, error: { message: 'Database query timeout' } })
+          }, 4000) // 4 second timeout for database queries
+        })
+        
+        // Race the query against timeout
+        const { data: allData, error: queryError } = await Promise.race([queryPromise, timeoutPromise])
         
         console.log('📊 Query result:', { 
           hasData: !!allData, 
@@ -173,6 +183,24 @@ export const userService = {
         
         if (queryError) {
           console.error('❌ Error querying user profile:', queryError)
+          
+          // Check if it's a timeout error - try cached data
+          if (queryError.message?.includes('timeout')) {
+            console.log('⏰ User: Database timeout - checking for cached data...')
+            try {
+              const cachedData = localStorage.getItem('cached-user-profile')
+              if (cachedData) {
+                const cachedProfile = JSON.parse(cachedData)
+                if (cachedProfile.id === userId) {
+                  console.log('✅ User: Using cached profile data for timeout fallback')
+                  return cachedProfile
+                }
+              }
+            } catch (e) {
+              console.log('⚠️ User: Could not access cached data')
+            }
+            return null
+          }
           
           // Check if it's a rate limit error
           if (queryError.message?.includes('429') || queryError.code === '429') {
@@ -234,13 +262,19 @@ export const userService = {
     
     console.log('🔄 Creating profile for:', { userId, email, firstName, lastName })
     
-    // First check if profile already exists to prevent duplicates
+    // First check if profile already exists to prevent duplicates (with timeout)
     try {
-      const { data: existingData } = await supabase
+      const existingQuery = supabase
         .from('users')
         .select('*')
         .eq('id', userId)
         .limit(1)
+      
+      const existingTimeout = new Promise<{ data: null }>((resolve) => {
+        setTimeout(() => resolve({ data: null }), 3000)
+      })
+      
+      const { data: existingData } = await Promise.race([existingQuery, existingTimeout])
       
       if (existingData && existingData.length > 0) {
         console.log('✅ Profile already exists, returning existing profile')
@@ -253,7 +287,8 @@ export const userService = {
     // Always try the simple approach first (without name columns)
     try {
       console.log('🔧 Attempting basic profile creation...')
-      const { data, error } = await supabase
+      
+      const insertQuery = supabase
         .from('users')
         .insert([
           {
@@ -265,20 +300,53 @@ export const userService = {
         ])
         .select()
       
+      const insertTimeout = new Promise<{ data: null; error: { message: string } }>((resolve) => {
+        setTimeout(() => {
+          console.error('⏰ User: Profile creation timeout after 5 seconds')
+          resolve({ data: null, error: { message: 'Profile creation timeout' } })
+        }, 5000)
+      })
+      
+      const { data, error } = await Promise.race([insertQuery, insertTimeout])
+      
       if (error) {
         console.error('❌ Error creating basic profile:', error)
+        
+        // Handle timeout errors
+        if (error.message?.includes('timeout')) {
+          console.log('⏰ User: Profile creation timed out - checking if profile exists')
+          try {
+            const { data: timeoutCheckData } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', userId)
+              .limit(1)
+            
+            if (timeoutCheckData && timeoutCheckData.length > 0) {
+              console.log('✅ Profile was actually created, returning it')
+              return timeoutCheckData[0]
+            }
+          } catch (timeoutCheckError) {
+            console.log('⚠️ Could not verify profile creation after timeout')
+          }
+          return null
+        }
         
         // Handle duplicate key error (profile already exists)
         if (error.message?.includes('duplicate') || error.code === '23505') {
           console.log('🔄 Profile already exists due to duplicate, fetching existing profile...')
-          const { data: existingData } = await supabase
-            .from('users')
-            .select('*')
-            .eq('id', userId)
-            .limit(1)
-          
-          if (existingData && existingData.length > 0) {
-            return existingData[0]
+          try {
+            const { data: existingData } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', userId)
+              .limit(1)
+            
+            if (existingData && existingData.length > 0) {
+              return existingData[0]
+            }
+          } catch (fetchError) {
+            console.log('⚠️ Could not fetch existing profile after duplicate error')
           }
         }
         
