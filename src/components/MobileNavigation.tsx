@@ -70,6 +70,7 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
     { href: '/solutions', icon: '🎯', label: 'Solutions', type: 'link' as const },
     { action: handleFeatureClick, icon: '⚡', label: 'Features', type: 'button' as const },
     { action: handlePricingClick, icon: '💰', label: 'Pricing', type: 'button' as const },
+    { href: '/toolkit', icon: '🛠️', label: 'Our Toolkit', type: 'link' as const },
     { href: '/blog', icon: '✍️', label: 'Blogs', type: 'link' as const },
     { href: '/login', icon: '🔑', label: 'Sign In', type: 'link' as const },
     { href: '/signup', icon: '🚀', label: 'Get Started', type: 'link' as const, special: true }

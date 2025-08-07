@@ -12,7 +12,7 @@ import MobileNavigation from './MobileNavigation'
 
 interface SmartNavigationProps {
   user: UserProfile | null
-  currentPage?: 'gpts' | 'documents' | 'blog' | 'dashboard' | 'settings'
+  currentPage?: 'gpts' | 'documents' | 'blog' | 'toolkit' | 'dashboard' | 'settings'
   onFeatureClick?: () => void
   onPricingClick?: () => void
   loading?: boolean
@@ -179,6 +179,7 @@ export default function SmartNavigation({ user, currentPage, onFeatureClick, onP
                     { href: "/dashboard", label: "Dashboard", page: "dashboard", icon: "📊" },
                     { href: "/gpts", label: "GPTs", page: "gpts", icon: "🤖" },
                     { href: "/documents", label: "Playbooks", page: "documents", icon: "📚" },
+                    { href: "/toolkit", label: "Our Toolkit", page: "toolkit", icon: "🛠️" },
                     { href: "/blog", label: "Blogs", page: "blog", icon: "✍️" }
                   ].map((item) => {
                     const isActive = currentPage === item.page

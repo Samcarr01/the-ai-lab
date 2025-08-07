@@ -42,6 +42,8 @@ export default function AdminPage() {
   const [affiliateUrl, setAffiliateUrl] = useState('')
   const [analyzedAffiliateTool, setAnalyzedAffiliateTool] = useState<any>(null)
   const [affiliateImage, setAffiliateImage] = useState<File | null>(null)
+  const [editingTool, setEditingTool] = useState<AffiliateTool | null>(null)
+  const [showEditModal, setShowEditModal] = useState(false)
   const [notification, setNotification] = useState<{
     isOpen: boolean
     title: string
@@ -307,6 +309,170 @@ export default function AdminPage() {
     }
   }
 
+  // Affiliate Tools Functions
+  const analyzeAffiliateTool = async () => {
+    if (!affiliateUrl.trim()) {
+      showNotification('Error', 'Please enter an affiliate URL', 'error')
+      return
+    }
+
+    setAnalyzing(true)
+    try {
+      console.log('🔍 Analyzing affiliate tool:', affiliateUrl)
+      
+      const response = await fetch('/api/ai/analyze-affiliate-tool', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url: affiliateUrl }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || `Analysis failed: ${response.status}`)
+      }
+
+      const result = await response.json()
+      console.log('✅ Analysis result:', result)
+      
+      setAnalyzedAffiliateTool(result)
+      showNotification(
+        'Analysis Complete!',
+        `Generated content for "${result.title}". Please review and upload an image.`,
+        'success'
+      )
+    } catch (error) {
+      console.error('❌ Affiliate tool analysis failed:', error)
+      showNotification(
+        'Analysis Failed',
+        error instanceof Error ? error.message : 'Unknown error occurred',
+        'error'
+      )
+    } finally {
+      setAnalyzing(false)
+    }
+  }
+
+  const uploadAffiliateTool = async () => {
+    if (!analyzedAffiliateTool) {
+      showNotification('Error', 'Please analyze a tool first', 'error')
+      return
+    }
+
+    if (!affiliateImage) {
+      showNotification('Error', 'Please upload an image for the tool', 'error')
+      return
+    }
+
+    setUploading(true)
+    try {
+      console.log('📤 Uploading affiliate tool and image...')
+      
+      // First upload the image to get the URL
+      const formData = new FormData()
+      formData.append('file', affiliateImage)
+      
+      const imageResponse = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!imageResponse.ok) {
+        throw new Error('Image upload failed')
+      }
+
+      const imageData = await imageResponse.json()
+      console.log('✅ Image uploaded:', imageData.url)
+
+      // Create the affiliate tool with the image URL
+      const newTool = await affiliateToolsService.create({
+        title: analyzedAffiliateTool.title,
+        description: analyzedAffiliateTool.description,
+        affiliate_url: affiliateUrl,
+        original_url: analyzedAffiliateTool.original_url,
+        image_url: imageData.url,
+        category: analyzedAffiliateTool.category,
+        is_featured: false,
+        research_data: analyzedAffiliateTool.research_data
+      })
+
+      console.log('✅ Affiliate tool created:', newTool)
+
+      // Reset form and reload data
+      setAffiliateUrl('')
+      setAnalyzedAffiliateTool(null)
+      setAffiliateImage(null)
+      await loadContent()
+
+      showNotification(
+        'Tool Added Successfully!',
+        `"${newTool.title}" has been added to your toolkit and is now live.`,
+        'success'
+      )
+    } catch (error) {
+      console.error('❌ Upload failed:', error)
+      showNotification(
+        'Upload Failed',
+        error instanceof Error ? error.message : 'Unknown error occurred',
+        'error'
+      )
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const toggleAffiliateFeatured = async (tool: AffiliateTool) => {
+    try {
+      await affiliateToolsService.toggleFeatured(tool.id)
+      await loadContent()
+      
+      showNotification(
+        'Success',
+        `"${tool.title}" ${tool.is_featured ? 'removed from' : 'added to'} featured tools`,
+        'success'
+      )
+    } catch (error) {
+      console.error('❌ Toggle featured failed:', error)
+      showNotification('Error', 'Failed to update featured status', 'error')
+    }
+  }
+
+  const deleteAffiliateTool = async (tool: AffiliateTool) => {
+    if (!confirm(`Are you sure you want to delete "${tool.title}"?`)) {
+      return
+    }
+
+    try {
+      await affiliateToolsService.delete(tool.id)
+      await loadContent()
+      showNotification('Success', `"${tool.title}" deleted successfully!`, 'success')
+    } catch (error) {
+      console.error('❌ Delete failed:', error)
+      showNotification('Error', 'Delete failed. Please try again.', 'error')
+    }
+  }
+
+  const editAffiliateTool = (tool: AffiliateTool) => {
+    setEditingTool(tool)
+    setShowEditModal(true)
+  }
+
+  const updateAffiliateTool = async (updatedTool: Partial<AffiliateTool>) => {
+    if (!editingTool) return
+
+    try {
+      await affiliateToolsService.update(editingTool.id, updatedTool)
+      await loadContent()
+      setShowEditModal(false)
+      setEditingTool(null)
+      showNotification('Success', `"${editingTool.title}" updated successfully!`, 'success')
+    } catch (error) {
+      console.error('❌ Update failed:', error)
+      showNotification('Error', 'Update failed. Please try again.', 'error')
+    }
+  }
+
   if (loading) {
     return (
       <DarkThemeBackground>
@@ -352,6 +518,7 @@ export default function AdminPage() {
               {[
                 { id: 'content', label: 'Content Management', icon: '📚' },
                 { id: 'blog', label: 'Blog Posts', icon: '✍️' },
+                { id: 'affiliate', label: 'Our Toolkit', icon: '🛠️' },
                 { id: 'tier', label: 'Tier Testing', icon: '🎯' }
               ].map((section) => (
                 <button
@@ -642,6 +809,236 @@ export default function AdminPage() {
                   <p className="text-gray-400 mb-6">Create your first blog post to get started!</p>
                 </div>
               )}
+            </div>
+          )}
+
+          {activeSection === 'affiliate' && (
+            <div className="space-y-8">
+              {/* Add New Affiliate Tool */}
+              <div className="bg-slate-800/60 rounded-2xl p-6 border border-white/10">
+                <h2 className="text-xl font-semibold text-white mb-6 flex items-center">
+                  <span className="mr-3">🛠️</span>
+                  Add New Affiliate Tool
+                </h2>
+
+                {/* Step 1: Enter Affiliate URL */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Affiliate URL
+                  </label>
+                  <div className="flex gap-3">
+                    <input
+                      type="url"
+                      value={affiliateUrl}
+                      onChange={(e) => setAffiliateUrl(e.target.value)}
+                      placeholder="https://n8n.io?ref=your-affiliate-id"
+                      className="flex-1 bg-slate-700 border border-gray-600 text-white placeholder-gray-400 px-4 py-3 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                      disabled={analyzing || uploading}
+                    />
+                    <button
+                      onClick={analyzeAffiliateTool}
+                      disabled={analyzing || uploading || !affiliateUrl.trim()}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                    >
+                      {analyzing ? (
+                        <span className="flex items-center">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Analyzing...
+                        </span>
+                      ) : (
+                        '🔍 Analyze Tool'
+                      )}
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-2">
+                    Paste your affiliate link and AI will research the tool and generate compelling content.
+                  </p>
+                </div>
+
+                {/* Step 2: AI Analysis Results */}
+                {analyzedAffiliateTool && (
+                  <div className="border-t border-gray-700 pt-6 mb-6">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                      <span className="mr-2">✨</span>
+                      AI Generated Content
+                    </h3>
+                    
+                    <div className="bg-slate-700/50 rounded-lg p-4 mb-4">
+                      <div className="mb-3">
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Title</label>
+                        <p className="text-white font-medium">{analyzedAffiliateTool.title}</p>
+                      </div>
+                      
+                      <div className="mb-3">
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Category</label>
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-purple-600/20 text-purple-300">
+                          {analyzedAffiliateTool.category}
+                        </span>
+                      </div>
+                      
+                      <div className="mb-3">
+                        <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
+                        <p className="text-gray-100 text-sm leading-relaxed">{analyzedAffiliateTool.description}</p>
+                      </div>
+
+                      {analyzedAffiliateTool.key_benefits && (
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-1">Key Benefits</label>
+                          <ul className="list-disc list-inside text-gray-100 text-sm">
+                            {analyzedAffiliateTool.key_benefits.map((benefit: string, index: number) => (
+                              <li key={index}>{benefit}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Step 3: Upload Image */}
+                {analyzedAffiliateTool && (
+                  <div className="border-t border-gray-700 pt-6">
+                    <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
+                      <span className="mr-2">📸</span>
+                      Upload Tool Image
+                    </h3>
+                    
+                    <div className="mb-4">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setAffiliateImage(e.target.files?.[0] || null)}
+                        className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-purple-600 file:text-white hover:file:bg-purple-700"
+                        disabled={uploading}
+                      />
+                      <p className="text-xs text-gray-400 mt-1">
+                        Upload a high-quality logo or screenshot of the tool (recommended: 200x200px)
+                      </p>
+                    </div>
+
+                    {affiliateImage && (
+                      <div className="mb-4">
+                        <p className="text-sm text-gray-300 mb-2">Preview:</p>
+                        <div className="w-20 h-20 bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                          <img 
+                            src={URL.createObjectURL(affiliateImage)} 
+                            alt="Preview"
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <button
+                      onClick={uploadAffiliateTool}
+                      disabled={uploading || !affiliateImage || !analyzedAffiliateTool}
+                      className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:from-green-700 hover:to-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                    >
+                      {uploading ? (
+                        <span className="flex items-center">
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Publishing Tool...
+                        </span>
+                      ) : (
+                        '🚀 Publish to Toolkit'
+                      )}
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Existing Affiliate Tools */}
+              <div className="bg-slate-800/60 rounded-2xl p-6 border border-white/10">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-semibold text-white flex items-center">
+                    <span className="mr-3">🛠️</span>
+                    Your Toolkit ({affiliateTools.length} tools)
+                  </h2>
+                  <Link
+                    href="/toolkit"
+                    target="_blank"
+                    className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  >
+                    📱 View Public Page
+                  </Link>
+                </div>
+
+                {affiliateTools.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">🛠️</div>
+                    <h3 className="text-lg font-medium text-white mb-2">No affiliate tools yet</h3>
+                    <p className="text-gray-400">Add your first tool using the form above to start building your toolkit page.</p>
+                  </div>
+                ) : (
+                  <div className="grid gap-4">
+                    {affiliateTools.map((tool) => (
+                      <div
+                        key={tool.id}
+                        className="flex items-center justify-between p-4 bg-slate-700/50 rounded-lg border border-gray-600"
+                      >
+                        <div className="flex items-center space-x-4">
+                          {tool.image_url && (
+                            <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                              <img 
+                                src={tool.image_url} 
+                                alt={tool.title}
+                                className="max-w-full max-h-full object-contain"
+                              />
+                            </div>
+                          )}
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <h3 className="font-semibold text-white">{tool.title}</h3>
+                              {tool.is_featured && (
+                                <span className="px-2 py-1 text-xs bg-yellow-600/20 text-yellow-300 rounded-full">
+                                  ⭐ Featured
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm text-gray-300">{tool.category}</p>
+                            <p className="text-xs text-gray-400 mt-1 max-w-md truncate">
+                              {tool.description}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => toggleAffiliateFeatured(tool)}
+                            className="p-2 text-yellow-400 hover:bg-slate-600 rounded-lg transition-colors"
+                            title={tool.is_featured ? "Remove from featured" : "Add to featured"}
+                          >
+                            {tool.is_featured ? '⭐' : '☆'}
+                          </button>
+                          <button
+                            onClick={() => editAffiliateTool(tool)}
+                            className="p-2 text-blue-400 hover:bg-slate-600 rounded-lg transition-colors"
+                            title="Edit tool"
+                          >
+                            ✏️
+                          </button>
+                          <a
+                            href={tool.affiliate_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 text-green-400 hover:bg-slate-600 rounded-lg transition-colors"
+                            title="Visit affiliate link"
+                          >
+                            🔗
+                          </a>
+                          <button
+                            onClick={() => deleteAffiliateTool(tool)}
+                            className="p-2 text-red-400 hover:bg-slate-600 rounded-lg transition-colors"
+                            title="Delete tool"
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -1416,6 +1813,132 @@ export default function AdminPage() {
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Edit Affiliate Tool Modal */}
+      {showEditModal && editingTool && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-800 rounded-2xl border border-white/10 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-white flex items-center">
+                  <span className="mr-2">✏️</span>
+                  Edit Affiliate Tool
+                </h3>
+                <button
+                  onClick={() => {
+                    setShowEditModal(false)
+                    setEditingTool(null)
+                  }}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
+                  <input
+                    type="text"
+                    value={editingTool.title}
+                    onChange={(e) => setEditingTool({ ...editingTool, title: e.target.value })}
+                    className="w-full px-4 py-3 bg-slate-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+                  <textarea
+                    value={editingTool.description}
+                    onChange={(e) => setEditingTool({ ...editingTool, description: e.target.value })}
+                    rows={4}
+                    className="w-full px-4 py-3 bg-slate-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                  <select
+                    value={editingTool.category}
+                    onChange={(e) => setEditingTool({ ...editingTool, category: e.target.value })}
+                    className="w-full px-4 py-3 bg-slate-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  >
+                    <option value="Business Planning">Business Planning</option>
+                    <option value="Productivity">Productivity</option>
+                    <option value="Communication">Communication</option>
+                    <option value="Automation">Automation</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Design">Design</option>
+                    <option value="Development">Development</option>
+                    <option value="Analysis">Analysis</option>
+                    <option value="Research">Research</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Affiliate URL</label>
+                  <input
+                    type="url"
+                    value={editingTool.affiliate_url}
+                    onChange={(e) => setEditingTool({ ...editingTool, affiliate_url: e.target.value })}
+                    className="w-full px-4 py-3 bg-slate-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+
+                {editingTool.original_url && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Original URL</label>
+                    <input
+                      type="url"
+                      value={editingTool.original_url}
+                      onChange={(e) => setEditingTool({ ...editingTool, original_url: e.target.value })}
+                      className="w-full px-4 py-3 bg-slate-700 border border-gray-600 text-white placeholder-gray-400 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    />
+                  </div>
+                )}
+
+                <div className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    id="edit-featured"
+                    checked={editingTool.is_featured}
+                    onChange={(e) => setEditingTool({ ...editingTool, is_featured: e.target.checked })}
+                    className="w-4 h-4 text-purple-600 bg-slate-700 border-gray-600 rounded focus:ring-purple-500"
+                  />
+                  <label htmlFor="edit-featured" className="text-sm text-gray-300">
+                    Featured tool (appears in top section)
+                  </label>
+                </div>
+
+                <div className="flex items-center justify-end space-x-3 pt-4 border-t border-gray-700">
+                  <button
+                    onClick={() => {
+                      setShowEditModal(false)
+                      setEditingTool(null)
+                    }}
+                    className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => updateAffiliateTool({
+                      title: editingTool.title,
+                      description: editingTool.description,
+                      category: editingTool.category,
+                      affiliate_url: editingTool.affiliate_url,
+                      original_url: editingTool.original_url,
+                      is_featured: editingTool.is_featured
+                    })}
+                    className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

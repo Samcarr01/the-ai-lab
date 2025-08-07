@@ -71,6 +71,7 @@ export default function InternalMobileNavigation({
     { href: '/dashboard', icon: '📊', label: 'Dashboard' },
     { href: '/gpts', icon: '🤖', label: 'GPTs' },
     { href: '/documents', icon: '📚', label: 'Playbooks' },
+    { href: '/toolkit', icon: '🛠️', label: 'Our Toolkit' },
     { href: '/blog', icon: '✍️', label: 'Blogs' },
     { href: '/settings', icon: '⚙️', label: 'Settings' }
   ]

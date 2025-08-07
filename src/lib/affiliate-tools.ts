@@ -1,6 +1,5 @@
 // Affiliate Tools service for managing "Our Toolkit" page
 import { createClient } from './supabase/client'
-import { createClient as createServerClient } from './supabase/server'
 
 export interface AffiliateTool {
   id: number
@@ -83,13 +82,14 @@ export const affiliateToolsService = {
     }
 
     // Get unique categories and add 'All' at the beginning
-    const categories = [...new Set(data?.map(item => item.category) || [])]
+    const uniqueCategories = new Set(data?.map(item => item.category) || [])
+    const categories = Array.from(uniqueCategories)
     return ['All', ...categories]
   },
 
   // Create new affiliate tool (admin only)
   async create(tool: Omit<AffiliateTool, 'id' | 'created_at' | 'updated_at'>): Promise<AffiliateTool> {
-    const supabase = createServerClient()
+    const supabase = createClient()
     
     const { data, error } = await supabase
       .from('affiliate_tools')
@@ -107,7 +107,7 @@ export const affiliateToolsService = {
 
   // Update affiliate tool (admin only)
   async update(id: number, updates: Partial<AffiliateTool>): Promise<AffiliateTool> {
-    const supabase = createServerClient()
+    const supabase = createClient()
     
     const { data, error } = await supabase
       .from('affiliate_tools')
@@ -126,7 +126,7 @@ export const affiliateToolsService = {
 
   // Delete affiliate tool (admin only)
   async delete(id: number): Promise<void> {
-    const supabase = createServerClient()
+    const supabase = createClient()
     
     const { error } = await supabase
       .from('affiliate_tools')
@@ -141,7 +141,7 @@ export const affiliateToolsService = {
 
   // Toggle featured status
   async toggleFeatured(id: number): Promise<AffiliateTool> {
-    const supabase = createServerClient()
+    const supabase = createClient()
     
     // First get current featured status
     const { data: current } = await supabase
