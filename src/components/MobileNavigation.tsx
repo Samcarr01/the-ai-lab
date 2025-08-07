@@ -37,8 +37,10 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
     setIsOpen(false)
   }, [pathname])
 
-  // Prevent scrolling when modal is open
+  // Prevent scrolling when modal is open (client-side only)
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     if (isOpen) {
       document.body.style.overflow = 'hidden'
       document.body.style.position = 'fixed'
@@ -50,9 +52,11 @@ export default function MobileNavigation({ onFeatureClick, onPricingClick }: Mob
     }
     
     return () => {
-      document.body.style.overflow = 'unset'
-      document.body.style.position = 'unset'
-      document.body.style.width = 'unset'
+      if (typeof window !== 'undefined') {
+        document.body.style.overflow = 'unset'
+        document.body.style.position = 'unset'
+        document.body.style.width = 'unset'
+      }
     }
   }, [isOpen])
 

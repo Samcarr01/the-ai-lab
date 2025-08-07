@@ -130,17 +130,17 @@ export default function SmartNavigation({ user, currentPage, onFeatureClick, onP
       const { error } = await auth.signOut()
       if (error) {
         console.error('Desktop sign out error:', error)
-        // Force navigation if signOut fails
-        window.location.href = '/'
+        // Use router for consistent navigation - no hard page reload
+        router.push('/')
       } else {
         console.log('Desktop sign out successful')
-        // Don't force reload - let auth state listeners handle the update
+        // Use router for smooth navigation
         router.push('/')
       }
     } catch (error) {
       console.error('Desktop sign out error:', error)
-      // Force navigation even if sign out failed
-      window.location.href = '/'
+      // Use router even for errors - maintain React state
+      router.push('/')
     }
   }
 

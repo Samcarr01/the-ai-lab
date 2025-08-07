@@ -40,13 +40,13 @@ export default function DashboardPage() {
       
       console.log('🔄 Dashboard: Starting auth check...')
       
-      // Set a shorter timeout for better UX
+      // Set a reasonable timeout for better UX
       timeoutId = setTimeout(() => {
         if (!isMounted) return
-        console.error('🚨 Dashboard: Auth loading timeout after 20 seconds - forcing error state')
+        console.error('🚨 Dashboard: Auth loading timeout after 5 seconds - forcing error state')
         setLoading(false)
         setUser(null)
-      }, 20000) // 20 second timeout
+      }, 5000) // 5 second timeout - much more responsive
       
       try {
         const { user: authUser, error } = await auth.getUser()
@@ -87,7 +87,7 @@ export default function DashboardPage() {
           
           if (!isMounted) return
           setLoading(false)
-          setTimeout(() => router.push('/login?error=auth_failed'), 100)
+          router.push('/login?error=auth_failed')
           return
         }
 
@@ -120,7 +120,7 @@ export default function DashboardPage() {
             console.error('Failed to load or create user profile')
             if (!isMounted) return
             setLoading(false)
-            setTimeout(() => router.push('/login'), 100)
+            router.push('/login')
           }
         } catch (profileError: any) {
           console.error('❌ Dashboard: Profile error:', profileError)
@@ -137,7 +137,7 @@ export default function DashboardPage() {
           
           if (!isMounted) return
           setLoading(false)
-          setTimeout(() => router.push('/login'), 100)
+          router.push('/login')
         }
       } catch (err) {
         console.error('❌ Dashboard: Auth error:', err)

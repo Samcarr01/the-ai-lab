@@ -35,8 +35,10 @@ export default function InternalMobileNavigation({
     setIsOpen(false)
   }, [pathname])
 
-  // Prevent scrolling when modal is open
+  // Prevent scrolling when modal is open (client-side only)
   useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     if (isOpen) {
       document.body.style.overflow = 'hidden'
       document.body.style.position = 'fixed'
@@ -48,9 +50,11 @@ export default function InternalMobileNavigation({
     }
     
     return () => {
-      document.body.style.overflow = 'unset'
-      document.body.style.position = 'unset'
-      document.body.style.width = 'unset'
+      if (typeof window !== 'undefined') {
+        document.body.style.overflow = 'unset'
+        document.body.style.position = 'unset'
+        document.body.style.width = 'unset'
+      }
     }
   }, [isOpen])
 
@@ -176,11 +180,14 @@ export default function InternalMobileNavigation({
                 localStorage.removeItem('supabase-auth-persist')
                 localStorage.removeItem('rememberMe')
                 const { auth } = await import('@/lib/auth')
+                const { useRouter } = await import('next/navigation')
                 await auth.signOut()
-                window.location.href = '/'
+                // Use Next.js router for smooth navigation instead of hard redirect
+                window.location.pathname = '/'
               } catch (error) {
                 console.error('Sign out error:', error)
-                window.location.href = '/'
+                // Use pathname change instead of href for better performance
+                window.location.pathname = '/'
               }
             }}
             className="flex items-center space-x-3 px-3 py-3 rounded-lg text-red-300 hover:bg-red-500/10 transition-all duration-150 hover:scale-105 active:scale-95 w-full text-left"

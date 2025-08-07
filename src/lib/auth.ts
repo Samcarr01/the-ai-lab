@@ -1,27 +1,28 @@
 import { createClient } from './supabase/client'
 
+// Safe origin getter for SSR/CSR compatibility
+const getOrigin = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin
+  }
+  return process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+}
+
 // Expose supabase client for auth state listening
 const supabase = createClient()
 
-// Rate limiting to prevent 429 errors
+// Simple rate limiting to prevent 429 errors
 let lastAuthCall = 0
 let lastSignupCall = 0
 const MIN_AUTH_INTERVAL = 1000 // 1 second minimum between auth calls
-const MIN_SIGNUP_INTERVAL = 5000 // 5 seconds minimum between signup calls
-let authCallQueue: Promise<any> | null = null
-let signupCallQueue: Promise<any> | null = null
+const MIN_SIGNUP_INTERVAL = 2000 // 2 seconds minimum between signup calls
 
 export const auth = {
   supabase,
   async signUp(email: string, password: string, firstName?: string, lastName?: string) {
-    // Rate limiting protection for signup calls
+    // Simple rate limiting protection for signup calls
     const now = Date.now()
     if (now - lastSignupCall < MIN_SIGNUP_INTERVAL) {
-      if (signupCallQueue) {
-        console.log('🔄 Auth: Rate limiting signup - waiting for previous signup call...')
-        return await signupCallQueue
-      }
-      // If no queue, enforce minimum interval
       const waitTime = MIN_SIGNUP_INTERVAL - (now - lastSignupCall)
       console.log(`🔄 Auth: Rate limiting signup - waiting ${waitTime}ms...`)
       await new Promise(resolve => setTimeout(resolve, waitTime))
@@ -30,40 +31,32 @@ export const auth = {
     lastSignupCall = Date.now()
     const supabase = createClient()
     
-    // Create promise for queue management
-    const signupPromise = (async () => {
-      try {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/auth/callback`,
-            data: {
-              first_name: firstName || '',
-              last_name: lastName || '',
-            }
-          },
-        })
-        
-        return { data, error }
-      } catch (err: any) {
-        console.error('❌ Auth: Signup error:', err)
-        
-        // Check if it's a 429 rate limit error
-        if (err.message?.includes('429') || err.status === 429) {
-          console.error('🚨 Auth: Signup rate limit detected - backing off for 10 seconds')
-          await new Promise(resolve => setTimeout(resolve, 10000))
-          return { data: null, error: { message: 'Too many signup attempts. Please wait a moment and try again.' } }
-        }
-        
-        return { data: null, error: err }
-      } finally {
-        signupCallQueue = null
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${getOrigin()}/auth/callback`,
+          data: {
+            first_name: firstName || '',
+            last_name: lastName || '',
+          }
+        },
+      })
+      
+      return { data, error }
+    } catch (err: any) {
+      console.error('❌ Auth: Signup error:', err)
+      
+      // Check if it's a 429 rate limit error
+      if (err.message?.includes('429') || err.status === 429) {
+        console.error('🚨 Auth: Signup rate limit detected - backing off for 3 seconds')
+        await new Promise(resolve => setTimeout(resolve, 3000))
+        return { data: null, error: { message: 'Too many signup attempts. Please wait a moment and try again.' } }
       }
-    })()
-    
-    signupCallQueue = signupPromise
-    return await signupPromise
+      
+      return { data: null, error: err }
+    }
   },
 
   async signIn(email: string, password: string, rememberMe: boolean = false) {
@@ -176,50 +169,39 @@ export const auth = {
   },
 
   async getUser() {
-    // Rate limiting protection to prevent 429 errors
+    // Simple rate limiting protection to prevent 429 errors
     const now = Date.now()
     if (now - lastAuthCall < MIN_AUTH_INTERVAL) {
-      // If we're being called too frequently, wait for the previous call
-      if (authCallQueue) {
-        console.log('🔄 Auth: Rate limiting - waiting for previous auth call...')
-        return await authCallQueue
-      }
+      console.log('🔄 Auth: Rate limiting - throttling request...')
+      await new Promise(resolve => setTimeout(resolve, MIN_AUTH_INTERVAL - (now - lastAuthCall)))
     }
     
-    lastAuthCall = now
+    lastAuthCall = Date.now()
     const supabase = createClient()
     
-    // Create promise for queue management
-    const authPromise = (async () => {
-      try {
-        const { data: { user }, error } = await supabase.auth.getUser()
-        
-        // If we get a refresh token error, clear the session
-        if (error && (error.message?.includes('Refresh Token') || error.message?.includes('Invalid Refresh'))) {
-          console.log('🔄 Auth: Invalid refresh token detected, clearing session...')
-          await this.signOut()
-          return { user: null, error }
-        }
-        
-        return { user, error }
-      } catch (err: any) {
-        console.error('❌ Auth: Error getting user:', err)
-        
-        // Check if it's a 429 rate limit error
-        if (err.message?.includes('429') || err.status === 429) {
-          console.error('🚨 Auth: Rate limit detected - backing off for 3 seconds')
-          await new Promise(resolve => setTimeout(resolve, 3000))
-          return { user: null, error: { message: 'Rate limit exceeded. Please wait a moment and try again.' } }
-        }
-        
-        return { user: null, error: err }
-      } finally {
-        authCallQueue = null
+    try {
+      const { data: { user }, error } = await supabase.auth.getUser()
+      
+      // If we get a refresh token error, clear the session
+      if (error && (error.message?.includes('Refresh Token') || error.message?.includes('Invalid Refresh'))) {
+        console.log('🔄 Auth: Invalid refresh token detected, clearing session...')
+        await this.signOut()
+        return { user: null, error }
       }
-    })()
-    
-    authCallQueue = authPromise
-    return await authPromise
+      
+      return { user, error }
+    } catch (err: any) {
+      console.error('❌ Auth: Error getting user:', err)
+      
+      // Check if it's a 429 rate limit error
+      if (err.message?.includes('429') || err.status === 429) {
+        console.error('🚨 Auth: Rate limit detected - backing off for 2 seconds')
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        return { user: null, error: { message: 'Rate limit exceeded. Please wait a moment and try again.' } }
+      }
+      
+      return { user: null, error: err }
+    }
   },
 
   async getSession() {
