@@ -28,7 +28,7 @@ USING (bucket_id = 'blog-images');
 CREATE POLICY "Allow authenticated users to update blog images"
 ON storage.objects FOR UPDATE
 TO authenticated
-USING (bucket_id = blog-images');
+USING (bucket_id = 'blog-images');
 
 -- Storage policy: Allow authenticated users to delete blog images
 CREATE POLICY "Allow authenticated users to delete blog images" 

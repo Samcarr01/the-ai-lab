@@ -360,22 +360,24 @@ IMAGE PLACEHOLDERS:
 - Add [IMAGE: specific description] where visuals would help
 - Be specific about what should be shown (e.g., "[IMAGE: Screenshot of ChatGPT-4 interface with code generation example]")
 
-STRUCTURE YOUR BLOG POST TO ENSURE 2,500+ WORDS:
+CONTENT STRUCTURE REQUIREMENTS:
 1. Title (45-60 chars, professional, clear, avoid slang like "good vibe" or "ultimate")
 2. Introduction (250-300 words minimum, compelling hook + clear value proposition + detailed outline)
-3. 8-10 major sections with descriptive H2 headings (300-400 words EACH):
-   - What is [Topic]? (400+ words: comprehensive definitions, background, historical context, importance)
-   - Why [Topic] Matters Now (350+ words: current market trends, benefits, problems it solves, statistics)
-   - Key Features and Components (400+ words: detailed feature breakdowns, technical specifications)
-   - Complete Step-by-Step Implementation Guide (500+ words: actionable steps with detailed explanations)
-   - Advanced Best Practices and Pro Tips (400+ words: expert strategies, optimization techniques)
-   - Detailed Comparison with Alternatives (450+ words: comparison tables, pros/cons analysis)
-   - Common Mistakes and How to Avoid Them (350+ words: real-world challenges with solutions)
-   - Tools and Resources You Need (300+ words: specific tool recommendations, setup guides)
-   - Real-World Case Studies and Examples (400+ words: detailed success stories, metrics)
-   - Future Trends and What's Next (300+ words: predictions, upcoming developments)
+3. 8-10 major sections with descriptive H2 headings (NO word counts in headings):
+   - What is [Topic]? (comprehensive definitions, background, historical context, importance)
+   - Why [Topic] Matters Now (current market trends, benefits, problems it solves, statistics)
+   - Key Features and Components (detailed feature breakdowns, technical specifications)
+   - Complete Step-by-Step Implementation Guide (actionable steps with detailed explanations)
+   - Advanced Best Practices and Pro Tips (expert strategies, optimization techniques)
+   - Detailed Comparison with Alternatives (comparison tables, pros/cons analysis)
+   - Common Mistakes and How to Avoid Them (real-world challenges with solutions)
+   - Tools and Resources You Need (specific tool recommendations, setup guides)
+   - Real-World Case Studies and Examples (detailed success stories, metrics)
+   - Future Trends and What's Next (predictions, upcoming developments)
 4. Must include: detailed numbered lists, comparison tables, code examples, screenshot descriptions
 5. Strong conclusion (250+ words) with comprehensive summary + clear call-to-action + next steps
+
+🚨 CRITICAL: DO NOT include word count numbers like "(400+ words)" in ANY headings or content - these are internal guidelines only!
 
 TITLE REQUIREMENTS:
 - Professional tone, avoid casual slang or buzzwords

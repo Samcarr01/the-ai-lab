@@ -70,9 +70,30 @@ export const imageStorageService = {
         })
 
       if (error) {
-        console.error('Failed to upload image to Supabase:', error)
+        console.error(`❌ [STORAGE DEBUG] Supabase upload failed for ${fileName}:`, {
+          error: error.message,
+          details: error,
+          fileName,
+          fileSize: imageFile.size,
+          fileType: imageFile.type
+        })
+        
+        // Check if it's a bucket/permissions issue
+        if (error.message.includes('bucket') || error.message.includes('permission')) {
+          console.error(`🔧 [STORAGE DEBUG] This looks like a bucket configuration issue. Please check:`)
+          console.error(`   1. blog-images bucket exists in Supabase Storage`)
+          console.error(`   2. RLS policies allow authenticated users to INSERT`)
+          console.error(`   3. Service role key has storage permissions`)
+        }
+        
         return null
       }
+
+      console.log(`✅ [STORAGE DEBUG] Successfully uploaded to Supabase:`, {
+        fileName,
+        path: data.path,
+        size: imageFile.size
+      })
 
       const uploadTime = Date.now() - uploadStartTime
       console.log(`⚡ Image uploaded in ${uploadTime}ms`)
@@ -106,24 +127,46 @@ export const imageStorageService = {
 
   // Store multiple images and return permanent URLs
   async storeMultipleImages(images: Array<{url: string, prompt: string, description: string, placement: string}>, blogTitle: string): Promise<Array<{url: string, prompt: string, description: string, placement: string}>> {
+    console.log(`💾 [STORAGE DEBUG] Starting batch storage of ${images.length} images for blog: ${blogTitle}`)
     const storedImages = []
     
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
       const fileName = this.generateImageFileName(blogTitle, i + 1)
+      
+      console.log(`💾 [STORAGE DEBUG] Processing image ${i + 1}/${images.length}:`)
+      console.log(`  - Original URL: ${image.url.slice(0, 80)}...`)
+      console.log(`  - Generated filename: ${fileName}`)
+      console.log(`  - Description: ${image.description}`)
+      
       const permanentUrl = await this.storeDalleImage(image.url, fileName)
       
       if (permanentUrl) {
+        console.log(`✅ [STORAGE DEBUG] Successfully stored image ${i + 1}: ${permanentUrl}`)
         storedImages.push({
           ...image,
           url: permanentUrl, // Replace temporary URL with permanent one
           original_dalle_url: image.url // Keep original for reference
         })
       } else {
-        // If storage fails, keep original URL (will expire but better than nothing)
-        console.warn(`Failed to store image ${i + 1}, keeping original URL`)
-        storedImages.push(image)
+        console.error(`❌ [STORAGE DEBUG] Failed to store image ${i + 1}, keeping original DALL-E URL`)
+        console.error(`  - This URL will expire and cause broken images`)
+        console.error(`  - Original URL: ${image.url}`)
+        
+        // Still add the image but with original (temporary) URL
+        storedImages.push({
+          ...image,
+          storage_failed: true // Mark as failed storage
+        })
       }
+    }
+    
+    const successCount = storedImages.filter(img => !('storage_failed' in img)).length
+    console.log(`💾 [STORAGE SUMMARY] ${successCount}/${images.length} images stored successfully`)
+    
+    if (successCount < images.length) {
+      console.error(`❌ [STORAGE SUMMARY] ${images.length - successCount} images failed to store permanently`)
+      console.error(`   These will show as broken images once DALL-E URLs expire (typically within 1 hour)`)
     }
     
     return storedImages
