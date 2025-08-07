@@ -44,6 +44,7 @@ export default function AdminPage() {
   const [affiliateImage, setAffiliateImage] = useState<File | null>(null)
   const [editingTool, setEditingTool] = useState<AffiliateTool | null>(null)
   const [showEditModal, setShowEditModal] = useState(false)
+  const [editingImage, setEditingImage] = useState<File | null>(null)
   const [notification, setNotification] = useState<{
     isOpen: boolean
     title: string
@@ -455,6 +456,7 @@ export default function AdminPage() {
 
   const editAffiliateTool = (tool: AffiliateTool) => {
     setEditingTool(tool)
+    setEditingImage(null) // Reset image selection
     setShowEditModal(true)
   }
 
@@ -462,10 +464,35 @@ export default function AdminPage() {
     if (!editingTool) return
 
     try {
-      await affiliateToolsService.update(editingTool.id, updatedTool)
+      let finalUpdatedTool = { ...updatedTool }
+
+      // If a new image was selected, upload it first
+      if (editingImage) {
+        console.log('📤 Uploading new image for affiliate tool...')
+        
+        const formData = new FormData()
+        formData.append('file', editingImage)
+        
+        const imageResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (!imageResponse.ok) {
+          throw new Error('Image upload failed')
+        }
+
+        const imageData = await imageResponse.json()
+        console.log('✅ New image uploaded:', imageData.url)
+        
+        finalUpdatedTool.image_url = imageData.url
+      }
+
+      await affiliateToolsService.update(editingTool.id, finalUpdatedTool)
       await loadContent()
       setShowEditModal(false)
       setEditingTool(null)
+      setEditingImage(null)
       showNotification('Success', `"${editingTool.title}" updated successfully!`, 'success')
     } catch (error) {
       console.error('❌ Update failed:', error)
@@ -1831,6 +1858,7 @@ export default function AdminPage() {
                   onClick={() => {
                     setShowEditModal(false)
                     setEditingTool(null)
+                    setEditingImage(null)
                   }}
                   className="text-gray-400 hover:text-white transition-colors"
                 >
@@ -1900,6 +1928,52 @@ export default function AdminPage() {
                   </div>
                 )}
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Tool Image</label>
+                  <div className="space-y-3">
+                    {/* Current Image Preview */}
+                    {editingTool.image_url && (
+                      <div className="flex items-center space-x-3">
+                        <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                          <img 
+                            src={editingTool.image_url} 
+                            alt={editingTool.title}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
+                        <span className="text-sm text-gray-400">Current image</span>
+                      </div>
+                    )}
+                    
+                    {/* New Image Upload */}
+                    <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => setEditingImage(e.target.files?.[0] || null)}
+                        className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-purple-600 file:text-white hover:file:bg-purple-700"
+                      />
+                      <p className="text-xs text-gray-400 mt-1">
+                        Upload a new image to replace the current one (recommended: 200x200px)
+                      </p>
+                    </div>
+
+                    {/* New Image Preview */}
+                    {editingImage && (
+                      <div className="flex items-center space-x-3">
+                        <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center overflow-hidden">
+                          <img 
+                            src={URL.createObjectURL(editingImage)} 
+                            alt="New preview"
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
+                        <span className="text-sm text-green-400">New image (will replace current)</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <div className="flex items-center space-x-3">
                   <input
                     type="checkbox"
@@ -1918,6 +1992,7 @@ export default function AdminPage() {
                     onClick={() => {
                       setShowEditModal(false)
                       setEditingTool(null)
+                      setEditingImage(null)
                     }}
                     className="px-4 py-2 text-gray-300 hover:text-white transition-colors"
                   >
