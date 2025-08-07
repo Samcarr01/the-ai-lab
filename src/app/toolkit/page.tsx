@@ -133,11 +133,9 @@ export default function ToolkitPage() {
     console.log('ToolCard data:', { tool, isFeatured, isFlipped })
 
     return (
-      <div className="group relative h-96" style={{ perspective: '1000px' }}>
+      <div className="group relative h-[420px]" style={{ perspective: '1000px' }}>
         <div 
-          className={`tool-card relative w-full h-full cursor-pointer transition-transform duration-700 ease-in-out ${
-            isFlipped ? 'rotateY-180' : ''
-          }`}
+          className="tool-card relative w-full h-full cursor-pointer transition-all duration-500 ease-out"
           style={{ 
             transformStyle: 'preserve-3d',
             transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
@@ -167,20 +165,20 @@ export default function ToolkitPage() {
             {/* Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
 
-            <div className="relative p-8 h-full flex flex-col justify-between">
+            <div className="relative p-6 h-full flex flex-col justify-between">
               {/* Top Section */}
-              <div className="text-center">
+              <div className="text-center flex-1 flex flex-col">
                 {/* Image - Show placeholder if no image */}
-                <div className="mb-6 flex justify-center">
-                  <div className="w-20 h-20 rounded-2xl bg-white/95 shadow-lg p-3 flex items-center justify-center backdrop-blur-sm">
+                <div className="mb-4 flex justify-center">
+                  <div className="w-16 h-16 rounded-xl bg-white/95 shadow-lg p-2 flex items-center justify-center backdrop-blur-sm">
                     {tool.image_url ? (
                       <img 
                         src={tool.image_url} 
                         alt={tool.title}
-                        className="w-14 h-14 object-contain"
+                        className="w-12 h-12 object-contain"
                       />
                     ) : (
-                      <div className="w-14 h-14 flex items-center justify-center text-2xl">
+                      <div className="w-12 h-12 flex items-center justify-center text-xl">
                         {categoryInfo.emoji}
                       </div>
                     )}
@@ -188,27 +186,27 @@ export default function ToolkitPage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-xl font-bold text-white mb-3 leading-tight">
+                <h3 className="text-lg font-bold text-white mb-2 leading-tight line-clamp-2">
                   {tool.title || 'Sample Tool'}
                 </h3>
 
                 {/* Category */}
-                <div className={`inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold mb-4 bg-gradient-to-r ${categoryInfo.color} text-white shadow-md`}>
-                  <span className="mr-2">{categoryInfo.emoji}</span>
+                <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold mb-3 bg-gradient-to-r ${categoryInfo.color} text-white shadow-md`}>
+                  <span className="mr-1">{categoryInfo.emoji}</span>
                   {tool.category || 'Automation'}
                 </div>
 
                 {/* Description Preview */}
-                <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                  {tool.description ? `${tool.description.slice(0, 120)}...` : 'A powerful tool to transform your workflow and boost productivity.'}
+                <p className="text-gray-300 text-xs leading-relaxed mb-4 line-clamp-3 flex-1">
+                  {tool.description ? `${tool.description.slice(0, 100)}...` : 'A powerful tool to transform your workflow and boost productivity.'}
                 </p>
               </div>
 
               {/* Bottom Section */}
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {/* Primary CTA */}
                 <button 
-                  className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                  className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
                   onClick={(e) => {
                     e.stopPropagation()
                     if (tool.affiliate_url) {
@@ -222,7 +220,7 @@ export default function ToolkitPage() {
                 </button>
                 
                 {/* Secondary Action */}
-                <button className="w-full text-gray-400 hover:text-white text-xs transition-colors">
+                <button className="w-full text-gray-400 hover:text-white text-xs transition-colors py-1">
                   👆 Click card for details
                 </button>
               </div>
@@ -236,24 +234,24 @@ export default function ToolkitPage() {
             WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)'
           }}>
-            <div className="p-8 h-full flex flex-col">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-white rounded-xl p-2 flex items-center justify-center">
+            <div className="p-6 h-full flex flex-col">
+              {/* Header with only X button */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-white rounded-xl p-2 flex items-center justify-center">
                     {tool.image_url ? (
                       <img 
                         src={tool.image_url} 
                         alt={tool.title}
-                        className="w-8 h-8 object-contain"
+                        className="w-6 h-6 object-contain"
                       />
                     ) : (
-                      <span className="text-lg">{categoryInfo.emoji}</span>
+                      <span className="text-sm">{categoryInfo.emoji}</span>
                     )}
                   </div>
                   <div>
-                    <h4 className="text-lg font-bold text-white">{tool.title || 'Sample Tool'}</h4>
-                    <p className="text-sm text-purple-300">{tool.category || 'Automation'}</p>
+                    <h4 className="text-base font-bold text-white line-clamp-1">{tool.title || 'Sample Tool'}</h4>
+                    <p className="text-xs text-purple-300">{tool.category || 'Automation'}</p>
                   </div>
                 </div>
                 <button 
@@ -261,45 +259,39 @@ export default function ToolkitPage() {
                     e.stopPropagation()
                     toggleCard(tool.id)
                   }}
-                  className="w-8 h-8 rounded-full bg-slate-700 text-gray-300 hover:text-white hover:bg-slate-600 text-sm flex items-center justify-center transition-colors"
+                  className="w-7 h-7 rounded-full bg-slate-700/80 text-gray-300 hover:text-white hover:bg-slate-600 text-sm flex items-center justify-center transition-all duration-200 hover:scale-110"
                 >
                   ✕
                 </button>
               </div>
 
               {/* Content */}
-              <div className="flex-1 mb-6">
-                <div className="mb-4">
-                  <h5 className="text-purple-300 font-semibold mb-2 flex items-center">
+              <div className="flex-1 mb-4 overflow-hidden">
+                <div className="mb-3">
+                  <h5 className="text-purple-300 font-semibold mb-2 flex items-center text-sm">
                     <span className="mr-2">✨</span>
                     Why We Love This Tool
                   </h5>
-                  <p className="text-gray-200 text-sm leading-relaxed">
+                  <p className="text-gray-200 text-sm leading-relaxed overflow-hidden">
                     {tool.description || 'A comprehensive tool designed to streamline your workflow and increase productivity. This powerful solution has been battle-tested and proven to deliver results for businesses of all sizes.'}
                   </p>
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="space-y-3">
+              {/* Single Action Button */}
+              <div>
                 <button 
-                  className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-sm transition-all duration-300 shadow-lg"
+                  className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-sm transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                   onClick={(e) => {
                     e.stopPropagation()
-                    window.open(tool.affiliate_url, '_blank')
+                    if (tool.affiliate_url) {
+                      window.open(tool.affiliate_url, '_blank')
+                    } else {
+                      console.log('No affiliate URL provided')
+                    }
                   }}
                 >
                   🚀 Get Started Now
-                </button>
-                
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    toggleCard(tool.id)
-                  }}
-                  className="w-full px-4 py-2 border border-slate-600 text-gray-300 hover:text-white hover:border-slate-500 rounded-lg text-sm transition-colors"
-                >
-                  ← Back to Overview
                 </button>
               </div>
             </div>

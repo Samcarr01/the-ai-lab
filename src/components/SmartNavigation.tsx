@@ -187,7 +187,7 @@ export default function SmartNavigation({ user, currentPage, onFeatureClick, onP
                       <Link
                         key={item.href}
                         href={item.href}
-                        className={`relative px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 group ${
+                        className={`relative px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 group whitespace-nowrap ${
                           isActive
                             ? 'text-white bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-500/25'
                             : 'text-gray-300 hover:text-white hover:bg-white/10'
@@ -226,7 +226,7 @@ export default function SmartNavigation({ user, currentPage, onFeatureClick, onP
                 {/* User Profile Section */}
                 <div className="flex items-center space-x-3 pl-6 border-l border-white/10">
                   {/* User Greeting */}
-                  <div className="text-sm text-gray-300 font-medium">
+                  <div className="text-sm text-gray-300 font-medium whitespace-nowrap">
                     Hi, {getUserDisplayName(effectiveUser)}! 👋
                   </div>
                   
@@ -251,19 +251,22 @@ export default function SmartNavigation({ user, currentPage, onFeatureClick, onP
                   {/* Settings Link */}
                   <Link
                     href="/settings"
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 whitespace-nowrap ${
                       currentPage === 'settings'
                         ? 'text-purple-300 bg-purple-900/30 border border-purple-500/30'
                         : 'text-gray-400 hover:text-white hover:bg-white/10'
                     }`}
                   >
-                    ⚙️ Settings
+                    <span className="flex items-center space-x-1.5">
+                      <span>⚙️</span>
+                      <span>Settings</span>
+                    </span>
                   </Link>
                   
                   {/* Sign Out Button */}
                   <button
                     onClick={handleSignOut}
-                    className="px-3 py-1.5 rounded-full text-xs font-medium text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-300"
+                    className="px-3 py-1.5 rounded-full text-xs font-medium text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-300 whitespace-nowrap"
                   >
                     Sign Out
                   </button>
