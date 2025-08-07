@@ -180,7 +180,13 @@ export const auth = {
     const supabase = createClient()
     
     try {
-      const { data: { user }, error } = await supabase.auth.getUser()
+      // Add timeout to prevent hanging requests
+      const authPromise = supabase.auth.getUser()
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Auth request timeout')), 8000)
+      )
+      
+      const { data: { user }, error } = await Promise.race([authPromise, timeoutPromise]) as any
       
       // If we get a refresh token error, clear the session
       if (error && (error.message?.includes('Refresh Token') || error.message?.includes('Invalid Refresh'))) {
@@ -192,6 +198,12 @@ export const auth = {
       return { user, error }
     } catch (err: any) {
       console.error('❌ Auth: Error getting user:', err)
+      
+      // Check if it's a timeout
+      if (err.message?.includes('timeout')) {
+        console.error('🚨 Auth: Request timeout - returning null user')
+        return { user: null, error: { message: 'Authentication timeout' } }
+      }
       
       // Check if it's a 429 rate limit error
       if (err.message?.includes('429') || err.status === 429) {

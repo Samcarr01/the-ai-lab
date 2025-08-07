@@ -43,10 +43,10 @@ export default function DashboardPage() {
       // Set a reasonable timeout for better UX
       timeoutId = setTimeout(() => {
         if (!isMounted) return
-        console.error('🚨 Dashboard: Auth loading timeout after 5 seconds - forcing error state')
+        console.error('🚨 Dashboard: Auth loading timeout after 10 seconds - forcing error state')
         setLoading(false)
         setUser(null)
-      }, 5000) // 5 second timeout - much more responsive
+      }, 10000) // 10 second timeout to handle rate limiting
       
       try {
         const { user: authUser, error } = await auth.getUser()
@@ -251,9 +251,15 @@ export default function DashboardPage() {
       <DarkThemeBackground>
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
-            <p className="text-gray-300">Loading dashboard...</p>
-            <p className="text-gray-500 text-sm mt-2">Check browser console for details</p>
+            <div className="relative">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400 mx-auto mb-4"></div>
+              <div className="animate-ping absolute top-0 left-1/2 transform -translate-x-1/2 w-12 h-12 rounded-full bg-purple-400 opacity-20"></div>
+            </div>
+            <p className="text-gray-300 text-lg font-medium">Loading your dashboard...</p>
+            <p className="text-gray-500 text-sm mt-2">Authenticating and loading your profile</p>
+            {authDebugInfo && (
+              <p className="text-xs text-gray-600 mt-1">Status: {authDebugInfo.step}</p>
+            )}
           </div>
         </div>
       </DarkThemeBackground>
