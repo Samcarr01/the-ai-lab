@@ -335,6 +335,29 @@
     transform: rotateY(-180deg);
   }
   
+  /* Custom scrollbar for card content */
+  .card-scrollable {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
+  }
+  
+  .card-scrollable::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .card-scrollable::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .card-scrollable::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.3);
+    border-radius: 2px;
+  }
+  
+  .card-scrollable::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.5);
+  }
+  
   /* Mobile optimization utilities */
   .mobile-optimized {
     -webkit-tap-highlight-color: transparent;

@@ -236,23 +236,23 @@ export default function ToolkitPage() {
               transform: 'rotateY(180deg)'
             }}
           >
-            <div className="p-6 h-full flex flex-col">
+            <div className="p-4 h-full flex flex-col">
               {/* Header with only X button */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-white rounded-xl p-2 flex items-center justify-center">
+              <div className="flex items-center justify-between mb-3 flex-shrink-0">
+                <div className="flex items-center space-x-2 flex-1 min-w-0">
+                  <div className="w-8 h-8 bg-white rounded-lg p-1.5 flex items-center justify-center flex-shrink-0">
                     {tool.image_url ? (
                       <img 
                         src={tool.image_url} 
                         alt={tool.title}
-                        className="w-6 h-6 object-contain"
+                        className="w-5 h-5 object-contain"
                       />
                     ) : (
-                      <span className="text-sm">{categoryInfo.emoji}</span>
+                      <span className="text-xs">{categoryInfo.emoji}</span>
                     )}
                   </div>
-                  <div>
-                    <h4 className="text-base font-bold text-white line-clamp-1">{tool.title || 'Sample Tool'}</h4>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-sm font-bold text-white line-clamp-1">{tool.title || 'Sample Tool'}</h4>
                     <p className="text-xs text-purple-300">{tool.category || 'Automation'}</p>
                   </div>
                 </div>
@@ -261,29 +261,39 @@ export default function ToolkitPage() {
                     e.stopPropagation()
                     toggleCard(tool.id)
                   }}
-                  className="w-7 h-7 rounded-full bg-slate-700/80 text-gray-300 hover:text-white hover:bg-slate-600 text-sm flex items-center justify-center transition-all duration-200 hover:scale-110"
+                  className="w-6 h-6 rounded-full bg-slate-700/80 text-gray-300 hover:text-white hover:bg-slate-600 text-xs flex items-center justify-center transition-all duration-200 hover:scale-110 flex-shrink-0 ml-2"
                 >
                   ✕
                 </button>
               </div>
 
-              {/* Content */}
-              <div className="flex-1 mb-4 overflow-hidden">
-                <div className="mb-3">
-                  <h5 className="text-purple-300 font-semibold mb-2 flex items-center text-sm">
-                    <span className="mr-2">✨</span>
+              {/* Content - Scrollable */}
+              <div className="flex-1 mb-3 overflow-y-auto card-scrollable">
+                <div className="pr-1"> {/* Small padding for scrollbar */}
+                  <h5 className="text-purple-300 font-semibold mb-2 flex items-center text-xs">
+                    <span className="mr-1">✨</span>
                     Why We Love This Tool
                   </h5>
-                  <p className="text-gray-200 text-sm leading-relaxed overflow-hidden">
-                    {tool.description || 'A comprehensive tool designed to streamline your workflow and increase productivity. This powerful solution has been battle-tested and proven to deliver results for businesses of all sizes.'}
-                  </p>
+                  <div className="text-gray-200 text-xs leading-relaxed">
+                    {tool.description ? (
+                      <div className="space-y-2">
+                        {tool.description.split('\n\n').map((paragraph, index) => (
+                          <p key={index} className="leading-relaxed">
+                            {paragraph}
+                          </p>
+                        ))}
+                      </div>
+                    ) : (
+                      <p>A comprehensive tool designed to streamline your workflow and increase productivity. This powerful solution has been battle-tested and proven to deliver results for businesses of all sizes.</p>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Single Action Button */}
-              <div>
+              {/* Single Action Button - Fixed at bottom */}
+              <div className="flex-shrink-0">
                 <button 
-                  className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-sm transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className="w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-xs transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                   onClick={(e) => {
                     e.stopPropagation()
                     if (tool.affiliate_url) {
