@@ -692,9 +692,6 @@ FORMAT YOUR COMPLETE RESPONSE AS THIS EXACT JSON STRUCTURE (no additional text b
             }
             
             console.log('✅ Successfully parsed blog post JSON with title:', blogPost.title?.slice(0, 50))
-            } else {
-              throw new Error('No JSON found in response');
-            }
           } catch (parseError) {
             console.error('❌ Failed to parse blog JSON:', parseError);
             console.error('📋 Full raw content received:', accumulatedContent);
