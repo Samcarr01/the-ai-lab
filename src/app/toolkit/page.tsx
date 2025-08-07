@@ -52,10 +52,11 @@ export default function ToolkitPage() {
             description: 'The workflow automation tool that transformed how we handle repetitive tasks. N8N\'s visual interface lets you connect 300+ services without writing code. We\'ve automated everything from lead processing to content distribution, saving 15+ hours per week.',
             category: 'Automation',
             affiliate_url: 'https://n8n.io',
-            image_url: null,
+            image_url: undefined,
             is_featured: true,
             created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
+            hasAccess: true
           }
         ]
         setTools(sampleTools)
