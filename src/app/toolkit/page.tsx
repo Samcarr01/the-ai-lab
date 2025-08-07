@@ -43,6 +43,25 @@ export default function ToolkitPage() {
       // Filter out 'All' from categories to prevent duplicate
       setCategories(categoriesData.filter(cat => cat !== 'All'))
       
+      // If no tools, add sample data for demo
+      if (toolsData.length === 0) {
+        const sampleTools = [
+          {
+            id: 1,
+            title: 'N8N Automation Platform',
+            description: 'The workflow automation tool that transformed how we handle repetitive tasks. N8N\'s visual interface lets you connect 300+ services without writing code. We\'ve automated everything from lead processing to content distribution, saving 15+ hours per week.',
+            category: 'Automation',
+            affiliate_url: 'https://n8n.io',
+            image_url: null,
+            is_featured: true,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ]
+        setTools(sampleTools)
+        setCategories(['Automation'])
+      }
+      
     } catch (error) {
       console.error('Error loading toolkit data:', error)
     } finally {
@@ -109,21 +128,31 @@ export default function ToolkitPage() {
     const isFlipped = flippedCards.has(tool.id)
     const categoryInfo = getCategoryInfo(tool.category)
 
+    // Debug logging
+    console.log('ToolCard data:', { tool, isFeatured, isFlipped })
+
     return (
       <div className="group relative h-96" style={{ perspective: '1000px' }}>
         <div 
           className={`tool-card relative w-full h-full cursor-pointer transition-transform duration-700 ease-in-out ${
-            isFlipped ? 'flipped' : ''
+            isFlipped ? 'rotateY-180' : ''
           }`}
-          style={{ transformStyle: 'preserve-3d' }}
+          style={{ 
+            transformStyle: 'preserve-3d',
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
+          }}
           onClick={() => toggleCard(tool.id)}
         >
           {/* FRONT CARD */}
-          <div className={`card-face card-front absolute inset-0 w-full h-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 group-hover:shadow-2xl ${
+          <div className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 group-hover:shadow-2xl ${
             isFeatured 
               ? 'bg-gradient-to-br from-yellow-400/10 via-purple-900 to-slate-900 border-2 border-yellow-400/30' 
               : 'bg-gradient-to-br from-purple-900/50 via-slate-800 to-slate-900 border border-slate-600/50'
-          }`}>
+          }`}
+          style={{ 
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden'
+          }}>
             
             {/* Featured Badge */}
             {isFeatured && (
@@ -140,33 +169,37 @@ export default function ToolkitPage() {
             <div className="relative p-8 h-full flex flex-col justify-between">
               {/* Top Section */}
               <div className="text-center">
-                {/* Image */}
-                {tool.image_url && (
-                  <div className="mb-6 flex justify-center">
-                    <div className="w-20 h-20 rounded-2xl bg-white/95 shadow-lg p-3 flex items-center justify-center backdrop-blur-sm">
+                {/* Image - Show placeholder if no image */}
+                <div className="mb-6 flex justify-center">
+                  <div className="w-20 h-20 rounded-2xl bg-white/95 shadow-lg p-3 flex items-center justify-center backdrop-blur-sm">
+                    {tool.image_url ? (
                       <img 
                         src={tool.image_url} 
                         alt={tool.title}
                         className="w-14 h-14 object-contain"
                       />
-                    </div>
+                    ) : (
+                      <div className="w-14 h-14 flex items-center justify-center text-2xl">
+                        {categoryInfo.emoji}
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
 
                 {/* Title */}
                 <h3 className="text-xl font-bold text-white mb-3 leading-tight">
-                  {tool.title}
+                  {tool.title || 'Sample Tool'}
                 </h3>
 
                 {/* Category */}
                 <div className={`inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold mb-4 bg-gradient-to-r ${categoryInfo.color} text-white shadow-md`}>
                   <span className="mr-2">{categoryInfo.emoji}</span>
-                  {tool.category}
+                  {tool.category || 'Automation'}
                 </div>
 
                 {/* Description Preview */}
                 <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                  {tool.description.slice(0, 120)}...
+                  {tool.description ? `${tool.description.slice(0, 120)}...` : 'A powerful tool to transform your workflow and boost productivity.'}
                 </p>
               </div>
 
@@ -177,10 +210,14 @@ export default function ToolkitPage() {
                   className="w-full px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
                   onClick={(e) => {
                     e.stopPropagation()
-                    window.open(tool.affiliate_url, '_blank')
+                    if (tool.affiliate_url) {
+                      window.open(tool.affiliate_url, '_blank')
+                    } else {
+                      console.log('No affiliate URL provided')
+                    }
                   }}
                 >
-                  🚀 Try {tool.title}
+                  🚀 Try {tool.title || 'This Tool'}
                 </button>
                 
                 {/* Secondary Action */}
@@ -192,23 +229,30 @@ export default function ToolkitPage() {
           </div>
 
           {/* BACK CARD */}
-          <div className="card-face card-back absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 border border-purple-500/50 shadow-xl overflow-hidden">
+          <div className="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 border border-purple-500/50 shadow-xl overflow-hidden"
+          style={{ 
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            transform: 'rotateY(180deg)'
+          }}>
             <div className="p-8 h-full flex flex-col">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
-                  {tool.image_url && (
-                    <div className="w-12 h-12 bg-white rounded-xl p-2 flex items-center justify-center">
+                  <div className="w-12 h-12 bg-white rounded-xl p-2 flex items-center justify-center">
+                    {tool.image_url ? (
                       <img 
                         src={tool.image_url} 
                         alt={tool.title}
                         className="w-8 h-8 object-contain"
                       />
-                    </div>
-                  )}
+                    ) : (
+                      <span className="text-lg">{categoryInfo.emoji}</span>
+                    )}
+                  </div>
                   <div>
-                    <h4 className="text-lg font-bold text-white">{tool.title}</h4>
-                    <p className="text-sm text-purple-300">{tool.category}</p>
+                    <h4 className="text-lg font-bold text-white">{tool.title || 'Sample Tool'}</h4>
+                    <p className="text-sm text-purple-300">{tool.category || 'Automation'}</p>
                   </div>
                 </div>
                 <button 
@@ -230,7 +274,7 @@ export default function ToolkitPage() {
                     Why We Love This Tool
                   </h5>
                   <p className="text-gray-200 text-sm leading-relaxed">
-                    {tool.description}
+                    {tool.description || 'A comprehensive tool designed to streamline your workflow and increase productivity. This powerful solution has been battle-tested and proven to deliver results for businesses of all sizes.'}
                   </p>
                 </div>
               </div>
@@ -261,24 +305,6 @@ export default function ToolkitPage() {
           </div>
         </div>
 
-        <style jsx>{`
-          .tool-card {
-            transform-style: preserve-3d;
-          }
-          .tool-card.flipped {
-            transform: rotateY(180deg);
-          }
-          .card-face {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-          }
-          .card-front {
-            transform: rotateY(0deg);
-          }
-          .card-back {
-            transform: rotateY(180deg);
-          }
-        `}</style>
       </div>
     )
   }
