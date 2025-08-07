@@ -253,35 +253,8 @@ export async function POST(request: NextRequest) {
           sendProgress({ step: 'setup', status: 'starting' })
           const setupStart = Date.now()
 
-          // Load SEO knowledge - use custom knowledge base if provided
-          const seoKnowledge = knowledgeBase || `
-## Blog Structure & Length
-- Optimal length: 1,500-2,500 words for best SEO performance
-- Headline: 60-70 characters, include primary keyword near beginning
-- Introduction: Hook reader in first 10-15 seconds, clear value proposition
-- Body: Use H2/H3 headings hierarchically, 2-4 sentence paragraphs
-- Conclusion: Summarize key takeaways, include clear call-to-action
-
-## Content Quality Requirements
-- Scannable format: 79% of users scan content, not read word-for-word
-- Short paragraphs: 1-3 sentences max for mobile readability
-- Bullet points/lists: Break up text, highlight key information
-- Bold/italic: Emphasize important concepts (don't overuse)
-- White space: Prevent overwhelming visual density
-
-## SEO Optimization
-- Primary keyword: Include naturally in headline, intro, headings
-- Heading structure: H2/H3 tags that tell complete story when scanned
-- Meta description: 150-160 characters, compelling and keyword-rich
-- Internal links: Link to related content for better site structure
-- External links: Include 2-3 authoritative sources for credibility
-
-## Writing Approach
-- Conversational tone: Use "you", contractions, rhetorical questions
-- Active voice: More engaging than passive voice
-- Concrete language: Specific words over vague generalities
-- Evidence-based: Support claims with data, research, examples
-- Actionable insights: Provide practical takeaways readers can implement`
+          // Use condensed SEO knowledge base (no file loading needed)
+          console.log('✅ Using condensed SEO knowledge base (efficient, focused strategies)')
 
           sendProgress({
             step: 'setup',
@@ -321,8 +294,43 @@ ${includeWebSearch ? `RESEARCH REQUIREMENTS:
 - Look for authoritative sources like official websites, tech publications, research papers
 - Gather concrete data points, user testimonials, and comparison information` : ''}
 
-Follow these SEO guidelines:
-${seoKnowledge}
+🎯 CRITICAL SEO & LINKING STRATEGIES (Condensed from 85KB Guide):
+
+INTERNAL LINKING (8-12 links per post - MANDATORY):
+- Hub & Spoke Model: Link to our main sections as content hubs
+  • [AI productivity tools](/gpts) - for any tool/software mentions
+  • [comprehensive guides](/documents) - for how-to, tutorials, resources  
+  • [related articles](/blog) - for topic extensions, case studies
+  • [upgrade to Pro](/upgrade) - for premium features/tools mentions
+- Use descriptive, keyword-rich anchor text (not "click here" or "read more")
+- Place high-value internal links early in content (first 2-3 paragraphs)
+- Create bidirectional linking - reference related internal content naturally
+- Examples: "discover powerful [AI productivity tools](/gpts)" or "our [comprehensive automation guides](/documents)"
+
+EXTERNAL LINKING (5-8 links per post - MANDATORY):  
+- Link to HIGH-AUTHORITY sources with specific, working URLs
+- Authoritative domains: openai.com, google.com/research, hubspot.com, semrush.com, ahrefs.com, backlinko.com
+- Use SPECIFIC page URLs, not just domains: https://openai.com/research/gpt-4 
+- Strategic anchor text: [OpenAI's GPT-4 research](https://openai.com/research/gpt-4)
+- Link to: original research, statistics, tool websites, expert opinions, case studies
+- Use rel="noopener" for external links opening in new tabs
+- NO placeholder URLs or fake links - only real, working external links
+
+CONTENT OPTIMIZATION:
+- Primary keyword in title, first paragraph, 2-3 H2 headings, conclusion
+- Meta description: 150-160 characters, include primary keyword + CTA
+- H2/H3 heading hierarchy: 8-10 major sections with descriptive headings
+- Write 2,500-3,000 words: comprehensive coverage beats short posts
+- Include bullet lists, numbered steps, bold key phrases
+- Conversational tone with "you", contractions, actionable advice
+- Add specific statistics, examples, case studies throughout
+
+ENGAGEMENT ELEMENTS:
+- Hook readers in first 50 words with compelling statistics or questions  
+- Include practical examples and real-world applications
+- Add comparison tables, step-by-step processes, and troubleshooting tips
+- End with clear call-to-action and next steps
+- Use short paragraphs (2-4 sentences) for mobile readability
 
 📝 CONTENT LENGTH GUIDELINES:
 1. Aim for comprehensive, detailed coverage of the topic
@@ -341,12 +349,12 @@ CONTENT STRUCTURE GUIDELINES:
 - Use conversational tone with "you", contractions, and active voice
 - Focus on being helpful and informative rather than hitting word targets
 
-LINKING REQUIREMENTS (MUST FOLLOW):
-- Internal links (3-5): Use format [descriptive text](/gpts) or [descriptive text](/documents) or [descriptive text](/blog)
-- External links (2-3): Use format [source name](https://actual-url.com) - link to real websites
-- Example: "Check out our [AI productivity tools](/gpts)" or "According to [OpenAI's research](https://openai.com/research)"
-- DO NOT use citation-style references like [1], [2], [3] - always use proper markdown links
-- DO NOT put numbers in square brackets - that's for academic papers, not blog posts
+⚡ LINKING IMPLEMENTATION (Follow the condensed strategies above):
+- INTERNAL: Minimum 8-12 internal links using the hub & spoke model
+- EXTERNAL: Minimum 5-8 external links to real, authoritative sources  
+- NO citation-style references like [1], [2], [3] - use proper markdown links
+- NO placeholder URLs - only real, working links to specific pages
+- Use the exact formats and examples provided in the SEO strategies above
 
 IMAGE PLACEHOLDERS:
 - Add [IMAGE: specific description] where visuals would help
