@@ -55,14 +55,14 @@ export default function PrivacyPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-purple-100/50">
             <div className="prose prose-lg max-w-none">
               
               <h2 className="text-2xl font-semibold text-white mb-4">1. Information We Collect</h2>
-              <p className="mb-4 text-gray-700 leading-relaxed">
+              <p className="mb-4 text-gray-200 leading-relaxed text-lg">
                 We collect information you provide directly to us, such as when you create an account, subscribe to our service, or contact us for support.
               </p>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3 text-lg">
                 <li><strong>Account Information:</strong> Email address, password, and subscription status</li>
                 <li><strong>Payment Information:</strong> Processed securely through Stripe (we don't store payment details)</li>
                 <li><strong>Usage Data:</strong> Pages visited, content accessed, and feature usage</li>
@@ -70,10 +70,10 @@ export default function PrivacyPage() {
               </ul>
 
               <h2 className="text-2xl font-semibold text-white mb-4">2. How We Use Your Information</h2>
-              <p className="mb-4 text-gray-700 leading-relaxed">
+              <p className="mb-4 text-gray-200 leading-relaxed text-lg">
                 We use the information we collect to provide, maintain, and improve our services:
               </p>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3">
                 <li>Provide access to GPTs and playbooks based on your subscription</li>
                 <li>Process payments and manage your subscription</li>
                 <li>Send important service updates and notifications</li>
@@ -83,10 +83,10 @@ export default function PrivacyPage() {
               </ul>
 
               <h2 className="text-2xl font-semibold text-white mb-4">3. Information Sharing</h2>
-              <p className="mb-4 text-gray-700 leading-relaxed">
+              <p className="mb-4 text-gray-200 leading-relaxed text-lg">
                 We do not sell, trade, or otherwise transfer your personal information to third parties, except in the following circumstances:
               </p>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3">
                 <li><strong>Payment Processing:</strong> Stripe processes payments on our behalf</li>
                 <li><strong>Service Providers:</strong> Trusted partners who help operate our service (Supabase, Vercel)</li>
                 <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
@@ -94,24 +94,24 @@ export default function PrivacyPage() {
               </ul>
 
               <h2 className="text-2xl font-semibold text-white mb-4">4. Data Security</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 We implement appropriate security measures to protect your personal information against unauthorized access, 
                 alteration, disclosure, or destruction. This includes encryption, secure servers, and regular security audits. 
                 However, no method of transmission over the internet is 100% secure.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">5. Data Retention</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 We retain your personal information for as long as your account is active or as needed to provide you services. 
                 We will retain and use your information as necessary to comply with legal obligations, resolve disputes, 
                 and enforce our agreements.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">6. Your Rights</h2>
-              <p className="mb-4 text-gray-700 leading-relaxed">
+              <p className="mb-4 text-gray-200 leading-relaxed text-lg">
                 You have certain rights regarding your personal information:
               </p>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3">
                 <li><strong>Access:</strong> Request a copy of your personal data</li>
                 <li><strong>Correction:</strong> Update or correct inaccurate information</li>
                 <li><strong>Deletion:</strong> Request deletion of your personal data</li>
@@ -120,24 +120,26 @@ export default function PrivacyPage() {
                 <li><strong>Withdrawal:</strong> Withdraw consent where processing is based on consent</li>
               </ul>
 
-              <h2 className="text-2xl font-semibold text-white mb-4">7. Cookies and Tracking</h2>
-              <p className="mb-4 text-gray-700 leading-relaxed">
-                We use cookies and similar tracking technologies to enhance your experience:
+              <h2 className="text-2xl font-semibold text-white mb-4">7. Essential Cookies Only</h2>
+              <p className="mb-4 text-gray-200 leading-relaxed text-lg">
+                We use minimal, essential cookies to make our service work properly. We do not use tracking or marketing cookies.
               </p>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
-                <li><strong>Essential Cookies:</strong> Required for basic site functionality and authentication</li>
-                <li><strong>Analytics:</strong> Help us understand how users interact with our service</li>
-                <li><strong>Preferences:</strong> Remember your settings and preferences</li>
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3 text-lg">
+                <li><strong>Authentication:</strong> Remember you're logged in so you don't have to sign in repeatedly</li>
+                <li><strong>User Preferences:</strong> Save your settings like "Remember Me" checkbox state</li>
+                <li><strong>Essential Functionality:</strong> Required for basic site features to work properly</li>
               </ul>
-              <p className="mb-6 text-gray-700 leading-relaxed">
-                You can control cookies through your browser settings, but this may affect site functionality.
-              </p>
+              <div className="mb-6 p-4 bg-green-900/20 border border-green-500/30 rounded-xl">
+                <p className="text-green-200 text-lg">
+                  <strong>✅ Privacy-First Approach:</strong> We don't use Google Analytics, Facebook Pixel, or any third-party tracking cookies. Your browsing behavior is not monitored or sold to advertisers.
+                </p>
+              </div>
 
               <h2 className="text-2xl font-semibold text-white mb-4">8. Third-Party Services</h2>
-              <p className="mb-4 text-gray-700 leading-relaxed">
+              <p className="mb-4 text-gray-200 leading-relaxed text-lg">
                 Our service integrates with third-party services that have their own privacy policies:
               </p>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3">
                 <li><strong>Stripe:</strong> Payment processing and subscription management</li>
                 <li><strong>Supabase:</strong> Database and authentication services</li>
                 <li><strong>Vercel:</strong> Website hosting and content delivery</li>
@@ -145,28 +147,28 @@ export default function PrivacyPage() {
               </ul>
 
               <h2 className="text-2xl font-semibold text-white mb-4">9. International Transfers</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 Your information may be transferred to and processed in countries other than your own. 
                 We ensure appropriate safeguards are in place to protect your information in accordance with this privacy policy 
                 and applicable data protection laws.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">10. Children's Privacy</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 Our service is not intended for children under 16 years of age. We do not knowingly collect personal 
                 information from children under 16. If we become aware that we have collected personal information from 
                 a child under 16, we will take steps to delete such information.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">11. Updates to This Policy</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 We may update this privacy policy from time to time. We will notify you of any changes by posting the 
                 new privacy policy on this page and updating the "Last updated" date. We encourage you to review this 
                 policy periodically for any changes.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">12. Contact Us</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 If you have any questions about this privacy policy or our privacy practices, please contact us through our 
                 <Link href="/contact" className="text-purple-400 hover:text-purple-300 font-medium"> contact page</Link> or 
                 email us directly.

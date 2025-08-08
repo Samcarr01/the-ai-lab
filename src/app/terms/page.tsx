@@ -55,29 +55,29 @@ export default function TermsPage() {
             </p>
           </div>
 
-          <div className="bg-slate-800/80/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-purple-100/50">
+          <div className="bg-slate-800/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-purple-100/50">
             <div className="prose prose-lg max-w-none">
               
               <h2 className="text-2xl font-semibold text-white mb-4">1. Acceptance of Terms</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 By accessing and using thehackai service, you accept and agree to be bound by the terms and provision of this agreement. 
                 If you do not agree to abide by the above, please do not use this service.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">2. Service Description</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 thehackai provides access to curated AI tools, GPTs, and PDF playbooks through Pro (£7/month) and Ultra (£19/month) subscription plans. 
                 Free accounts have preview access to browse content titles and descriptions.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">3. Account Registration</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 You must create an account to access our services. You are responsible for maintaining the confidentiality of your 
                 account credentials and for all activities that occur under your account.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">4. Subscription and Payment</h2>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3">
                 <li>Pro subscriptions are billed monthly at £7</li>
                 <li>Ultra subscriptions are billed monthly at £19</li>
                 <li>Payment is processed through Stripe</li>
@@ -87,11 +87,11 @@ export default function TermsPage() {
               </ul>
 
               <h2 className="text-2xl font-semibold text-white mb-4">5. Content Usage and Restrictions</h2>
-              <p className="mb-4 text-gray-700 leading-relaxed">
+              <p className="mb-4 text-gray-200 leading-relaxed text-lg">
                 The GPTs and playbooks provided are for your personal and business use only. Content is provided "as is" without warranty.
               </p>
               <p className="mb-2 text-white font-semibold">STRICTLY PROHIBITED:</p>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2 ml-4">
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3 ml-4">
                 <li><strong>Redistribution:</strong> You may not share, distribute, or republish any GPTs or playbooks</li>
                 <li><strong>Commercial Resale:</strong> You may not sell, license, or monetize any content from this platform</li>
                 <li><strong>Account Sharing:</strong> You may not share your account credentials or allow others to access your account</li>
@@ -99,12 +99,12 @@ export default function TermsPage() {
                 <li><strong>Public Distribution:</strong> You may not post content on social media, forums, or any public platforms</li>
                 <li><strong>Team Distribution:</strong> You may not distribute content to team members, colleagues, or business partners without individual subscriptions</li>
               </ul>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 <strong>Violation of these restrictions will result in immediate account termination and may result in legal action.</strong>
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">6. Additional Prohibited Uses</h2>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3">
                 <li>Attempting to circumvent payment systems or access restrictions</li>
                 <li>Using content for illegal or harmful purposes</li>
                 <li>Reverse engineering or copying our service infrastructure</li>
@@ -114,28 +114,28 @@ export default function TermsPage() {
               </ul>
 
               <h2 className="text-2xl font-semibold text-white mb-4">7. Intellectual Property and Licensing</h2>
-              <p className="mb-4 text-gray-700 leading-relaxed">
+              <p className="mb-4 text-gray-200 leading-relaxed text-lg">
                 All content, including GPTs, playbooks, and service materials, remain the exclusive property of thehackai. 
                 You receive a limited, non-transferable license to use the content solely for your personal and business purposes.
               </p>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 <strong>This license does not grant you any rights to:</strong> reproduce, distribute, display publicly, 
                 create derivative works, or commercially exploit any content. The license terminates immediately upon 
                 violation of these terms or cancellation of your subscription.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">8. Limitation of Liability</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 thehackai shall not be liable for any indirect, incidental, special, consequential, or punitive damages 
                 resulting from your use of the service. Our liability is limited to the amount you paid for the service.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">9. Content Protection and Enforcement</h2>
-              <p className="mb-4 text-gray-700 leading-relaxed">
+              <p className="mb-4 text-gray-200 leading-relaxed text-lg">
                 We actively monitor and protect our intellectual property. We employ various technical and legal measures to detect 
                 unauthorized distribution of our content.
               </p>
-              <ul className="mb-6 text-gray-700 leading-relaxed list-disc list-inside space-y-2">
+              <ul className="mb-6 text-gray-200 leading-relaxed text-lg list-disc list-inside space-y-3">
                 <li>Content is watermarked and tracked for unauthorized distribution</li>
                 <li>We monitor file-sharing platforms and social media for our content</li>
                 <li>We may pursue legal action against violators including claims for damages</li>
@@ -143,25 +143,25 @@ export default function TermsPage() {
               </ul>
 
               <h2 className="text-2xl font-semibold text-white mb-4">10. Account Termination</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 We may terminate or suspend your account immediately, without prior notice, for conduct that we believe 
                 violates these Terms of Service, including content sharing violations, or is harmful to other users or the service.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">11. Changes to Terms</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 We reserve the right to modify these terms at any time. We will notify users of significant changes 
                 via email or through the service. Continued use after changes constitutes acceptance.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">12. Governing Law</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 These Terms shall be interpreted and governed by the laws of the United Kingdom. 
                 Any disputes shall be subject to the exclusive jurisdiction of UK courts.
               </p>
 
               <h2 className="text-2xl font-semibold text-white mb-4">13. Contact Information</h2>
-              <p className="mb-6 text-gray-700 leading-relaxed">
+              <p className="mb-6 text-gray-200 leading-relaxed text-lg">
                 If you have any questions about these Terms of Service, please contact us through our 
                 <Link href="/contact" className="text-purple-400 hover:text-purple-300 font-medium"> contact page</Link>.
               </p>
