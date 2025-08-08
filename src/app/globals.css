@@ -485,6 +485,41 @@
     }
   }
 
+  /* Mobile Modal Optimization */
+  @media (max-width: 640px) {
+    .mobile-modal {
+      height: 100vh !important;
+      width: 100vw !important;
+      border-radius: 0 !important;
+      max-height: none !important;
+      margin: 0 !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+    }
+    
+    .mobile-modal-content {
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      overflow: hidden !important;
+    }
+    
+    .mobile-modal-scrollable {
+      flex: 1 !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior: contain !important;
+    }
+    
+    .mobile-modal-footer {
+      flex-shrink: 0 !important;
+      padding-bottom: env(safe-area-inset-bottom) !important;
+    }
+  }
+
   /* 🌀 EPIC HUD ANIMATIONS FOR IRON MAN RADIAL MENU */
   @keyframes bounce-in {
     0% {
