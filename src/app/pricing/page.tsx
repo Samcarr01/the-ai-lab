@@ -8,6 +8,7 @@ import { contentStatsService, type ContentStats } from '@/lib/content-stats'
 import { STRIPE_CONFIG } from '@/lib/stripe-config'
 import SmartNavigation from '@/components/SmartNavigation'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
+import Footer from '@/components/Footer'
 
 export default function PricingPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
@@ -224,6 +225,9 @@ export default function PricingPage() {
           </p>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </DarkThemeBackground>
   )
 }

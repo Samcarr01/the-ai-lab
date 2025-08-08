@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
+import Footer from '@/components/Footer'
 import GradientBackground from '@/components/NetworkBackground'
 import ScrollAnimation from '@/components/ScrollAnimation'
 
@@ -337,32 +338,7 @@ export default function ContactPage() {
       </main>
 
       {/* Footer */}
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-200">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div className="w-8 h-8 flex items-center justify-center">
-                <Image
-                  src="/logo.png"
-                  alt="thehackai logo"
-                  width={32}
-                  height={32}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <span className="text-lg font-semibold text-white">thehackai</span>
-            </div>
-            <div className="flex space-x-6 text-sm text-gray-100">
-              <Link href="/terms" className="hover:text-purple-400 transition-colors">Terms</Link>
-              <Link href="/privacy" className="hover:text-purple-400 transition-colors">Privacy</Link>
-              <Link href="/contact" className="text-purple-400 font-medium">Contact</Link>
-            </div>
-          </div>
-          <div className="mt-8 text-center text-sm text-gray-300">
-            © 2025 thehackai. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </DarkThemeBackground>
   )
 }

@@ -16,6 +16,7 @@ import TypewriterText from '@/components/TypewriterText'
 import PromptRefinerDemo from '@/components/PromptRefinerDemo'
 import PlaybookFlipDemo from '@/components/PlaybookFlipDemo'
 import SmartNavigation from '@/components/SmartNavigation'
+import Footer from '@/components/Footer'
 
 function HomePageContent() {
   const [user, setUser] = useState<UserProfile | null>(null)
@@ -461,32 +462,7 @@ function HomePageContent() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t border-gray-700">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 sm:space-x-3 mb-4 md:mb-0">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center">
-                <Image
-                  src="/logo.png"
-                  alt="thehackai logo"
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-contain logo-dark-purple-blue-glow"
-                />
-              </div>
-              <span className="text-base sm:text-lg font-semibold text-white">thehackai</span>
-            </div>
-            <div className="flex space-x-4 sm:space-x-6 text-xs sm:text-sm text-gray-300">
-              <Link href="/terms" className="hover:text-purple-400 transition-colors">Terms</Link>
-              <Link href="/privacy" className="hover:text-purple-400 transition-colors">Privacy</Link>
-              <Link href="/contact" className="hover:text-purple-400 transition-colors">Contact</Link>
-            </div>
-          </div>
-          <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm text-gray-400 px-4 sm:px-0">
-            © 2025 thehackai. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </DarkThemeBackground>
   )
 }

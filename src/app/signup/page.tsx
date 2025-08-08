@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
+import Footer from '@/components/Footer'
 
 export default function SignupPage() {
   const [firstName, setFirstName] = useState('')
@@ -525,6 +526,9 @@ export default function SignupPage() {
           <span>Back to thehackai</span>
         </Link>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </DarkThemeBackground>
   )
 }

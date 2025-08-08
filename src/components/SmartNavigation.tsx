@@ -313,6 +313,20 @@ export default function SmartNavigation({ user, currentPage, onFeatureClick, onP
                   )}
                   
                   <Link
+                    href="/toolkit"
+                    className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 group ${
+                      currentPage === 'toolkit' 
+                        ? 'text-white bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-500/25' 
+                        : 'text-gray-300 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <span className="group-hover:scale-105 transition-transform duration-300">🛠️</span>
+                      <span>Our Toolkit</span>
+                    </div>
+                  </Link>
+                  
+                  <Link
                     href="/blog"
                     className={`px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 group ${
                       currentPage === 'blog' 

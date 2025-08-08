@@ -9,6 +9,7 @@ import SmartNavigation from '@/components/SmartNavigation'
 import { AffiliateCard } from '@/components/AffiliateCard'
 import { AffiliateModal } from '@/components/AffiliateModal'
 import { AffiliateTool } from '@/types/affiliate'
+import Footer from '@/components/Footer'
 
 export default function ToolkitPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
@@ -278,6 +279,9 @@ export default function ToolkitPage() {
         isOpen={!!selectedTool}
         onClose={handleClose}
       />
+
+      {/* Footer */}
+      <Footer />
     </DarkThemeBackground>
   )
 }
