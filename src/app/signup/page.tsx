@@ -2,13 +2,17 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
+import { userService, type UserProfile } from '@/lib/user'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
 import Footer from '@/components/Footer'
+import SmartNavigation from '@/components/SmartNavigation'
 
 export default function SignupPage() {
+  const [user, setUser] = useState<UserProfile | null>(null)
+  const [userLoading, setUserLoading] = useState(true)
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -20,6 +24,28 @@ export default function SignupPage() {
   const [success, setSuccess] = useState(false)
   const [lastSubmitTime, setLastSubmitTime] = useState(0)
   const router = useRouter()
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { user: authUser, error } = await auth.getUser()
+        
+        if (!error && authUser) {
+          let userProfile = await userService.getProfile(authUser.id)
+          if (!userProfile) {
+            userProfile = await userService.createProfile(authUser.id, authUser.email || '')
+          }
+          setUser(userProfile)
+        }
+      } catch (err) {
+        console.error('Error fetching user:', err)
+      } finally {
+        setUserLoading(false)
+      }
+    }
+
+    getUser()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -156,36 +182,39 @@ export default function SignupPage() {
   }
 
   return (
-    <DarkThemeBackground className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* Logo */}
-        <div className="flex justify-center">
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg p-3 border border-purple-200/30">
-              <Image
-                src="/logo.png"
-                alt="thehackai logo"
-                width={48}
-                height={48}
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-2xl font-bold text-gradient">thehackai</span>
-          </Link>
+    <DarkThemeBackground className="flex flex-col min-h-screen">
+      <SmartNavigation user={user} currentPage="signup" />
+      
+      <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          {/* Logo */}
+          <div className="flex justify-center">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg p-3 border border-purple-200/30">
+                <Image
+                  src="/logo.png"
+                  alt="thehackai logo"
+                  width={48}
+                  height={48}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <span className="text-2xl font-bold text-gradient">thehackai</span>
+            </Link>
+          </div>
+          
+          <h2 className="mt-6 text-center text-3xl font-bold text-white">
+            Start Your AI Journey! 🚀
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-100">
+            Get instant access to curated AI tools and expert playbooks
+          </p>
+          <div className="mt-4 text-center">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-900/30 text-green-300 border border-green-500/30">
+              ✨ 100% Free • No Credit Card Required
+            </span>
+          </div>
         </div>
-        
-        <h2 className="mt-6 text-center text-3xl font-bold text-white">
-          Start Your AI Journey! 🚀
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-100">
-          Get instant access to curated AI tools and expert playbooks
-        </p>
-        <div className="mt-4 text-center">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-900/30 text-green-300 border border-green-500/30">
-            ✨ 100% Free • No Credit Card Required
-          </span>
-        </div>
-      </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         {/* Free access highlight */}

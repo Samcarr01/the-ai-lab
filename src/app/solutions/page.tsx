@@ -8,125 +8,45 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { contentStatsService, type ContentStats } from '@/lib/content-stats'
+import { auth } from '@/lib/auth'
+import { userService, type UserProfile } from '@/lib/user'
 import Footer from '@/components/Footer'
+import SmartNavigation from '@/components/SmartNavigation'
 
 export default function SolutionsPage() {
+  const [user, setUser] = useState<UserProfile | null>(null)
+  const [loading, setLoading] = useState(true)
   const [contentStats, setContentStats] = useState<ContentStats | null>(null)
   
-  // Load content stats on component mount
+  // Load user and content stats on component mount
   useEffect(() => {
-    const loadStats = async () => {
+    const loadData = async () => {
       try {
+        // Get user
+        const { user: authUser, error } = await auth.getUser()
+        
+        if (!error && authUser) {
+          let userProfile = await userService.getProfile(authUser.id)
+          if (!userProfile) {
+            userProfile = await userService.createProfile(authUser.id, authUser.email || '')
+          }
+          setUser(userProfile)
+        }
+
+        // Load content stats
         const stats = await contentStatsService.getContentStats('ultra')
         setContentStats(stats)
       } catch (error) {
-        console.error('Failed to load content stats:', error)
+        console.error('Failed to load data:', error)
+      } finally {
+        setLoading(false)
       }
     }
-    loadStats()
+    loadData()
   }, [])
   return (
     <DarkThemeBackground>
-      {/* Navigation matching homepage exactly */}
-      <header className="fixed top-0 w-full z-50 bg-slate-900/95 backdrop-blur-xl border-b border-white/10 shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 sm:h-20">
-            {/* Logo */}
-            <Link href="/" className="flex items-center space-x-3 group">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center group-hover:scale-105 transition-all duration-300">
-                <Image
-                  src="/logo.png"
-                  alt="thehackai logo"
-                  width={64}
-                  height={64}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent group-hover:from-purple-300 group-hover:to-pink-300 transition-all duration-300">
-                thehackai
-              </span>
-            </Link>
-            
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center">
-              <nav className="flex items-center space-x-1 mr-6">
-                <Link
-                  href="/"
-                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
-                >
-                  <div className="flex items-center space-x-2">
-                    <span className="group-hover:scale-105 transition-transform duration-300">🏠</span>
-                    <span>Home</span>
-                  </div>
-                </Link>
-                
-                <Link
-                  href="/#features"
-                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
-                >
-                  <div className="flex items-center space-x-2">
-                    <span className="group-hover:scale-105 transition-transform duration-300">⚡</span>
-                    <span>Features</span>
-                  </div>
-                </Link>
-                
-                <Link
-                  href="/#pricing"
-                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
-                >
-                  <div className="flex items-center space-x-2">
-                    <span className="group-hover:scale-105 transition-transform duration-300">💰</span>
-                    <span>Pricing</span>
-                  </div>
-                </Link>
-                
-                <Link
-                  href="/blog"
-                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
-                >
-                  <div className="flex items-center space-x-2">
-                    <span className="group-hover:scale-105 transition-transform duration-300">✍️</span>
-                    <span>Blogs</span>
-                  </div>
-                </Link>
-              </nav>
-              
-              {/* Auth Actions */}
-              <div className="flex items-center space-x-3">
-                <Link
-                  href="/login"
-                  className="px-4 py-2.5 rounded-xl font-medium text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all duration-300 group"
-                >
-                  <div className="flex items-center space-x-2">
-                    <span className="group-hover:scale-105 transition-transform duration-300">🔑</span>
-                    <span>Sign In</span>
-                  </div>
-                </Link>
-                <Link
-                  href="/signup"
-                  className="px-6 py-2.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105 transition-all duration-300 group"
-                >
-                  <div className="flex items-center space-x-2">
-                    <span className="group-hover:scale-105 transition-transform duration-300">🚀</span>
-                    <span>Get Started</span>
-                  </div>
-                </Link>
-              </div>
-            </div>
-
-            {/* Mobile Menu */}
-            <div className="md:hidden">
-              <Link 
-                href="/signup"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-full font-semibold text-sm"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+      <SmartNavigation user={user} currentPage="solutions" />
       
       <div className="min-h-screen pt-16 sm:pt-20">
         {/* Hero Section */}

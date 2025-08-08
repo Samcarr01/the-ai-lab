@@ -5,10 +5,14 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
+import { userService, type UserProfile } from '@/lib/user'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
 import Footer from '@/components/Footer'
+import SmartNavigation from '@/components/SmartNavigation'
 
 export default function LoginPage() {
+  const [user, setUser] = useState<UserProfile | null>(null)
+  const [userLoading, setUserLoading] = useState(true)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
@@ -21,14 +25,26 @@ export default function LoginPage() {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const { user } = await auth.getUser()
-        if (user) {
+        const { user: authUser } = await auth.getUser()
+        if (authUser) {
           // User is already logged in, redirect to dashboard
           router.push('/dashboard')
           return
+        } else {
+          // Get user profile if available
+          let userProfile = null
+          if (authUser) {
+            userProfile = await userService.getProfile(authUser.id)
+            if (!userProfile) {
+              userProfile = await userService.createProfile(authUser.id, authUser.email || '')
+            }
+          }
+          setUser(userProfile)
         }
       } catch (error) {
         // User is not logged in, continue to login page
+      } finally {
+        setUserLoading(false)
       }
       
       // Load remember me preference
@@ -109,31 +125,34 @@ export default function LoginPage() {
   }
 
   return (
-    <DarkThemeBackground className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* Logo */}
-        <div className="flex justify-center">
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-lg p-3 border border-purple-200/30">
-              <Image
-                src="/logo.png"
-                alt="thehackai logo"
-                width={56}
-                height={56}
-                className="w-full h-full object-contain logo-dark-purple-blue-glow"
-              />
-            </div>
-            <span className="text-2xl font-bold text-gradient">thehackai</span>
-          </Link>
+    <DarkThemeBackground className="flex flex-col min-h-screen">
+      <SmartNavigation user={user} currentPage="login" />
+      
+      <div className="flex-1 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          {/* Logo */}
+          <div className="flex justify-center">
+            <Link href="/" className="flex items-center space-x-3">
+              <div className="w-14 h-14 bg-white rounded-xl flex items-center justify-center shadow-lg p-3 border border-purple-200/30">
+                <Image
+                  src="/logo.png"
+                  alt="thehackai logo"
+                  width={56}
+                  height={56}
+                  className="w-full h-full object-contain logo-dark-purple-blue-glow"
+                />
+              </div>
+              <span className="text-2xl font-bold text-gradient">thehackai</span>
+            </Link>
+          </div>
+          
+          <h2 className="mt-6 text-center text-3xl font-bold text-white">
+            Welcome back! 👋
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-100">
+            Sign in to access your AI workflows
+          </p>
         </div>
-        
-        <h2 className="mt-6 text-center text-3xl font-bold text-white">
-          Welcome back! 👋
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-100">
-          Sign in to access your AI workflows
-        </p>
-      </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="glass rounded-2xl px-8 py-8 shadow-xl border border-purple-100">
