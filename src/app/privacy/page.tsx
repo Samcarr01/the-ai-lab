@@ -1,44 +1,43 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
 import Footer from '@/components/Footer'
+import SmartNavigation from '@/components/SmartNavigation'
+import { auth } from '@/lib/auth'
+import { userService, type UserProfile } from '@/lib/user'
+
+'use client'
 
 export default function PrivacyPage() {
+  const [user, setUser] = useState<UserProfile | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const { user: authUser, error } = await auth.getUser()
+        
+        if (!error && authUser) {
+          let userProfile = await userService.getProfile(authUser.id)
+          if (!userProfile) {
+            userProfile = await userService.createProfile(authUser.id, authUser.email || '')
+          }
+          setUser(userProfile)
+        }
+      } catch (err) {
+        console.error('Error fetching user:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    getUser()
+  }, [])
+
   return (
     <DarkThemeBackground>
-      {/* Navigation Header */}
-      <header className="fixed top-0 w-full z-50 glass">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg p-2 border border-purple-200/30">
-                <Image
-                  src="/logo.png"
-                  alt="thehackai logo"
-                  width={40}
-                  height={40}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <span className="text-xl font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                thehackai
-              </span>
-            </Link>
-            
-            <nav className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-100 hover:text-purple-300 transition-colors">
-                Home
-              </Link>
-              <Link href="/login" className="text-purple-400 font-medium hover:text-purple-300 transition-colors">
-                Sign In
-              </Link>
-              <Link href="/signup" className="gradient-purple text-white px-5 py-2 rounded-full font-medium button-hover shadow-md">
-                Get Started
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <SmartNavigation user={user} currentPage="privacy" />
 
       {/* Main Content */}
       <main className="pt-16 sm:pt-20 pb-20 px-4 sm:px-6 lg:px-8">
