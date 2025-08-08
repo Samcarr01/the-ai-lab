@@ -32,7 +32,7 @@ export const AffiliateCard: React.FC<AffiliateCardProps> = ({
       }}
     >
       <div 
-        className={`w-full h-full rounded-2xl overflow-hidden shadow-xl transform-gpu transition-all duration-200 ${
+        className={`w-full h-full rounded-3xl overflow-hidden shadow-xl transform-gpu transition-all duration-200 ${
           isFeatured 
             ? 'bg-gradient-to-br from-yellow-400/20 via-purple-800 to-purple-900 border-2 border-yellow-400/40' 
             : 'bg-gradient-to-br from-purple-800 via-purple-900 to-slate-800 border border-purple-500/30'
