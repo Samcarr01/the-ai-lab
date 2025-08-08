@@ -158,8 +158,8 @@ export default function ToolkitPage() {
         <div 
           className={`w-full h-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
             isFeatured 
-              ? 'bg-gradient-to-br from-yellow-400/10 via-purple-900 to-slate-900 border-2 border-yellow-400/30' 
-              : 'bg-gradient-to-br from-purple-900/50 via-slate-800 to-slate-900 border border-slate-600/50'
+              ? 'bg-gradient-to-br from-yellow-400/20 via-purple-800 to-purple-900 border-2 border-yellow-400/40' 
+              : 'bg-gradient-to-br from-purple-800 via-purple-900 to-slate-800 border border-purple-500/30'
           }`}
         >
           {/* Featured Badge */}
@@ -171,8 +171,8 @@ export default function ToolkitPage() {
             </div>
           )}
 
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+          {/* Clean subtle overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-purple-900/30 via-transparent to-transparent"></div>
 
           <div className="relative p-6 h-full flex flex-col justify-between">
             {/* Top Section */}
@@ -255,7 +255,7 @@ export default function ToolkitPage() {
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/10">
+          <div className="p-6 border-b border-white/10">
             <div className="flex items-center space-x-4">
               <div className="w-16 h-16 bg-white rounded-2xl p-3 flex items-center justify-center">
                 {tool.image_url ? (
@@ -276,12 +276,6 @@ export default function ToolkitPage() {
                 </div>
               </div>
             </div>
-            <button 
-              onClick={() => setExpandedCard(null)}
-              className="w-10 h-10 rounded-full bg-slate-700/80 text-gray-300 hover:text-white hover:bg-slate-600 text-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
-            >
-              ✕
-            </button>
           </div>
 
           {/* Content */}
