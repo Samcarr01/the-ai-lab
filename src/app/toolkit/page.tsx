@@ -1,13 +1,14 @@
 'use client'
 
-import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
 import { affiliateToolsService, type AffiliateToolWithAccess } from '@/lib/affiliate-tools'
 import DarkThemeBackground from '@/components/DarkThemeBackground'
 import SmartNavigation from '@/components/SmartNavigation'
+import { AffiliateCard } from '@/components/AffiliateCard'
+import { AffiliateModal } from '@/components/AffiliateModal'
+import { AffiliateTool } from '@/types/affiliate'
 
 export default function ToolkitPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
@@ -15,8 +16,8 @@ export default function ToolkitPage() {
   const [categories, setCategories] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [loading, setLoading] = useState(true)
-  const [expandedCard, setExpandedCard] = useState<number | null>(null)
-  const router = useRouter()
+  const [selectedTool, setSelectedTool] = useState<AffiliateTool | null>(null)
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
 
   const loadData = async () => {
     try {
@@ -51,9 +52,29 @@ export default function ToolkitPage() {
             title: 'N8N Automation Platform',
             description: 'The workflow automation tool that transformed how we handle repetitive tasks. N8N\'s visual interface lets you connect 300+ services without writing code. We\'ve automated everything from lead processing to content distribution, saving 15+ hours per week.',
             category: 'Automation',
+            rating: 4.8,
+            price: 'Free',
             affiliate_url: 'https://n8n.io',
             image_url: undefined,
             is_featured: true,
+            key_benefits: [
+              'Saves 15+ hours per week with intelligent automation',
+              'Connect 300+ services without coding',
+              'Visual workflow builder for complex processes',
+              'Self-hosted option for complete data control'
+            ],
+            why_we_love_it: [
+              'Zero learning curve with drag-and-drop interface',
+              'Robust automation that handles edge cases gracefully',
+              'Active community with thousands of workflow templates',
+              'Enterprise-grade security with self-hosting options'
+            ],
+            standout_features: [
+              'Visual workflow editor with 300+ integrations',
+              'Advanced error handling and retry mechanisms',
+              'Real-time execution monitoring and debugging',
+              'Custom JavaScript functions for complex logic'
+            ],
             created_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             hasAccess: true
@@ -97,38 +118,15 @@ export default function ToolkitPage() {
     return categoryMap[category as keyof typeof categoryMap] || { emoji: '🛠️', color: 'from-gray-500 to-slate-600' }
   }
 
-  const toggleCard = (toolId: number) => {
-    setExpandedCard(expandedCard === toolId ? null : toolId)
+  const handleExpand = (tool: AffiliateTool) => {
+    setSelectedTool(tool)
+    setExpandedCardId(String(tool.id))
   }
 
-  // Close modal when clicking outside or pressing escape
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setExpandedCard(null)
-      }
-    }
-
-    const handleClickOutside = (e: MouseEvent) => {
-      if (expandedCard && (e.target as Element).classList.contains('modal-backdrop')) {
-        setExpandedCard(null)
-      }
-    }
-
-    if (expandedCard) {
-      document.addEventListener('keydown', handleEscape)
-      document.addEventListener('click', handleClickOutside)
-      document.body.style.overflow = 'hidden' // Prevent background scrolling
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.removeEventListener('click', handleClickOutside)
-      document.body.style.overflow = 'unset'
-    }
-  }, [expandedCard])
+  const handleClose = () => {
+    setSelectedTool(null)
+    setExpandedCardId(null)
+  }
 
   if (loading) {
     return (
@@ -146,223 +144,6 @@ export default function ToolkitPage() {
     )
   }
 
-  // Simple preview card component
-  const ToolCard = ({ tool, index, isFeatured = false }: { tool: AffiliateToolWithAccess, index: number, isFeatured?: boolean }) => {
-    const categoryInfo = getCategoryInfo(tool.category)
-
-    return (
-      <div 
-        className="group relative h-[340px] cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-        onClick={() => toggleCard(tool.id)}
-      >
-        <div 
-          className={`w-full h-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
-            isFeatured 
-              ? 'bg-gradient-to-br from-yellow-400/20 via-purple-800 to-purple-900 border-2 border-yellow-400/40' 
-              : 'bg-gradient-to-br from-purple-800 via-purple-900 to-slate-800 border border-purple-500/30'
-          }`}
-        >
-          {/* Featured Badge */}
-          {isFeatured && (
-            <div className="absolute top-3 right-3 z-10">
-              <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white text-sm font-bold">⭐</span>
-              </div>
-            </div>
-          )}
-
-          {/* Clean subtle overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-purple-900/30 via-transparent to-transparent"></div>
-
-          <div className="relative p-6 h-full flex flex-col justify-between">
-            {/* Top Section */}
-            <div className="text-center flex-1 flex flex-col">
-              {/* Image */}
-              <div className="mb-4 flex justify-center">
-                <div className="w-16 h-16 rounded-xl bg-white/95 shadow-lg p-2 flex items-center justify-center backdrop-blur-sm">
-                  {tool.image_url ? (
-                    <img 
-                      src={tool.image_url} 
-                      alt={tool.title}
-                      className="w-12 h-12 object-contain"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 flex items-center justify-center text-xl">
-                      {categoryInfo.emoji}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Title */}
-              <h3 className="text-lg font-bold text-white mb-2 leading-tight line-clamp-2">
-                {tool.title || 'Sample Tool'}
-              </h3>
-
-              {/* Category */}
-              <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold mb-3 bg-gradient-to-r ${categoryInfo.color} text-white shadow-md`}>
-                <span className="mr-1">{categoryInfo.emoji}</span>
-                {tool.category || 'Automation'}
-              </div>
-
-              {/* Description Preview */}
-              <p className="text-gray-300 text-xs leading-relaxed mb-4 line-clamp-3 flex-1">
-                {tool.description ? (
-                  tool.description.length > 120 
-                    ? `${tool.description.slice(0, 120)}...` 
-                    : tool.description
-                ) : 'A powerful tool to transform your workflow and boost productivity.'}
-              </p>
-            </div>
-
-            {/* Bottom Section */}
-            <div className="space-y-2">
-              {/* Quick Action */}
-              <button 
-                className="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (tool.affiliate_url) {
-                    window.open(tool.affiliate_url, '_blank')
-                  }
-                }}
-              >
-                🚀 Try Now
-              </button>
-              
-              {/* Expand hint */}
-              <button className="w-full text-gray-400 hover:text-white text-xs transition-colors py-1">
-                👆 Click for full details
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Expanded modal component
-  const ExpandedModal = ({ tool }: { tool: AffiliateToolWithAccess }) => {
-    const categoryInfo = getCategoryInfo(tool.category)
-
-    return (
-      <div 
-        className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-lg p-4"
-        style={{ backdropFilter: 'blur(12px)' }}
-      >
-        <div 
-          className="relative w-full max-w-4xl max-h-[90vh] bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 rounded-3xl shadow-2xl border border-purple-500/30 animate-in zoom-in-95 duration-300"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Header */}
-          <div className="p-6 border-b border-white/10">
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-white rounded-2xl p-3 flex items-center justify-center">
-                {tool.image_url ? (
-                  <img 
-                    src={tool.image_url} 
-                    alt={tool.title}
-                    className="w-10 h-10 object-contain"
-                  />
-                ) : (
-                  <span className="text-2xl">{categoryInfo.emoji}</span>
-                )}
-              </div>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold text-white">{tool.title}</h2>
-                <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold mt-2 bg-gradient-to-r ${categoryInfo.color} text-white`}>
-                  <span className="mr-2">{categoryInfo.emoji}</span>
-                  {tool.category}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
-            <div className="space-y-6">
-              {/* Main Description */}
-              <div>
-                <h3 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
-                  <span className="mr-3">✨</span>
-                  Why We Love This Tool
-                </h3>
-                <div className="text-gray-200 text-base leading-relaxed space-y-4">
-                  {tool.description ? (
-                    tool.description.split('\n\n').map((paragraph, index) => (
-                      <p key={index} className="leading-relaxed">
-                        {paragraph}
-                      </p>
-                    ))
-                  ) : (
-                    <p>A comprehensive tool designed to streamline your workflow and increase productivity. This powerful solution has been battle-tested and proven to deliver results for businesses of all sizes.</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Standout Features */}
-              {(tool as any).standout_features && (tool as any).standout_features.length > 0 && (
-                <div>
-                  <h4 className="text-lg font-semibold text-green-300 mb-3 flex items-center">
-                    <span className="mr-2">🚀</span>
-                    Standout Features
-                  </h4>
-                  <ul className="space-y-2">
-                    {(tool as any).standout_features.map((feature: string, index: number) => (
-                      <li key={index} className="text-gray-200 text-sm flex items-start">
-                        <span className="text-purple-400 mr-2">•</span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Key Benefits */}
-              {(tool as any).key_benefits && (tool as any).key_benefits.length > 0 && (
-                <div>
-                  <h4 className="text-lg font-semibold text-blue-300 mb-3 flex items-center">
-                    <span className="mr-2">💎</span>
-                    Key Benefits
-                  </h4>
-                  <ul className="space-y-2">
-                    {(tool as any).key_benefits.map((benefit: string, index: number) => (
-                      <li key={index} className="text-gray-200 text-sm flex items-start">
-                        <span className="text-blue-400 mr-2">•</span>
-                        {benefit}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Footer Actions */}
-          <div className="p-6 border-t border-white/10">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button 
-                className="flex-1 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                onClick={() => {
-                  if (tool.affiliate_url) {
-                    window.open(tool.affiliate_url, '_blank')
-                  }
-                }}
-              >
-                🚀 Get Started Now
-              </button>
-              <button 
-                onClick={() => setExpandedCard(null)}
-                className="px-8 py-4 border border-slate-600 text-gray-300 hover:text-white hover:border-slate-500 rounded-xl text-lg transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <DarkThemeBackground>
@@ -437,7 +218,14 @@ export default function ToolkitPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
               {featuredTools.map((tool, index) => (
-                <ToolCard key={tool.id} tool={tool} index={index} isFeatured={true} />
+                <AffiliateCard 
+                  key={tool.id} 
+                  tool={tool as AffiliateTool} 
+                  onExpand={handleExpand}
+                  isExpanded={expandedCardId === String(tool.id)}
+                  index={index} 
+                  isFeatured={true} 
+                />
               ))}
             </div>
           </div>
@@ -455,7 +243,14 @@ export default function ToolkitPage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
               {regularTools.map((tool, index) => (
-                <ToolCard key={tool.id} tool={tool} index={index} />
+                <AffiliateCard 
+                  key={tool.id} 
+                  tool={tool as AffiliateTool} 
+                  onExpand={handleExpand}
+                  isExpanded={expandedCardId === String(tool.id)}
+                  index={index} 
+                  isFeatured={false} 
+                />
               ))}
             </div>
           </div>
@@ -477,10 +272,12 @@ export default function ToolkitPage() {
         )}
       </main>
 
-      {/* Expanded Modal */}
-      {expandedCard && (
-        <ExpandedModal tool={tools.find(t => t.id === expandedCard)!} />
-      )}
+      {/* Affiliate Modal */}
+      <AffiliateModal
+        tool={selectedTool}
+        isOpen={!!selectedTool}
+        onClose={handleClose}
+      />
     </DarkThemeBackground>
   )
 }
