@@ -5,17 +5,18 @@ const prefersReducedMotion = typeof window !== 'undefined'
   ? window.matchMedia('(prefers-reduced-motion: reduce)').matches 
   : false
 
-// Optimized spring configuration for faster, smoother morphing
+// Ultra-smooth spring configuration for instant, buttery animations
 export const springTransition = {
   type: 'spring' as const,
-  damping: 40,
-  stiffness: 500,
-  mass: 0.6,
+  damping: 50,
+  stiffness: 800,
+  mass: 0.4,
+  velocity: 0,
 }
 
 export const reducedMotionTransition = {
-  duration: 0.15,
-  ease: 'easeOut' as const,
+  duration: 0.1,
+  ease: [0.23, 1, 0.32, 1] as const, // Custom bezier for smoothness
 }
 
 // Card to Modal morph variants
@@ -32,22 +33,22 @@ export const cardToModalVariants: Variants = {
   },
 }
 
-// Content reveal animation with stagger (optimized)
+// Ultra-smooth content reveal with minimal movement
 export const contentRevealVariants: Variants = {
   hidden: {
     opacity: 0,
-    y: prefersReducedMotion ? 0 : 10,
-    transition: prefersReducedMotion ? reducedMotionTransition : {
-      ...springTransition,
-      duration: 0.2,
+    y: prefersReducedMotion ? 0 : 5,
+    transition: {
+      duration: 0.1,
+      ease: [0.23, 1, 0.32, 1] as const,
     },
   },
   visible: {
     opacity: 1,
     y: 0,
-    transition: prefersReducedMotion ? reducedMotionTransition : {
-      ...springTransition,
-      duration: 0.2,
+    transition: {
+      duration: 0.15,
+      ease: [0.23, 1, 0.32, 1] as const,
     },
   },
 }
@@ -56,47 +57,51 @@ export const staggerContainer: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: prefersReducedMotion ? 0 : 0.02, // 20ms stagger (faster)
-      delayChildren: prefersReducedMotion ? 0 : 0.05, // Reduced delay
+      staggerChildren: prefersReducedMotion ? 0 : 0.01, // 10ms stagger (ultra-fast)
+      delayChildren: prefersReducedMotion ? 0 : 0.02, // Minimal delay
     },
   },
 }
 
-// CTA button with gentle pulse (optimized)
+// Ultra-smooth CTA button
 export const ctaButtonVariants: Variants = {
   hidden: {
     opacity: 0,
-    scale: prefersReducedMotion ? 1 : 0.95,
+    scale: prefersReducedMotion ? 1 : 0.98,
   },
   visible: {
     opacity: 1,
     scale: 1,
-    transition: prefersReducedMotion ? reducedMotionTransition : {
-      ...springTransition,
-      delay: 0.1, // Much faster delay
+    transition: {
+      duration: 0.15,
+      ease: [0.23, 1, 0.32, 1] as const,
+      delay: 0.05, // Instant response
     },
   },
   pulse: {
-    scale: prefersReducedMotion ? 1 : [1, 1.02, 1],
+    scale: prefersReducedMotion ? 1 : [1, 1.01, 1],
     transition: {
-      duration: 0.4, // Faster pulse
-      ease: 'easeInOut' as const,
-      delay: 0.2, // Earlier pulse
+      duration: 0.3,
+      ease: [0.23, 1, 0.32, 1] as const,
+      delay: 0.1,
     },
   },
 }
 
-// Backdrop variants (faster)
+// Instant backdrop for immediate response
 export const backdropVariants: Variants = {
   hidden: {
     opacity: 0,
     backdropFilter: 'blur(0px)',
-    transition: { duration: 0.1 },
+    transition: { duration: 0.05 },
   },
   visible: {
     opacity: 1,
     backdropFilter: 'blur(12px)',
-    transition: { duration: 0.15, ease: 'easeOut' },
+    transition: { 
+      duration: 0.1, 
+      ease: [0.23, 1, 0.32, 1] as const,
+    },
   },
 }
 
