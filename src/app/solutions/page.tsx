@@ -8,6 +8,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { contentStatsService, type ContentStats } from '@/lib/content-stats'
+import Footer from '@/components/Footer'
 
 export default function SolutionsPage() {
   const [contentStats, setContentStats] = useState<ContentStats | null>(null)
@@ -16,7 +17,7 @@ export default function SolutionsPage() {
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const stats = await contentStatsService.getContentStats('free')
+        const stats = await contentStatsService.getContentStats('ultra')
         setContentStats(stats)
       } catch (error) {
         console.error('Failed to load content stats:', error)
@@ -173,7 +174,7 @@ export default function SolutionsPage() {
                   <div className="relative">
                     <div className="absolute inset-0 bg-purple-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500 animate-pulse"></div>
                     <div className="relative text-4xl font-bold text-purple-400 mb-2 transform group-hover:scale-110 transition-all duration-300">
-                      <AnimatedCounter end={(contentStats?.totalGPTs || 7) + (contentStats?.totalPlaybooks || 10)} duration={2000} />+
+                      <AnimatedCounter end={(contentStats?.totalGPTs || 7) + (contentStats?.totalPlaybooks || 4)} duration={2000} />+
                     </div>
                   </div>
                   <p className="text-gray-400">Premium AI Tools</p>
@@ -486,7 +487,7 @@ export default function SolutionsPage() {
                 <div className="text-left">
                   <h3 className="text-2xl font-bold text-cyan-400 mb-4">💰 Cost Effective</h3>
                   <p className="text-gray-300">
-                    One subscription replaces multiple tool subscriptions. Get access to <span className="text-cyan-400 font-semibold">{(contentStats?.totalGPTs || 7) + (contentStats?.totalPlaybooks || 10)}+</span> premium resources starting from just £7/month.
+                    One subscription replaces multiple tool subscriptions. Get access to <span className="text-cyan-400 font-semibold">{(contentStats?.totalGPTs || 7) + (contentStats?.totalPlaybooks || 4)}+</span> premium resources starting from just £7/month.
                   </p>
                 </div>
                 <div className="text-left">
@@ -525,6 +526,9 @@ export default function SolutionsPage() {
           </div>
         </section>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </DarkThemeBackground>
   )
 }
