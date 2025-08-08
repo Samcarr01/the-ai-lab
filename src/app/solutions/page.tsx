@@ -94,7 +94,10 @@ export default function SolutionsPage() {
                   <div className="relative">
                     <div className="absolute inset-0 bg-purple-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500 animate-pulse"></div>
                     <div className="relative text-4xl font-bold text-purple-400 mb-2 transform group-hover:scale-110 transition-all duration-300">
-                      <AnimatedCounter end={(contentStats?.totalGPTs || 7) + (contentStats?.totalPlaybooks || 4)} duration={2000} />+
+                      <AnimatedCounter 
+                        end={contentStats ? (contentStats.totalGPTs + contentStats.totalPlaybooks) : 11} 
+                        duration={2000} 
+                      />+
                     </div>
                   </div>
                   <p className="text-gray-400">Premium AI Tools</p>
