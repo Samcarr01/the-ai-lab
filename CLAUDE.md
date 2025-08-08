@@ -17,14 +17,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Email Marketing:** Brevo API integration
 - **File Storage:** Supabase Storage for PDFs
 - **Styling:** Tailwind CSS v3.4.17 with shadcn/ui components
-- **AI Integration:** OpenAI GPT-4o for content analysis
+- **AI Integration:** OpenAI GPT-4o + DALL-E 3, Perplexity Sonar for web search
 
 ## 📊 **Database Schema**
 ```sql
 users (id, email, first_name, last_name, user_tier, stripe_customer_id, created_at, updated_at)
 documents (id, title, description, pdf_url, category, is_featured, added_date, created_at, updated_at)
 gpts (id, title, description, chatgpt_url, category, is_featured, added_date, created_at, updated_at)
-blog_posts (id, title, content, slug, published_at, meta_description, category, read_time)
+blog_posts (id, title, content, slug, published_at, meta_description, category, read_time, generated_images)
+affiliate_tools (id, title, description, category, affiliate_url, image_url, is_featured, created_at, updated_at)
 ```
 
 ## 🎯 **Business Model - Freemium Platform**
@@ -59,6 +60,7 @@ blog_posts (id, title, content, slug, published_at, meta_description, category, 
 - **Documents/Playbooks:** PDF upload system with AI-powered categorization
 - **Admin Panel:** Complete content management with AI analysis
 - **Subscription System:** Stripe integration with webhook handling
+- **Affiliate Tools System:** Complete "Our Toolkit" with AI-powered tool analysis and modal expansion
 
 ### **✅ Authentication & User Management (100% Complete)**
 - **PKCE Flow:** Properly configured for email confirmation
@@ -83,6 +85,7 @@ blog_posts (id, title, content, slug, published_at, meta_description, category, 
 - **Touch Optimization:** 44px minimum touch targets, proper mobile navigation
 - **Interactive Elements:** Modal system, expandable descriptions, smooth transitions
 - **Professional Typography:** Progressive scaling across breakpoints
+- **Toolkit Modal System:** Beautiful card expansion with blurred backdrop and comprehensive tool details
 
 ### **✅ Payment Integration (100% Complete)**
 - **Stripe Checkout:** Secure payment processing for Pro and Ultra subscriptions
@@ -132,13 +135,16 @@ src/
 │   ├── dashboard/         # User dashboard
 │   ├── gpts/             # GPTs listing
 │   ├── documents/        # Documents/playbooks listing
+│   ├── toolkit/          # Affiliate tools showcase
 │   ├── admin/            # Admin panel
 │   └── api/              # API routes
+│     └── ai/             # AI services (analysis, research)
 ├── components/           # Reusable UI components
 ├── lib/                 # Utilities and services
 │   ├── supabase/       # Database clients
 │   ├── auth.ts         # Authentication service
 │   ├── brevo.ts        # Email marketing service
+│   ├── affiliate-tools.ts # Affiliate tools management
 │   └── stripe.ts       # Payment processing
 └── styles/             # Global styles
 ```
@@ -150,6 +156,8 @@ src/
 - **AI Analysis:** `src/app/api/ai/analyze-document/route.ts`
 - **Payment Processing:** `src/lib/stripe.ts`
 - **Email Marketing:** `src/lib/brevo.ts`
+- **Affiliate Tools:** `src/lib/affiliate-tools.ts` - Tool management with access control
+- **AI Tool Analysis:** `src/app/api/ai/analyze-affiliate-tool/route.ts` - Comprehensive tool research
 
 ## 🔧 **Admin Workflow**
 
@@ -170,6 +178,53 @@ src/
 - **PDF Document Analysis:** Intelligent content analysis with filename recognition
 - **Smart Categorization:** Auto-assigns appropriate categories
 - **Professional Results:** Clean titles and compelling descriptions
+
+### **Affiliate Tools Management:**
+1. **Tool Research:** Add any affiliate URL for comprehensive AI analysis
+2. **Perplexity Integration:** Fast web search with Sonar model for factual research
+3. **Enhanced AI Analysis:** 250-350 word detailed personal stories with metrics
+4. **Rich Content Structure:** Why we love it, standout features, key benefits
+5. **Admin Approval:** Review and edit AI-generated content before publishing
+6. **Category Assignment:** Auto-categorization with manual override options
+7. **Image Upload:** Custom tool images with automatic resizing and optimization
+
+## 🛠️ **Our Toolkit System (100% Complete)**
+
+### **✅ Public Toolkit Page (`/toolkit`)**
+- **Value Proposition:** "The battle-tested tools that transformed our business"
+- **Professional Design:** Purple gradient cards with glassmorphism effects
+- **Category Filtering:** Smart categorization with emoji indicators
+- **Featured/Regular Sections:** Highlight game-changing tools vs essential arsenal
+- **Modal Expansion:** Beautiful full-screen modals with blurred backdrop
+- **Responsive Design:** Optimized for all device sizes with touch-friendly interactions
+
+### **✅ Enhanced UI/UX Experience**
+- **Card Preview:** Clean design with tool icons, titles, categories, and descriptions
+- **Modal System:** Click to expand into comprehensive tool details
+- **Professional Aesthetics:** Purple-themed gradients eliminating harsh black corners
+- **Interactive Elements:** Hover effects, smooth animations, and accessible navigation
+- **Smart Text Fitting:** Auto-truncation ensuring content always displays properly
+
+### **✅ Comprehensive Tool Analysis**
+- **AI-Powered Research:** Perplexity integration for factual web search
+- **Personal Stories:** 250-350 word authentic testimonials with metrics
+- **Detailed Sections:** Why we love it, standout features, key benefits
+- **Quantified Benefits:** Specific time savings, efficiency gains, ROI evidence
+- **Professional Tone:** Authentic enthusiasm balanced with credibility
+
+### **✅ Content Structure**
+- **Discovery Context:** Personal stories about finding and testing tools
+- **Feature Breakdown:** Practical applications with real-world use cases
+- **Transformation Metrics:** Quantifiable productivity gains and cost savings
+- **Pain Point Solutions:** Specific problems eliminated by each tool
+- **Workflow Integration:** How tools fit into daily business operations
+
+### **✅ Admin Integration**
+- **URL Analysis:** Add any affiliate link for automatic AI research
+- **Content Review:** Edit AI-generated analysis before publishing
+- **Image Management:** Upload and optimize tool logos/screenshots
+- **Feature Control:** Toggle featured status for priority placement
+- **Category Management:** Auto-categorization with manual override
 
 ## 🚀 **Deployment Status**
 
@@ -195,8 +250,9 @@ STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 BREVO_API_KEY=your_brevo_api_key
 BREVO_FROM_EMAIL=hello@thehackai.com
 
-# OpenAI
+# AI Services
 OPENAI_API_KEY=your_openai_api_key
+PERPLEXITY_API_KEY=your_perplexity_api_key
 
 # Site Configuration
 NEXT_PUBLIC_SITE_URL=https://thehackai.com
@@ -288,6 +344,8 @@ git push origin main  # Auto-deploys to Vercel
 - ✅ **Email Marketing** - Brevo integration with list management
 - ✅ **Mobile Optimization** - Comprehensive responsive design
 - ✅ **Debug Infrastructure** - Monitoring and troubleshooting tools
+- ✅ **Our Toolkit System** - Complete affiliate tools showcase with AI-powered analysis
+- ✅ **Blog Generation System** - AI-powered content creation with permanent image storage
 
 **Ready for users and scaling!** 🚀
 
