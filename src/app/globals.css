@@ -358,6 +358,42 @@
     background: rgba(139, 92, 246, 0.5);
   }
   
+  /* Modal animations */
+  @keyframes modal-fade-in {
+    from {
+      opacity: 0;
+      backdrop-filter: blur(0px);
+    }
+    to {
+      opacity: 1;
+      backdrop-filter: blur(12px);
+    }
+  }
+  
+  @keyframes modal-zoom-in {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  .animate-in {
+    animation-duration: 300ms;
+    animation-fill-mode: both;
+  }
+  
+  .fade-in {
+    animation-name: modal-fade-in;
+  }
+  
+  .zoom-in-95 {
+    animation-name: modal-zoom-in;
+  }
+  
   /* Mobile optimization utilities */
   .mobile-optimized {
     -webkit-tap-highlight-color: transparent;

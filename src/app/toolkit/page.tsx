@@ -15,7 +15,7 @@ export default function ToolkitPage() {
   const [categories, setCategories] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [loading, setLoading] = useState(true)
-  const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set())
+  const [expandedCard, setExpandedCard] = useState<number | null>(null)
   const router = useRouter()
 
   const loadData = async () => {
@@ -98,16 +98,37 @@ export default function ToolkitPage() {
   }
 
   const toggleCard = (toolId: number) => {
-    setFlippedCards(prev => {
-      const newSet = new Set(prev)
-      if (newSet.has(toolId)) {
-        newSet.delete(toolId)
-      } else {
-        newSet.add(toolId)
-      }
-      return newSet
-    })
+    setExpandedCard(expandedCard === toolId ? null : toolId)
   }
+
+  // Close modal when clicking outside or pressing escape
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setExpandedCard(null)
+      }
+    }
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (expandedCard && (e.target as Element).classList.contains('modal-backdrop')) {
+        setExpandedCard(null)
+      }
+    }
+
+    if (expandedCard) {
+      document.addEventListener('keydown', handleEscape)
+      document.addEventListener('click', handleClickOutside)
+      document.body.style.overflow = 'hidden' // Prevent background scrolling
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.removeEventListener('click', handleClickOutside)
+      document.body.style.overflow = 'unset'
+    }
+  }, [expandedCard])
 
   if (loading) {
     return (
@@ -125,191 +146,185 @@ export default function ToolkitPage() {
     )
   }
 
+  // Simple preview card component
   const ToolCard = ({ tool, index, isFeatured = false }: { tool: AffiliateToolWithAccess, index: number, isFeatured?: boolean }) => {
-    const isFlipped = flippedCards.has(tool.id)
     const categoryInfo = getCategoryInfo(tool.category)
 
     return (
-      <div className="group relative h-[420px]" style={{ perspective: '1200px' }}>
+      <div 
+        className="group relative h-[320px] cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+        onClick={() => toggleCard(tool.id)}
+      >
         <div 
-          className="relative w-full h-full cursor-pointer hover:scale-105"
-          style={{
-            transformStyle: 'preserve-3d',
-            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-            transition: 'all 0.8s cubic-bezier(0.23, 1, 0.320, 1)'
-          }}
-          onClick={() => toggleCard(tool.id)}
+          className={`w-full h-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 ${
+            isFeatured 
+              ? 'bg-gradient-to-br from-yellow-400/10 via-purple-900 to-slate-900 border-2 border-yellow-400/30' 
+              : 'bg-gradient-to-br from-purple-900/50 via-slate-800 to-slate-900 border border-slate-600/50'
+          }`}
         >
-          {/* FRONT CARD */}
-          <div 
-            className={`absolute inset-0 w-full h-full rounded-2xl overflow-hidden shadow-xl transition-all duration-300 group-hover:shadow-2xl ${
-              isFeatured 
-                ? 'bg-gradient-to-br from-yellow-400/10 via-purple-900 to-slate-900 border-2 border-yellow-400/30' 
-                : 'bg-gradient-to-br from-purple-900/50 via-slate-800 to-slate-900 border border-slate-600/50'
-            }`}
-            style={{
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden'
-            }}
-          >
-            
-            {/* Featured Badge - Only on front card */}
-            {isFeatured && (
-              <div className="absolute top-3 right-3 z-20">
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-white text-sm font-bold">⭐</span>
-                </div>
-              </div>
-            )}
-
-            {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-
-            <div className="relative p-6 h-full flex flex-col justify-between">
-              {/* Top Section */}
-              <div className="text-center flex-1 flex flex-col">
-                {/* Image - Show placeholder if no image */}
-                <div className="mb-4 flex justify-center">
-                  <div className="w-16 h-16 rounded-xl bg-white/95 shadow-lg p-2 flex items-center justify-center backdrop-blur-sm">
-                    {tool.image_url ? (
-                      <img 
-                        src={tool.image_url} 
-                        alt={tool.title}
-                        className="w-12 h-12 object-contain"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 flex items-center justify-center text-xl">
-                        {categoryInfo.emoji}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h3 className="text-lg font-bold text-white mb-2 leading-tight line-clamp-2">
-                  {tool.title || 'Sample Tool'}
-                </h3>
-
-                {/* Category */}
-                <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold mb-3 bg-gradient-to-r ${categoryInfo.color} text-white shadow-md`}>
-                  <span className="mr-1">{categoryInfo.emoji}</span>
-                  {tool.category || 'Automation'}
-                </div>
-
-                {/* Description Preview */}
-                <p className="text-gray-300 text-xs leading-relaxed mb-4 line-clamp-3 flex-1">
-                  {tool.description ? `${tool.description.slice(0, 100)}...` : 'A powerful tool to transform your workflow and boost productivity.'}
-                </p>
-              </div>
-
-              {/* Bottom Section */}
-              <div className="space-y-2">
-                {/* Primary CTA */}
-                <button 
-                  className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    if (tool.affiliate_url) {
-                      window.open(tool.affiliate_url, '_blank')
-                    } else {
-                      console.log('No affiliate URL provided')
-                    }
-                  }}
-                >
-                  🚀 Try {tool.title || 'This Tool'}
-                </button>
-                
-                {/* Secondary Action */}
-                <button className="w-full text-gray-400 hover:text-white text-xs transition-colors py-1">
-                  👆 Click card for details
-                </button>
+          {/* Featured Badge */}
+          {isFeatured && (
+            <div className="absolute top-3 right-3 z-10">
+              <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                <span className="text-white text-sm font-bold">⭐</span>
               </div>
             </div>
-          </div>
+          )}
 
-          {/* BACK CARD */}
-          <div 
-            className="absolute inset-0 w-full h-full rounded-2xl bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 border border-purple-500/50 shadow-xl overflow-hidden"
-            style={{
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              transform: 'rotateY(180deg)'
-            }}
-          >
-            <div className="p-4 h-full flex flex-col">
-              {/* Header with only X button */}
-              <div className="flex items-center justify-between mb-3 flex-shrink-0">
-                <div className="flex items-center space-x-2 flex-1 min-w-0">
-                  <div className="w-8 h-8 bg-white rounded-lg p-1.5 flex items-center justify-center flex-shrink-0">
-                    {tool.image_url ? (
-                      <img 
-                        src={tool.image_url} 
-                        alt={tool.title}
-                        className="w-5 h-5 object-contain"
-                      />
-                    ) : (
-                      <span className="text-xs">{categoryInfo.emoji}</span>
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <h4 className="text-sm font-bold text-white line-clamp-1">{tool.title || 'Sample Tool'}</h4>
-                    <p className="text-xs text-purple-300">{tool.category || 'Automation'}</p>
-                  </div>
-                </div>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    toggleCard(tool.id)
-                  }}
-                  className="w-6 h-6 rounded-full bg-slate-700/80 text-gray-300 hover:text-white hover:bg-slate-600 text-xs flex items-center justify-center transition-all duration-200 hover:scale-110 flex-shrink-0 ml-2"
-                >
-                  ✕
-                </button>
-              </div>
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
 
-              {/* Content - Scrollable */}
-              <div className="flex-1 mb-3 overflow-y-auto card-scrollable">
-                <div className="pr-1"> {/* Small padding for scrollbar */}
-                  <h5 className="text-purple-300 font-semibold mb-2 flex items-center text-xs">
-                    <span className="mr-1">✨</span>
-                    Why We Love This Tool
-                  </h5>
-                  <div className="text-gray-200 text-xs leading-relaxed">
-                    {tool.description ? (
-                      <div className="space-y-2">
-                        {tool.description.split('\n\n').map((paragraph, index) => (
-                          <p key={index} className="leading-relaxed">
-                            {paragraph}
-                          </p>
-                        ))}
-                      </div>
-                    ) : (
-                      <p>A comprehensive tool designed to streamline your workflow and increase productivity. This powerful solution has been battle-tested and proven to deliver results for businesses of all sizes.</p>
-                    )}
-                  </div>
+          <div className="relative p-6 h-full flex flex-col justify-between">
+            {/* Top Section */}
+            <div className="text-center flex-1 flex flex-col">
+              {/* Image */}
+              <div className="mb-4 flex justify-center">
+                <div className="w-16 h-16 rounded-xl bg-white/95 shadow-lg p-2 flex items-center justify-center backdrop-blur-sm">
+                  {tool.image_url ? (
+                    <img 
+                      src={tool.image_url} 
+                      alt={tool.title}
+                      className="w-12 h-12 object-contain"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 flex items-center justify-center text-xl">
+                      {categoryInfo.emoji}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Single Action Button - Fixed at bottom */}
-              <div className="flex-shrink-0">
-                <button 
-                  className="w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-xs transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    if (tool.affiliate_url) {
-                      window.open(tool.affiliate_url, '_blank')
-                    } else {
-                      console.log('No affiliate URL provided')
-                    }
-                  }}
-                >
-                  🚀 Get Started Now
-                </button>
+              {/* Title */}
+              <h3 className="text-lg font-bold text-white mb-2 leading-tight line-clamp-2">
+                {tool.title || 'Sample Tool'}
+              </h3>
+
+              {/* Category */}
+              <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold mb-3 bg-gradient-to-r ${categoryInfo.color} text-white shadow-md`}>
+                <span className="mr-1">{categoryInfo.emoji}</span>
+                {tool.category || 'Automation'}
               </div>
+
+              {/* Description Preview */}
+              <p className="text-gray-300 text-xs leading-relaxed mb-4 line-clamp-3 flex-1">
+                {tool.description ? `${tool.description.slice(0, 100)}...` : 'A powerful tool to transform your workflow and boost productivity.'}
+              </p>
+            </div>
+
+            {/* Bottom Section */}
+            <div className="space-y-2">
+              {/* Quick Action */}
+              <button 
+                className="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-sm transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (tool.affiliate_url) {
+                    window.open(tool.affiliate_url, '_blank')
+                  }
+                }}
+              >
+                🚀 Try Now
+              </button>
+              
+              {/* Expand hint */}
+              <button className="w-full text-gray-400 hover:text-white text-xs transition-colors py-1">
+                👆 Click for full details
+              </button>
             </div>
           </div>
         </div>
+      </div>
+    )
+  }
 
+  // Expanded modal component
+  const ExpandedModal = ({ tool }: { tool: AffiliateToolWithAccess }) => {
+    const categoryInfo = getCategoryInfo(tool.category)
+
+    return (
+      <div 
+        className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-lg p-4"
+        style={{ backdropFilter: 'blur(12px)' }}
+      >
+        <div 
+          className="relative w-full max-w-4xl max-h-[90vh] bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 rounded-3xl shadow-2xl border border-purple-500/30 animate-in zoom-in-95 duration-300"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-white/10">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 bg-white rounded-2xl p-3 flex items-center justify-center">
+                {tool.image_url ? (
+                  <img 
+                    src={tool.image_url} 
+                    alt={tool.title}
+                    className="w-10 h-10 object-contain"
+                  />
+                ) : (
+                  <span className="text-2xl">{categoryInfo.emoji}</span>
+                )}
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-white">{tool.title}</h2>
+                <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold mt-2 bg-gradient-to-r ${categoryInfo.color} text-white`}>
+                  <span className="mr-2">{categoryInfo.emoji}</span>
+                  {tool.category}
+                </div>
+              </div>
+            </div>
+            <button 
+              onClick={() => setExpandedCard(null)}
+              className="w-10 h-10 rounded-full bg-slate-700/80 text-gray-300 hover:text-white hover:bg-slate-600 text-lg flex items-center justify-center transition-all duration-200 hover:scale-110"
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
+                  <span className="mr-3">✨</span>
+                  Why We Love This Tool
+                </h3>
+                <div className="text-gray-200 text-base leading-relaxed space-y-4">
+                  {tool.description ? (
+                    tool.description.split('\n\n').map((paragraph, index) => (
+                      <p key={index} className="leading-relaxed">
+                        {paragraph}
+                      </p>
+                    ))
+                  ) : (
+                    <p>A comprehensive tool designed to streamline your workflow and increase productivity. This powerful solution has been battle-tested and proven to deliver results for businesses of all sizes.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer Actions */}
+          <div className="p-6 border-t border-white/10">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button 
+                className="flex-1 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-xl text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+                onClick={() => {
+                  if (tool.affiliate_url) {
+                    window.open(tool.affiliate_url, '_blank')
+                  }
+                }}
+              >
+                🚀 Get Started Now
+              </button>
+              <button 
+                onClick={() => setExpandedCard(null)}
+                className="px-8 py-4 border border-slate-600 text-gray-300 hover:text-white hover:border-slate-500 rounded-xl text-lg transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -426,6 +441,11 @@ export default function ToolkitPage() {
           </div>
         )}
       </main>
+
+      {/* Expanded Modal */}
+      {expandedCard && (
+        <ExpandedModal tool={tools.find(t => t.id === expandedCard)!} />
+      )}
     </DarkThemeBackground>
   )
 }
