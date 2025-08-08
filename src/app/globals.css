@@ -422,6 +422,12 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  /* Force rounded corners during layoutId animations */
+  .force-rounded {
+    border-radius: 1.5rem !important;
+    -webkit-border-radius: 1.5rem !important;
+  }
   
   /* Mobile-specific responsive helpers */
   @media (max-width: 640px) {

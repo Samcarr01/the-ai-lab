@@ -19,16 +19,14 @@ export const reducedMotionTransition = {
   ease: [0.23, 1, 0.32, 1] as const, // Custom bezier for smoothness
 }
 
-// Card to Modal morph variants with consistent rounded corners
+// Card to Modal morph variants - removed borderRadius to prevent override
 export const cardToModalVariants: Variants = {
   card: {
     scale: 1,
-    borderRadius: '1.5rem', // Keep consistent rounded corners
     transition: prefersReducedMotion ? reducedMotionTransition : springTransition,
   },
   modal: {
     scale: 1,
-    borderRadius: '1.5rem', // Same radius to prevent corner shifting
     transition: prefersReducedMotion ? reducedMotionTransition : springTransition,
   },
 }

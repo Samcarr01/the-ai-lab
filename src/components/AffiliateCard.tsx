@@ -17,9 +17,10 @@ export const AffiliateCard: React.FC<AffiliateCardProps> = ({
   return (
     <motion.div
       layoutId={`card-${tool.id}`}
-      className={`group relative h-[380px] cursor-pointer will-change-transform smooth-animation ${
+      className={`group relative h-[380px] cursor-pointer will-change-transform smooth-animation force-rounded ${
         isExpanded ? 'pointer-events-none' : ''
       }`}
+      style={{ borderRadius: '1.5rem' }}
       variants={cardToModalVariants}
       onClick={() => !isExpanded && onExpand(tool)}
       whileHover={!isExpanded ? { y: -2, scale: 1.01 } : {}}
