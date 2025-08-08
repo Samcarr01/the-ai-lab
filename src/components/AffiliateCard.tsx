@@ -17,13 +17,13 @@ export const AffiliateCard: React.FC<AffiliateCardProps> = ({
   return (
     <motion.div
       layoutId={`card-${tool.id}`}
-      className={`group relative h-[380px] cursor-pointer transition-all duration-300 ${
-        isExpanded ? 'pointer-events-none' : 'hover:scale-105 hover:shadow-2xl'
+      className={`group relative h-[380px] cursor-pointer will-change-transform ${
+        isExpanded ? 'pointer-events-none' : ''
       }`}
       variants={cardToModalVariants}
       onClick={() => !isExpanded && onExpand(tool)}
-      whileHover={!isExpanded ? { y: -8 } : {}}
-      transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+      whileHover={!isExpanded ? { y: -4, scale: 1.02 } : {}}
+      transition={{ type: 'spring', damping: 30, stiffness: 400, mass: 0.5 }}
     >
       <div 
         className={`w-full h-full rounded-2xl overflow-hidden shadow-xl transition-all duration-500 ${

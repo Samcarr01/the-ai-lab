@@ -59,8 +59,11 @@ export const AffiliateModal: React.FC<AffiliateModalProps> = ({
           <motion.div
             ref={modalRef}
             layoutId={`card-${tool.id}`}
-            className="relative w-full max-w-4xl max-h-[90vh] bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 rounded-3xl shadow-2xl border border-purple-500/30 overflow-hidden"
+            className="relative w-full max-w-4xl max-h-[90vh] bg-gradient-to-br from-purple-900 via-slate-800 to-slate-900 rounded-3xl shadow-2xl border border-purple-500/30 overflow-hidden will-change-transform"
             variants={cardToModalVariants}
+            initial="card"
+            animate="modal"
+            exit="card"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
