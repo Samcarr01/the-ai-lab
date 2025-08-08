@@ -152,7 +152,7 @@ export default function ToolkitPage() {
 
     return (
       <div 
-        className="group relative h-[320px] cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+        className="group relative h-[340px] cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl"
         onClick={() => toggleCard(tool.id)}
       >
         <div 
@@ -207,7 +207,11 @@ export default function ToolkitPage() {
 
               {/* Description Preview */}
               <p className="text-gray-300 text-xs leading-relaxed mb-4 line-clamp-3 flex-1">
-                {tool.description ? `${tool.description.slice(0, 100)}...` : 'A powerful tool to transform your workflow and boost productivity.'}
+                {tool.description ? (
+                  tool.description.length > 120 
+                    ? `${tool.description.slice(0, 120)}...` 
+                    : tool.description
+                ) : 'A powerful tool to transform your workflow and boost productivity.'}
               </p>
             </div>
 
@@ -283,6 +287,7 @@ export default function ToolkitPage() {
           {/* Content */}
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
             <div className="space-y-6">
+              {/* Main Description */}
               <div>
                 <h3 className="text-xl font-semibold text-purple-300 mb-4 flex items-center">
                   <span className="mr-3">✨</span>
@@ -300,6 +305,42 @@ export default function ToolkitPage() {
                   )}
                 </div>
               </div>
+
+              {/* Standout Features */}
+              {(tool as any).standout_features && (tool as any).standout_features.length > 0 && (
+                <div>
+                  <h4 className="text-lg font-semibold text-green-300 mb-3 flex items-center">
+                    <span className="mr-2">🚀</span>
+                    Standout Features
+                  </h4>
+                  <ul className="space-y-2">
+                    {(tool as any).standout_features.map((feature: string, index: number) => (
+                      <li key={index} className="text-gray-200 text-sm flex items-start">
+                        <span className="text-purple-400 mr-2">•</span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Key Benefits */}
+              {(tool as any).key_benefits && (tool as any).key_benefits.length > 0 && (
+                <div>
+                  <h4 className="text-lg font-semibold text-blue-300 mb-3 flex items-center">
+                    <span className="mr-2">💎</span>
+                    Key Benefits
+                  </h4>
+                  <ul className="space-y-2">
+                    {(tool as any).key_benefits.map((benefit: string, index: number) => (
+                      <li key={index} className="text-gray-200 text-sm flex items-start">
+                        <span className="text-blue-400 mr-2">•</span>
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
 

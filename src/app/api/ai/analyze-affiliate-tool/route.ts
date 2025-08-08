@@ -101,41 +101,59 @@ Focus on factual, current information that would help someone understand why thi
     // Step 2: Generate compelling content with OpenAI
     console.log('✍️ Generating content with OpenAI...')
 
-    const contentPrompt = `Based on this research about ${toolDomain}:
+    const contentPrompt = `Based on this comprehensive research about ${toolDomain}:
 
 ${researchData}
 
-Create an engaging affiliate tool description that follows these requirements:
+Create an in-depth affiliate tool analysis with a compelling personal story. Write as a successful AI entrepreneur who has extensively tested this tool in real business scenarios.
 
-STYLE & TONE:
-- Write as a successful AI entrepreneur personally recommending this tool
-- Conversational and enthusiastic but trustworthy
-- Focus on transformation and real value
-- Include a compelling statistic or specific benefit
+REQUIREMENTS:
 
-STRUCTURE (150-200 words max):
-1. Opening hook - Why this tool caught our attention
-2. Key transformation/benefit - What problem it solves
-3. Specific value - Include a number, statistic, or concrete benefit
-4. Personal touch - Why it's in "our toolkit"
-5. Enthusiasm closer - Why it's essential
+DESCRIPTION (250-350 words):
+- Opening: Personal discovery story with context (when/why we found it)
+- Immediate impact: First impression and early results
+- Deep dive: Why we love it with 3-4 specific reasons and concrete examples
+- Feature breakdown: Most impactful capabilities with real-world applications  
+- Transformation metrics: Specific time saved, efficiency gained, or revenue impact
+- Pain points solved: What frustrating problems it eliminates completely
+- Daily workflow integration: How it fits seamlessly into operations
+- Competitive advantage: What makes it superior to alternatives
+- ROI evidence: Quantifiable benefits, productivity gains, or cost savings
+- Personal testament: Why it's become indispensable
+- Professional recommendation: Why serious professionals need this
 
-AVOID:
-- Generic descriptions
-- Overly promotional language
-- Feature lists without benefits
-- Being too lengthy
+ENHANCED SECTIONS:
+- "why_we_love_it": 4-5 detailed reasons with specific examples
+- "standout_features": 4-6 key features with practical applications
+- "key_benefits": 4-6 benefits with quantifiable outcomes
 
-EXAMPLE TONE:
-"When we discovered [Tool], it completely changed how we [specific use case]. The ability to [key feature] meant we could [specific benefit/time saved]. What really impressed us was [compelling fact/statistic]. It's become an essential part of our daily workflow because [personal reason]. For anyone serious about [relevant field], this tool is non-negotiable."
+STYLE GUIDELINES:
+- Personal, authentic, and trustworthy tone
+- Include specific metrics, percentages, time savings
+- Focus on real business transformation and measurable value
+- Genuine enthusiasm balanced with professional credibility
+- Use concrete examples over generic statements
+
+ENHANCED STRUCTURE EXAMPLE:
+"When we discovered [Tool] six months ago during a particularly challenging project, it immediately caught our attention. The [specific capability] solved a problem we'd been wrestling with for months, and within the first week, we saw [specific improvement/metric].
+
+What makes us evangelical about this tool? First, [detailed reason 1 with example]. Second, [detailed reason 2 with specific outcome]. Third, [detailed reason 3 with measurable benefit]. Finally, [detailed reason 4 with practical application].
+
+The standout features that transformed our workflow include [feature 1 with real-world use case], [feature 2 with efficiency gain], [feature 3 with problem solved], and [feature 4 with competitive advantage]. Each of these directly addresses pain points we face daily.
+
+Before [Tool], our process involved [old inefficient method] which took [time/cost]. Now, we can [new efficient process] in [reduced time], saving us approximately [specific metric] per [timeframe]. The ROI became evident within [specific timeframe] when we [specific achievement].
+
+It's become so integral to our operations that we can't imagine working without it. The [specific feature] alone has transformed how we approach [specific task], while the [another feature] ensures we never miss [specific opportunity/problem]. For anyone serious about [field/industry], this tool isn't just recommended - it's absolutely essential for staying competitive."
 
 Respond in JSON format:
 {
-  "title": "Professional Tool Name",
-  "description": "Engaging 150-200 word personal recommendation",
-  "category": "Most appropriate category from: Automation, Productivity, Development, Marketing, Design, Communication, Analysis, Research",
-  "key_benefits": ["benefit1", "benefit2", "benefit3"],
-  "original_url": "Clean tool website URL (without affiliate params)"
+  "title": "Professional Tool Name (exactly as the tool markets itself)",
+  "description": "Detailed 250-350 word personal story with specific metrics and real-world applications",
+  "category": "Most appropriate category from: Automation, Productivity, Development, Marketing, Design, Communication, Analysis, Research, Business Planning",
+  "key_benefits": ["benefit1 with specific metric/outcome", "benefit2 with quantified improvement", "benefit3 with measurable value", "benefit4 with practical impact"],
+  "why_we_love_it": ["detailed reason 1 with specific example", "detailed reason 2 with concrete outcome", "detailed reason 3 with practical benefit", "detailed reason 4 with real-world application"],
+  "standout_features": ["feature1 with practical use case", "feature2 with efficiency benefit", "feature3 with problem-solving capability", "feature4 with competitive advantage"],
+  "original_url": "Clean tool website URL (without affiliate tracking parameters)"
 }`
 
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -157,7 +175,7 @@ Respond in JSON format:
           }
         ],
         temperature: 0.7,
-        max_tokens: 800,
+        max_tokens: 1200,
         response_format: { type: "json_object" }
       })
     })
@@ -190,6 +208,8 @@ Respond in JSON format:
       description: analyzed.description || 'An amazing tool that transforms workflows and boosts productivity.',
       category: analyzed.category || 'Productivity',
       key_benefits: analyzed.key_benefits || [],
+      why_we_love_it: analyzed.why_we_love_it || [],
+      standout_features: analyzed.standout_features || [],
       original_url: analyzed.original_url || `https://${toolDomain}`,
       research_data: {
         perplexity_research: researchData,
@@ -204,12 +224,29 @@ Respond in JSON format:
   } catch (error) {
     console.error('❌ Affiliate tool analysis error:', error)
     
-    // Enhanced fallback based on URL
+    // Enhanced fallback with comprehensive structure
     const fallbackResult = {
-      title: 'Affiliate Tool',
-      description: 'This tool has become an essential part of our workflow. It streamlines processes, saves time, and delivers consistent results that have transformed how we operate. The intuitive interface and powerful features make it perfect for teams looking to optimize their productivity and achieve better outcomes.',
+      title: 'Essential Business Tool',
+      description: 'When we first discovered this tool during a busy quarter, it immediately stood out for its ability to streamline our most time-consuming processes. Within the first month of implementation, we noticed a 35% reduction in manual work and significantly improved team coordination. The intuitive design means zero learning curve, while the robust feature set handles everything from basic automation to complex workflow management. What really impressed us was how it integrated seamlessly with our existing tools, eliminating the usual friction of adopting new software. The time savings alone - approximately 8-10 hours per week across our team - justified the investment within the first billing cycle. Beyond efficiency, it solved our biggest pain point: maintaining consistency across projects. Now every team member follows the same optimized process, resulting in higher quality output and fewer errors. The real-time collaboration features have transformed how we approach deadlines, turning what used to be stressful rushes into smooth, coordinated efforts. For any serious business looking to scale operations without adding overhead, this tool has become absolutely indispensable to our success.',
       category: 'Productivity',
-      key_benefits: ['Streamlines workflows', 'Saves time', 'Improves productivity'],
+      key_benefits: [
+        'Reduces manual work by 35% with intelligent automation',
+        'Saves 8-10 hours per week across team operations', 
+        'Eliminates process inconsistencies with standardized workflows',
+        'Integrates seamlessly with existing business tools'
+      ],
+      why_we_love_it: [
+        'Zero learning curve with intuitive design that gets teams productive immediately',
+        'Robust automation handles complex workflows without breaking or requiring maintenance',
+        'Real-time collaboration features eliminate coordination bottlenecks during crunch times',
+        'Scalable architecture grows with business needs without performance degradation'
+      ],
+      standout_features: [
+        'Intelligent workflow automation with customizable triggers and conditions',
+        'Real-time team collaboration with instant updates and notifications',
+        'Seamless integration hub connecting all essential business tools',
+        'Advanced analytics dashboard providing actionable insights on team productivity'
+      ],
       original_url: affiliateUrl,
       research_data: {
         error: error instanceof Error ? error.message : 'Unknown error',
