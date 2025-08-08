@@ -12,7 +12,7 @@ import MobileNavigation from './MobileNavigation'
 
 interface SmartNavigationProps {
   user: UserProfile | null
-  currentPage?: 'gpts' | 'documents' | 'blog' | 'toolkit' | 'dashboard' | 'settings'
+  currentPage?: 'gpts' | 'documents' | 'blog' | 'toolkit' | 'dashboard' | 'settings' | 'contact' | 'login' | 'signup' | 'privacy' | 'terms' | 'solutions'
   onFeatureClick?: () => void
   onPricingClick?: () => void
   loading?: boolean

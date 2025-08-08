@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
@@ -6,8 +8,6 @@ import Footer from '@/components/Footer'
 import SmartNavigation from '@/components/SmartNavigation'
 import { auth } from '@/lib/auth'
 import { userService, type UserProfile } from '@/lib/user'
-
-'use client'
 
 export default function TermsPage() {
   const [user, setUser] = useState<UserProfile | null>(null)
