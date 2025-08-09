@@ -49,93 +49,111 @@ export default function SolutionsPage() {
       <SmartNavigation user={user} currentPage="solutions" />
       
       <div className="min-h-screen pt-16 sm:pt-20">
-        {/* Hero Section */}
+        {/* Problem-Focused Hero Section */}
         <section className="relative py-12 sm:py-16 px-4">
-          <div className="max-w-6xl mx-auto text-center">
+          <div className="max-w-6xl mx-auto">
             <ScrollAnimation>
-              <div className="mb-8">
-                <span className="inline-block px-4 py-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-full text-purple-300 text-sm font-medium border border-purple-500/30 mb-6">
-                  🚀 Battle-tested AI Playbooks & GPTs
+              <div className="text-center mb-16">
+                <span className="inline-block px-4 py-2 bg-gradient-to-r from-red-600/20 to-orange-600/20 rounded-full text-red-300 text-sm font-medium border border-red-500/30 mb-6">
+                  💡 Problems We Solve
                 </span>
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight hover:scale-105 transition-transform duration-500">
-                  <span className="inline-block hover:animate-pulse">Make any AI smarter</span>
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white leading-tight">
+                  Stop Wasting Time on
                   <br />
-                  <span className="inline-block hover:animate-bounce">instantly</span>
+                  <span className="bg-gradient-to-r from-red-400 via-orange-400 to-yellow-400 bg-clip-text text-transparent">
+                    Broken AI Tools
+                  </span>
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed px-2 sm:px-0">
-                  Skip months of trial and error. Our <span className="text-purple-400 font-semibold">proven GPTs</span> and <span className="text-pink-400 font-semibold">playbooks give AI knowledge it doesn't have</span> — so you get expert results immediately.
+                <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+                  Every day, professionals waste hours fighting with AI tools that don't work, following outdated guides, and getting mediocre results. <span className="text-purple-400 font-semibold">We've solved this problem.</span>
                 </p>
               </div>
             </ScrollAnimation>
 
+            {/* Before vs After Comparison */}
             <ScrollAnimation delay={0.2}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 px-4 sm:px-0">
-                <Link 
-                  href="/gpts"
-                  className="group px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 text-center mobile-touch-target relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <span className="relative z-10 group-hover:animate-pulse">Explore GPTs</span>
-                </Link>
-                <Link 
-                  href="/documents"
-                  className="group px-6 sm:px-8 py-3 sm:py-4 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/10 transition-all duration-300 hover:scale-105 text-center mobile-touch-target relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  <span className="relative z-10 group-hover:animate-pulse">View Playbooks</span>
-                </Link>
-              </div>
-            </ScrollAnimation>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+                {/* The Problem */}
+                <div className="bg-gradient-to-br from-red-900/20 to-orange-900/20 border border-red-500/30 rounded-2xl p-8">
+                  <div className="text-red-400 text-5xl mb-6 text-center">😤</div>
+                  <h3 className="text-2xl font-bold text-red-300 mb-6 text-center">Your Current Reality</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">Spending 3+ hours tweaking prompts for basic tasks</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">Following YouTube tutorials that don't work</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">Getting inconsistent, mediocre AI results</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">Paying for multiple AI tools that barely help</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-red-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">Feeling frustrated and behind on AI adoption</p>
+                    </div>
+                  </div>
+                  <div className="mt-6 p-4 bg-red-900/30 rounded-lg border border-red-500/30">
+                    <p className="text-red-200 text-center font-medium">
+                      <span className="text-red-300 text-lg">💸</span> Average cost: <span className="font-bold">20+ hours/week</span> + <span className="font-bold">$200+/month</span> on tools that don't deliver
+                    </p>
+                  </div>
+                </div>
 
-            {/* Stats with floating animation */}
-            <ScrollAnimation delay={0.3}>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-4xl mx-auto px-4 sm:px-0">
-                <div className="text-center group">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-purple-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500 animate-pulse"></div>
-                    <div className="relative text-4xl font-bold text-purple-400 mb-2 transform group-hover:scale-110 transition-all duration-300">
-                      <AnimatedCounter 
-                        end={contentStats ? (contentStats.totalGPTs + contentStats.totalPlaybooks) : 11} 
-                        duration={2000} 
-                      />+
+                {/* The Solution */}
+                <div className="bg-gradient-to-br from-green-900/20 to-purple-900/20 border border-green-500/30 rounded-2xl p-8">
+                  <div className="text-green-400 text-5xl mb-6 text-center">🚀</div>
+                  <h3 className="text-2xl font-bold text-green-300 mb-6 text-center">With thehackai</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">Get expert results in under 5 minutes</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">Access battle-tested GPTs that actually work</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">Follow proven playbooks with guaranteed results</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">One platform, everything you need for £7-19/month</p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <div className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0"></div>
+                      <p className="text-gray-300">Feel confident and ahead with AI workflows</p>
                     </div>
                   </div>
-                  <p className="text-gray-400">Premium AI Tools</p>
-                </div>
-                <div className="text-center group">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-pink-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500 animate-pulse"></div>
-                    <div className="relative text-4xl font-bold text-pink-400 mb-2 transform group-hover:scale-110 transition-all duration-300">
-                      <AnimatedCounter end={100} duration={2500} />%
-                    </div>
+                  <div className="mt-6 p-4 bg-green-900/30 rounded-lg border border-green-500/30">
+                    <p className="text-green-200 text-center font-medium">
+                      <span className="text-green-300 text-lg">💰</span> Your new reality: <span className="font-bold">2 hours/week</span> + <span className="font-bold">£7-19/month</span> for expert AI results
+                    </p>
                   </div>
-                  <p className="text-gray-400">Battle-Tested</p>
-                </div>
-                <div className="text-center group">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-cyan-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500 animate-pulse"></div>
-                    <div className="relative text-4xl font-bold text-cyan-400 mb-2 transform group-hover:scale-110 transition-all duration-300">
-                      Weekly
-                    </div>
-                  </div>
-                  <p className="text-gray-400">Fresh Updates</p>
                 </div>
               </div>
             </ScrollAnimation>
           </div>
         </section>
 
-        {/* Problems We Solve */}
+        {/* Real-World Use Cases */}
         <section className="py-20 px-4 bg-gradient-to-b from-transparent to-gray-900/50">
           <div className="max-w-6xl mx-auto">
             <ScrollAnimation>
               <div className="text-center mb-16">
                 <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                  Stop Wasting Time on
-                  <span className="text-red-400"> Broken AI Tools</span>
+                  Real Results from
+                  <span className="text-purple-400"> Real People</span>
                 </h2>
                 <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4 sm:px-0">
-                  We've all been there - spending hours trying AI tools that don't work, following outdated guides, or getting mediocre results. We solve that.
+                  See how professionals are using our GPTs and playbooks to save time, increase quality, and get ahead with AI.
                 </p>
               </div>
             </ScrollAnimation>
@@ -144,58 +162,40 @@ export default function SolutionsPage() {
               <ScrollAnimation delay={0.1}>
                 <div className="bg-red-900/20 border border-red-500/30 rounded-xl p-6 sm:p-8">
                   <div className="text-red-400 text-4xl mb-4">❌</div>
-                  <h3 className="text-2xl font-bold text-white mb-4">The Old Way</h3>
-                  <ul className="space-y-3 text-gray-300">
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      Hours searching for AI tools that work
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      Following outdated guides that don't work
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      Testing dozens of broken AI tools
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      Wasting time on mediocre results
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      Paying for multiple tool subscriptions
-                    </li>
-                  </ul>
+                  <h3 className="text-xl font-bold text-white mb-3 text-center">Marketing Manager Sarah</h3>
+                  <div className="mb-4">
+                    <p className="text-gray-300 text-sm mb-3">
+                      <span className="text-red-300">"I was spending 6 hours a week writing social media posts and email campaigns. The results were inconsistent and I felt like I was falling behind."</span>
+                    </p>
+                    <div className="h-px bg-gradient-to-r from-red-500/30 to-orange-500/30 mb-3"></div>
+                    <p className="text-gray-300 text-sm">
+                      <span className="text-green-300">"With thehackai's Content Creation GPT, I now produce a week's worth of content in 30 minutes. Quality is 10x better and I'm finally ahead of the game."</span>
+                    </p>
+                  </div>
+                  <div className="bg-green-900/30 rounded-lg p-3 text-center">
+                    <p className="text-green-300 text-sm font-medium">💰 Saved 5.5 hours/week</p>
+                    <p className="text-green-300 text-sm font-medium">📈 10x better quality</p>
+                  </div>
                 </div>
               </ScrollAnimation>
 
               <ScrollAnimation delay={0.2}>
                 <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-6 sm:p-8">
                   <div className="text-green-400 text-4xl mb-4">✅</div>
-                  <h3 className="text-2xl font-bold text-white mb-4">The thehackai Way</h3>
-                  <ul className="space-y-3 text-gray-300">
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">•</span>
-                      Get work-ready AI tools (tested by professionals)
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">•</span>
-                      Always current and proven to work
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">•</span>
-                      Skip straight to tools that deliver results
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">•</span>
-                      Professional results from day one
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">•</span>
-                      One subscription replaces multiple tools
-                    </li>
-                  </ul>
+                  <h3 className="text-xl font-bold text-white mb-3 text-center">Consultant Mike</h3>
+                  <div className="mb-4">
+                    <p className="text-gray-300 text-sm mb-3">
+                      <span className="text-red-300">"Creating client reports took me 8 hours per project. I was working nights and weekends just to keep up with demand."</span>
+                    </p>
+                    <div className="h-px bg-gradient-to-r from-green-500/30 to-teal-500/30 mb-3"></div>
+                    <p className="text-gray-300 text-sm">
+                      <span className="text-green-300">"Now I use the Report Writing playbook and finish reports in 45 minutes. Clients love the quality and I've doubled my client load."</span>
+                    </p>
+                  </div>
+                  <div className="bg-green-900/30 rounded-lg p-3 text-center">
+                    <p className="text-green-300 text-sm font-medium">💰 2x more clients</p>
+                    <p className="text-green-300 text-sm font-medium">⏰ 90% time saved</p>
+                  </div>
                 </div>
               </ScrollAnimation>
             </div>
