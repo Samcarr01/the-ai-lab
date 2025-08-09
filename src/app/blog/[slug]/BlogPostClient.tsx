@@ -192,42 +192,45 @@ export default function BlogPostClient({ post, user }: Props) {
                   </a>
                 )
               },
-              // Custom image renderer with persistent loading (no state changes during scroll)
+              // Stable image renderer to prevent layout shift during scroll
               img: ({ src, alt }) => (
                 <figure className="my-8 clear-both">
-                  <img 
-                    src={src} 
-                    alt={alt} 
-                    className="rounded-lg shadow-xl w-full h-auto block"
-                    loading="eager" // Load immediately
-                    decoding="sync" // Synchronous decoding for stability
-                    style={{ 
-                      minHeight: '200px',
-                      maxWidth: '100%',
-                      height: 'auto'
-                    }}
-                    onError={(e) => {
-                      console.warn('❌ Image failed to load:', src)
-                      // Replace with placeholder without state change
-                      const target = e.target as HTMLImageElement
-                      target.style.display = 'none'
-                      const placeholder = document.createElement('div')
-                      placeholder.className = 'w-full min-h-[300px] bg-gray-800/50 rounded-lg flex items-center justify-center border border-gray-700'
-                      placeholder.innerHTML = `
-                        <div class="text-center text-gray-400">
-                          <svg class="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          <p class="text-sm">Image temporarily unavailable</p>
-                          ${alt ? `<p class="text-xs mt-1 opacity-75">${alt}</p>` : ''}
-                        </div>
-                      `
-                      target.parentNode?.insertBefore(placeholder, target)
-                    }}
-                    onLoad={() => {
-                      console.log('✅ Image loaded and cached:', src)
-                    }}
-                  />
+                  <div className="blog-image shadow-xl">
+                    <img 
+                      src={src} 
+                      alt={alt} 
+                      className="w-full h-auto block"
+                      loading="eager" // Load immediately to prevent scroll-triggered loading
+                      decoding="async" // Non-blocking decoding for better performance  
+                      fetchPriority="high" // Prioritize image loading
+                      style={{ 
+                        minHeight: '300px',
+                        maxWidth: '100%',
+                        height: 'auto'
+                      }}
+                      onError={(e) => {
+                        console.warn('❌ Blog image failed to load:', src)
+                        const target = e.target as HTMLImageElement
+                        const container = target.closest('.blog-image')
+                        if (container) {
+                          container.innerHTML = `
+                            <div class="w-full h-full bg-gray-800/50 rounded-lg flex items-center justify-center border border-gray-700 min-h-[300px]">
+                              <div class="text-center text-gray-400">
+                                <svg class="w-12 h-12 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <p class="text-sm">Image temporarily unavailable</p>
+                                ${alt ? `<p class="text-xs mt-1 opacity-75">${alt}</p>` : ''}
+                              </div>
+                            </div>
+                          `
+                        }
+                      }}
+                      onLoad={() => {
+                        console.log('✅ Blog image loaded successfully:', src)
+                      }}
+                    />
+                  </div>
                   {alt && <figcaption className="text-center text-sm text-gray-400 mt-3">{alt}</figcaption>}
                 </figure>
               ),
