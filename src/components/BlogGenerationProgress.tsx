@@ -258,14 +258,14 @@ export default function BlogGenerationProgress({
   }
 
   return (
-    <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-purple-200 shadow-lg">
+    <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-purple-500/30 shadow-lg">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 sm:mb-2">
+          <h3 className="text-lg sm:text-xl font-bold text-white mb-1 sm:mb-2">
             🤖 AI Blog Generation
           </h3>
-          <p className="text-sm text-gray-600">
-            Total time: <span className="font-mono font-semibold text-purple-600">
+          <p className="text-sm text-gray-300">
+            Total time: <span className="font-mono font-semibold text-purple-400">
               {formatTime(totalElapsed)}
             </span>
           </p>
@@ -274,7 +274,7 @@ export default function BlogGenerationProgress({
         {!isComplete && (
           <button
             onClick={onCancel}
-            className="mt-3 sm:mt-0 px-3 sm:px-4 py-2 text-xs sm:text-sm text-red-600 hover:text-red-800 border border-red-300 rounded-lg hover:bg-red-50 transition-colors"
+            className="mt-3 sm:mt-0 px-3 sm:px-4 py-2 text-xs sm:text-sm text-red-400 hover:text-red-300 border border-red-500/50 rounded-lg hover:bg-red-900/30 transition-colors"
           >
             Cancel
           </button>
@@ -293,12 +293,12 @@ export default function BlogGenerationProgress({
               key={stepKey}
               className={`flex items-center p-4 sm:p-5 rounded-xl transition-all duration-500 transform hover:scale-[1.02] ${
                 status === 'completed'
-                  ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 shadow-md'
+                  ? 'bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/50 shadow-md'
                   : status === 'starting' || status === 'running' || currentStep === stepKey
-                  ? `bg-gradient-to-r ${config.color} bg-opacity-10 border border-purple-300 shadow-lg animate-pulse`
+                  ? `bg-gradient-to-r ${config.color} bg-opacity-20 border border-purple-500/50 shadow-lg animate-pulse`
                   : status === 'error'
-                  ? 'bg-gradient-to-r from-red-50 to-pink-50 border border-red-300 shadow-md'
-                  : 'bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200'
+                  ? 'bg-gradient-to-r from-red-900/30 to-pink-900/30 border border-red-500/50 shadow-md'
+                  : 'bg-gradient-to-r from-slate-700/50 to-slate-800/50 border border-gray-600/50'
               }`}
             >
               {/* Step Icon and Info */}
@@ -311,7 +311,7 @@ export default function BlogGenerationProgress({
                       ? `bg-gradient-to-br ${config.color} text-white shadow-lg animate-bounce`
                       : status === 'error'
                       ? 'bg-gradient-to-br from-red-400 to-pink-500 text-white shadow-lg'
-                      : 'bg-gradient-to-br from-gray-300 to-gray-400 text-gray-600'
+                      : 'bg-gradient-to-br from-gray-600 to-gray-700 text-gray-300'
                   }`}>
                     {status === 'completed' ? '✅' : status === 'error' ? '❌' : config.icon}
                   </div>
@@ -320,10 +320,10 @@ export default function BlogGenerationProgress({
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0 flex-1">
-                      <h4 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
+                      <h4 className="font-semibold text-white text-sm sm:text-base truncate">
                         {config.title}
                       </h4>
-                      <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                      <p className="text-xs sm:text-sm text-gray-300 mt-1">
                         {step?.message || config.description}
                       </p>
                     </div>
@@ -332,21 +332,21 @@ export default function BlogGenerationProgress({
                     <div className="flex items-center mt-2 sm:mt-0 sm:ml-4">
                       {status === 'starting' || status === 'running' || currentStep === stepKey ? (
                         <div className="flex items-center">
-                          <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-purple-600 border-t-transparent mr-2"></div>
-                          <span className="font-mono text-xs sm:text-sm text-purple-600 font-semibold">
+                          <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-2 border-purple-400 border-t-transparent mr-2"></div>
+                          <span className="font-mono text-xs sm:text-sm text-purple-400 font-semibold">
                             {formatTime(duration)}
                           </span>
                         </div>
                       ) : status === 'completed' ? (
-                        <span className="font-mono text-xs sm:text-sm text-green-600 font-semibold">
+                        <span className="font-mono text-xs sm:text-sm text-green-400 font-semibold">
                           {formatTime(step?.duration || 0)}
                         </span>
                       ) : status === 'error' ? (
-                        <span className="font-mono text-xs sm:text-sm text-red-600 font-semibold">
+                        <span className="font-mono text-xs sm:text-sm text-red-400 font-semibold">
                           {formatTime(step?.duration || 0)}
                         </span>
                       ) : (
-                        <span className="font-mono text-xs sm:text-sm text-gray-400">
+                        <span className="font-mono text-xs sm:text-sm text-gray-500">
                           waiting...
                         </span>
                       )}
@@ -362,12 +362,12 @@ export default function BlogGenerationProgress({
       {/* Overall Progress Bar */}
       <div className="mt-6">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-xs sm:text-sm font-medium text-gray-700">Overall Progress</span>
-          <span className="text-xs sm:text-sm text-gray-600">
+          <span className="text-xs sm:text-sm font-medium text-gray-100">Overall Progress</span>
+          <span className="text-xs sm:text-sm text-gray-300">
             {Object.values(steps).filter(s => s.status === 'completed').length} / {Object.keys(stepConfig).length} steps
           </span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3">
+        <div className="w-full bg-slate-700 rounded-full h-2 sm:h-3">
           <div
             className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 sm:h-3 rounded-full transition-all duration-300 ease-out"
             style={{
@@ -380,10 +380,10 @@ export default function BlogGenerationProgress({
       {/* Mobile-optimized current step indicator */}
       <div className="mt-4 sm:hidden">
         {currentStep && !isComplete && (
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-3">
+          <div className="bg-purple-900/30 border border-purple-500/50 rounded-lg p-3">
             <div className="flex items-center">
               <div className="animate-pulse w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
-              <span className="text-sm font-medium text-purple-800">
+              <span className="text-sm font-medium text-purple-200">
                 Currently: {stepConfig[currentStep as keyof typeof stepConfig]?.title}
               </span>
             </div>
