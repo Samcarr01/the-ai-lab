@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -9,6 +10,20 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 
 export async function GET(request: NextRequest) {
   try {
+    // CRITICAL SECURITY: Verify admin authentication
+    const supabase = createServerClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (!user || user.email !== 'samcarr1232@gmail.com') {
+      console.error('❌ Admin content access denied:', { 
+        hasUser: !!user, 
+        email: user?.email, 
+        requiredEmail: 'samcarr1232@gmail.com' 
+      })
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+    }
+    
+    console.log('✅ Admin content access verified for:', user.email)
     // Get both GPTs and documents using admin client to bypass RLS
     const [gptsResult, documentsResult] = await Promise.all([
       supabaseAdmin

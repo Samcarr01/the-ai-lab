@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
@@ -9,6 +10,21 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 
 export async function POST(request: NextRequest) {
   try {
+    // CRITICAL SECURITY: Verify admin authentication
+    const supabase = createServerClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (!user || user.email !== 'samcarr1232@gmail.com') {
+      console.error('❌ Admin access denied:', { 
+        hasUser: !!user, 
+        email: user?.email, 
+        requiredEmail: 'samcarr1232@gmail.com' 
+      })
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 })
+    }
+    
+    console.log('✅ Admin access verified for:', user.email)
+    
     const { type, id, is_featured } = await request.json()
     
     if (!type || !id || typeof is_featured !== 'boolean') {
