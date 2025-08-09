@@ -13,7 +13,7 @@ export async function GET() {
     // Test if required_tier column exists
     const { data: gpts, error: gptsError } = await supabase
       .from('gpts')
-      .select('id, title, required_tier, tier')
+      .select('id, title, required_tier')
       .limit(3)
     
     if (gptsError) {
@@ -30,7 +30,7 @@ export async function GET() {
     // Test documents too
     const { data: docs, error: docsError } = await supabase
       .from('documents')
-      .select('id, title, required_tier, tier')
+      .select('id, title, required_tier')
       .limit(3)
     
     if (docsError) {
@@ -66,13 +66,11 @@ export async function GET() {
       data: {
         gpts: gpts?.map(g => ({
           title: g.title,
-          required_tier: g.required_tier || 'NOT SET',
-          tier: g.tier || 'NOT SET'
+          required_tier: g.required_tier || 'NOT SET'
         })) || [],
         documents: docs?.map(d => ({
           title: d.title,
-          required_tier: d.required_tier || 'NOT SET',
-          tier: d.tier || 'NOT SET'
+          required_tier: d.required_tier || 'NOT SET'
         })) || [],
         users: users?.map(u => ({
           email: u.email,
