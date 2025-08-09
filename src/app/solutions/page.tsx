@@ -143,64 +143,6 @@ export default function SolutionsPage() {
           </div>
         </section>
 
-        {/* Real-World Use Cases */}
-        <section className="py-20 px-4 bg-gradient-to-b from-transparent to-gray-900/50">
-          <div className="max-w-6xl mx-auto">
-            <ScrollAnimation>
-              <div className="text-center mb-16">
-                <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                  Real Results from
-                  <span className="text-purple-400"> Real People</span>
-                </h2>
-                <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto px-4 sm:px-0">
-                  See how professionals are using our GPTs and playbooks to save time, increase quality, and get ahead with AI.
-                </p>
-              </div>
-            </ScrollAnimation>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-16 px-4 sm:px-0">
-              <ScrollAnimation delay={0.1}>
-                <div className="bg-red-900/20 border border-red-500/30 rounded-xl p-6 sm:p-8">
-                  <div className="text-red-400 text-4xl mb-4">❌</div>
-                  <h3 className="text-xl font-bold text-white mb-3 text-center">Marketing Manager Sarah</h3>
-                  <div className="mb-4">
-                    <p className="text-gray-300 text-sm mb-3">
-                      <span className="text-red-300">"I was spending 6 hours a week writing social media posts and email campaigns. The results were inconsistent and I felt like I was falling behind."</span>
-                    </p>
-                    <div className="h-px bg-gradient-to-r from-red-500/30 to-orange-500/30 mb-3"></div>
-                    <p className="text-gray-300 text-sm">
-                      <span className="text-green-300">"With thehackai's Content Creation GPT, I now produce a week's worth of content in 30 minutes. Quality is 10x better and I'm finally ahead of the game."</span>
-                    </p>
-                  </div>
-                  <div className="bg-green-900/30 rounded-lg p-3 text-center">
-                    <p className="text-green-300 text-sm font-medium">💰 Saved 5.5 hours/week</p>
-                    <p className="text-green-300 text-sm font-medium">📈 10x better quality</p>
-                  </div>
-                </div>
-              </ScrollAnimation>
-
-              <ScrollAnimation delay={0.2}>
-                <div className="bg-green-900/20 border border-green-500/30 rounded-xl p-6 sm:p-8">
-                  <div className="text-green-400 text-4xl mb-4">✅</div>
-                  <h3 className="text-xl font-bold text-white mb-3 text-center">Consultant Mike</h3>
-                  <div className="mb-4">
-                    <p className="text-gray-300 text-sm mb-3">
-                      <span className="text-red-300">"Creating client reports took me 8 hours per project. I was working nights and weekends just to keep up with demand."</span>
-                    </p>
-                    <div className="h-px bg-gradient-to-r from-green-500/30 to-teal-500/30 mb-3"></div>
-                    <p className="text-gray-300 text-sm">
-                      <span className="text-green-300">"Now I use the Report Writing playbook and finish reports in 45 minutes. Clients love the quality and I've doubled my client load."</span>
-                    </p>
-                  </div>
-                  <div className="bg-green-900/30 rounded-lg p-3 text-center">
-                    <p className="text-green-300 text-sm font-medium">💰 2x more clients</p>
-                    <p className="text-green-300 text-sm font-medium">⏰ 90% time saved</p>
-                  </div>
-                </div>
-              </ScrollAnimation>
-            </div>
-          </div>
-        </section>
 
         {/* Our Solutions */}
         <section id="features" className="py-20 px-4">
